@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRL-Fortbildungstag – Präsentation</title>
+<style>
+:root {
+  --col-slate-dark:  #2C3D4C;
+  --col-slate:       #3E5668;
+  --col-slate-mid:   #6A8599;
+  --col-slate-pale:  #D0DCE6;
+  --col-slate-ghost: #EEF3F7;
+  --col-rust-dark:   #9E4E22;
+  --col-rust:        #D97A4A;
+  --col-rust-mid:    #EBA882;
+  --col-rust-pale:   #F5DDD1;
+  --col-rust-ghost:  #FBF0EB;
+  --col-sage-dark:   #4D8B3F;
+  --col-sage:        #7DBB6F;
+  --col-sage-pale:   #DDF0D8;
+  --col-sage-ghost:  #F0FAF0;
+  --col-warning:     #C17B00;
+  --col-warning-pale:#FFF3CC;
+  --col-warning-text:#5C4400;
+  --col-bg:          #F5F4F1;
+  --col-white:       #FFFFFF;
+  --col-text:        #1E2A35;
+  --col-text-muted:  #5A6A78;
+  --col-border:      #D4D0C8;
+  --col-shadow:      rgba(62,86,104,0.12);
+  --text-xs:   0.694rem;
+  --text-sm:   0.833rem;
+  --text-base: 1rem;
+  --text-md:   1.2rem;
+  --text-lg:   1.44rem;
+  --text-xl:   1.728rem;
+  --text-2xl:  2.074rem;
+  --text-3xl:  2.488rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+font-family: -apple-system, ‘Helvetica Neue’, Arial, sans-serif;
+background: #1a2832;
+color: var(–col-text);
+height: 100vh;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+
+:focus-visible {
+outline: 3px solid var(–col-rust);
+outline-offset: 3px;
+border-radius: 4px;
+}
+
+/* ── SLIDESHOW WRAPPER ── */
+.slideshow {
+width: 100%;
+max-width: 1100px;
+height: 100vh;
+max-height: 680px;
+position: relative;
+border-radius: 16px;
+overflow: hidden;
+box-shadow: 0 24px 64px rgba(0,0,0,0.45);
+}
+
+/* ── SLIDES ── */
+.slide {
+position: absolute;
+inset: 0;
+display: flex;
+flex-direction: column;
+opacity: 0;
+pointer-events: none;
+transform: translateX(60px);
+transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.slide.active {
+opacity: 1;
+pointer-events: all;
+transform: translateX(0);
+}
+.slide.exit {
+opacity: 0;
+transform: translateX(-60px);
+pointer-events: none;
+}
+
+/* ── SLIDE HEADER BAR ── */
+.slide-header {
+background: var(–col-slate);
+color: white;
+padding: 16px 36px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-shrink: 0;
+}
+.slide-header .phase-label {
+font-size: var(–text-xs);
+color: var(–col-slate-pale);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+font-weight: 600;
+}
+.slide-header h2 {
+font-size: var(–text-lg);
+font-weight: 700;
+color: white;
+margin-top: 2px;
+}
+.slide-badge {
+background: rgba(255,255,255,0.15);
+border-radius: 20px;
+padding: 6px 14px;
+font-size: var(–text-xs);
+color: white;
+font-weight: 600;
+white-space: nowrap;
+}
+
+/* ── SLIDE BODY ── */
+.slide-body {
+flex: 1;
+background: var(–col-bg);
+padding: 32px 36px 20px;
+overflow-y: auto;
+display: flex;
+flex-direction: column;
+gap: 18px;
+}
+.slide-body.centered {
+align-items: center;
+justify-content: center;
+text-align: center;
+}
+
+/* ── TITLE SLIDE ── */
+.slide-title-bg {
+background: linear-gradient(135deg, var(–col-slate-dark) 0%, var(–col-slate) 60%, #5a7d94 100%);
+}
+.slide-title-content {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 48px 48px 28px;
+gap: 20px;
+position: relative;
+overflow: hidden;
+}
+.slide-title-content::before {
+content: ‘’;
+position: absolute;
+top: -80px; right: -80px;
+width: 300px; height: 300px;
+border-radius: 50%;
+background: rgba(255,255,255,0.04);
+}
+.slide-title-content::after {
+content: ‘’;
+position: absolute;
+bottom: -60px; left: -60px;
+width: 220px; height: 220px;
+border-radius: 50%;
+background: rgba(217,122,74,0.12);
+}
+.title-kicker {
+font-size: var(–text-sm);
+color: var(–col-rust-mid);
+text-transform: uppercase;
+letter-spacing: 0.12em;
+font-weight: 700;
+}
+.title-main {
+font-size: var(–text-3xl);
+font-weight: 800;
+color: white;
+line-height: 1.15;
+}
+.title-sub {
+font-size: var(–text-md);
+color: var(–col-slate-pale);
+max-width: 560px;
+line-height: 1.5;
+}
+.title-tags {
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+justify-content: center;
+margin-top: 8px;
+}
+.tag {
+border: 1.5px solid rgba(255,255,255,0.25);
+border-radius: 20px;
+padding: 5px 14px;
+font-size: var(–text-xs);
+color: rgba(255,255,255,0.75);
+font-weight: 500;
+}
+
+/* ── CARDS ── */
+.card {
+background: var(–col-white);
+border-radius: 12px;
+padding: 18px 22px;
+box-shadow: 0 2px 8px var(–col-shadow);
+}
+.card-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 16px;
+}
+.card-row.three { grid-template-columns: 1fr 1fr 1fr; }
+.card-row.four  { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.card-title {
+font-size: var(–text-sm);
+font-weight: 700;
+color: var(–col-slate);
+text-transform: uppercase;
+letter-spacing: 0.06em;
+margin-bottom: 8px;
+}
+.card-body {
+font-size: var(–text-sm);
+color: var(–col-text);
+line-height: 1.55;
+}
+
+/* Border-left accent variants */
+.card.accent-rust   { border-left: 4px solid var(–col-rust); }
+.card.accent-slate  { border-left: 4px solid var(–col-slate-mid); }
+.card.accent-sage   { border-left: 4px solid var(–col-sage); }
+.card.accent-orange { border-left: 4px solid var(–col-rust); }
+.card.bg-rust-ghost { background: var(–col-rust-ghost); border-left: 4px solid var(–col-rust); }
+.card.bg-sage-ghost { background: var(–col-sage-ghost); border-left: 4px solid var(–col-sage); }
+.card.bg-slate-ghost{ background: var(–col-slate-ghost); border-left: 4px solid var(–col-slate-mid); }
+.card.bg-warning    { background: var(–col-warning-pale); border-left: 4px solid var(–col-warning); }
+
+/* ── TIMELINE ── */
+.timeline {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 0;
+position: relative;
+}
+.timeline::before {
+content: ‘’;
+position: absolute;
+top: 28px;
+left: 10%;
+right: 10%;
+height: 3px;
+background: var(–col-slate-pale);
+z-index: 0;
+}
+.tl-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 8px;
+position: relative;
+z-index: 1;
+cursor: pointer;
+padding: 4px 6px;
+border-radius: 8px;
+transition: background 0.2s;
+}
+.tl-item:hover { background: var(–col-slate-ghost); }
+.tl-item.active-tl { background: var(–col-slate-pale); }
+.tl-dot {
+width: 36px;
+height: 36px;
+border-radius: 50%;
+background: var(–col-slate);
+color: white;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1rem;
+font-weight: 700;
+box-shadow: 0 2px 6px var(–col-shadow);
+flex-shrink: 0;
+transition: background 0.2s;
+}
+.tl-item.active-tl .tl-dot { background: var(–col-rust-dark); }
+.tl-dot.rust  { background: var(–col-rust-dark); }
+.tl-dot.sage  { background: var(–col-sage-dark); }
+.tl-dot.slate { background: var(–col-slate); }
+.tl-time {
+font-size: 0.62rem;
+font-weight: 700;
+color: var(–col-text-muted);
+text-align: center;
+line-height: 1.2;
+}
+.tl-label {
+font-size: 0.6rem;
+color: var(–col-text);
+text-align: center;
+font-weight: 600;
+line-height: 1.3;
+}
+
+/* ── ZONE CARDS ── */
+.zone-card {
+background: var(–col-white);
+border-radius: 14px;
+padding: 20px 18px;
+box-shadow: 0 2px 12px var(–col-shadow);
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s;
+display: flex;
+flex-direction: column;
+gap: 10px;
+border: 2px solid transparent;
+}
+.zone-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px var(–col-shadow); }
+.zone-card.open  { border-color: var(–col-slate-mid); }
+.zone-icon {
+font-size: 1.8rem;
+line-height: 1;
+}
+.zone-name {
+font-size: var(–text-sm);
+font-weight: 800;
+color: var(–col-slate-dark);
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+.zone-tagline {
+font-size: var(–text-xs);
+color: var(–col-text-muted);
+line-height: 1.4;
+}
+.zone-examples {
+display: none;
+margin-top: 8px;
+padding-top: 10px;
+border-top: 1px solid var(–col-border);
+}
+.zone-card.open .zone-examples { display: block; }
+.zone-examples ul {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+.zone-examples li {
+font-size: var(–text-xs);
+color: var(–col-text);
+padding-left: 14px;
+position: relative;
+line-height: 1.4;
+}
+.zone-examples li::before {
+content: ‘›’;
+position: absolute;
+left: 0;
+color: var(–col-rust-dark);
+font-weight: 700;
+}
+
+/* ── GOAL TEMPLATE ── */
+.goal-template {
+background: var(–col-white);
+border-radius: 12px;
+box-shadow: 0 2px 10px var(–col-shadow);
+overflow: hidden;
+}
+.goal-template-header {
+background: var(–col-rust-dark);
+color: white;
+padding: 12px 20px;
+font-size: var(–text-sm);
+font-weight: 700;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.goal-template-body {
+padding: 18px 20px;
+display: flex;
+flex-direction: column;
+gap: 14px;
+}
+.goal-field label {
+display: block;
+font-size: var(–text-xs);
+font-weight: 700;
+color: var(–col-text-muted);
+text-transform: uppercase;
+letter-spacing: 0.07em;
+margin-bottom: 5px;
+}
+.goal-field textarea, .goal-field input {
+width: 100%;
+border: 1.5px solid var(–col-border);
+border-radius: 8px;
+padding: 10px 12px;
+font-size: var(–text-sm);
+font-family: inherit;
+color: var(–col-text);
+background: var(–col-bg);
+resize: none;
+transition: border-color 0.2s;
+font-size: 1rem; /* iOS no-zoom */
+}
+.goal-field textarea:focus, .goal-field input:focus {
+outline: none;
+border-color: var(–col-rust-dark);
+background: var(–col-white);
+}
+
+/* ── REFLEX LEVELS ── */
+.reflex-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 14px;
+}
+.reflex-block {
+background: var(–col-white);
+border-radius: 12px;
+overflow: hidden;
+box-shadow: 0 2px 8px var(–col-shadow);
+}
+.reflex-block-header {
+padding: 10px 16px;
+font-size: var(–text-xs);
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.07em;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+.reflex-block-header.indiv { background: var(–col-slate); color: white; }
+.reflex-block-header.kolleg{ background: var(–col-rust-dark); color: white; }
+.reflex-block ul {
+padding: 14px 16px;
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
+.reflex-block li {
+font-size: var(–text-xs);
+color: var(–col-text);
+padding-left: 16px;
+position: relative;
+line-height: 1.4;
+}
+.reflex-block li::before {
+content: ‘→’;
+position: absolute;
+left: 0;
+color: var(–col-text-muted);
+font-weight: 700;
+}
+
+/* ── HIGHLIGHT BOX ── */
+.highlight-box {
+background: var(–col-slate);
+color: white;
+border-radius: 12px;
+padding: 18px 22px;
+display: flex;
+align-items: flex-start;
+gap: 14px;
+}
+.highlight-box .hb-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+.highlight-box .hb-text { font-size: var(–text-sm); line-height: 1.55; }
+.highlight-box strong { color: var(–col-rust-mid); }
+
+/* ── SRL TURBINE ── */
+.turbine-row {
+display: flex;
+gap: 0;
+align-items: stretch;
+}
+.turbine-item {
+flex: 1;
+text-align: center;
+padding: 16px 12px;
+position: relative;
+}
+.turbine-item::after {
+content: ‘→’;
+position: absolute;
+right: -8px;
+top: 50%;
+transform: translateY(-50%);
+font-size: 1.2rem;
+color: var(–col-border);
+font-weight: 700;
+z-index: 1;
+}
+.turbine-item:last-child::after { display: none; }
+.turbine-circle {
+width: 64px; height: 64px;
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 1.5rem;
+margin: 0 auto 10px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.turbine-circle.p { background: var(–col-slate-pale); }
+.turbine-circle.d { background: var(–col-rust-pale); }
+.turbine-circle.r { background: var(–col-sage-pale); }
+.turbine-label {
+font-size: var(–text-xs);
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+color: var(–col-text-muted);
+margin-bottom: 6px;
+}
+.turbine-name {
+font-size: var(–text-sm);
+font-weight: 700;
+color: var(–col-text);
+margin-bottom: 4px;
+}
+.turbine-detail {
+font-size: var(–text-xs);
+color: var(–col-text-muted);
+line-height: 1.35;
+}
+
+/* ── BOTTOM NAV ── */
+.nav-bar {
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+align-items: center;
+gap: 16px;
+background: rgba(26, 40, 50, 0.9);
+backdrop-filter: blur(8px);
+border-radius: 40px;
+padding: 10px 20px;
+z-index: 100;
+border: 1px solid rgba(255,255,255,0.1);
+}
+.nav-btn {
+background: rgba(255,255,255,0.12);
+border: none;
+color: white;
+width: 38px; height: 38px;
+border-radius: 50%;
+font-size: 1.1rem;
+cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+transition: background 0.2s;
+}
+.nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.25); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-dots {
+display: flex;
+gap: 7px;
+align-items: center;
+}
+.nav-dot {
+width: 8px; height: 8px;
+border-radius: 50%;
+background: rgba(255,255,255,0.25);
+cursor: pointer;
+transition: background 0.2s, transform 0.2s;
+}
+.nav-dot.active {
+background: var(–col-rust);
+transform: scale(1.3);
+}
+.nav-counter {
+color: rgba(255,255,255,0.5);
+font-size: var(–text-xs);
+font-weight: 600;
+min-width: 36px;
+text-align: center;
+}
+
+/* ── PHASE BADGE strip ── */
+.phase-strip {
+display: flex;
+gap: 8px;
+flex-wrap: wrap;
+margin-bottom: 4px;
+}
+.phase-chip {
+border-radius: 20px;
+padding: 4px 12px;
+font-size: var(–text-xs);
+font-weight: 600;
+display: flex;
+align-items: center;
+gap: 5px;
+}
+.phase-chip.slate { background: var(–col-slate-pale); color: var(–col-slate-dark); }
+.phase-chip.rust  { background: var(–col-rust-pale); color: var(–col-rust-dark); }
+.phase-chip.sage  { background: var(–col-sage-pale); color: var(–col-sage-dark); }
+.phase-chip.warn  { background: var(–col-warning-pale); color: var(–col-warning-text); }
+
+/* ── KEY STATEMENT ── */
+.key-statement {
+font-size: var(–text-lg);
+font-weight: 800;
+color: var(–col-slate-dark);
+line-height: 1.3;
+border-left: 5px solid var(–col-rust);
+padding-left: 18px;
+margin: 4px 0;
+}
+
+/* ── PILL LIST ── */
+.pill-list {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-top: 6px;
+}
+.pill {
+background: var(–col-slate-ghost);
+border-radius: 20px;
+padding: 5px 14px;
+font-size: var(–text-xs);
+color: var(–col-slate-dark);
+font-weight: 600;
+border: 1.5px solid var(–col-slate-pale);
+}
+.pill.rust {
+background: var(–col-rust-ghost);
+border-color: var(–col-rust-mid);
+color: var(–col-rust-dark);
+}
+
+/* ── IMPULS KOMPETENZEN ── */
+.komp-grid {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+gap: 10px;
+margin-top: 4px;
+}
+.komp-item {
+background: var(–col-white);
+border-radius: 10px;
+padding: 12px 8px;
+text-align: center;
+box-shadow: 0 2px 6px var(–col-shadow);
+}
+.komp-item .k-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.komp-item .k-name {
+font-size: 0.65rem;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+color: var(–col-slate);
+}
+.komp-item.k1 { border-top: 3px solid #3E5668; }
+.komp-item.k2 { border-top: 3px solid #D97A4A; }
+.komp-item.k3 { border-top: 3px solid #7DBB6F; }
+.komp-item.k4 { border-top: 3px solid #C17B00; }
+.komp-item.k5 { border-top: 3px solid #6A8599; }
+
+/* ── NEXT STEPS ── */
+.next-step-item {
+display: flex;
+align-items: flex-start;
+gap: 14px;
+background: var(–col-white);
+border-radius: 10px;
+padding: 14px 16px;
+box-shadow: 0 2px 6px var(–col-shadow);
+}
+.next-step-num {
+width: 32px; height: 32px;
+border-radius: 50%;
+background: var(–col-slate);
+color: white;
+display: flex; align-items: center; justify-content: center;
+font-weight: 800;
+font-size: var(–text-sm);
+flex-shrink: 0;
+}
+.next-step-text { font-size: var(–text-sm); color: var(–col-text); line-height: 1.5; }
+.next-step-text strong { color: var(–col-slate-dark); }
+
+/* Scroll indicator */
+.scroll-hint {
+font-size: var(–text-xs);
+color: var(–col-text-muted);
+text-align: right;
+padding-top: 4px;
+opacity: 0.6;
+}
+</style>
+
+</head>
+<body>
+
+<div class="slideshow" id="slideshow">
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 0: TITEL -->
+
+  <div class="slide active" id="slide-0">
+    <div style="flex:1; background: linear-gradient(135deg, #1E2A35 0%, var(--col-slate) 55%, #5a7d94 100%); display:flex; flex-direction:column;">
+      <div class="slide-title-content" style="flex:1;">
+        <div class="title-kicker">Kollegiale Fortbildung · SRL</div>
+        <div class="title-main">Ein Tag als<br>SRL-Zyklus</div>
+        <div class="title-sub">Wie der Fortbildungstag selbst zum Modell für selbstreguliertes Lernen wird – für Kolleg:innen erfahrbar gemacht.</div>
+        <div class="title-tags">
+          <span class="tag">Planung → Durchführung → Reflexion</span>
+          <span class="tag">Stebner / Klassen</span>
+          <span class="tag">UZH-Turbinen-Modell</span>
+          <span class="tag">Lernlandschaft</span>
+        </div>
+      </div>
+      <div style="background: rgba(0,0,0,0.2); padding: 14px 36px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+        <span style="font-size: var(--text-xs); color: rgba(255,255,255,0.5);">Präsentation · Kollegium</span>
+        <span style="font-size: var(--text-xs); color: var(--col-rust-mid); font-weight:600;">▸ Weiter mit Pfeiltasten oder Klick</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 1: GRUNDIDEE -->
+
+  <div class="slide" id="slide-1">
+    <div class="slide-header">
+      <div>
+        <div class="phase-label">Konzept</div>
+        <h2>Die Grundidee</h2>
+      </div>
+      <span class="slide-badge">1 / 9</span>
+    </div>
+    <div class="slide-body">
+      <p class="key-statement">„Der Tag selbst wird zum Modell."</p>
+      <div class="card-row">
+        <div class="card accent-rust">
+          <div class="card-title">Was wir tun</div>
+          <div class="card-body">Wir reden nicht nur über SRL – wir <strong>erleben</strong> den Tag als SRL-Zyklus. Ankommen, Ziel setzen, selbstgesteuert arbeiten, reflektieren.</div>
+        </div>
+        <div class="card accent-sage">
+          <div class="card-title">Was Kolleg:innen erfahren</div>
+          <div class="card-body">Wie unterschiedlich Lernwege sein können – und dass das kein Chaos ist, sondern <strong>Struktur mit Freiheit</strong>.</div>
+        </div>
+      </div>
+      <div class="highlight-box">
+        <span class="hb-icon">🎯</span>
+        <span class="hb-text">Der entscheidende Unterschied zu klassischen Fortbildungen: <strong>Niemand muss alles machen.</strong> Jede:r baut sich den Tag im Hinblick auf das eigene Ziel. Das ist kein nettes Extra – das <em>ist</em> die Botschaft.</span>
+      </div>
+      <div class="card bg-slate-ghost">
+        <div class="card-title">Konsequenz des Ansatzes</div>
+        <div class="card-body">Die Struktur des Tages lehrt mehr als jeder Input-Vortrag. Wer erfahren hat, wie es sich anfühlt, ein eigenes Lernziel zu formulieren und selbst zu steuern – der versteht, was SRL für Schüler:innen bedeutet.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 2: TAGESÜBERBLICK -->
+
+  <div class="slide" id="slide-2">
+    <div class="slide-header">
+      <div>
+        <div class="phase-label">Tagesstruktur</div>
+        <h2>Der Überblick</h2>
+      </div>
+      <span class="slide-badge">2 / 9</span>
+    </div>
+    <div class="slide-body">
+      <div class="card">
+        <div class="timeline">
+          <div class="tl-item" onclick="goToSlide(3)">
+            <div class="tl-dot slate">☕</div>
+            <div class="tl-time">8:30</div>
+            <div class="tl-label">Ankommen</div>
+          </div>
+          <div class="tl-item" onclick="goToSlide(3)">
+            <div class="tl-dot slate">💡</div>
+            <div class="tl-time">8:45</div>
+            <div class="tl-label">Impuls</div>
+          </div>
+          <div class="tl-item" onclick="goToSlide(4)">
+            <div class="tl-dot rust">🎯</div>
+            <div class="tl-time">9:30</div>
+            <div class="tl-label">Ziel&shy;setzung</div>
+          </div>
+          <div class="tl-item" onclick="goToSlide(5)">
+            <div class="tl-dot rust">🗺️</div>
+            <div class="tl-time">9:50</div>
+            <div class="tl-label">Arbeits&shy;phase I</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#888;">🍽️</div>
+            <div class="tl-time">12:30</div>
+            <div class="tl-label">Mittag&shy;pause</div>
+          </div>
+          <div class="tl-item" onclick="goToSlide(7)">
+            <div class="tl-dot rust">🏫</div>
+            <div class="tl-time">13:30</div>
+            <div class="tl-label">Arbeits&shy;phase II</div>
+          </div>
+          <div class="tl-item" onclick="goToSlide(8)">
+            <div class="tl-dot sage">🔄</div>
+            <div class="tl-time">14:45</div>
+            <div class="tl-label">Reflexion</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-row three">
+        <div class="card" style="border-top: 3px solid var(--col-slate);">
+          <div class="card-title" style="color:var(--col-slate);">📋 Planung</div>
+          <div class="card-body" style="font-size:var(--text-xs);">Impuls + individuelle Zielsetzung bilden die Planungsphase des SRL-Zyklus.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--col-rust-dark);">
+          <div class="card-title" style="color:var(--col-rust-dark);">⚡ Durchführung</div>
+          <div class="card-body" style="font-size:var(--text-xs);">Beide Arbeitsphasen = freie, zielorientierte Durchführung in der Lernlandschaft.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--col-sage-dark);">
+          <div class="card-title" style="color:var(--col-sage-dark);">🔄 Reflexion</div>
+          <div class="card-body" style="font-size:var(--text-xs);">Strukturierte Rückschau auf zwei Ebenen: individuell und als Kollegium.</div>
+        </div>
+      </div>
+      <div class="scroll-hint">Tippe auf die Zeitpunkte oben, um zur jeweiligen Phase zu springen</div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 3: ANKOMMEN + IMPULS -->
+
+  <div class="slide" id="slide-3">
+    <div class="slide-header">
+      <div>
+        <div class="phase-label">Phase 1 · 8:30 – 9:30</div>
+        <h2>Ankommen &amp; Impuls</h2>
+      </div>
+      <span class="slide-badge">3 / 9</span>
+    </div>
+    <div class="slide-body">
+      <div class="card-row">
+        <div class="card bg-slate-ghost">
+          <div class="card-title">☕ Ankommen (8:30–8:45)</div>
+          <div class="card-body">Offenes Ankommen. Kein Programm, keine Erwartung – einfach da sein und ankommen.</div>
+        </div>
+        <div class="card accent-rust">
+          <div class="card-title">💡 Impuls (8:45–9:30)</div>
+          <div class="card-body">Kein „alles erklären". Ein <strong>gemeinsames Denkangebot</strong> – nicht mehr, nicht weniger.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Was der Impuls leistet</div>
+        <div class="komp-grid">
+          <div class="komp-item k1">
+            <div class="k-icon">🧠</div>
+            <div class="k-name">Kognition</div>
+          </div>
+          <div class="komp-item k2">
+            <div class="k-icon">🔍</div>
+            <div class="k-name">Meta&shy;kognition</div>
+          </div>
+          <div class="komp-item k3">
+            <div class="k-icon">💪</div>
+            <div class="k-name">Motivation</div>
+          </div>
+          <div class="komp-item k4">
+            <div class="k-icon">💛</div>
+            <div class="k-name">Emotion</div>
+          </div>
+          <div class="komp-item k5">
+            <div class="k-icon">🛠️</div>
+            <div class="k-name">Ressourcen</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:var(--text-xs); color:var(--col-text-muted);">Stebner / Klassen &amp; UZH-Turbinen-Modell als theoretischer Rahmen</div>
+      </div>
+      <div class="highlight-box">
+        <span class="hb-icon">🗣️</span>
+        <span class="hb-text">Leitfrage für den Impuls: <strong>„Was heißt das für unsere Schüler:innen konkret im Alltag?"</strong><br>SRL als erlernbare Kompetenz – nicht als Methode.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 4: ZIELSETZUNG -->
+
+  <div class="slide" id="slide-4">
+    <div class="slide-header">
+      <div>
+        <div class="phase-label">Phase 2 · 9:30 – 9:50</div>
+        <h2>Individuelle Zielsetzung</h2>
+      </div>
+      <span class="slide-badge">4 / 9</span>
+    </div>
+    <div class="slide-body">
+      <div class="card bg-warning">
+        <div class="card-title">⚠ Wichtig: Nicht zwischen Tür und Angel</div>
+        <div class="card-body">Diese Phase braucht echte Zeit. Wer sein Ziel nicht kennt, kann sich nicht selbst steuern. Das ist der <strong>entscheidende Bruch</strong> – der Phase, die den ganzen Tag trägt.</div>
+      </div>
+
+```
+  <div class="goal-template">
+    <div class="goal-template-header">🎯 Mein Ziel für heute — Vorlage</div>
+    <div class="goal-template-body">
+      <div class="goal-field">
+        <label for="ziel-text">Mein Ziel</label>
+        <textarea id="ziel-text" rows="2" placeholder="z.B. „Ich möchte verstehen, wie ich SRL in meinen Unterricht einbauen kann.""></textarea>
+      </div>
+      <div class="card-row">
+        <div class="goal-field">
+          <label for="ziel-warum">Warum ist mir das wichtig?</label>
+          <textarea id="ziel-warum" rows="2" placeholder="Meine persönliche Motivation..."></textarea>
+        </div>
+        <div class="goal-field">
+          <label for="ziel-kriterium">Woran merke ich, dass ich es erreicht habe?</label>
+          <textarea id="ziel-kriterium" rows="2" placeholder="Mein Erfolgskriterium..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Beispiel-Ziele</div>
+    <div class="pill-list">
+      <span class="pill">„Ich will SRL in meinen Unterricht einbauen"</span>
+      <span class="pill rust">„Ich will eine konkrete Unterrichtsidee entwickeln"</span>
+      <span class="pill">„Ich will klären, wie das organisatorisch geht"</span>
+      <span class="pill rust">„Ich will die Theorie besser verstehen"</span>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 5: LERNLANDSCHAFT -->
+
+  <div class="slide" id="slide-5">
+    <div class="slide-header">
+      <div>
+        <div class="phase-label">Phase 3 · 9:50 – 12:30</div>
+        <h2>Offene Arbeitsphase I — Lernlandschaft</h2>
+      </div>
+      <span class="slide-badge">5 / 9</span>
+    </div>
+    <div class="slide-body">
+      <div class="highlight-box" style="margin-bottom:4px;">
+        <span class="hb-icon">🗺️</span>
+        <span class="hb-text"><strong>Jede:r baut sich den Tag selbst.</strong> Die Angebote sind sichtbar strukturiert – aber frei wählbar. Entscheidend: Alles ist Angebot im Hinblick auf das eigene Ziel.</span>
+      </div>
+      <div class="card-row four" id="zones-grid">
+        <div class="zone-card" onclick="toggleZone(this)">
+          <div class="zone-icon">🎓</div>
+          <div class="zone-name">Input-Zone</div>
+          <div class="zone-tagline">Kurze Mini-Workshops, 20–30 min, wiederholend</div>
+          <div class="zone-examples">
+            <ul>
+              <li>SRL im Unterricht konkret</li>
+              <li>Feedback &amp; Diagnostik</li>
+              <li>KI &amp; SRL</li>
+              <li>Lernziele formulieren</li>
+            </ul>
+          </div>
+        </div>
+        <div class="zone-card" onclick="toggleZone(this)">
+          <div class="zone-icon">✏️</div>
+          <div class="zone-name">Transfer-Zone</div>
+          <div class="zone-tagline">Eigene Materialien &amp; Unterrichtsideen entwickeln</div>
+          <div class="zone-examples">
+            <ul>
+              <li>Eigene Stunde planen</li>
+              <li>Material entwickeln</li>
+              <li>Lernaufgabe umgestalten</li>
+              <li>Vorlage für eigene Klasse</li>
+            </ul>
+          </div>
+        </div>
+        <div class="zone-card" onclick="toggleZone(this)">
+          <div class="zone-icon">💬</div>
+          <div class="zone-name">Austausch-Zone</div>
+          <div class="zone-tagline">Moderierte Gespräche &amp; kollegiale Beratung</div>
+          <div class="zone-examples">
+            <ul>
+              <li>Kollegiale Fallberatung</li>
+              <li>Erfahrungen teilen</li>
+              <li>Fragen klären</li>
+              <li>Informell austauschen</li>
+            </ul>
+          </div>
+        </div>
+        <div class="zone-card" onclick="toggleZone(this)">
+          <div class="zone-icon">🔇</div>
+          <div class="zone-name">Fokus-Zone</div>
+          <div class="zone-tagline">Ruhige Einzelarbeit, konzentriert</div>
+          <div class="zone-examples">
+            <ul>
+              <li>Lesen &amp; Vertiefen</li>
+              <li>Eigenes Konzept schreiben</li>
+              <li>Recherche &amp; Planung</li>
+              <li>Stille Verarbeitung</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card bg-sage-ghost">
+        <div class="card-title">🔑 Das Prinzip</div>
+        <div class="card-body" style="font-size:var(--text-xs);">Niemand muss alles machen. Niemand muss dieselbe Zone besuchen. Alles passiert im Hinblick auf das eigene Ziel – formuliert in Phase 2. ▸ <em>Tippe auf eine Zone für Beispiele.</em></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 6: TURBINE -->
+
+  <div class="slide" id="slide-6">
+    <div class="slide-header">
+      <div>
+        <div class="phase-label">Hintergrund · Modell</div>
+        <h2>UZH-Turbinen-Modell</h2>
+      </div>
+      <span class="slide-badge">6 / 9</span>
+    </div>
+    <div class="slide-body">
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title">Der SRL-Zyklus als Rahmen des Tages</div>
+        <div class="turbine-row" style="margin-top:16px;">
+          <div class="turbine-item">
+            <div class="turbine-circle p">📋</div>
+            <div class="turbine-label">Planung</div>
+            <div class="turbine-name">Planen</div>
+            <div class="turbine-detail">Ziele setzen, Strategien wählen, Ressourcen planen</div>
+          </div>
+          <div class="turbine-item">
+            <div class="turbine-circle d">⚡</div>
+            <div class="turbine-label">Durchführung</div>
+            <div class="turbine-name">Handeln</div>
+            <div class="turbine-detail">Selbstüberwachung, Anpassung, Regulation</div>
+          </div>
+          <div class="turbine-item">
+            <div class="turbine-circle r">🔄</div>
+            <div class="turbine-label">Reflexion</div>
+            <div class="turbine-name">Reflektieren</div>
+            <div class="turbine-detail">Evaluation, Attribution, Schlussfolgerungen</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-row" style="margin-top:14px;">
+        <div class="card" style="border-top: 3px solid var(--col-slate);">
+          <div class="card-title">Im Fortbildungstag</div>
+          <div class="card-body" style="font-size:var(--text-xs);">
+            <strong>Planung:</strong> Impuls + Zielsetzung (8:30–9:50)<br>
+            <strong>Durchführung:</strong> Arbeitsphase I + II (9:50–14:45)<br>
+            <strong>Reflexion:</strong> Abschluss-Reflexion (14:45–15:30)
+          </div>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--col-rust-dark);">
+          <div class="card-title">Fünf Kompetenzbereiche</div>
+          <div class="card-body" style="font-size:var(--text-xs);">
+            🧠 Kognition &nbsp;·&nbsp; 🔍 Metakognition<br>
+            💪 Motivation &nbsp;·&nbsp; 💛 Emotion<br>
+            🛠️ Ressourcenmanagement<br>
+            <span style="color:var(--col-text-muted); margin-top:4px; display:block;">Nach Stebner / Klassen (UZH-Modell)</span>
+          </div>
+        </div>
+      </div>
+      <div class="highlight-box">
+        <span class="hb-icon">🔑</span>
+        <span class="hb-text">SRL ist keine Methode – sondern eine <strong>erlernbare Kompetenz</strong>. Der Fortbildungstag macht das erfahrbar: Wer selbst erlebt, wie eigene Ziele die Arbeit steuern, versteht, was Schüler:innen brauchen.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 7: ARBEITSPHASE II -->
+
+  <div class="slide" id="slide-7">
+    <div class="slide-header">
+      <div>
+        <div class="phase-label">Phase 4 · 13:30 – 14:45</div>
+        <h2>Offene Arbeitsphase II</h2>
+      </div>
+      <span class="slide-badge">7 / 9</span>
+    </div>
+    <div class="slide-body">
+      <div class="card bg-rust-ghost">
+        <div class="card-title">Perspektivwechsel nach der Mittagspause</div>
+        <div class="card-body">Nicht mehr: <em>„Was mache ich?"</em><br>
+        Jetzt: <strong>„Was brauchen wir gemeinsam, damit SRL bei uns funktioniert?"</strong></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Mögliche Themen-Gruppen (selbstgebildet)</div>
+        <div class="card-row" style="margin-top:10px;">
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="background:var(--col-slate-ghost); border-radius:8px; padding:10px 12px; display:flex; align-items:center; gap:10px; font-size:var(--text-sm);">
+              <span style="font-size:1.2rem;">⏱</span>
+              <div><strong>Lernzeiten / Stundenstruktur</strong><br><span style="font-size:var(--text-xs); color:var(--col-text-muted);">Wie können wir SRL-Zeiten im Stundenplan verankern?</span></div>
+            </div>
+            <div style="background:var(--col-slate-ghost); border-radius:8px; padding:10px 12px; display:flex; align-items:center; gap:10px; font-size:var(--text-sm);">
+              <span style="font-size:1.2rem;">📝</span>
+              <div><strong>Prüfungsformate</strong><br><span style="font-size:var(--text-xs); color:var(--col-text-muted);">Welche Formate unterstützen SRL statt zu untergraben?</span></div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="background:var(--col-slate-ghost); border-radius:8px; padding:10px 12px; display:flex; align-items:center; gap:10px; font-size:var(--text-sm);">
+              <span style="font-size:1.2rem;">💬</span>
+              <div><strong>Feedbackkultur</strong><br><span style="font-size:var(--text-xs); color:var(--col-text-muted);">Wie geben und empfangen wir Feedback lernwirksam?</span></div>
+            </div>
+            <div style="background:var(--col-slate-ghost); border-radius:8px; padding:10px 12px; display:flex; align-items:center; gap:10px; font-size:var(--text-sm);">
+              <span style="font-size:1.2rem;">💻</span>
+              <div><strong>Digitale Infrastruktur</strong><br><span style="font-size:var(--text-xs); color:var(--col-text-muted);">Was brauchen wir technisch, um SRL zu unterstützen?</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="highlight-box">
+        <span class="hb-icon">🏫</span>
+        <span class="hb-text">Jetzt geht es nicht mehr nur um den eigenen Unterricht – sondern um <strong>Schulentwicklung</strong>. Diese Phase bildet die Brücke: vom individuellen Handeln zum gemeinsamen Rahmen.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 8: REFLEXION -->
+
+  <div class="slide" id="slide-8">
+    <div class="slide-header">
+      <div>
+        <div class="phase-label">Phase 5 · 14:45 – 15:30</div>
+        <h2>Reflexionsphase</h2>
+      </div>
+      <span class="slide-badge">8 / 9</span>
+    </div>
+    <div class="slide-body">
+      <div class="card bg-warning">
+        <div class="card-title">⚠ Nicht: „Wie fandest du den Tag?"</div>
+        <div class="card-body">Die Reflexion ist keine Feedbackrunde über den Tag – sondern <strong>SRL-Reflexion auf zwei Ebenen</strong>.</div>
+      </div>
+      <div class="reflex-row">
+        <div class="reflex-block">
+          <div class="reflex-block-header indiv">🧍 Individuell (kurz, ruhig)</div>
+          <ul>
+            <li>Habe ich mein Ziel erreicht?</li>
+            <li>Was nehme ich konkret mit?</li>
+            <li>Was ist mein nächster Schritt im Unterricht?</li>
+          </ul>
+        </div>
+        <div class="reflex-block">
+          <div class="reflex-block-header kolleg">👥 Kollegiumsebene</div>
+          <ul>
+            <li>Wo sind wir als Schule einen Schritt weitergekommen?</li>
+            <li>Was sind die nächsten gemeinsamen Schritte?</li>
+            <li>Wer übernimmt Verantwortung für was?</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card bg-sage-ghost">
+        <div class="card-title">💡 Sichtbar machen (Taskcard / Wand)</div>
+        <div class="card-body" style="font-size:var(--text-sm);">
+          <strong>→ „Unsere nächsten Schritte Richtung SRL"</strong><br>
+          <span style="font-size:var(--text-xs); color:var(--col-text-muted); margin-top:4px; display:block;">Die Ergebnisse der Kollegiumsreflexion werden gemeinsam sichtbar dokumentiert – analog oder digital.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────── SLIDE 9: NÄCHSTE SCHRITTE -->
+
+  <div class="slide" id="slide-9">
+    <div class="slide-header">
+      <div>
+        <div class="phase-label">Ausblick</div>
+        <h2>Nächste Schritte</h2>
+      </div>
+      <span class="slide-badge">9 / 9</span>
+    </div>
+    <div class="slide-body">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="next-step-item">
+          <div class="next-step-num">1</div>
+          <div class="next-step-text"><strong>Zonen konkret ausgestalten</strong><br>Workshop-Titel, Kurzbeschreibungen und Materialien für alle vier Zonen entwickeln – direkt einsetzbar.</div>
+        </div>
+        <div class="next-step-item">
+          <div class="next-step-num">2</div>
+          <div class="next-step-text"><strong>Zielsetzungs-Template finalisieren</strong><br>Analog oder als Taskcard – das Template aus Folie 4 für alle Kolleg:innen bereitstellen.</div>
+        </div>
+        <div class="next-step-item">
+          <div class="next-step-num">3</div>
+          <div class="next-step-text"><strong>Impuls vorbereiten</strong><br>Fokus auf Stebner/Klassen + UZH-Modell. Leitfrage: „Was heißt das für unsere Schüler:innen konkret?"</div>
+        </div>
+        <div class="next-step-item">
+          <div class="next-step-num">4</div>
+          <div class="next-step-text"><strong>Räume planen</strong><br>Welcher Raum für welche Zone? Fokus-Zone braucht ruhige Umgebung. Input-Zone benötigt Präsentationstechnik.</div>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top:6px;">
+        <span class="hb-icon">✨</span>
+        <span class="hb-text"><strong>Was diesen Tag stark macht:</strong> Kolleg:innen erleben unmittelbar, wie unterschiedlich Lernwege sein können – und dass das nicht Chaos ist, sondern <strong>Struktur mit Freiheit.</strong></span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end slideshow -->
+
+<!-- ── NAVIGATION ── -->
+
+<nav class="nav-bar" aria-label="Foliennavigation">
+  <button class="nav-btn" id="btn-prev" onclick="prevSlide()" aria-label="Zurück" title="Zurück">‹</button>
+  <div class="nav-dots" id="nav-dots" role="tablist"></div>
+  <button class="nav-btn" id="btn-next" onclick="nextSlide()" aria-label="Weiter" title="Weiter">›</button>
+  <span class="nav-counter" id="nav-counter">1 / 10</span>
+</nav>
+
+<script>
+const TOTAL = 10;
+let current = 0;
+let transitioning = false;
+
+function buildDots() {
+  const container = document.getElementById('nav-dots');
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('button');
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Folie ' + (i + 1));
+    d.setAttribute('role', 'tab');
+    d.onclick = () => goToSlide(i);
+    container.appendChild(d);
+  }
+}
+
+function goToSlide(n) {
+  if (n === current || transitioning) return;
+  transitioning = true;
+
+  const prev = document.getElementById('slide-' + current);
+  const next = document.getElementById('slide-' + n);
+
+  // Set exit direction
+  const forward = n > current;
+  prev.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+  prev.style.opacity = '0';
+  prev.style.transform = forward ? 'translateX(-60px)' : 'translateX(60px)';
+  prev.style.pointerEvents = 'none';
+
+  next.style.transition = 'none';
+  next.style.opacity = '0';
+  next.style.transform = forward ? 'translateX(60px)' : 'translateX(-60px)';
+  next.style.pointerEvents = 'none';
+  next.classList.add('active');
+  next.classList.remove('exit');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      next.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+      next.style.opacity = '1';
+      next.style.transform = 'translateX(0)';
+      next.style.pointerEvents = 'all';
+    });
+  });
+
+  setTimeout(() => {
+    prev.classList.remove('active');
+    prev.style.transition = '';
+    prev.style.opacity = '';
+    prev.style.transform = '';
+    prev.style.pointerEvents = '';
+    transitioning = false;
+  }, 380);
+
+  current = n;
+  updateNav();
+}
+
+function nextSlide() { if (current < TOTAL - 1) goToSlide(current + 1); }
+function prevSlide() { if (current > 0) goToSlide(current - 1); }
+
+function updateNav() {
+  document.querySelectorAll('.nav-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+  document.getElementById('btn-prev').disabled = current === 0;
+  document.getElementById('btn-next').disabled = current === TOTAL - 1;
+  document.getElementById('nav-counter').textContent = (current + 1) + ' / ' + TOTAL;
+}
+
+function toggleZone(card) {
+  const wasOpen = card.classList.contains('open');
+  document.querySelectorAll('.zone-card').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) card.classList.add('open');
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); prevSlide(); }
+});
+
+// Click anywhere to advance (except inputs/buttons/textareas)
+document.getElementById('slideshow').addEventListener('click', e => {
+  const tag = e.target.tagName;
+  if (['BUTTON','INPUT','TEXTAREA','A'].includes(tag)) return;
+  if (e.target.classList.contains('zone-card') || e.target.closest('.zone-card')) return;
+  if (e.target.classList.contains('tl-item') || e.target.closest('.tl-item')) return;
+  nextSlide();
+});
+
+buildDots();
+updateNav();
+</script>
+
+</body>
+</html>
