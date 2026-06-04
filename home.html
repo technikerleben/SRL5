@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRL Klasse 5 · HBG Dortmund</title>
+<style>
+  :root {
+    --navy:       #1a2e4a;
+    --navy-mid:   #243b5e;
+    --navy-light: #2e4d7a;
+    --accent:     #c8873a;
+    --accent-dim: #d4a56a;
+    --sage:       #7dbb6f;
+    --bg:         #f5f3ef;
+    --bg-card:    #ffffff;
+    --text:       #1e2330;
+    --text-mid:   #3d4559;
+    --text-light: #6b7591;
+    --border:     #ddd8ce;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Hero ────────────────────────────────────── */
+  .hero {
+    background: var(--navy);
+    padding: 64px 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Dezentes Raster-Muster im Hintergrund */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  /* Akzent-Kreis oben rechts */
+  .hero::after {
+    content: '';
+    position: absolute;
+    right: -80px;
+    top: -80px;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,135,58,.18), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-kuerzel {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-kuerzel::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 300;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 strong {
+    font-weight: 800;
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: rgba(255,255,255,.45);
+    margin-top: 14px;
+    max-width: 540px;
+    line-height: 1.6;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .hero-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,.6);
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* ── Karten-Bereich ───────────────────────────── */
+  .cards-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 48px 64px;
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  /* ── Einzelne Karte ───────────────────────────── */
+  .card {
+    display: block;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 28px 24px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--card-accent, var(--accent));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+  }
+  .card:hover {
+    border-color: var(--card-accent, var(--accent-dim));
+    box-shadow: 0 6px 28px rgba(26,46,74,.1);
+    transform: translateY(-2px);
+  }
+  .card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .card-icon {
+    font-size: 1.8rem;
+    margin-bottom: 14px;
+    display: block;
+    line-height: 1;
+  }
+
+  .card-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--text-light));
+    margin-bottom: 6px;
+  }
+
+  .card h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 0.84rem;
+    color: var(--text-light);
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  .card-arrow {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--card-accent, var(--text-light));
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: gap 0.2s;
+  }
+  .card:hover .card-arrow { gap: 8px; }
+
+  /* Individuelle Akzentfarben */
+  .card-arbeitspapier { --card-accent: #2e4d7a; }
+  .card-startpaket    { --card-accent: #c8873a; }
+  .card-video         { --card-accent: #7b5ea7; }
+  .card-lerninhalte   { --card-accent: #4a9b64; }
+
+  /* ── Footer ────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 48px 36px;
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: var(--text-light);
+  }
+
+  /* ── Responsive ────────────────────────────────── */
+  @media (max-width: 640px) {
+    .hero { padding: 40px 20px 40px; }
+    .cards-section { padding: 32px 20px 48px; }
+    .cards { grid-template-columns: 1fr; }
+    footer { padding: 14px 20px 32px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-kuerzel">Pilotprojekt · HBG Dortmund · Schuljahr 2026/27</div>
+    <h1>
+      <strong>Selbstreguliertes Lernen</strong>
+      in Klasse 5
+    </h1>
+    <p class="hero-sub">Alle Materialien, Konzepte und Planungshilfen für das Klassenteam auf einen Blick.</p>
+    <div class="hero-meta">
+      <span class="hero-tag">SRL-Turbinen-Modell (UZH)</span>
+      <span class="hero-tag">9 Module</span>
+      <span class="hero-tag">12 Fächer</span>
+      <span class="hero-tag">8 Projektcluster</span>
+      <span class="hero-tag">Stand: 4. Juni 2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="cards-section">
+  <div class="section-label">Projektmaterialien</div>
+
+  <div class="cards">
+
+    <a class="card card-arbeitspapier" href="index.html">
+      <span class="card-icon">📄</span>
+      <div class="card-label">Konzept</div>
+      <h2>Arbeitspapier</h2>
+      <p>Das vollständige konzeptionelle Arbeitspapier mit allen 9 Modulen, pädagogischen Leitideen, Teamabsprachen und Anhang.</p>
+      <span class="card-arrow">Zum Arbeitspapier →</span>
+    </a>
+
+    <a class="card card-startpaket" href="start.html">
+      <span class="card-icon">🗂</span>
+      <div class="card-label">Vorbereitung</div>
+      <h2>Startpaket</h2>
+      <p>Was vor dem ersten Schultag feststehen muss: 9 Startentscheidungen mit Detailinfos und einer abhakbaren Checkliste für das Team.</p>
+      <span class="card-arrow">Zum Startpaket →</span>
+    </a>
+
+    <a class="card card-video" href="video.html">
+      <span class="card-icon">▶</span>
+      <div class="card-label">Überblick</div>
+      <h2>Erklärvideo & Schaubild</h2>
+      <p>KI-generiertes Erklärvideo (NotebookLM) und ein visuelles Schaubild als kompakte Einführung in die Projektidee.</p>
+      <span class="card-arrow">Zu Video und Schaubild →</span>
+    </a>
+
+    <a class="card card-lerninhalte" href="lerninhalte.html">
+      <span class="card-icon">📚</span>
+      <div class="card-label">Planung</div>
+      <h2>Unterrichtsvorhaben & Projektideen</h2>
+      <p>Übersicht aller Themen aus 12 Fächern in Jahrgang 5, plus 8 fächerübergreifende Projektcluster mit Fächertabellen und Produktideen.</p>
+      <span class="card-arrow">Zur Übersicht →</span>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <span>Pilotprojekt SRL Klasse 5 · Heinrich-Böll-Gesamtschule Dortmund</span>
+  <span>Stand: 4. Juni 2026</span>
+</footer>
+
+</body>
+</html>
