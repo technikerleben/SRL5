@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HBG Do: SRL Klasse 5 – Projektvorstellung</title>
+<style>
+  :root {
+    --navy:       #1a2e4a;
+    --navy-mid:   #243b5e;
+    --navy-light: #2e4d7a;
+    --accent:     #c8873a;
+    --accent-dim: #d4a56a;
+    --bg:         #f5f3ef;
+    --bg-card:    #ffffff;
+    --text:       #1e2330;
+    --text-mid:   #3d4559;
+    --text-light: #6b7591;
+    --border:     #ddd8ce;
+    --font-serif: Georgia, 'Times New Roman', serif;
+    --font-sans:  'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── Header ──────────────────────────────────── */
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 32px 48px 28px;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .header-kuerzel {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.9rem;
+    font-weight: normal;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .header-sub {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+  }
+
+  /* ── Nav-Links im Header ─────────────────────── */
+  .header-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .header-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .header-link.primary {
+    background: var(--accent);
+    color: #fff;
+    border: 1.5px solid var(--accent);
+  }
+  .header-link.primary:hover {
+    background: #b8762a;
+    border-color: #b8762a;
+  }
+  .header-link.secondary {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.85);
+    border: 1.5px solid rgba(255,255,255,0.2);
+  }
+  .header-link.secondary:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+  }
+
+  /* ── Haupt-Layout ────────────────────────────── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 48px 80px;
+  }
+
+  /* ── Video-Bereich ───────────────────────────── */
+  .video-section {
+    margin-bottom: 48px;
+  }
+
+  .video-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Responsiver 16:9-Wrapper */
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 */
+    background: var(--navy);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  }
+  .video-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* Platzhalter wenn keine Video-ID */
+  .video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: var(--navy);
+    color: rgba(255,255,255,0.4);
+  }
+  .video-placeholder .ph-icon {
+    font-size: 3rem;
+    opacity: 0.4;
+  }
+  .video-placeholder .ph-text {
+    font-size: 0.85rem;
+    text-align: center;
+    max-width: 280px;
+    line-height: 1.5;
+  }
+  .video-placeholder .ph-id {
+    font-family: monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.08);
+    padding: 4px 12px;
+    border-radius: 4px;
+    color: var(--accent-dim);
+  }
+
+  /* ── Beschreibungstext ───────────────────────── */
+  .video-description {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-top: 24px;
+  }
+  .video-description h2 {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-weight: normal;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .video-description p {
+    font-size: 0.9rem;
+    color: var(--text-mid);
+    margin-bottom: 0.75em;
+  }
+  .video-description p:last-child { margin-bottom: 0; }
+
+  /* ── Weiterführende Links ────────────────────── */
+  .weiterfuehrendes {
+    margin-top: 40px;
+  }
+  .link-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .link-card:hover {
+    border-color: var(--accent-dim);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .link-card-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .link-card-text strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--navy-mid);
+    margin-bottom: 2px;
+  }
+  .link-card-text span {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    line-height: 1.3;
+  }
+
+  /* ── Footer ──────────────────────────────────── */
+  footer {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 16px 48px 40px;
+    border-top: 1px solid var(--border);
+    font-size: 0.72rem;
+    color: var(--text-light);
+    font-style: italic;
+  }
+
+  /* ── Responsive ──────────────────────────────── */
+  @media (max-width: 680px) {
+    header { padding: 24px 20px 20px; }
+    main { padding: 28px 20px 48px; }
+    .link-cards { grid-template-columns: 1fr; }
+    footer { padding: 14px 20px 32px; }
+    header h1 { font-size: 1.45rem; }
+  }
+
+  @media print {
+    .video-wrapper iframe { display: none; }
+    .video-placeholder { display: flex !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-kuerzel">Pilotprojekt · SRL Klasse 5 · HBG Dortmund · Schuljahr 2026/27</div>
+    <h1>Selbstreguliertes Lernen in Klasse 5</h1>
+    <div class="header-sub">Projektvorstellung für Kolleginnen und Kollegen</div>
+    <div class="header-links">
+      <a class="header-link primary" href="index.html">📄 Zum Arbeitspapier</a>
+      <a class="header-link secondary" href="start.html">🗂 Zum Startpaket</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="video-section">
+    <div class="video-label">Projektvorstellung · Video</div>
+
+    <div class="video-wrapper" id="video-wrapper">
+      <!-- Platzhalter – wird durch Video ersetzt sobald ID eingetragen -->
+      <div class="video-placeholder" id="video-placeholder">
+        <span class="ph-icon">▶</span>
+        <span class="ph-text">Das Video wird hier erscheinen, sobald die YouTube-ID eingetragen ist.</span>
+        <span class="ph-id">VIDEO_ID_HIER_EINTRAGEN</span>
+      </div>
+    </div>
+
+    <div class="video-description">
+      <h2>Worum geht es in diesem Video?</h2>
+      <p>Dieses Video gibt einen kompakten Überblick über das Pilotprojekt zum selbstregulierten Lernen in Klasse 5 an der Heinrich-Böll-Gesamtschule Dortmund. Es richtet sich an alle Kolleginnen und Kollegen, die das Projekt mitdenken, mitgestalten oder einfach besser verstehen möchten.</p>
+      <p>Im Mittelpunkt stehen die pädagogische Grundidee, die zentralen Module und die gemeinsamen Ziele für das erste Projektjahr. Das vollständige Arbeitspapier mit allen Details ist über den Link oben erreichbar.</p>
+    </div>
+  </div>
+
+  <div class="weiterfuehrendes">
+    <div class="video-label">Weiterführendes</div>
+    <div class="link-cards">
+      <a class="link-card" href="index.html">
+        <span class="link-card-icon">📄</span>
+        <span class="link-card-text">
+          <strong>Arbeitspapier</strong>
+          <span>Vollständiges Konzept mit allen Modulen, Leitideen und Anhang</span>
+        </span>
+      </a>
+      <a class="link-card" href="start.html">
+        <span class="link-card-icon">🗂</span>
+        <span class="link-card-text">
+          <strong>Startpaket</strong>
+          <span>Was vor dem ersten Schultag feststehen muss – mit Checkliste</span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Pilotprojekt SRL Klasse 5 · Heinrich-Böll-Gesamtschule Dortmund · Stand: 4. Juni 2026
+</footer>
+
+<script>
+  // ── Video einbinden ──────────────────────────────────────────────────────
+  // Sobald die YouTube-Video-ID feststeht, hier eintragen:
+  const VIDEO_ID = '';   // ← z. B. 'dQw4w9WgXcQ'
+
+  if (VIDEO_ID) {
+    const wrapper = document.getElementById('video-wrapper');
+    wrapper.innerHTML = `
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/${VIDEO_ID}?rel=0&modestbranding=1"
+        title="SRL Klasse 5 – Projektvorstellung"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>`;
+  }
+</script>
+</body>
+</html>
