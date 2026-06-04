@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Übersicht Unterrichtsvorhaben Jahrgang 5</title>
+  <style>
+    :root {
+      --navy:        #1a2e4a;
+      --navy-mid:    #243b5e;
+      --navy-light:  #2e4d7a;
+      --accent:      #c8873a;
+      --accent-dim:  #d4a56a;
+      --sage:        #7dbb6f;
+      --sage-bg:     #eef6eb;
+      --sage-border: #5a9e4d;
+      --bg:          #f5f3ef;
+      --bg-card:     #ffffff;
+      --text:        #1e2330;
+      --text-mid:    #3d4559;
+      --text-light:  #6b7591;
+      --border:      #ddd8ce;
+
+      /* Fachfarben – mapped auf HBG-Palette */
+      --slate-dark:  #1a2e4a;
+      --slate:       #2e4d7a;
+      --slate-ghost: #eef2fa;
+      --slate-pale:  #c5d4ea;
+
+      --rust-dark:   #8a4f10;
+      --rust:        #c8873a;
+      --rust-ghost:  #fff3e8;
+      --rust-pale:   #f0c89a;
+
+      --sage-dark:   #2d6b3f;
+      --sage-ghost:  #eef6eb;
+      --sage-pale:   #b5dba8;
+
+      --muted:       #6b7591;
+      --line:        rgba(30,42,53,.12);
+      --shadow:      0 4px 20px rgba(26,46,74,.09);
+      --radius:      10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 0 64px;
+    }
+
+    /* ── Header ──────────────────────────────── */
+    header {
+      background: var(--navy);
+      color: #fff;
+      padding: 32px 48px 28px;
+      margin-bottom: 32px;
+    }
+
+    .header-kuerzel {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .subtitle {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,.55);
+      max-width: 760px;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    .header-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .header-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .header-link.primary {
+      background: var(--accent);
+      color: #fff;
+      border: 1.5px solid var(--accent);
+    }
+    .header-link.primary:hover { background: #b8762a; border-color: #b8762a; }
+    .header-link.secondary {
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.85);
+      border: 1.5px solid rgba(255,255,255,.2);
+    }
+    .header-link.secondary:hover { background: rgba(255,255,255,.15); color: #fff; }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      color: rgba(255,255,255,.85);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Info-Kacheln ────────────────────────── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 0 48px 28px;
+    }
+
+    .info {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+    }
+
+    .info strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--navy-mid);
+      font-size: 0.82rem;
+    }
+
+    /* ── Controls ────────────────────────────── */
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin: 0 48px 16px;
+    }
+
+    .search {
+      width: 100%;
+      padding: 11px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: var(--bg-card);
+      color: var(--text);
+      transition: border-color 0.15s;
+    }
+    .search:focus {
+      outline: none;
+      border-color: var(--accent-dim);
+    }
+
+    .count {
+      color: var(--text-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ── Quick-Nav ───────────────────────────── */
+    .quick-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 48px 20px;
+    }
+
+    .quick-nav a {
+      color: var(--navy-mid);
+      text-decoration: none;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .quick-nav a:hover {
+      border-color: var(--accent-dim);
+      background: #fff8f0;
+    }
+
+    /* ── Kachelraster ────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 0 48px;
+    }
+
+    /* ── Fachkarte ───────────────────────────── */
+    .subject {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .subject-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .subject.slate .subject-header {
+      background: var(--slate-ghost);
+      border-top: 4px solid var(--slate);
+    }
+    .subject.rust .subject-header {
+      background: var(--rust-ghost);
+      border-top: 4px solid var(--rust);
+    }
+    .subject.sage .subject-header {
+      background: var(--sage-ghost);
+      border-top: 4px solid var(--sage);
+    }
+
+    .subject h2 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.01em;
+    }
+
+    .subject-note {
+      margin-top: 2px;
+      color: var(--text-light);
+      font-size: 0.78rem;
+    }
+
+    .pill {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      color: var(--text-light);
+    }
+
+    /* ── Themenzeilen ────────────────────────── */
+    .items { padding: 4px 8px 10px; }
+
+    .item {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .item:last-child { border-bottom: none; }
+
+    .item-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .meta {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--navy-mid);
+      background: var(--slate-ghost);
+      border: 1px solid var(--slate-pale);
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 4px;
+    }
+
+    .desc {
+      color: var(--text-light);
+      font-size: 0.83rem;
+      line-height: 1.45;
+    }
+
+    /* ── Legende ─────────────────────────────── */
+    .legend {
+      margin: 20px 48px 0;
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      color: var(--text-light);
+      font-size: 0.82rem;
+    }
+    .legend strong { color: var(--text-mid); }
+
+    /* ── Footer ──────────────────────────────── */
+    footer {
+      max-width: 1040px;
+      margin: 32px auto 0;
+      padding: 16px 48px 40px;
+      border-top: 1px solid var(--border);
+      font-size: 0.72rem;
+      color: var(--text-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    footer a {
+      color: var(--text-light);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--text-light);
+    }
+    footer a:hover { color: var(--navy); }
+
+    /* ── Responsive ──────────────────────────── */
+    @media (max-width: 860px) {
+      header { padding: 24px 20px 20px; }
+      .info-grid, .controls, .quick-nav, .grid, .legend { margin-left: 20px; margin-right: 20px; }
+      .info-grid, .controls { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      footer { padding: 14px 20px 32px; flex-direction: column; align-items: flex-start; }
+    }
+
+    @media print {
+      body { background: white; }
+      header { padding: 14px 20px; }
+      .page, footer { max-width: none; }
+      .controls, .quick-nav, .header-links { display: none; }
+      .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .subject { break-inside: avoid; box-shadow: none; border: 1pt solid #ccc; }
+      .info-grid, .grid, .legend, .controls, .quick-nav { margin-left: 0; margin-right: 0; }
+    }
+
+    /* ── Tab-Navigation ──────────────────────── */
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      margin: 0 48px 24px;
+      border-bottom: 2px solid var(--border);
+    }
+    .tab-btn {
+      padding: 10px 22px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-light);
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      letter-spacing: 0.01em;
+    }
+    .tab-btn:hover { color: var(--navy); }
+    .tab-btn.active {
+      color: var(--navy);
+      border-bottom-color: var(--accent);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Projekt-Cluster ─────────────────────── */
+    .cluster-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 0 48px;
+    }
+
+    .cluster {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .cluster-header {
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      user-select: none;
+    }
+    .cluster-header:hover { background: var(--bg); }
+
+    .cluster.c1 .cluster-header { border-top: 4px solid var(--slate); background: var(--slate-ghost); }
+    .cluster.c2 .cluster-header { border-top: 4px solid var(--rust);  background: var(--rust-ghost); }
+    .cluster.c3 .cluster-header { border-top: 4px solid var(--sage);  background: var(--sage-ghost); }
+    .cluster.c4 .cluster-header { border-top: 4px solid #7b5ea7;      background: #f2eff8; }
+    .cluster.c5 .cluster-header { border-top: 4px solid var(--slate); background: var(--slate-ghost); }
+    .cluster.c6 .cluster-header { border-top: 4px solid var(--rust);  background: var(--rust-ghost); }
+    .cluster.c7 .cluster-header { border-top: 4px solid var(--sage);  background: var(--sage-ghost); }
+    .cluster.c8 .cluster-header { border-top: 4px solid #7b5ea7;      background: #f2eff8; }
+
+    .cluster-title-wrap { flex: 1; min-width: 0; }
+    .cluster-num {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 2px;
+    }
+    .cluster h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.25;
+      margin: 0;
+    }
+    .cluster-teaser {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .cluster-chevron {
+      font-size: 0.72rem;
+      color: var(--text-light);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .cluster.open .cluster-chevron { transform: rotate(180deg); }
+
+    .cluster-body {
+      display: none;
+      padding: 16px 18px 18px;
+    }
+    .cluster.open .cluster-body { display: block; }
+
+    .cluster-body p {
+      font-size: 0.86rem;
+      color: var(--text-mid);
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    /* Projektidee-Box */
+    .projekt-box {
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 0.84rem;
+      color: var(--text-mid);
+      line-height: 1.5;
+    }
+    .projekt-box strong {
+      display: block;
+      color: var(--navy);
+      font-size: 0.82rem;
+      margin-bottom: 3px;
+    }
+
+    /* Fächertabelle */
+    .fach-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-bottom: 12px;
+    }
+    .fach-table th {
+      background: var(--navy);
+      color: #fff;
+      text-align: left;
+      padding: 6px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .fach-table th:first-child { border-radius: 4px 0 0 0; }
+    .fach-table th:last-child  { border-radius: 0 4px 0 0; }
+    .fach-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text-mid);
+      line-height: 1.4;
+    }
+    .fach-table tr:last-child td { border-bottom: none; }
+    .fach-table tr:nth-child(even) td { background: #faf8f5; }
+    .fach-table td:first-child { font-weight: 700; color: var(--navy-mid); white-space: nowrap; }
+
+    /* SRL-Badge */
+    .srl-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--sage-dark);
+      background: var(--sage-ghost);
+      border: 1px solid var(--sage-pale);
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    /* Produkt-Zeile */
+    .produkt {
+      font-size: 0.82rem;
+      color: var(--text-mid);
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+    .produkt strong { color: var(--navy-mid); }
+
+    /* Empfehlung-Box */
+    .empfehlung-wrap {
+      margin: 20px 48px 0;
+      background: var(--navy);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 20px 24px;
+    }
+    .empfehlung-wrap h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .empfehlung-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .empfehlung-item {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .empfehlung-item strong {
+      display: block;
+      font-size: 0.82rem;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .empfehlung-item span {
+      font-size: 0.76rem;
+      color: rgba(255,255,255,.6);
+      line-height: 1.4;
+    }
+
+    /* SRL-Phasentabelle */
+    .phasen-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 12px;
+    }
+    .phasen-table th {
+      background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.9);
+      text-align: left;
+      padding: 7px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .phasen-table td {
+      padding: 7px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      color: rgba(255,255,255,.75);
+      line-height: 1.45;
+      vertical-align: top;
+    }
+    .phasen-table td:first-child { font-weight: 700; color: var(--accent-dim); white-space: nowrap; }
+    .phasen-table tr:last-child td { border-bottom: none; }
+
+    @media (max-width: 860px) {
+      .tab-bar, .cluster-grid, .empfehlung-wrap { margin-left: 20px; margin-right: 20px; }
+      .cluster-grid { grid-template-columns: 1fr; }
+      .empfehlung-grid { grid-template-columns: 1fr; }
+    }
+    @media print {
+      .tab-bar { display: none; }
+      .tab-panel { display: block !important; }
+      .cluster-body { display: block !important; }
+      .cluster-grid, .empfehlung-wrap { margin-left: 0; margin-right: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div class="header-kuerzel">Pilotprojekt · SRL Klasse 5 · HBG Dortmund · Schuljahr 2026/27</div>
+      <h1>Unterrichtsvorhaben Jahrgang 5</h1>
+      <p class="subtitle">Erweiterte Übersicht der Themen aus den schulinternen Curricula. Ergänzt wurden Englisch, Mathematik und Musik. Die Darstellung ist als Arbeitsübersicht für Klassenteam, Jahresplanung und fachübergreifende Projektideen gedacht.</p>
+      <div class="badges">
+        <span class="badge">Jahrgang 5</span>
+        <span class="badge">12 Fächer/Bereiche</span>
+        <span class="badge">53 Themen</span>
+        <span class="badge">Projektplanung</span>
+        <span class="badge">SRL-Anschluss möglich</span>
+      </div>
+    </header>
+
+    <div class="tab-bar" role="tablist">
+      <button class="tab-btn active" data-tab="faecher" role="tab">📚 Fachübersicht</button>
+      <button class="tab-btn" data-tab="projekte" role="tab">🔗 Projektideen</button>
+    </div>
+
+    <div id="tab-faecher" class="tab-panel active">
+    <section class="controls">
+      <input class="search" id="search" type="search" placeholder="Thema, Fach oder Stichwort suchen …" aria-label="Übersicht durchsuchen">
+      <div class="count" id="count"></div>
+    </section>
+
+    <nav class="quick-nav" aria-label="Schnellnavigation">
+      <a href="#deutsch">Deutsch</a>
+      <a href="#englisch">Englisch</a>
+      <a href="#mathematik">Mathematik</a>
+      <a href="#musik">Musik</a>
+      <a href="#gesellschaftslehre">Gesellschaftslehre</a>
+      <a href="#naturwissenschaften">Naturwissenschaften</a>
+      <a href="#technik">Technik</a>
+      <a href="#hauswirtschaft">Hauswirtschaft</a>
+      <a href="#kunst">Kunst</a>
+      <a href="#sport">Sport</a>
+      <a href="#evangelische-religion">Evangelische Religion</a>
+      <a href="#praktische-philosophie">Praktische Philosophie</a>
+    </nav>
+
+    <section class="grid" id="grid">
+
+      <article class="subject slate" id="deutsch" data-search="deutsch ganzjähriges kernfach gemeinsam neu starten – verfassen von briefen ca. 16 std. kennenlernen, gesprächsregeln, persönliche und formale briefe, begründet stellung nehmen. ein besuch im zoo – auf basis von material berichten ca. 20 std. tiere beschreiben, sachtexte erschließen, informationen auswerten, tiermagazin/präsentation. unterwegs in der bahn – aus texten informationen entnehmen, vergleichen und bewerten ca. 20 std. sachtexte, fahrpläne, schaubilder und tabellen erschließen und vergleichen. gespenstercasting – auf basis von material erzählen ca. 16 std. erzählende texte, gruselgeschichten, wörtliche rede, spannendes erzählen. lektüre ca. 24–28 std. inhaltszusammenfassung, figuren, rollenbiografie, charakterisierung, innerer monolog, tagebucheinträge. märchenhaft – märchen untersuchen und selbst verfassen ca. 20 std. märchenmerkmale, recherche, eigenes märchen schreiben und überarbeiten.">
+        <div class="subject-header">
+          <div>
+            <h2>Deutsch</h2>
+            <div class="subject-note">Ganzjähriges Kernfach</div>
+          </div>
+          <span class="pill">6 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="deutsch gemeinsam neu starten – verfassen von briefen ca. 16 std. kennenlernen, gesprächsregeln, persönliche und formale briefe, begründet stellung nehmen.">
+            <div class="item-title">Gemeinsam neu starten – Verfassen von Briefen</div>
+            <div class="meta">ca. 16 Std.</div>
+            <div class="desc">Kennenlernen, Gesprächsregeln, persönliche und formale Briefe, begründet Stellung nehmen.</div>
+          </div>
+
+          <div class="item" data-search="deutsch ein besuch im zoo – auf basis von material berichten ca. 20 std. tiere beschreiben, sachtexte erschließen, informationen auswerten, tiermagazin/präsentation.">
+            <div class="item-title">Ein Besuch im Zoo – Auf Basis von Material berichten</div>
+            <div class="meta">ca. 20 Std.</div>
+            <div class="desc">Tiere beschreiben, Sachtexte erschließen, Informationen auswerten, Tiermagazin/Präsentation.</div>
+          </div>
+
+          <div class="item" data-search="deutsch unterwegs in der bahn – aus texten informationen entnehmen, vergleichen und bewerten ca. 20 std. sachtexte, fahrpläne, schaubilder und tabellen erschließen und vergleichen.">
+            <div class="item-title">Unterwegs in der Bahn – Aus Texten Informationen entnehmen, vergleichen und bewerten</div>
+            <div class="meta">ca. 20 Std.</div>
+            <div class="desc">Sachtexte, Fahrpläne, Schaubilder und Tabellen erschließen und vergleichen.</div>
+          </div>
+
+          <div class="item" data-search="deutsch gespenstercasting – auf basis von material erzählen ca. 16 std. erzählende texte, gruselgeschichten, wörtliche rede, spannendes erzählen.">
+            <div class="item-title">Gespenstercasting – Auf Basis von Material erzählen</div>
+            <div class="meta">ca. 16 Std.</div>
+            <div class="desc">Erzählende Texte, Gruselgeschichten, wörtliche Rede, spannendes Erzählen.</div>
+          </div>
+
+          <div class="item" data-search="deutsch lektüre ca. 24–28 std. inhaltszusammenfassung, figuren, rollenbiografie, charakterisierung, innerer monolog, tagebucheinträge.">
+            <div class="item-title">Lektüre</div>
+            <div class="meta">ca. 24–28 Std.</div>
+            <div class="desc">Inhaltszusammenfassung, Figuren, Rollenbiografie, Charakterisierung, innerer Monolog, Tagebucheinträge.</div>
+          </div>
+
+          <div class="item" data-search="deutsch märchenhaft – märchen untersuchen und selbst verfassen ca. 20 std. märchenmerkmale, recherche, eigenes märchen schreiben und überarbeiten.">
+            <div class="item-title">Märchenhaft – Märchen untersuchen und selbst verfassen</div>
+            <div class="meta">ca. 20 Std.</div>
+            <div class="desc">Märchenmerkmale, Recherche, eigenes Märchen schreiben und überarbeiten.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject rust" id="englisch" data-search="englisch ganzjähriges kernfach, 4 wochenstunden people and places ca. 16–20 std. über sich selbst, familie, vorlieben, freizeit und die eigene wohngegend sprechen; notting hill kennenlernen; fact file zu einem ort in der eigenen umgebung. school ca. 20 std. schule, klassenraum, stundenplan, schulalltag und schuluniform; über die eigene schule sprechen und präsentieren; classroom board game. free time ca. 16–20 std. frühstücksgewohnheiten, wochenendaktivitäten, hobbys und sportarten; fact file oder präsentation zu hobby/sport. at home ca. 16–20 std. zimmer, wohnen, aktivitäten zuhause, aufgaben im haushalt und typische woche; podcast oder präsentation. have a great day! ca. 16 std. geburtstage, familie, ausflugsziele, brighton, einkaufsdialoge und postkarte; planung einer geburtstagsparty.">
+        <div class="subject-header">
+          <div>
+            <h2>Englisch</h2>
+            <div class="subject-note">Ganzjähriges Kernfach, 4 Wochenstunden</div>
+          </div>
+          <span class="pill">5 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="englisch people and places ca. 16–20 std. über sich selbst, familie, vorlieben, freizeit und die eigene wohngegend sprechen; notting hill kennenlernen; fact file zu einem ort in der eigenen umgebung.">
+            <div class="item-title">People and places</div>
+            <div class="meta">ca. 16–20 Std.</div>
+            <div class="desc">Über sich selbst, Familie, Vorlieben, Freizeit und die eigene Wohngegend sprechen; Notting Hill kennenlernen; fact file zu einem Ort in der eigenen Umgebung.</div>
+          </div>
+
+          <div class="item" data-search="englisch school ca. 20 std. schule, klassenraum, stundenplan, schulalltag und schuluniform; über die eigene schule sprechen und präsentieren; classroom board game.">
+            <div class="item-title">School</div>
+            <div class="meta">ca. 20 Std.</div>
+            <div class="desc">Schule, Klassenraum, Stundenplan, Schulalltag und Schuluniform; über die eigene Schule sprechen und präsentieren; classroom board game.</div>
+          </div>
+
+          <div class="item" data-search="englisch free time ca. 16–20 std. frühstücksgewohnheiten, wochenendaktivitäten, hobbys und sportarten; fact file oder präsentation zu hobby/sport.">
+            <div class="item-title">Free time</div>
+            <div class="meta">ca. 16–20 Std.</div>
+            <div class="desc">Frühstücksgewohnheiten, Wochenendaktivitäten, Hobbys und Sportarten; fact file oder Präsentation zu Hobby/Sport.</div>
+          </div>
+
+          <div class="item" data-search="englisch at home ca. 16–20 std. zimmer, wohnen, aktivitäten zuhause, aufgaben im haushalt und typische woche; podcast oder präsentation.">
+            <div class="item-title">At home</div>
+            <div class="meta">ca. 16–20 Std.</div>
+            <div class="desc">Zimmer, Wohnen, Aktivitäten zuhause, Aufgaben im Haushalt und typische Woche; Podcast oder Präsentation.</div>
+          </div>
+
+          <div class="item" data-search="englisch have a great day! ca. 16 std. geburtstage, familie, ausflugsziele, brighton, einkaufsdialoge und postkarte; planung einer geburtstagsparty.">
+            <div class="item-title">Have a great day!</div>
+            <div class="meta">ca. 16 Std.</div>
+            <div class="desc">Geburtstage, Familie, Ausflugsziele, Brighton, Einkaufsdialoge und Postkarte; Planung einer Geburtstagsparty.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject sage" id="mathematik" data-search="mathematik ganzjähriges kernfach unsere klasse – daten erheben und auswerten ca. 16 std. daten erheben, strichlisten, häufigkeitstabellen, säulen- und balkendiagramme, minimum, maximum, spannweite und median; klassenarbeit 1. neue zahlen?! – schriftliche addition und subtraktion ca. 12 std. natürliche zahlen darstellen, ordnen und vergleichen; römische zahlen, schätzen, schriftliche addition/subtraktion, längen- und zeitangaben; klassenarbeit 2. unser schulhof – geometrische figuren zeichnen und messen ca. 16 std. punkt, gerade, strecke, parallel, senkrecht; koordinatensystem, flächen erkennen, geodreieck, geogebra und messen in der umwelt; klassenarbeit 3. könig der löwen – natürliche zahlen multiplizieren und dividieren ca. 20 std. kopfrechnen, kleines und großes einmaleins, vielfache, zahlenreihen, rechenbäume, schriftliches multiplizieren und dividieren; klassenarbeit 4. mein kinderzimmer renovieren – flächen und flächeninhalte von rechtecken und quadraten ca. 16 std. flächen vergleichen, flächeneinheiten, flächeninhalt und umfang von rechtecken und quadraten, quadratzahlen, pentominos; klassenarbeit 5. das runde muss ins eckige – unterwegs in der fußball-bundesliga: brüche und verhältnisse ca. 20 std. brüche als teil eines ganzen, bruchteile von größen, brüche darstellen und deuten, fußball-bundesliga als kontext; klassenarbeit 6. mandalas – symmetrie ca. 8 std. achsensymmetrie und punktsymmetrie erkennen und herstellen; muster zeichnen und untersuchen.">
+        <div class="subject-header">
+          <div>
+            <h2>Mathematik</h2>
+            <div class="subject-note">Ganzjähriges Kernfach</div>
+          </div>
+          <span class="pill">7 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="mathematik unsere klasse – daten erheben und auswerten ca. 16 std. daten erheben, strichlisten, häufigkeitstabellen, säulen- und balkendiagramme, minimum, maximum, spannweite und median; klassenarbeit 1.">
+            <div class="item-title">Unsere Klasse – Daten erheben und auswerten</div>
+            <div class="meta">ca. 16 Std.</div>
+            <div class="desc">Daten erheben, Strichlisten, Häufigkeitstabellen, Säulen- und Balkendiagramme, Minimum, Maximum, Spannweite und Median; Klassenarbeit 1.</div>
+          </div>
+
+          <div class="item" data-search="mathematik neue zahlen?! – schriftliche addition und subtraktion ca. 12 std. natürliche zahlen darstellen, ordnen und vergleichen; römische zahlen, schätzen, schriftliche addition/subtraktion, längen- und zeitangaben; klassenarbeit 2.">
+            <div class="item-title">Neue Zahlen?! – Schriftliche Addition und Subtraktion</div>
+            <div class="meta">ca. 12 Std.</div>
+            <div class="desc">Natürliche Zahlen darstellen, ordnen und vergleichen; römische Zahlen, Schätzen, schriftliche Addition/Subtraktion, Längen- und Zeitangaben; Klassenarbeit 2.</div>
+          </div>
+
+          <div class="item" data-search="mathematik unser schulhof – geometrische figuren zeichnen und messen ca. 16 std. punkt, gerade, strecke, parallel, senkrecht; koordinatensystem, flächen erkennen, geodreieck, geogebra und messen in der umwelt; klassenarbeit 3.">
+            <div class="item-title">Unser Schulhof – Geometrische Figuren zeichnen und messen</div>
+            <div class="meta">ca. 16 Std.</div>
+            <div class="desc">Punkt, Gerade, Strecke, parallel, senkrecht; Koordinatensystem, Flächen erkennen, Geodreieck, GeoGebra und Messen in der Umwelt; Klassenarbeit 3.</div>
+          </div>
+
+          <div class="item" data-search="mathematik könig der löwen – natürliche zahlen multiplizieren und dividieren ca. 20 std. kopfrechnen, kleines und großes einmaleins, vielfache, zahlenreihen, rechenbäume, schriftliches multiplizieren und dividieren; klassenarbeit 4.">
+            <div class="item-title">König der Löwen – Natürliche Zahlen multiplizieren und dividieren</div>
+            <div class="meta">ca. 20 Std.</div>
+            <div class="desc">Kopfrechnen, kleines und großes Einmaleins, Vielfache, Zahlenreihen, Rechenbäume, schriftliches Multiplizieren und Dividieren; Klassenarbeit 4.</div>
+          </div>
+
+          <div class="item" data-search="mathematik mein kinderzimmer renovieren – flächen und flächeninhalte von rechtecken und quadraten ca. 16 std. flächen vergleichen, flächeneinheiten, flächeninhalt und umfang von rechtecken und quadraten, quadratzahlen, pentominos; klassenarbeit 5.">
+            <div class="item-title">Mein Kinderzimmer renovieren – Flächen und Flächeninhalte von Rechtecken und Quadraten</div>
+            <div class="meta">ca. 16 Std.</div>
+            <div class="desc">Flächen vergleichen, Flächeneinheiten, Flächeninhalt und Umfang von Rechtecken und Quadraten, Quadratzahlen, Pentominos; Klassenarbeit 5.</div>
+          </div>
+
+          <div class="item" data-search="mathematik das runde muss ins eckige – unterwegs in der fußball-bundesliga: brüche und verhältnisse ca. 20 std. brüche als teil eines ganzen, bruchteile von größen, brüche darstellen und deuten, fußball-bundesliga als kontext; klassenarbeit 6.">
+            <div class="item-title">Das Runde muss ins Eckige – Unterwegs in der Fußball-Bundesliga: Brüche und Verhältnisse</div>
+            <div class="meta">ca. 20 Std.</div>
+            <div class="desc">Brüche als Teil eines Ganzen, Bruchteile von Größen, Brüche darstellen und deuten, Fußball-Bundesliga als Kontext; Klassenarbeit 6.</div>
+          </div>
+
+          <div class="item" data-search="mathematik mandalas – symmetrie ca. 8 std. achsensymmetrie und punktsymmetrie erkennen und herstellen; muster zeichnen und untersuchen.">
+            <div class="item-title">Mandalas – Symmetrie</div>
+            <div class="meta">ca. 8 Std.</div>
+            <div class="desc">Achsensymmetrie und Punktsymmetrie erkennen und herstellen; Muster zeichnen und untersuchen.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject slate" id="musik" data-search="musik ganzjähriges fach laut screenshot musik um uns 1. halbjahr alltagsbezug zu musik, musikhören und musikalischer umgebung; laut screenshot ohne besondere testangabe. instrumentenkunde 1. halbjahr instrumente kennenlernen und unterscheiden; im screenshot als besonderer aspekt der sonstigen mitarbeit: test. notenkunde 1. halbjahr grundlagen der notenschrift und musikalischer zeichen; im screenshot als besonderer aspekt der sonstigen mitarbeit: test. programmmusik 2. halbjahr musik beschreibt oder erzählt etwas; verbindung von musik, bildern, geschichten und vorstellungen. mozart superstar 2. halbjahr komponist, biografie und werkbeispiele mozarts; musikalische und kulturgeschichtliche orientierung. zauberflöte 2. halbjahr einführung in oper/musiktheater am beispiel der zauberflöte.">
+        <div class="subject-header">
+          <div>
+            <h2>Musik</h2>
+            <div class="subject-note">Ganzjähriges Fach laut Screenshot</div>
+          </div>
+          <span class="pill">6 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="musik musik um uns 1. halbjahr alltagsbezug zu musik, musikhören und musikalischer umgebung; laut screenshot ohne besondere testangabe.">
+            <div class="item-title">Musik um uns</div>
+            <div class="meta">1. Halbjahr</div>
+            <div class="desc">Alltagsbezug zu Musik, Musikhören und musikalischer Umgebung; laut Screenshot ohne besondere Testangabe.</div>
+          </div>
+
+          <div class="item" data-search="musik instrumentenkunde 1. halbjahr instrumente kennenlernen und unterscheiden; im screenshot als besonderer aspekt der sonstigen mitarbeit: test.">
+            <div class="item-title">Instrumentenkunde</div>
+            <div class="meta">1. Halbjahr</div>
+            <div class="desc">Instrumente kennenlernen und unterscheiden; im Screenshot als besonderer Aspekt der sonstigen Mitarbeit: Test.</div>
+          </div>
+
+          <div class="item" data-search="musik notenkunde 1. halbjahr grundlagen der notenschrift und musikalischer zeichen; im screenshot als besonderer aspekt der sonstigen mitarbeit: test.">
+            <div class="item-title">Notenkunde</div>
+            <div class="meta">1. Halbjahr</div>
+            <div class="desc">Grundlagen der Notenschrift und musikalischer Zeichen; im Screenshot als besonderer Aspekt der sonstigen Mitarbeit: Test.</div>
+          </div>
+
+          <div class="item" data-search="musik programmmusik 2. halbjahr musik beschreibt oder erzählt etwas; verbindung von musik, bildern, geschichten und vorstellungen.">
+            <div class="item-title">Programmmusik</div>
+            <div class="meta">2. Halbjahr</div>
+            <div class="desc">Musik beschreibt oder erzählt etwas; Verbindung von Musik, Bildern, Geschichten und Vorstellungen.</div>
+          </div>
+
+          <div class="item" data-search="musik mozart superstar 2. halbjahr komponist, biografie und werkbeispiele mozarts; musikalische und kulturgeschichtliche orientierung.">
+            <div class="item-title">Mozart Superstar</div>
+            <div class="meta">2. Halbjahr</div>
+            <div class="desc">Komponist, Biografie und Werkbeispiele Mozarts; musikalische und kulturgeschichtliche Orientierung.</div>
+          </div>
+
+          <div class="item" data-search="musik zauberflöte 2. halbjahr einführung in oper/musiktheater am beispiel der zauberflöte.">
+            <div class="item-title">Zauberflöte</div>
+            <div class="meta">2. Halbjahr</div>
+            <div class="desc">Einführung in Oper/Musiktheater am Beispiel der Zauberflöte.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject rust" id="gesellschaftslehre" data-search="gesellschaftslehre ganzjähriges kernfach symbiose oder ständiges gegeneinander? leben in der stadt und auf dem land ca. 16 std. stadt/land, daseinsgrundfunktionen, mobilität, stadt-umland-beziehungen. das alte ägypten – eine hochkultur? ca. 16 std. nil, pharao, gesellschaftspyramide, götterwelt, pyramiden, hochkulturmerkmale. woher kommen unsere lebensmittel? landwirtschaft früher und heute ca. 16 std. landwirtschaft in nrw, wandel, nachhaltige landwirtschaft, fleischkonsum, berufe. kann ich mitwirken? demokratie heute und im antiken griechenland ca. 20 std. polis, athen, sparta, kindererziehung, demokratie früher und heute. ferien – die schönste zeit des jahres?! tourismus im spannungsfeld zwischen freizeitspaß und umweltbelastungen ca. 15 std. tourismusformen, küste, nationalparks, klimadiagramme, massentourismus.">
+        <div class="subject-header">
+          <div>
+            <h2>Gesellschaftslehre</h2>
+            <div class="subject-note">Ganzjähriges Kernfach</div>
+          </div>
+          <span class="pill">5 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="gesellschaftslehre symbiose oder ständiges gegeneinander? leben in der stadt und auf dem land ca. 16 std. stadt/land, daseinsgrundfunktionen, mobilität, stadt-umland-beziehungen.">
+            <div class="item-title">Symbiose oder ständiges Gegeneinander? Leben in der Stadt und auf dem Land</div>
+            <div class="meta">ca. 16 Std.</div>
+            <div class="desc">Stadt/Land, Daseinsgrundfunktionen, Mobilität, Stadt-Umland-Beziehungen.</div>
+          </div>
+
+          <div class="item" data-search="gesellschaftslehre das alte ägypten – eine hochkultur? ca. 16 std. nil, pharao, gesellschaftspyramide, götterwelt, pyramiden, hochkulturmerkmale.">
+            <div class="item-title">Das Alte Ägypten – Eine Hochkultur?</div>
+            <div class="meta">ca. 16 Std.</div>
+            <div class="desc">Nil, Pharao, Gesellschaftspyramide, Götterwelt, Pyramiden, Hochkulturmerkmale.</div>
+          </div>
+
+          <div class="item" data-search="gesellschaftslehre woher kommen unsere lebensmittel? landwirtschaft früher und heute ca. 16 std. landwirtschaft in nrw, wandel, nachhaltige landwirtschaft, fleischkonsum, berufe.">
+            <div class="item-title">Woher kommen unsere Lebensmittel? Landwirtschaft früher und heute</div>
+            <div class="meta">ca. 16 Std.</div>
+            <div class="desc">Landwirtschaft in NRW, Wandel, nachhaltige Landwirtschaft, Fleischkonsum, Berufe.</div>
+          </div>
+
+          <div class="item" data-search="gesellschaftslehre kann ich mitwirken? demokratie heute und im antiken griechenland ca. 20 std. polis, athen, sparta, kindererziehung, demokratie früher und heute.">
+            <div class="item-title">Kann ich mitwirken? Demokratie heute und im antiken Griechenland</div>
+            <div class="meta">ca. 20 Std.</div>
+            <div class="desc">Polis, Athen, Sparta, Kindererziehung, Demokratie früher und heute.</div>
+          </div>
+
+          <div class="item" data-search="gesellschaftslehre ferien – die schönste zeit des jahres?! tourismus im spannungsfeld zwischen freizeitspaß und umweltbelastungen ca. 15 std. tourismusformen, küste, nationalparks, klimadiagramme, massentourismus.">
+            <div class="item-title">Ferien – Die schönste Zeit des Jahres?! Tourismus im Spannungsfeld zwischen Freizeitspaß und Umweltbelastungen</div>
+            <div class="meta">ca. 15 Std.</div>
+            <div class="desc">Tourismusformen, Küste, Nationalparks, Klimadiagramme, Massentourismus.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject sage" id="naturwissenschaften" data-search="naturwissenschaften ganzjähriges kernfach lebensräume und lebensbedingungen je thema ca. 20 std. lebensräume, tiere und pflanzen, biotop- und artenschutz, extreme lebensräume. mit allen sinnen wahrnehmen ca. 25 std. sinne, sinnesorgane, auge, ohr, schall, haut, wahrnehmung und schutzmaßnahmen.">
+        <div class="subject-header">
+          <div>
+            <h2>Naturwissenschaften</h2>
+            <div class="subject-note">Ganzjähriges Kernfach</div>
+          </div>
+          <span class="pill">2 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="naturwissenschaften lebensräume und lebensbedingungen je thema ca. 20 std. lebensräume, tiere und pflanzen, biotop- und artenschutz, extreme lebensräume.">
+            <div class="item-title">Lebensräume und Lebensbedingungen</div>
+            <div class="meta">je Thema ca. 20 Std.</div>
+            <div class="desc">Lebensräume, Tiere und Pflanzen, Biotop- und Artenschutz, extreme Lebensräume.</div>
+          </div>
+
+          <div class="item" data-search="naturwissenschaften mit allen sinnen wahrnehmen ca. 25 std. sinne, sinnesorgane, auge, ohr, schall, haut, wahrnehmung und schutzmaßnahmen.">
+            <div class="item-title">Mit allen Sinnen wahrnehmen</div>
+            <div class="meta">ca. 25 Std.</div>
+            <div class="desc">Sinne, Sinnesorgane, Auge, Ohr, Schall, Haut, Wahrnehmung und Schutzmaßnahmen.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject slate" id="technik" data-search="technik halbjahresfach im wechsel mit hauswirtschaft sicherheit im technikunterricht ca. 6 wochenstunden werkraumregeln, technikraum, arbeitsschutz, sicherheitseinrichtungen. fertigungstechnik i ca. 40 wochenstunden holz bearbeiten, werkzeugkunde, handschmeichler, schmuckstück, bohrmaschinenschein. elektrotechnik ca. 20 wochenstunden einfacher gleichstromkreis, löten, taschenlampe, ggf. lötmännchen.">
+        <div class="subject-header">
+          <div>
+            <h2>Technik</h2>
+            <div class="subject-note">Halbjahresfach im Wechsel mit Hauswirtschaft</div>
+          </div>
+          <span class="pill">3 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="technik sicherheit im technikunterricht ca. 6 wochenstunden werkraumregeln, technikraum, arbeitsschutz, sicherheitseinrichtungen.">
+            <div class="item-title">Sicherheit im Technikunterricht</div>
+            <div class="meta">ca. 6 Wochenstunden</div>
+            <div class="desc">Werkraumregeln, Technikraum, Arbeitsschutz, Sicherheitseinrichtungen.</div>
+          </div>
+
+          <div class="item" data-search="technik fertigungstechnik i ca. 40 wochenstunden holz bearbeiten, werkzeugkunde, handschmeichler, schmuckstück, bohrmaschinenschein.">
+            <div class="item-title">Fertigungstechnik I</div>
+            <div class="meta">ca. 40 Wochenstunden</div>
+            <div class="desc">Holz bearbeiten, Werkzeugkunde, Handschmeichler, Schmuckstück, Bohrmaschinenschein.</div>
+          </div>
+
+          <div class="item" data-search="technik elektrotechnik ca. 20 wochenstunden einfacher gleichstromkreis, löten, taschenlampe, ggf. lötmännchen.">
+            <div class="item-title">Elektrotechnik</div>
+            <div class="meta">ca. 20 Wochenstunden</div>
+            <div class="desc">Einfacher Gleichstromkreis, Löten, Taschenlampe, ggf. Lötmännchen.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject sage" id="hauswirtschaft" data-search="hauswirtschaft halbjahresfach im wechsel mit technik schritt für schritt in der küche fit! – grundlagen für das arbeiten im fach hauswirtschaft ca. 26 std. schulküche, hygiene, sicherheit, rezepte, mülltrennung, geräte und arbeitsmittel. fit in den tag – das pyramidenfrühstück ca. 14 std. frühstücksgewohnheiten, ernährungspyramide, lebensmittelgruppen, ausgewogenes frühstück.">
+        <div class="subject-header">
+          <div>
+            <h2>Hauswirtschaft</h2>
+            <div class="subject-note">Halbjahresfach im Wechsel mit Technik</div>
+          </div>
+          <span class="pill">2 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="hauswirtschaft schritt für schritt in der küche fit! – grundlagen für das arbeiten im fach hauswirtschaft ca. 26 std. schulküche, hygiene, sicherheit, rezepte, mülltrennung, geräte und arbeitsmittel.">
+            <div class="item-title">Schritt für Schritt in der Küche fit! – Grundlagen für das Arbeiten im Fach Hauswirtschaft</div>
+            <div class="meta">ca. 26 Std.</div>
+            <div class="desc">Schulküche, Hygiene, Sicherheit, Rezepte, Mülltrennung, Geräte und Arbeitsmittel.</div>
+          </div>
+
+          <div class="item" data-search="hauswirtschaft fit in den tag – das pyramidenfrühstück ca. 14 std. frühstücksgewohnheiten, ernährungspyramide, lebensmittelgruppen, ausgewogenes frühstück.">
+            <div class="item-title">Fit in den Tag – Das Pyramidenfrühstück</div>
+            <div class="meta">ca. 14 Std.</div>
+            <div class="desc">Frühstücksgewohnheiten, Ernährungspyramide, Lebensmittelgruppen, ausgewogenes Frühstück.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject rust" id="kunst" data-search="kunst jahrgang 5/6 laut curriculum hier spricht dein körper – botschaften ohne worte jg. 5 körpersprache, ausdruck, darstellen und gestalten. farbfamilie – wie viele geschwister hat eine farbe? jg. 5 farbe, farbfamilien, naturfarben/färbergarten, bne-bezug. punkt, linie, fläche – grafische gestaltungsmittel zur darstellung von form und struktur jg. 5 grafische mittel, form, struktur, bildgestaltung. der zufall als auslöser – das zufallsfarblabor jg. 5 experimentelles arbeiten mit farbe und zufallsverfahren.">
+        <div class="subject-header">
+          <div>
+            <h2>Kunst</h2>
+            <div class="subject-note">Jahrgang 5/6 laut Curriculum</div>
+          </div>
+          <span class="pill">4 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="kunst hier spricht dein körper – botschaften ohne worte jg. 5 körpersprache, ausdruck, darstellen und gestalten.">
+            <div class="item-title">Hier spricht dein Körper – Botschaften ohne Worte</div>
+            <div class="meta">Jg. 5</div>
+            <div class="desc">Körpersprache, Ausdruck, Darstellen und Gestalten.</div>
+          </div>
+
+          <div class="item" data-search="kunst farbfamilie – wie viele geschwister hat eine farbe? jg. 5 farbe, farbfamilien, naturfarben/färbergarten, bne-bezug.">
+            <div class="item-title">Farbfamilie – Wie viele Geschwister hat eine Farbe?</div>
+            <div class="meta">Jg. 5</div>
+            <div class="desc">Farbe, Farbfamilien, Naturfarben/Färbergarten, BNE-Bezug.</div>
+          </div>
+
+          <div class="item" data-search="kunst punkt, linie, fläche – grafische gestaltungsmittel zur darstellung von form und struktur jg. 5 grafische mittel, form, struktur, bildgestaltung.">
+            <div class="item-title">Punkt, Linie, Fläche – Grafische Gestaltungsmittel zur Darstellung von Form und Struktur</div>
+            <div class="meta">Jg. 5</div>
+            <div class="desc">Grafische Mittel, Form, Struktur, Bildgestaltung.</div>
+          </div>
+
+          <div class="item" data-search="kunst der zufall als auslöser – das zufallsfarblabor jg. 5 experimentelles arbeiten mit farbe und zufallsverfahren.">
+            <div class="item-title">Der Zufall als Auslöser – Das Zufallsfarblabor</div>
+            <div class="meta">Jg. 5</div>
+            <div class="desc">Experimentelles Arbeiten mit Farbe und Zufallsverfahren.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject slate" id="sport" data-search="sport ganzjähriges fach von den fingern zu den zehen ca. 6 std. aufwärmen, körperwahrnehmung, belastungsfähigkeit, unfallprophylaxe. spring wie flip ca. 8 std. sprungvarianten, hoch- und weitspringen, bewegungsphasen, leichtathletik. bewegen an geräten / turnen ca. 10 std. rollen, turnen, geräte, sicherheit und bewegungsgestaltung.">
+        <div class="subject-header">
+          <div>
+            <h2>Sport</h2>
+            <div class="subject-note">Ganzjähriges Fach</div>
+          </div>
+          <span class="pill">3 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="sport von den fingern zu den zehen ca. 6 std. aufwärmen, körperwahrnehmung, belastungsfähigkeit, unfallprophylaxe.">
+            <div class="item-title">Von den Fingern zu den Zehen</div>
+            <div class="meta">ca. 6 Std.</div>
+            <div class="desc">Aufwärmen, Körperwahrnehmung, Belastungsfähigkeit, Unfallprophylaxe.</div>
+          </div>
+
+          <div class="item" data-search="sport spring wie flip ca. 8 std. sprungvarianten, hoch- und weitspringen, bewegungsphasen, leichtathletik.">
+            <div class="item-title">Spring wie Flip</div>
+            <div class="meta">ca. 8 Std.</div>
+            <div class="desc">Sprungvarianten, Hoch- und Weitspringen, Bewegungsphasen, Leichtathletik.</div>
+          </div>
+
+          <div class="item" data-search="sport bewegen an geräten / turnen ca. 10 std. rollen, turnen, geräte, sicherheit und bewegungsgestaltung.">
+            <div class="item-title">Bewegen an Geräten / Turnen</div>
+            <div class="meta">ca. 10 Std.</div>
+            <div class="desc">Rollen, Turnen, Geräte, Sicherheit und Bewegungsgestaltung.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject sage" id="evangelische-religion" data-search="evangelische religion alternative zu praktischer philosophie ich, du und die anderen 1. quartal, ca. 16 std. identität, gemeinschaft, christliches miteinander. die schöpfung bewahren 2. quartal, ca. 18 std. schöpfung, verantwortung, umwelt, vergleich mit mythen und naturwissenschaft. umwelt jesu und umgang mit der bibel 3. quartal, ca. 20 std. jesus, bibel, christliche orientierung. religiöse feste feiern 4. quartal, ca. 10 std. christliche, jüdische und muslimische feste.">
+        <div class="subject-header">
+          <div>
+            <h2>Evangelische Religion</h2>
+            <div class="subject-note">Alternative zu Praktischer Philosophie</div>
+          </div>
+          <span class="pill">4 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="evangelische religion ich, du und die anderen 1. quartal, ca. 16 std. identität, gemeinschaft, christliches miteinander.">
+            <div class="item-title">Ich, du und die anderen</div>
+            <div class="meta">1. Quartal, ca. 16 Std.</div>
+            <div class="desc">Identität, Gemeinschaft, christliches Miteinander.</div>
+          </div>
+
+          <div class="item" data-search="evangelische religion die schöpfung bewahren 2. quartal, ca. 18 std. schöpfung, verantwortung, umwelt, vergleich mit mythen und naturwissenschaft.">
+            <div class="item-title">Die Schöpfung bewahren</div>
+            <div class="meta">2. Quartal, ca. 18 Std.</div>
+            <div class="desc">Schöpfung, Verantwortung, Umwelt, Vergleich mit Mythen und Naturwissenschaft.</div>
+          </div>
+
+          <div class="item" data-search="evangelische religion umwelt jesu und umgang mit der bibel 3. quartal, ca. 20 std. jesus, bibel, christliche orientierung.">
+            <div class="item-title">Umwelt Jesu und Umgang mit der Bibel</div>
+            <div class="meta">3. Quartal, ca. 20 Std.</div>
+            <div class="desc">Jesus, Bibel, christliche Orientierung.</div>
+          </div>
+
+          <div class="item" data-search="evangelische religion religiöse feste feiern 4. quartal, ca. 10 std. christliche, jüdische und muslimische feste.">
+            <div class="item-title">Religiöse Feste feiern</div>
+            <div class="meta">4. Quartal, ca. 10 Std.</div>
+            <div class="desc">Christliche, jüdische und muslimische Feste.</div>
+          </div>
+
+        </div>
+      </article>
+
+      <article class="subject rust" id="praktische-philosophie" data-search="praktische philosophie alternative zu religion ich und mein leben jg. 5 identität, selbstbild, persönliches leben. gemeinsam leben – wie können wir unsere gemeinschaft regeln? jg. 5 regeln, gemeinschaft, zusammenleben. ich sehe, wie du dich fühlst – wenn unser körper erzählt jg. 5 körpersprache, gefühle, ausdrucksformen. die tiere und ich – welche verantwortung trage ich für andere lebewesen? jg. 5 verantwortung gegenüber tieren und lebewesen. auf der suche nach dem sinn jg. 5 sinnfragen, orientierung, nachdenken über das leben. von lehrkraft festzulegen, z. b. antirassismus flexibles uv offenes unterrichtsvorhaben nach festlegung der lehrkraft.">
+        <div class="subject-header">
+          <div>
+            <h2>Praktische Philosophie</h2>
+            <div class="subject-note">Alternative zu Religion</div>
+          </div>
+          <span class="pill">6 UV</span>
+        </div>
+        <div class="items">
+
+          <div class="item" data-search="praktische philosophie ich und mein leben jg. 5 identität, selbstbild, persönliches leben.">
+            <div class="item-title">Ich und mein Leben</div>
+            <div class="meta">Jg. 5</div>
+            <div class="desc">Identität, Selbstbild, persönliches Leben.</div>
+          </div>
+
+          <div class="item" data-search="praktische philosophie gemeinsam leben – wie können wir unsere gemeinschaft regeln? jg. 5 regeln, gemeinschaft, zusammenleben.">
+            <div class="item-title">Gemeinsam leben – Wie können wir unsere Gemeinschaft regeln?</div>
+            <div class="meta">Jg. 5</div>
+            <div class="desc">Regeln, Gemeinschaft, Zusammenleben.</div>
+          </div>
+
+          <div class="item" data-search="praktische philosophie ich sehe, wie du dich fühlst – wenn unser körper erzählt jg. 5 körpersprache, gefühle, ausdrucksformen.">
+            <div class="item-title">Ich sehe, wie du dich fühlst – Wenn unser Körper erzählt</div>
+            <div class="meta">Jg. 5</div>
+            <div class="desc">Körpersprache, Gefühle, Ausdrucksformen.</div>
+          </div>
+
+          <div class="item" data-search="praktische philosophie die tiere und ich – welche verantwortung trage ich für andere lebewesen? jg. 5 verantwortung gegenüber tieren und lebewesen.">
+            <div class="item-title">Die Tiere und ich – Welche Verantwortung trage ich für andere Lebewesen?</div>
+            <div class="meta">Jg. 5</div>
+            <div class="desc">Verantwortung gegenüber Tieren und Lebewesen.</div>
+          </div>
+
+          <div class="item" data-search="praktische philosophie auf der suche nach dem sinn jg. 5 sinnfragen, orientierung, nachdenken über das leben.">
+            <div class="item-title">Auf der Suche nach dem Sinn</div>
+            <div class="meta">Jg. 5</div>
+            <div class="desc">Sinnfragen, Orientierung, Nachdenken über das Leben.</div>
+          </div>
+
+          <div class="item" data-search="praktische philosophie von lehrkraft festzulegen, z. b. antirassismus flexibles uv offenes unterrichtsvorhaben nach festlegung der lehrkraft.">
+            <div class="item-title">Von Lehrkraft festzulegen, z. B. Antirassismus</div>
+            <div class="meta">flexibles UV</div>
+            <div class="desc">Offenes Unterrichtsvorhaben nach Festlegung der Lehrkraft.</div>
+          </div>
+
+        </div>
+      </article>
+
+    </section>
+    </div><!-- /tab-faecher -->
+
+    <div id="tab-projekte" class="tab-panel">
+      <div class="cluster-grid">
+
+        <!-- Cluster 1 -->
+        <article class="cluster c1">
+          <div class="cluster-header">
+            <div class="cluster-title-wrap">
+              <div class="cluster-num">Cluster 1</div>
+              <h2>Ich, wir und unsere neue Schule</h2>
+              <div class="cluster-teaser">Ankommen, Kennenlernen, Gemeinschaft – das stärkste Startcluster für Klasse 5</div>
+            </div>
+            <span class="cluster-chevron">▼</span>
+          </div>
+          <div class="cluster-body">
+            <span class="srl-badge">⭐ SRL-Potenzial: sehr hoch</span>
+            <p>Viele Curricula starten mit Ankommen, Gemeinschaft und Lebenswelt. Deutsch, Englisch, Mathematik, GL, Religion/PP, Kunst und Musik treffen sich hier mit demselben Thema.</p>
+            <div class="projekt-box">
+              <strong>Projektidee: „Unsere Klasse 5 stellt sich vor"</strong>
+              Die Klasse erstellt eine analoge oder digitale Ausstellung: Steckbriefe, Klassenstatistiken, Schulkarte, englische about-me-Texte, Klassenregeln, Körpersprache-Plakate und ein gemeinsamer Brief.
+            </div>
+            <div class="produkt"><strong>Mögliches Produkt:</strong> Ausstellung „Das sind wir – so lernen und leben wir an der HBG"</div>
+            <table class="fach-table">
+              <thead><tr><th>Fach</th><th>Beitrag zum Projekt</th></tr></thead>
+              <tbody>
+                <tr><td>Deutsch</td><td>Briefe, Gesprächsregeln, begründete Wünsche</td></tr>
+                <tr><td>Englisch</td><td>About me, Our school, Orte und Personen beschreiben</td></tr>
+                <tr><td>Mathematik</td><td>Umfrage zur Klasse, Diagramme, Datenpräsentation</td></tr>
+                <tr><td>GL</td><td>Regeln, Mitbestimmung, Kinderrechte</td></tr>
+                <tr><td>Religion / PP</td><td>Gemeinschaft, Rücksicht, Identität</td></tr>
+                <tr><td>Kunst</td><td>Körpersprache, Selbstbild, Plakatgestaltung</td></tr>
+                <tr><td>Musik</td><td>Musik um uns, Klassensoundtrack</td></tr>
+                <tr><td>Sport</td><td>Körperwahrnehmung, Kooperation</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Cluster 2 -->
+        <article class="cluster c2">
+          <div class="cluster-header">
+            <div class="cluster-title-wrap">
+              <div class="cluster-num">Cluster 2</div>
+              <h2>Frühstück, Lebensmittel und Verantwortung</h2>
+              <div class="cluster-teaser">Hauswirtschaft, GL, NW und Englisch liegen hier fast übereinander</div>
+            </div>
+            <span class="cluster-chevron">▼</span>
+          </div>
+          <div class="cluster-body">
+            <span class="srl-badge">⭐ SRL-Potenzial: hoch</span>
+            <p>Hauswirtschaft hat das Pyramidenfrühstück, GL fragt nach der Herkunft von Lebensmitteln, NW behandelt Nutzpflanzen, Englisch hat food vocabulary und Frühstücksgewohnheiten.</p>
+            <div class="projekt-box">
+              <strong>Projektidee: „Unser faires Klassenfrühstück"</strong>
+              Die Klasse plant ein gemeinsames Frühstück: gesund, nachhaltig, bezahlbar, kulturell vielfältig. Endet mit echtem Frühstück plus Ausstellung zur Herkunft der Lebensmittel.
+            </div>
+            <div class="produkt"><strong>Mögliches Produkt:</strong> „Klassenfrühstücks-Kompass" mit Rezepten, Einkaufsliste, Nachhaltigkeitscheck und englischen Infokarten</div>
+            <table class="fach-table">
+              <thead><tr><th>Fach</th><th>Beitrag zum Projekt</th></tr></thead>
+              <tbody>
+                <tr><td>Hauswirtschaft</td><td>Pyramidenfrühstück, Hygiene, Lebensmittelgruppen</td></tr>
+                <tr><td>GL</td><td>Landwirtschaft, Herkunft, nachhaltige Produktion</td></tr>
+                <tr><td>NW</td><td>Nutzpflanzen, Tiere, Wachstum</td></tr>
+                <tr><td>Englisch</td><td>breakfast habits, food vocabulary</td></tr>
+                <tr><td>Mathematik</td><td>Kosten berechnen, Mengen planen</td></tr>
+                <tr><td>Deutsch</td><td>Sachtexte, Einladung, Elternbrief</td></tr>
+                <tr><td>Religion / PP</td><td>Teilen, gerechter Konsum, Verantwortung</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Cluster 3 -->
+        <article class="cluster c3">
+          <div class="cluster-header">
+            <div class="cluster-title-wrap">
+              <div class="cluster-num">Cluster 3</div>
+              <h2>Tiere, Pflanzen und Lebensräume schützen</h2>
+              <div class="cluster-teaser">NW, GL, Religion/PP und Deutsch verbindet das Thema Verantwortung für Lebewesen</div>
+            </div>
+            <span class="cluster-chevron">▼</span>
+          </div>
+          <div class="cluster-body">
+            <span class="srl-badge">⭐ SRL-Potenzial: sehr hoch</span>
+            <p>NW hat Lebensräume und Artenschutz, GL Stadt/Land und Umweltbelastung, Religion „Schöpfung bewahren", PP „Verantwortung für Lebewesen". Kinder können echte Forschungsfragen entwickeln.</p>
+            <div class="projekt-box">
+              <strong>Projektidee: „Lebensraum Schulhof – Was lebt hier und was braucht Schutz?"</strong>
+              Die Klasse untersucht den Schulhof als Lebensraum, beobachtet Pflanzen und Tiere, erstellt Karten und entwickelt Schutzideen.
+            </div>
+            <div class="produkt"><strong>Mögliches Produkt:</strong> „Unser Schulhof-Naturführer" als Heft, Ausstellung oder QR-Code-Rundgang</div>
+            <table class="fach-table">
+              <thead><tr><th>Fach</th><th>Beitrag zum Projekt</th></tr></thead>
+              <tbody>
+                <tr><td>NW</td><td>Lebensräume erkunden, Pflanzen/Tiere bestimmen</td></tr>
+                <tr><td>GL</td><td>Raumnutzung, Mensch-Umwelt-Konflikte</td></tr>
+                <tr><td>Deutsch</td><td>Sachtexte lesen, Informationstexte schreiben</td></tr>
+                <tr><td>Kunst</td><td>Naturfarben, Pflanzenzeichnungen</td></tr>
+                <tr><td>Mathematik</td><td>Zählungen, Diagramme, Schulhof-Skizze</td></tr>
+                <tr><td>Religion / PP</td><td>Verantwortung für Schöpfung und Lebewesen</td></tr>
+                <tr><td>Technik</td><td>Nisthilfe oder Schild bauen</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Cluster 4 -->
+        <article class="cluster c4">
+          <div class="cluster-header">
+            <div class="cluster-title-wrap">
+              <div class="cluster-num">Cluster 4</div>
+              <h2>Körper, Sinne, Wahrnehmung und Ausdruck</h2>
+              <div class="cluster-teaser">NW, Musik, Kunst, Sport und PP treffen sich an Sinnesorganen und Ausdruck</div>
+            </div>
+            <span class="cluster-chevron">▼</span>
+          </div>
+          <div class="cluster-body">
+            <span class="srl-badge">⭐ SRL-Potenzial: mittel</span>
+            <p>NW behandelt Sinnesorgane und Wahrnehmung, Kunst Körpersprache, PP Gefühle, Musik Klang und Instrumente, Sport Körperwahrnehmung und Bewegung.</p>
+            <div class="projekt-box">
+              <strong>Projektidee: „Sinnesparcours – Wie nehmen wir die Welt wahr?"</strong>
+              Die Klasse entwickelt Stationen zu Sehen, Hören, Tasten, Bewegung und Körpersprache für andere Klassen oder Eltern.
+            </div>
+            <div class="produkt"><strong>Mögliches Produkt:</strong> Begehbarer Sinnesparcours mit Stationenkarten in einfacher Sprache</div>
+            <table class="fach-table">
+              <thead><tr><th>Fach</th><th>Beitrag zum Projekt</th></tr></thead>
+              <tbody>
+                <tr><td>NW</td><td>Sinnesorgane, Wahrnehmungsexperimente, Schall</td></tr>
+                <tr><td>Musik</td><td>Instrumente, Klang, Lautstärke</td></tr>
+                <tr><td>Kunst</td><td>Körpersprache, optische Täuschungen</td></tr>
+                <tr><td>Sport</td><td>Gleichgewicht, Körperwahrnehmung</td></tr>
+                <tr><td>PP</td><td>Gefühle erkennen, Körpersprache deuten</td></tr>
+                <tr><td>Deutsch</td><td>Stationskarten, Erklärtexte</td></tr>
+                <tr><td>Mathematik</td><td>Messergebnisse, Tabellen</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Cluster 5 -->
+        <article class="cluster c5">
+          <div class="cluster-header">
+            <div class="cluster-title-wrap">
+              <div class="cluster-num">Cluster 5</div>
+              <h2>Stadt, Land, Wohnen und Zuhause</h2>
+              <div class="cluster-teaser">GL, Englisch, Mathematik, Technik und Hauswirtschaft rund um Räume und Orte</div>
+            </div>
+            <span class="cluster-chevron">▼</span>
+          </div>
+          <div class="cluster-body">
+            <span class="srl-badge">⭐ SRL-Potenzial: sehr hoch</span>
+            <p>GL hat Stadt und Land, Englisch At home und Places, Mathematik Geometrie und Flächen, Hauswirtschaft die Küche als Arbeitsplatz, Technik Raum und Material.</p>
+            <div class="projekt-box">
+              <strong>Projektidee: „Mein Lern- und Lebensraum"</strong>
+              Die Kinder untersuchen Räume und überlegen: Was macht einen Raum angenehm, sicher und lernfreundlich? Am Ende gestalten sie einen Plan des idealen Klassenraums.
+            </div>
+            <div class="produkt"><strong>Mögliches Produkt:</strong> „Unser idealer Klassenraum" als Modell, Poster oder Grundriss</div>
+            <table class="fach-table">
+              <thead><tr><th>Fach</th><th>Beitrag zum Projekt</th></tr></thead>
+              <tbody>
+                <tr><td>GL</td><td>Daseinsgrundfunktionen, Räume und Nutzung</td></tr>
+                <tr><td>Englisch</td><td>my room, at home, places in my area</td></tr>
+                <tr><td>Mathematik</td><td>Messen, Flächen, Grundriss</td></tr>
+                <tr><td>Kunst</td><td>Linien, Flächen, Raumwirkung</td></tr>
+                <tr><td>Technik</td><td>Material, kleine Ordnungshelfer</td></tr>
+                <tr><td>Hauswirtschaft</td><td>Ordnung, Sicherheit, Arbeitsabläufe</td></tr>
+                <tr><td>Deutsch</td><td>Raumbeschreibung, Verbesserungsvorschlag</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Cluster 6 -->
+        <article class="cluster c6">
+          <div class="cluster-header">
+            <div class="cluster-title-wrap">
+              <div class="cluster-num">Cluster 6</div>
+              <h2>Feiern, Feste, Märchen und kulturelle Vielfalt</h2>
+              <div class="cluster-teaser">Englisch, Deutsch, Musik, Religion/PP und Kunst rund um Kultur und Geschichten</div>
+            </div>
+            <span class="cluster-chevron">▼</span>
+          </div>
+          <div class="cluster-body">
+            <span class="srl-badge">⭐ SRL-Potenzial: mittel</span>
+            <p>Englisch hat Feste und Geburtstage, Deutsch Märchen und Lektüre, Musik Mozart und Zauberflöte, Religion religiöse Feste, PP Sinnfragen und Gemeinschaft.</p>
+            <div class="projekt-box">
+              <strong>Projektidee: „Fest der Geschichten und Klänge"</strong>
+              Die Klasse gestaltet ein kleines Kulturfestival: Märchen, Musik, Familien- und Geburtstagstraditionen, eigene Märchenvertonungen.
+            </div>
+            <div class="produkt"><strong>Mögliches Produkt:</strong> Kleine Präsentation für Eltern oder Parallelklassen mit Texten, Musik und Plakaten</div>
+            <table class="fach-table">
+              <thead><tr><th>Fach</th><th>Beitrag zum Projekt</th></tr></thead>
+              <tbody>
+                <tr><td>Deutsch</td><td>Märchen untersuchen und schreiben</td></tr>
+                <tr><td>Englisch</td><td>birthday party, postcard, celebrations</td></tr>
+                <tr><td>Musik</td><td>Mozart, Zauberflöte, Programmmusik</td></tr>
+                <tr><td>Kunst</td><td>Bühnenbild, Masken, Farbstimmung</td></tr>
+                <tr><td>Religion / PP</td><td>Feste, Sinn, kulturelle Vielfalt</td></tr>
+                <tr><td>Hauswirtschaft</td><td>einfache Fest-Snacks, Planung</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Cluster 7 -->
+        <article class="cluster c7">
+          <div class="cluster-header">
+            <div class="cluster-title-wrap">
+              <div class="cluster-num">Cluster 7</div>
+              <h2>Sicher arbeiten – in Werkraum, Küche und Sporthalle</h2>
+              <div class="cluster-teaser">Technik, Hauswirtschaft, NW und Sport mit demselben Thema Sicherheit und Regeln</div>
+            </div>
+            <span class="cluster-chevron">▼</span>
+          </div>
+          <div class="cluster-body">
+            <span class="srl-badge">⭐ SRL-Potenzial: hoch</span>
+            <p>Technik startet mit Werkraumregeln, Hauswirtschaft mit Hygiene und Unfallvermeidung, NW mit Experimentierregeln, Sport mit Aufwärmen und Körpergrenzen.</p>
+            <div class="projekt-box">
+              <strong>Projektidee: „Sicher starten an der HBG"</strong>
+              Die Kinder erstellen einen Sicherheits- und Organisationsguide für neue Fünftklässler: Werkraum, Küche, NW-Raum, Sporthalle und iPad.
+            </div>
+            <div class="produkt"><strong>Mögliches Produkt:</strong> „HBG-Sicherheitsführerschein" oder Plakatserie mit QR-Codes</div>
+            <table class="fach-table">
+              <thead><tr><th>Fach</th><th>Beitrag zum Projekt</th></tr></thead>
+              <tbody>
+                <tr><td>Technik</td><td>Werkraumregeln, Arbeitsschutz</td></tr>
+                <tr><td>Hauswirtschaft</td><td>Hygiene, Küche, Unfallvermeidung</td></tr>
+                <tr><td>NW</td><td>Experimentierregeln, Laborgeräte</td></tr>
+                <tr><td>Sport</td><td>Aufwärmen, sichere Bewegung</td></tr>
+                <tr><td>Deutsch</td><td>Regeln formulieren, Anleitungen schreiben</td></tr>
+                <tr><td>Englisch</td><td>classroom rules, safety phrases</td></tr>
+                <tr><td>Kunst</td><td>Piktogramme, Regelplakate</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Cluster 8 -->
+        <article class="cluster c8">
+          <div class="cluster-header">
+            <div class="cluster-title-wrap">
+              <div class="cluster-num">Cluster 8</div>
+              <h2>Zahlen, Daten und unser Alltag</h2>
+              <div class="cluster-teaser">Mathematik als roter Faden: Umfragen, Diagramme und reale Daten aus dem Klassenalltag</div>
+            </div>
+            <span class="cluster-chevron">▼</span>
+          </div>
+          <div class="cluster-body">
+            <span class="srl-badge">⭐ SRL-Potenzial: hoch</span>
+            <p>Mathematik startet mit Klassendaten und Diagrammen. Englisch, Hauswirtschaft, GL und Sport liefern Umfragethemen. Deutsch wertet Ergebnisse sprachlich aus.</p>
+            <div class="projekt-box">
+              <strong>Projektidee: „Klasse 5 in Zahlen"</strong>
+              Die Kinder erstellen ein Klassen-Datenbuch: Wege zur Schule, Frühstücksgewohnheiten, Hobbys, Sprachen, Orte in Dortmund – als Ausstellung für den Tag der offenen Tür.
+            </div>
+            <div class="produkt"><strong>Mögliches Produkt:</strong> „Unser Jahrgang 5 in Zahlen" als Ausstellung</div>
+            <table class="fach-table">
+              <thead><tr><th>Fach</th><th>Beitrag zum Projekt</th></tr></thead>
+              <tbody>
+                <tr><td>Mathematik</td><td>Daten erheben, Tabellen, Diagramme</td></tr>
+                <tr><td>Deutsch</td><td>Umfragefragen formulieren, Ergebnisse beschreiben</td></tr>
+                <tr><td>Englisch</td><td>kurze englische Aussagen zu Hobbys und Schule</td></tr>
+                <tr><td>GL</td><td>Mobilität, Stadtteil, Lebensräume</td></tr>
+                <tr><td>Hauswirtschaft</td><td>Frühstück, Essgewohnheiten</td></tr>
+                <tr><td>Sport</td><td>Bewegung, Lieblingssportarten</td></tr>
+                <tr><td>Musik</td><td>Musikgeschmack, Musik im Alltag</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+      </div><!-- /cluster-grid -->
+
+      <div class="empfehlung-wrap">
+        <h3>Empfehlungen für den Start</h3>
+        <div class="empfehlung-grid">
+          <div class="empfehlung-item">
+            <strong>1. Quartal: Cluster 1</strong>
+            <span>„Unsere Klasse 5 stellt sich vor" – verbindet Ankommen mit SRL-Routinen und vielen Fächern</span>
+          </div>
+          <div class="empfehlung-item">
+            <strong>2. Quartal: Cluster 2</strong>
+            <span>„Unser faires Klassenfrühstück" – lebensnah, praktisch, wenn Hauswirtschaft und GL thematisch greifen</span>
+          </div>
+          <div class="empfehlung-item">
+            <strong>3./4. Quartal: Cluster 3</strong>
+            <span>„Lebensraum Schulhof" – naturbezogenes Forschungsprojekt im Frühjahr oder Sommer</span>
+          </div>
+        </div>
+        <p style="font-size:0.8rem; color:rgba(255,255,255,.55); margin:0;">Alle Projekte können dieselbe SRL-Grundstruktur nutzen: Planung → Durchführung → Prüfung → Reflexion.</p>
+        <table class="phasen-table" style="margin-top:12px;">
+          <thead><tr><th>Phase</th><th>Leitfrage für die Kinder</th></tr></thead>
+          <tbody>
+            <tr><td>Planung</td><td>Was wollen wir herausfinden oder herstellen? Was brauchen wir dafür?</td></tr>
+            <tr><td>Durchführung</td><td>Welche Schritte erledige ich? Welche Strategie hilft mir?</td></tr>
+            <tr><td>Prüfung</td><td>Woran erkenne ich, ob unser Ergebnis gelungen ist?</td></tr>
+            <tr><td>Reflexion</td><td>Was habe ich über das Thema und über mein Lernen gelernt?</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /tab-projekte -->
+
+  </main>
+
+  <script>
+    // ── Tab-Umschaltung ───────────────────────
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ── Cluster-Accordion ─────────────────────
+    document.querySelectorAll('.cluster-header').forEach(hdr => {
+      hdr.addEventListener('click', () => {
+        hdr.closest('.cluster').classList.toggle('open');
+      });
+    });
+
+    const search = document.getElementById('search');
+    const subjects = [...document.querySelectorAll('.subject')];
+    const count = document.getElementById('count');
+
+    function update() {
+      const q = search.value.trim().toLowerCase();
+      let visibleSubjects = 0;
+      let visibleItems = 0;
+
+      subjects.forEach(subject => {
+        const items = [...subject.querySelectorAll('.item')];
+        let subjectHasVisibleItem = false;
+
+        items.forEach(item => {
+          const match = !q || item.dataset.search.includes(q) || subject.dataset.search.includes(q);
+          item.style.display = match ? '' : 'none';
+          if (match) {
+            visibleItems++;
+            subjectHasVisibleItem = true;
+          }
+        });
+
+        subject.style.display = subjectHasVisibleItem ? '' : 'none';
+        if (subjectHasVisibleItem) visibleSubjects++;
+      });
+
+      count.textContent = `${visibleItems} Themen in ${visibleSubjects} Fächern sichtbar`;
+    }
+
+    search.addEventListener('input', update);
+    update();
+  </script>
+  <footer>
+    <span>Unterrichtsvorhaben Jahrgang 5 · HBG Dortmund · Stand: 4. Juni 2026</span>
+    <a href="index.html">Vollständiges Arbeitspapier → srl-5.vercel.app</a>
+  </footer>
+</body>
+</html>
