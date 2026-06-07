@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ zum Pilotprojekt | Selbstreguliertes Lernen in Klasse 5</title>
+  <style>
+    :root {
+      --navy:        #1a2e4a;
+      --navy-mid:    #243b5e;
+      --navy-light:  #2e4d7a;
+      --accent:      #c8873a;
+      --accent-dim:  #d4a56a;
+      --sage:        #7dbb6f;
+      --sage-dark:   #2d6b3f;
+      --sage-bg:     #eef6eb;
+      --sage-pale:   #b5dba8;
+      --bg:          #f5f3ef;
+      --bg-card:     #ffffff;
+      --text:        #1e2330;
+      --text-mid:    #3d4559;
+      --text-light:  #6b7591;
+      --border:      #ddd8ce;
+      --rust-ghost:  #fff3e8;
+      --rust-pale:   #f0c89a;
+      --slate-ghost: #eef2fa;
+      --slate-pale:  #c5d4ea;
+      --slate-dark:  #1a2e4a;
+      --shadow:      0 4px 20px rgba(26,46,74,.09);
+      --radius-xl:   14px;
+      --radius-lg:   10px;
+      --radius-md:   8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 0 64px;
+    }
+
+    /* ── Header ──────────────────────────────── */
+    header.hero {
+      background: var(--navy);
+      color: #fff;
+      padding: 32px 48px 28px;
+      margin-bottom: 28px;
+      border-radius: 0;
+      box-shadow: none;
+      position: relative;
+      overflow: hidden;
+    }
+    header.hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+    header.hero::after {
+      content: '';
+      position: absolute;
+      right: -80px; top: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,135,58,.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-dim);
+      margin-bottom: 12px;
+    }
+    .eyebrow span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+
+    h1 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 300;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    h1 strong { font-weight: 800; }
+
+    .hero p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,.5);
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    .core-message {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .core-chip {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .core-chip small {
+      font-weight: 400;
+      color: rgba(255,255,255,.55);
+      margin-left: 4px;
+    }
+
+    /* ── Tab-Navigation ──────────────────────── */
+    .tabs-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 12px 48px;
+      background: rgba(245,243,239,.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .tab-button {
+      padding: 9px 22px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-light);
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .tab-button:hover { color: var(--navy); transform: none; background: none; }
+    .tab-button.active {
+      color: var(--navy);
+      border-bottom-color: var(--accent);
+      background: none;
+      box-shadow: none;
+    }
+
+    /* ── Inhalt ──────────────────────────────── */
+    .content { padding: 0 48px; margin-top: 24px; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Abschnitts-Header ───────────────────── */
+    .section-head {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin: 8px 0 18px;
+    }
+
+    .section-icon {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      box-shadow: none;
+      border: 1.5px solid var(--border);
+    }
+    .teacher .section-icon { background: var(--rust-ghost); color: var(--navy); border-color: var(--rust-pale); }
+    .student .section-icon { background: var(--sage-bg);    color: var(--sage-dark); border-color: var(--sage-pale); }
+    .parent  .section-icon { background: var(--slate-ghost);color: var(--navy); border-color: var(--slate-pale); }
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+      margin: 0 0 4px;
+      letter-spacing: -0.01em;
+    }
+    .section-head p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin: 0;
+      max-width: 600px;
+    }
+
+    /* ── Mini-Flow ───────────────────────────── */
+    .mini-flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 0 0 18px;
+    }
+
+    .flow-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      color: var(--text-mid);
+      line-height: 1.45;
+      box-shadow: none;
+    }
+    .flow-card strong {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy-mid);
+      margin-bottom: 4px;
+    }
+    .flow-card:nth-child(1) { border-top: 3px solid var(--accent); }
+    .flow-card:nth-child(2) { border-top: 3px solid var(--navy-light); }
+    .flow-card:nth-child(3) { border-top: 3px solid var(--sage); }
+
+    /* ── FAQ-Accordion ───────────────────────── */
+    .faq-grid { display: grid; gap: 8px; }
+
+    details {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: none;
+    }
+    details[open] { border-color: var(--accent-dim); }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 52px 16px 18px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--navy-mid);
+      position: relative;
+      line-height: 1.35;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "+";
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      color: var(--text-light);
+      font-weight: 700;
+      font-size: 1rem;
+      transition: background 0.15s, color 0.15s;
+    }
+    details[open] summary::after {
+      content: "–";
+      background: var(--rust-ghost);
+      border-color: var(--rust-pale);
+      color: var(--accent);
+    }
+
+    .answer {
+      padding: 0 18px 18px;
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+    .answer p { margin: 0 0 10px; }
+    .answer p:last-child { margin-bottom: 0; }
+    .answer ul { margin: 8px 0 0; padding-left: 1.1rem; }
+    .answer li { margin: 4px 0; }
+
+    /* ── Highlight-Box ───────────────────────── */
+    .highlight {
+      background: var(--rust-ghost);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      margin-top: 10px;
+    }
+    .student .highlight { background: var(--sage-bg); border-left-color: var(--sage); }
+    .parent  .highlight { background: var(--slate-ghost); border-left-color: var(--navy-light); }
+
+    /* ── Summary-Box am Ende ─────────────────── */
+    .summary-box {
+      margin-top: 28px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 22px 24px;
+      box-shadow: none;
+    }
+    .summary-box h2 { font-size: 1.05rem; margin-bottom: 14px; }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .summary-card {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 0.83rem;
+      color: var(--text-mid);
+      line-height: 1.45;
+    }
+    .summary-card strong {
+      display: block;
+      color: var(--navy-mid);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    /* ── Footer ──────────────────────────────── */
+    .footer {
+      margin-top: 24px;
+      padding: 16px 48px 36px;
+      border-top: 1px solid var(--border);
+      font-size: 0.72rem;
+      color: var(--text-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .footer a {
+      color: var(--text-light);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--text-light);
+    }
+    .footer a:hover { color: var(--navy); }
+
+    /* ── Responsive ──────────────────────────── */
+    @media (max-width: 680px) {
+      header.hero { padding: 24px 20px 20px; }
+      .tabs-wrap  { padding: 10px 20px; }
+      .content    { padding: 0 20px; }
+      .mini-flow, .summary-grid { grid-template-columns: 1fr; }
+      .footer     { padding: 14px 20px 32px; flex-direction: column; align-items: flex-start; }
+    }
+
+    @media print {
+      .tabs-wrap { display: none; }
+      .tab-panel { display: block !important; page-break-before: always; }
+      .tab-panel:first-child { page-break-before: auto; }
+      details .answer { display: block; }
+      details { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-content">
+        <div class="eyebrow"><span></span>FAQ zum Pilotprojekt</div>
+        <h1><strong>FAQ</strong> zum Pilotprojekt SRL Klasse 5</h1>
+        <p>
+          Die wichtigsten Fragen aus drei Blickwinkeln: Lehrkräfte, Schülerinnen und Schüler sowie Eltern.
+          Im Mittelpunkt steht ein klar begleiteter Start: nicht sofort völlige Offenheit, sondern wachsende Eigenständigkeit mit verlässlichen Routinen.
+        </p>
+      </div>
+
+      <div class="core-message">
+        <div class="core-chip">Planung <small>Was nehme ich mir vor?</small></div>
+        <div class="core-chip">Durchführung <small>Wie arbeite ich daran?</small></div>
+        <div class="core-chip">Reflexion <small>Was nehme ich daraus mit?</small></div>
+      </div>
+    </header>
+
+    <nav class="tabs-wrap" aria-label="FAQ-Blickwinkel">
+      <div class="tabs" role="tablist">
+        <button class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="tab-teacher" id="btn-teacher">Lehrkräfte</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="tab-student" id="btn-student">Schüler:innen</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="tab-parent" id="btn-parent">Eltern</button>
+      </div>
+    </nav>
+
+    <section class="content">
+      <article class="tab-panel teacher active" id="tab-teacher" role="tabpanel" aria-labelledby="btn-teacher">
+        <div class="section-head">
+          <div class="section-icon">L</div>
+          <div>
+            <h2>Fragen aus Sicht der Lehrkräfte</h2>
+            <p>Für das Klassenteam geht es vor allem um gemeinsame Verbindlichkeit, tragfähige Routinen und realistische Spielräume in den einzelnen Fächern.</p>
+          </div>
+        </div>
+
+        <div class="mini-flow">
+          <div class="flow-card"><strong>Planung</strong>Gemeinsame Sprache, Startstrategien, Lernzeiten und Mentorensystem klären.</div>
+          <div class="flow-card"><strong>Durchführung</strong>Lernzeiten begleiten, Aufgabenpakete nutzen, Strategien sichtbar machen.</div>
+          <div class="flow-card"><strong>Reflexion</strong>Rückmeldungen geben, Beobachtungen teilen, Strukturen nachsteuern.</div>
+        </div>
+
+        <div class="faq-grid">
+          <details open>
+            <summary>Was ist das Ziel des Pilotprojekts?</summary>
+            <div class="answer">
+              <p>Das Ziel ist, dass Schülerinnen und Schüler ab Klasse 5 Schritt für Schritt lernen, ihr eigenes Lernen besser zu planen, durchzuführen und zu reflektieren. Es geht nicht darum, Kinder sofort allein arbeiten zu lassen, sondern darum, ihnen klare Routinen, Strategien und Unterstützung zu geben.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Müssen alle Lehrkräfte alles gleich machen?</summary>
+            <div class="answer">
+              <p>Nein. Wichtig ist ein gemeinsamer Rahmen, aber keine vollständige Gleichförmigkeit. Alle Lehrkräfte sollten dieselbe Grundidee mittragen: Lernprozesse sichtbar machen, Lernstrategien benennen, Lernzeiten sinnvoll nutzen und Reflexion ermöglichen. Die konkrete Umsetzung darf je nach Fach unterschiedlich aussehen.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was muss für alle verbindlich sein?</summary>
+            <div class="answer">
+              <p>Verbindlich sein sollten vor allem die gemeinsame Sprache, der SRL-Zyklus aus Planung, Durchführung und Reflexion, feste Start- und Abschlussroutinen, eine Hilfestruktur für Schülerinnen und Schüler, Grundregeln für Lernzeiten und eine einfache Form der Rückmeldung.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was sind Lernzeiten?</summary>
+            <div class="answer">
+              <p>Lernzeiten sind Phasen, in denen Schülerinnen und Schüler an vorbereiteten Aufgabenpaketen arbeiten. Sie sind keine Stillarbeitsstunden, sondern begleitete Arbeitsphasen. Die Lehrkraft beobachtet, unterstützt, gibt Rückmeldung und hilft den Kindern, Strategien anzuwenden.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was ist der Unterschied zwischen Inputzeit und Lernzeit?</summary>
+            <div class="answer">
+              <p>In der Inputzeit werden neue Inhalte erklärt, gemeinsam erarbeitet oder besprochen. In der Lernzeit wenden die Schülerinnen und Schüler das Gelernte an, üben, vertiefen und reflektieren ihren Arbeitsprozess. Gerade am Anfang müssen Lernzeiten stark angeleitet werden.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Wie offen sollen Lernzeiten zu Beginn sein?</summary>
+            <div class="answer">
+              <p>Am Anfang möglichst wenig offen. Die Kinder brauchen klare Vorgaben: Woran arbeite ich? Was ist Pflicht? Wo finde ich Hilfe? Was mache ich, wenn ich fertig bin? Mehr Wahlmöglichkeiten können später wachsen.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was sind Aufgabenpakete?</summary>
+            <div class="answer">
+              <p>Aufgabenpakete sind strukturierte Lernmaterialien für eine bestimmte Unterrichtsphase oder ein Thema. Sie sollten enthalten: Lernziel, Pflichtaufgaben, mögliche Zusatzaufgaben, Hilfen und eine kurze Reflexion. Wichtig ist, dass sie für Kinder verständlich und im Raum gut auffindbar sind.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Müssen alle Fächer Kompetenzraster nutzen?</summary>
+            <div class="answer">
+              <p>Nicht sofort in voller Ausarbeitung. Sinnvoll wäre aber, dass zentrale Lernbereiche mit einfachen Kompetenzrastern begleitet werden. Mindestens sollten die Schülerinnen und Schüler verstehen können: Was ist der Mindeststandard? Was ist der Regelstandard? Was ist der Expertenstandard?</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Wie wird Leistung bewertet?</summary>
+            <div class="answer">
+              <p>Leistung wird weiterhin ernst genommen. Der Unterschied liegt darin, dass nicht nur punktuelle Tests zählen sollen, sondern stärker sichtbar wird, welche Kompetenzen ein Kind entwickelt. Rückmeldungen, Kompetenzraster, Selbst- und Fremdeinschätzungen sowie Lernprodukte können dabei eine Rolle spielen.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was sind Mentorengespräche?</summary>
+            <div class="answer">
+              <p>Mentorengespräche sind kurze regelmäßige Gespräche zwischen einem Kind und einer festen erwachsenen Bezugsperson. Es geht um Lernziele, Schwierigkeiten, Motivation, Wohlbefinden und nächste Schritte. Sie sind ein zentrales Instrument, damit SRL nicht anonym oder rein organisatorisch bleibt.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Wer führt Mentorengespräche?</summary>
+            <div class="answer">
+              <p>Das sollte vor dem Schulstart festgelegt werden. Möglich sind Klassenleitung, Sonderpädagogik oder weitere feste Personen aus dem Klassenteam. Wichtig ist, dass jedes Kind weiß: Es gibt jemanden, der regelmäßig mit mir auf mein Lernen schaut.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Wie viel Dokumentation braucht das Projekt?</summary>
+            <div class="answer">
+              <p>So wenig wie möglich, so viel wie nötig. Eine kurze Notiz nach Mentorengesprächen, einfache Beobachtungsbögen oder Einträge im Lernjournal reichen für den Anfang. Das Projekt darf nicht an Verwaltungsaufwand ersticken.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was ist für den Start wichtiger: perfekte Materialien oder stabile Routinen?</summary>
+            <div class="answer">
+              <p>Stabile Routinen. Ein einfacher, gut verstandener Ablauf ist wertvoller als ein perfekt gestaltetes Materialpaket, das im Alltag zu kompliziert ist.</p>
+              <div class="highlight">Für den Start gilt: lieber fünf stabile Routinen als zwanzig schöne Vorlagen.</div>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article class="tab-panel student" id="tab-student" role="tabpanel" aria-labelledby="btn-student">
+        <div class="section-head">
+          <div class="section-icon">S</div>
+          <div>
+            <h2>Fragen aus Sicht der Schüler:innen</h2>
+            <p>Für die Kinder zählt vor allem: Was ist neu? Wer hilft mir? Was muss ich tun? Und warum schauen wir am Ende gemeinsam zurück?</p>
+          </div>
+        </div>
+
+        <div class="mini-flow">
+          <div class="flow-card"><strong>Planung</strong>Du überlegst: Was möchte ich heute schaffen?</div>
+          <div class="flow-card"><strong>Durchführung</strong>Du arbeitest, probierst Strategien aus und nutzt Hilfe.</div>
+          <div class="flow-card"><strong>Reflexion</strong>Du schaust zurück: Was hat gut geklappt?</div>
+        </div>
+
+        <div class="faq-grid">
+          <details open>
+            <summary>Was ist in dieser Klasse anders?</summary>
+            <div class="answer">
+              <p>Du lernst nicht nur die Fächer Deutsch, Mathe, Englisch und andere. Du lernst auch, wie du gut lernen kannst. Dafür übst du bestimmte Schritte immer wieder: planen, arbeiten und zurückschauen.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Muss ich jetzt alles alleine machen?</summary>
+            <div class="answer">
+              <p>Nein. Du bekommst Hilfe. Am Anfang wird dir vieles genau erklärt. Du lernst erst nach und nach, mehr selbst zu entscheiden.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was bedeutet Planung?</summary>
+            <div class="answer">
+              <p>Planung heißt: Du überlegst vor dem Arbeiten, was du schaffen möchtest. Zum Beispiel: „Heute möchte ich Aufgabe 1 und 2 schaffen“ oder „Heute möchte ich wichtige Stellen im Text markieren.“</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was bedeutet Durchführung?</summary>
+            <div class="answer">
+              <p>Durchführung heißt: Du arbeitest an deinem Ziel. Du nutzt dein Material, probierst Strategien aus und holst dir Hilfe, wenn du nicht weiterkommst.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was bedeutet Reflexion?</summary>
+            <div class="answer">
+              <p>Reflexion heißt: Du schaust am Ende zurück. Was habe ich geschafft? Was war schwierig? Was mache ich beim nächsten Mal anders?</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was mache ich, wenn ich nicht weiterkomme?</summary>
+            <div class="answer">
+              <p>Du nutzt die Hilfekette:</p>
+              <ul>
+                <li>Erst denkst du selbst nach.</li>
+                <li>Dann schaust du ins Material oder auf eine Hilfekarte.</li>
+                <li>Dann fragst du ein anderes Kind.</li>
+                <li>Dann fragst du die Lehrkraft.</li>
+              </ul>
+              <div class="highlight">Hilfe holen ist kein Scheitern. Hilfe holen gehört zum Lernen.</div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Darf ich Fehler machen?</summary>
+            <div class="answer">
+              <p>Ja. Fehler gehören zum Lernen. Wichtig ist, dass du aus ihnen etwas lernst. Ein Fehler zeigt dir, woran du weiterarbeiten kannst.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was ist ein Lernziel?</summary>
+            <div class="answer">
+              <p>Ein Lernziel ist etwas, das du in einer Stunde, einer Woche oder in zwei Wochen schaffen möchtest. Es sollte klein und erreichbar sein.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was ist ein Aufgabenpaket?</summary>
+            <div class="answer">
+              <p>Ein Aufgabenpaket enthält Aufgaben zu einem Thema. Dort steht, was du lernen sollst, welche Aufgaben wichtig sind und welche Hilfen du nutzen kannst.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Darf ich mir Aufgaben selbst aussuchen?</summary>
+            <div class="answer">
+              <p>Am Anfang nur wenig. Zuerst üben wir gemeinsam, wie man Aufgaben bearbeitet und wie man passende Aufgaben auswählt. Später darfst du mehr selbst entscheiden.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was ist ein Mentorengespräch?</summary>
+            <div class="answer">
+              <p>Ein Mentorengespräch ist ein kurzes Gespräch mit einer festen erwachsenen Person. Ihr sprecht darüber, wie es dir geht, was gut klappt, was schwierig ist und was dein nächstes Ziel ist.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Werde ich trotzdem Noten bekommen?</summary>
+            <div class="answer">
+              <p>Ja, aber du bekommst auch Rückmeldungen, die dir genauer zeigen, was du schon kannst und woran du noch arbeiten solltest.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was muss ich jeden Tag mitbringen?</summary>
+            <div class="answer">
+              <p>Das wird am Anfang genau besprochen. Wichtig sind deine Materialien, dein Lernjournal oder deine Mappe und die Bereitschaft, die neuen Abläufe zu üben.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+
+      <article class="tab-panel parent" id="tab-parent" role="tabpanel" aria-labelledby="btn-parent">
+        <div class="section-head">
+          <div class="section-icon">E</div>
+          <div>
+            <h2>Fragen aus Sicht der Eltern</h2>
+            <p>Für Eltern ist besonders wichtig: Selbstreguliertes Lernen bedeutet nicht weniger Begleitung, sondern eine bewusste Anleitung zur wachsenden Eigenständigkeit.</p>
+          </div>
+        </div>
+
+        <div class="mini-flow">
+          <div class="flow-card"><strong>Planung</strong>Kinder setzen kleine, erreichbare Ziele.</div>
+          <div class="flow-card"><strong>Durchführung</strong>Kinder arbeiten mit klaren Hilfen und Routinen.</div>
+          <div class="flow-card"><strong>Reflexion</strong>Kinder lernen, Fortschritte und Schwierigkeiten zu benennen.</div>
+        </div>
+
+        <div class="faq-grid">
+          <details open>
+            <summary>Was bedeutet selbstreguliertes Lernen?</summary>
+            <div class="answer">
+              <p>Selbstreguliertes Lernen bedeutet, dass Kinder lernen, ihr eigenes Lernen besser zu verstehen und Schritt für Schritt mitzugestalten. Sie planen kleine Ziele, arbeiten daran, nutzen Hilfen und reflektieren anschließend, was gelungen ist.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Bedeutet das, dass mein Kind sich alles selbst beibringen muss?</summary>
+            <div class="answer">
+              <p>Nein. Das ist ein wichtiger Punkt. Das Projekt bedeutet nicht, dass Kinder allein gelassen werden. Gerade in Klasse 5 wird stark angeleitet. Die Kinder bekommen klare Strukturen, feste Routinen und regelmäßige Unterstützung.</p>
+              <div class="highlight">Selbstreguliertes Lernen heißt nicht: „Mach allein.“ Es heißt: „Wir üben gemeinsam, wie Lernen besser gelingt.“</div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Warum beginnt das Projekt schon in Klasse 5?</summary>
+            <div class="answer">
+              <p>Klasse 5 ist ein guter Zeitpunkt, weil Kinder sich neu orientieren und Lerngewohnheiten noch gut aufgebaut werden können. Das Projekt nutzt diesen Anfang, um von Beginn an eine bewusste Lernkultur zu entwickeln.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Wird dadurch weniger Fachunterricht gemacht?</summary>
+            <div class="answer">
+              <p>Nein. Fachliches Lernen bleibt zentral. Der Unterschied ist, dass stärker sichtbar gemacht wird, wie gelernt wird. Lernstrategien werden mit fachlichen Inhalten verbunden.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was sind Lernzeiten?</summary>
+            <div class="answer">
+              <p>Lernzeiten sind begleitete Arbeitsphasen, in denen die Kinder an Aufgaben arbeiten, üben, vertiefen und ihr Vorgehen reflektieren. Sie ersetzen nicht den Unterricht, sondern ergänzen Inputphasen und gemeinsame Erarbeitungen.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Wie wird verhindert, dass mein Kind überfordert wird?</summary>
+            <div class="answer">
+              <p>Das Projekt startet mit engen Vorgaben, klaren Routinen und einfachen Aufgabenstrukturen. Mehr Eigenständigkeit entsteht erst schrittweise. Außerdem gibt es Mentorengespräche und regelmäßige Beobachtung durch das Klassenteam.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was sind Mentorengespräche?</summary>
+            <div class="answer">
+              <p>Mentorengespräche sind kurze persönliche Gespräche, in denen ein Kind mit einer festen erwachsenen Bezugsperson über sein Lernen spricht. Dabei geht es nicht nur um Aufgaben, sondern auch um Motivation, Schwierigkeiten, Selbstvertrauen und nächste Schritte.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Gibt es weiterhin Klassenarbeiten und Noten?</summary>
+            <div class="answer">
+              <p>Ja. Das Projekt schafft Noten und Leistungsbewertung nicht ab. Es ergänzt sie aber durch mehr lernförderliche Rückmeldung, Kompetenzraster und Reflexion. Kinder sollen besser verstehen, was sie können und woran sie arbeiten müssen.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was ist ein Kompetenzraster?</summary>
+            <div class="answer">
+              <p>Ein Kompetenzraster beschreibt in einfacher Sprache, was ein Kind auf verschiedenen Niveaus kann. So wird deutlicher, was der nächste Lernschritt ist. Es geht nicht darum, Kinder früh festzulegen, sondern Entwicklung sichtbar zu machen.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Wird mein Kind durch die vielen neuen Strukturen zusätzlich belastet?</summary>
+            <div class="answer">
+              <p>Die Strukturen sollen entlasten, nicht belasten. Statt ständig neu herausfinden zu müssen, was erwartet wird, bekommen die Kinder wiederkehrende Abläufe: Ziel setzen, arbeiten, Hilfe nutzen, zurückschauen.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Wie können Eltern unterstützen?</summary>
+            <div class="answer">
+              <p>Eltern können helfen, indem sie nach Lernprozessen fragen, nicht nur nach Ergebnissen.</p>
+              <ul>
+                <li>Was war heute dein Ziel?</li>
+                <li>Was hat gut geklappt?</li>
+                <li>Wo hast du dir Hilfe geholt?</li>
+                <li>Was möchtest du beim nächsten Mal anders machen?</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was sollten Eltern eher vermeiden?</summary>
+            <div class="answer">
+              <p>Wenig hilfreich wäre es, dem Kind alle Planung abzunehmen oder sofort Lösungen vorzugeben. Besser ist es, das Kind beim Nachdenken zu unterstützen: „Was könntest du als Erstes tun?“ oder „Welche Hilfe hast du schon genutzt?“</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Woran erkenne ich, dass das Projekt meinem Kind hilft?</summary>
+            <div class="answer">
+              <p>Mögliche Zeichen sind: Ihr Kind kann besser sagen, woran es arbeitet, es nutzt Hilfen bewusster, es kann eigene Schwierigkeiten benennen, es setzt sich kleine Ziele und spricht genauer über Lernen.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Was passiert, wenn etwas nicht funktioniert?</summary>
+            <div class="answer">
+              <p>Das Projekt ist als Pilotprojekt angelegt. Das bedeutet: Es wird beobachtet, ausgewertet und angepasst. Nicht alles muss von Anfang an perfekt funktionieren. Wichtig ist, dass das Klassenteam regelmäßig prüft, welche Strukturen tragen und wo nachgesteuert werden muss.</p>
+            </div>
+          </details>
+        </div>
+      </article>
+    </section>
+
+    <section class="summary-box">
+      <h2>Kurzfassung für alle drei Gruppen</h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <strong>Für Lehrkräfte</strong>
+          Wir arbeiten mit gemeinsamen Grundroutinen, aber mit fachlichen Spielräumen.
+        </div>
+        <div class="summary-card">
+          <strong>Für Schüler:innen</strong>
+          Du lernst Schritt für Schritt, dein Lernen besser zu planen, durchzuführen und zu reflektieren.
+        </div>
+        <div class="summary-card">
+          <strong>Für Eltern</strong>
+          Ihr Kind wird nicht allein gelassen, sondern beim Aufbau von Eigenständigkeit eng begleitet.
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">Pilotprojekt Selbstreguliertes Lernen in Klasse 5 · FAQ</p>
+  </main>
+
+  <script>
+    const buttons = document.querySelectorAll(".tab-button");
+    const panels = document.querySelectorAll(".tab-panel");
+
+    function activateTab(button) {
+      const targetId = button.getAttribute("aria-controls");
+
+      buttons.forEach((btn) => {
+        btn.classList.remove("active");
+        btn.setAttribute("aria-selected", "false");
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.remove("active");
+      });
+
+      button.classList.add("active");
+      button.setAttribute("aria-selected", "true");
+      document.getElementById(targetId).classList.add("active");
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => activateTab(button));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const activeIndex = Array.from(buttons).findIndex((button) => button.classList.contains("active"));
+      if (event.key === "ArrowRight") {
+        const next = buttons[(activeIndex + 1) % buttons.length];
+        activateTab(next);
+        next.focus();
+      }
+      if (event.key === "ArrowLeft") {
+        const previous = buttons[(activeIndex - 1 + buttons.length) % buttons.length];
+        activateTab(previous);
+        previous.focus();
+      }
+    });
+  </script>
+</body>
+</html>
