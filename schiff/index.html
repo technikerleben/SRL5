@@ -62,6 +62,71 @@
   }
   .folie.aktiv{display:flex;opacity:1;}
 
+  /* ---------- Build-Steps: Elemente erscheinen nacheinander ---------- */
+  [data-step]{
+    opacity:0;
+    transform:translateY(26px) scale(.98);
+    filter:blur(2px);
+    transition:opacity .55s cubic-bezier(.22,.9,.3,1),
+               transform .55s cubic-bezier(.22,.9,.3,1),
+               filter .55s ease;
+    will-change:opacity,transform;
+  }
+  [data-step].da{
+    opacity:1;transform:none;filter:none;
+  }
+  /* Varianten der Einblend-Richtung */
+  [data-step][data-from="left"]{transform:translateX(-40px) scale(.98);}
+  [data-step][data-from="right"]{transform:translateX(40px) scale(.98);}
+  [data-step][data-from="zoom"]{transform:scale(.86);}
+  [data-step][data-from="left"].da,
+  [data-step][data-from="right"].da,
+  [data-step][data-from="zoom"].da{transform:none;}
+  /* kurzer Glanz-Akzent beim Erscheinen von Karten */
+  [data-step].da.aufploppen{animation:aufploppen .6s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes aufploppen{0%{transform:scale(.8);}60%{transform:scale(1.04);}100%{transform:scale(1);}}
+
+  @media (prefers-reduced-motion:reduce){
+    [data-step]{transition:opacity .3s ease;transform:none;filter:none;}
+    .schwebt,.wellen-deko,.treibt{animation:none !important;}
+  }
+
+  /* ---------- Durchgehende, dezente Bewegung ---------- */
+  .schwebt{animation:schwebt 5.5s ease-in-out infinite;}
+  @keyframes schwebt{0%,100%{transform:translateY(0) rotate(-.4deg);}50%{transform:translateY(-7px) rotate(.4deg);}}
+
+  .treibt{animation:treibt 7s ease-in-out infinite;}
+  @keyframes treibt{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+
+  /* leise treibende Wellenleiste am unteren Folienrand */
+  .wellen-deko{
+    position:absolute;left:0;right:0;bottom:0;height:54px;z-index:1;pointer-events:none;
+    overflow:hidden;opacity:.5;
+  }
+  .wellen-deko svg{position:absolute;bottom:0;width:200%;height:100%;}
+  .wellen-deko .w1{animation:wellenzug 14s linear infinite;}
+  .wellen-deko .w2{animation:wellenzug 22s linear infinite reverse;opacity:.6;}
+  @keyframes wellenzug{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* kleine ziehende Möwe quer über die Folie */
+  .moewe{
+    position:absolute;top:14%;left:-6%;font-size:1.4rem;z-index:1;opacity:.55;pointer-events:none;
+    animation:moewenflug 26s linear infinite;
+  }
+  @keyframes moewenflug{
+    0%{transform:translateX(0) translateY(0);}
+    50%{transform:translateX(60vw) translateY(-18px);}
+    100%{transform:translateX(118vw) translateY(6px);}
+  }
+
+  /* Kompass dreht ganz langsam */
+  .kompass.dreht{animation:kompassdreh 40s linear infinite;}
+  @keyframes kompassdreh{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+
+  /* Langsamer Karten-Zoom (Ken Burns) auf der Titelfolie */
+  .kenburns img{animation:kenburns 28s ease-in-out infinite alternate;transform-origin:50% 45%;}
+  @keyframes kenburns{from{transform:scale(1.02);}to{transform:scale(1.12);}}
+
   /* Pergament-Innenfläche */
   .pergament{
     flex:1;
@@ -297,7 +362,7 @@
 </head>
 <body>
 
-<div class="hinweis-bedienung" id="bedienhinweis">Pfeiltasten ← →  oder  Leertaste zum Blättern · Karten antippen</div>
+<div class="hinweis-bedienung" id="bedienhinweis">Leertaste oder → blättert Schritt für Schritt weiter · ← zurück</div>
 
 <button class="nav-pfeil" id="pfeil-zurueck" aria-label="Zurück">‹</button>
 <button class="nav-pfeil" id="pfeil-vor" aria-label="Weiter">›</button>
@@ -308,19 +373,20 @@
   <section class="folie aktiv" data-titel="Start">
     <div class="pergament">
       <div class="inhalt zentriert" style="padding:0;">
-        <div class="bildrahmen" style="position:absolute;inset:14px;border-width:0;border-radius:11px;">
+        <div class="bildrahmen kenburns" style="position:absolute;inset:14px;border-width:0;border-radius:11px;">
           <img src="weltkarte.png" alt="Weltkarte Kurs ins Unbekannte"
-               onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🗺️&lt;/div&gt;&lt;div&gt;Weltkarte&lt;/div&gt;&lt;div class=ph-name&gt;weltkarte.png&lt;/div&gt;&lt;/div&gt;';">
+               onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🗺️&lt;/div&gt;&lt;div&gt;Weltkarte&lt;/div&gt;&lt;div class=ph-name&gt;weltkarte.png&lt;/div&gt;&lt;div class=ph-name style=color:#b8612f&gt;404: '+this.src+'&lt;/div&gt;&lt;/div&gt;';">
         </div>
-        <div style="position:relative;z-index:3;background:rgba(240,227,196,.82);backdrop-filter:blur(2px);
+        <div data-step="1" data-from="zoom" class="schwebt" style="position:relative;z-index:3;background:rgba(240,227,196,.82);backdrop-filter:blur(2px);
                     border:3px solid var(--seil-dark);border-radius:16px;padding:30px 50px;box-shadow:0 14px 40px rgba(0,0,0,.5);">
           <div class="banner" style="margin-bottom:14px;">
             <h1>Kurs ins Unbekannte</h1>
           </div>
-          <p class="haupttext gross" style="color:var(--tinte);">Unser gemeinsames Klassenabenteuer<br>auf dem Otterschiff <span class="anker-icon">⚓</span></p>
+          <p class="haupttext gross" style="color:var(--tinte);">Unser gemeinsames Klassenabenteuer<br>auf hoher See <span class="anker-icon">⚓</span></p>
           <p style="margin-top:16px;font-size:1.05rem;color:var(--tinte-soft);font-style:italic;">Tippt euch durch und seht, wie unsere Reise beginnt.</p>
         </div>
       </div>
+      <span class="moewe">🕊️</span>
     </div>
   </section>
 
@@ -328,22 +394,23 @@
   <section class="folie" data-titel="Euer Schiff">
     <div class="pergament">
       <div class="inhalt">
-        <div class="banner"><h2>Das hier ist <em>euer</em> Schiff</h2></div>
+        <div class="banner schwebt" data-step="1"><h2>Das hier ist <em>euer</em> Schiff</h2></div>
         <div class="body-row">
-          <div class="bildrahmen contain" style="flex:0 0 52%;align-self:stretch;">
+          <div class="bildrahmen contain treibt" data-step="2" data-from="left" style="flex:0 0 52%;align-self:stretch;">
             <img src="schiff-ausmalen.png" alt="Großes Segelschiff zum Ausmalen"
-                 onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;⛵&lt;/div&gt;&lt;div&gt;Schiff zum Ausmalen&lt;/div&gt;&lt;div class=ph-name&gt;schiff-ausmalen.png&lt;/div&gt;&lt;/div&gt;';">
+                 onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;⛵&lt;/div&gt;&lt;div&gt;Schiff zum Ausmalen&lt;/div&gt;&lt;div class=ph-name&gt;schiff-ausmalen.png&lt;/div&gt;&lt;div class=ph-name style=color:#b8612f&gt;404: '+this.src+'&lt;/div&gt;&lt;/div&gt;';">
           </div>
           <div class="body-col" style="justify-content:center;">
-            <p class="haupttext">Noch ist es ein leeres Schiff. Es hat <strong>keinen Namen</strong>, leere <strong>Segel</strong> und ein leeres <strong>Wappen</strong>.</p>
-            <p class="haupttext">Das ändert sich bald — denn <strong>ihr</strong> seid die Otterbesatzung. Ihr entscheidet, wie das Schiff heißt, welche Farben die Segel bekommen und wofür eure Mannschaft steht.</p>
-            <div class="sim-folge" style="border-left-color:var(--blau);margin-top:4px;">
+            <p class="haupttext" data-step="3" data-from="right">Noch ist es ein leeres Schiff. Es hat <strong>keinen Namen</strong>, leere <strong>Segel</strong> und ein leeres <strong>Wappen</strong>.</p>
+            <p class="haupttext" data-step="4" data-from="right">Das ändert sich bald — denn <strong>ihr</strong> seid die Besatzung. Ihr entscheidet, wie das Schiff heißt, welche Farben die Segel bekommen und wofür eure Mannschaft steht.</p>
+            <div class="sim-folge" data-step="5" style="border-left-color:var(--blau);margin-top:4px;">
               <strong style="color:var(--blau);">Eure erste Aufgabe:</strong> Wir geben dem Schiff zusammen einen Namen.
             </div>
           </div>
         </div>
       </div>
-      <span class="kompass">🧭</span>
+      <div class="wellen-deko" aria-hidden="true"></div>
+      <span class="kompass dreht">🧭</span>
     </div>
   </section>
 
@@ -351,23 +418,23 @@
   <section class="folie" data-titel="Schiffsenergie">
     <div class="pergament">
       <div class="inhalt">
-        <div class="banner"><h2>Womit fährt unser Schiff?</h2></div>
-        <p class="haupttext" style="align-self:center;text-align:center;margin-bottom:6px;">Unser Schiff fährt mit drei Arten von Energie. Wir sammeln sie <strong>gemeinsam</strong> — durch das, was wir im Unterricht tun.</p>
+        <div class="banner schwebt" data-step="1"><h2>Womit fährt unser Schiff?</h2></div>
+        <p class="haupttext" data-step="2" style="align-self:center;text-align:center;margin-bottom:6px;">Unser Schiff fährt mit drei Arten von Energie. Wir sammeln sie <strong>gemeinsam</strong> — durch das, was wir im Unterricht tun.</p>
         <div class="body-row" style="flex:0 0 auto;justify-content:center;margin:8px 0;">
           <div class="res-row">
-            <div class="res-karte antrieb">
+            <div class="res-karte antrieb aufploppen" data-step="3" data-from="zoom">
               <div class="res-emoji">⚙️</div>
               <h3>Antrieb</h3>
               <p class="res-zweck">für verlässliches Arbeiten</p>
               <p class="res-text">Ruhig anfangen, dranbleiben, Aufgaben fertig machen. <br><em>Bringt uns voran und auf neue Routen.</em></p>
             </div>
-            <div class="res-karte wissen">
+            <div class="res-karte wissen aufploppen" data-step="4" data-from="zoom">
               <div class="res-emoji">📖</div>
               <h3>Wissen</h3>
               <p class="res-zweck">für Lernen und gute Ideen</p>
               <p class="res-text">Gut nachdenken, Fehler verbessern, Fragen stellen. <br><em>Hilft uns, Karten zu lesen und Rätsel zu lösen.</em></p>
             </div>
-            <div class="res-karte zusammen">
+            <div class="res-karte zusammen aufploppen" data-step="5" data-from="zoom">
               <div class="res-emoji">🤝</div>
               <h3>Zusammenhalt</h3>
               <p class="res-zweck">für Helfen und Miteinander</p>
@@ -375,11 +442,12 @@
             </div>
           </div>
         </div>
-        <p class="haupttext" style="align-self:center;text-align:center;font-style:italic;color:var(--tinte-soft);">
+        <p class="haupttext" data-step="6" style="align-self:center;text-align:center;font-style:italic;color:var(--tinte-soft);">
           Wichtig: Einmal gesammelte Energie wird <strong>nie wieder weggenommen</strong>. Wir kommen mal schneller, mal langsamer voran — aber niemand ist schuld.
         </p>
       </div>
-      <span class="kompass">🧭</span>
+      <div class="wellen-deko" aria-hidden="true"></div>
+      <span class="kompass dreht">🧭</span>
     </div>
   </section>
 
@@ -387,22 +455,23 @@
   <section class="folie" data-titel="Energie verdienen">
     <div class="pergament">
       <div class="inhalt">
-        <div class="banner"><h2>Wie bekommen wir diese Energie?</h2></div>
+        <div class="banner schwebt" data-step="1"><h2>Wie bekommen wir diese Energie?</h2></div>
         <div class="body-row">
-          <div class="bildrahmen contain" style="flex:0 0 54%;align-self:stretch;">
+          <div class="bildrahmen contain treibt" data-step="2" data-from="left" style="flex:0 0 54%;align-self:stretch;">
             <img src="ressourcen.png" alt="Plakat: Drei Schalen mit Glassteinen – Grün Antrieb, Blau Wissen, Orange Zusammenhalt"
-                 onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🟢🔵🟠&lt;/div&gt;&lt;div&gt;Glassteine-Plakat&lt;/div&gt;&lt;div class=ph-name&gt;ressourcen.png&lt;/div&gt;&lt;/div&gt;';">
+                 onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🟢🔵🟠&lt;/div&gt;&lt;div&gt;Glassteine-Plakat&lt;/div&gt;&lt;div class=ph-name&gt;ressourcen.png&lt;/div&gt;&lt;div class=ph-name style=color:#b8612f&gt;404: '+this.src+'&lt;/div&gt;&lt;/div&gt;';">
           </div>
           <div class="body-col" style="justify-content:center;">
-            <p class="haupttext">Für jede Energie gibt es eine <strong>Schale mit Glassteinen</strong>: <span style="color:var(--antrieb);font-weight:700;">grün</span> für Antrieb, <span style="color:var(--wissen);font-weight:700;">blau</span> für Wissen, <span style="color:var(--zusammen);font-weight:700;">orange</span> für Zusammenhalt.</p>
-            <p class="haupttext">Wenn jemand etwas <strong>besonders gut</strong> macht — richtig verlässlich arbeitet, klug mitdenkt oder anderen hilft — darf er ein bis zwei Steine aus der passenden Schale nehmen und sie dem Klassenleitungsteam geben.</p>
-            <div class="sim-folge" style="border-left-color:var(--rost);margin-top:4px;">
+            <p class="haupttext" data-step="3" data-from="right">Für jede Energie gibt es eine <strong>Schale mit Glassteinen</strong>: <span style="color:var(--antrieb);font-weight:700;">grün</span> für Antrieb, <span style="color:var(--wissen);font-weight:700;">blau</span> für Wissen, <span style="color:var(--zusammen);font-weight:700;">orange</span> für Zusammenhalt.</p>
+            <p class="haupttext" data-step="4" data-from="right">Wenn jemand etwas <strong>besonders gut</strong> macht — richtig verlässlich arbeitet, klug mitdenkt oder anderen hilft — darf er ein bis zwei Steine aus der passenden Schale nehmen und sie dem Klassenleitungsteam geben.</p>
+            <div class="sim-folge" data-step="5" style="border-left-color:var(--rost);margin-top:4px;">
               <strong style="color:var(--rost);">So wächst unser Vorrat:</strong> Die Steine zeigen unsere gesammelte Energie. Damit bringen wir das Schiff Stück für Stück voran.
             </div>
           </div>
         </div>
       </div>
-      <span class="kompass">🧭</span>
+      <div class="wellen-deko" aria-hidden="true"></div>
+      <span class="kompass dreht">🧭</span>
     </div>
   </section>
 
@@ -410,25 +479,25 @@
   <section class="folie" data-titel="So läuft eine Woche">
     <div class="pergament">
       <div class="inhalt">
-        <div class="banner"><h2>So läuft eine Woche bei uns</h2></div>
-        <p class="haupttext" style="align-self:center;text-align:center;margin-bottom:18px;">Jede Woche dreht sich dieselbe Schleife — und unsere Reise kommt ein Stück weiter.</p>
+        <div class="banner schwebt" data-step="1"><h2>So läuft eine Woche bei uns</h2></div>
+        <p class="haupttext" data-step="2" style="align-self:center;text-align:center;margin-bottom:18px;">Jede Woche dreht sich dieselbe Schleife — und unsere Reise kommt ein Stück weiter.</p>
         <div class="body-row" style="flex:0 0 auto;justify-content:center;">
           <div class="schritt-row">
-            <div class="schritt">
+            <div class="schritt" data-step="3" data-from="zoom">
               <span class="nr">1</span>
               <div class="s-emoji">📚</div>
               <h3>Im Unterricht</h3>
               <p>Wir lernen und arbeiten zusammen. Dabei sammeln wir Antrieb, Wissen und Zusammenhalt.</p>
             </div>
-            <span class="pfeil-zw">➜</span>
-            <div class="schritt">
+            <span class="pfeil-zw" data-step="4">➜</span>
+            <div class="schritt" data-step="4" data-from="zoom">
               <span class="nr">2</span>
               <div class="s-emoji">🎨</div>
               <h3>Verdiente Spielzeit</h3>
               <p>Wer seine Pflichtaufgaben fertig hat, darf am Abenteuer weiterbauen: zeichnen, planen, erfinden.</p>
             </div>
-            <span class="pfeil-zw">➜</span>
-            <div class="schritt">
+            <span class="pfeil-zw" data-step="5">➜</span>
+            <div class="schritt" data-step="5" data-from="zoom">
               <span class="nr">3</span>
               <div class="s-emoji">🗳️</div>
               <h3>Klassen-AG</h3>
@@ -436,11 +505,12 @@
             </div>
           </div>
         </div>
-        <p class="haupttext" style="align-self:center;text-align:center;margin-top:18px;font-style:italic;color:var(--tinte-soft);">
+        <p class="haupttext" data-step="6" style="align-self:center;text-align:center;margin-top:18px;font-style:italic;color:var(--tinte-soft);">
           Auf der nächsten Seite spielen wir <strong>eine Beispielwoche</strong> einfach mal durch.
         </p>
       </div>
-      <span class="kompass">🧭</span>
+      <div class="wellen-deko" aria-hidden="true"></div>
+      <span class="kompass dreht">🧭</span>
     </div>
   </section>
 
@@ -448,7 +518,7 @@
   <section class="folie" data-titel="Beispielwoche">
     <div class="pergament">
       <div class="inhalt">
-        <div class="banner"><h2 id="sim-banner">Eine Beispielwoche</h2></div>
+        <div class="banner schwebt"><h2 id="sim-banner">Eine Beispielwoche</h2></div>
 
         <div class="res-leiste" id="res-leiste">
           <div class="res-chip antrieb" id="chip-antrieb"><span class="chip-emoji">⚙️</span>Antrieb <span class="chip-wert">3</span></div>
@@ -460,7 +530,7 @@
         <div class="sim-wrap">
           <div class="sim-buehne">
             <div class="sim-bild">
-              <div class="bildrahmen" id="sim-bildrahmen" style="width:100%;aspect-ratio:4/3;max-height:100%;">
+              <div class="bildrahmen treibt" id="sim-bildrahmen" style="width:100%;aspect-ratio:4/3;max-height:100%;">
                 <div class="ph"><div class="ph-emoji">🌫️</div><div>Nebelbucht</div></div>
               </div>
             </div>
@@ -474,7 +544,7 @@
           </div>
         </div>
       </div>
-      <span class="kompass">🧭</span>
+      <span class="kompass dreht">🧭</span>
     </div>
   </section>
 
@@ -482,28 +552,29 @@
   <section class="folie" data-titel="Was du beitragen kannst">
     <div class="pergament">
       <div class="inhalt">
-        <div class="banner"><h2>Was <em>du</em> zum Abenteuer beitragen kannst</h2></div>
-        <p class="haupttext" style="align-self:center;text-align:center;margin-bottom:12px;">
+        <div class="banner schwebt" data-step="1"><h2>Was <em>du</em> zum Abenteuer beitragen kannst</h2></div>
+        <p class="haupttext" data-step="2" style="align-self:center;text-align:center;margin-bottom:12px;">
           Wenn deine Pflichtaufgaben fertig sind, darfst du dir eine dieser Karten aussuchen. Für jede Stärke ist etwas dabei!
         </p>
         <div class="boegen">
-          <div class="bogen">
+          <div class="bogen" data-step="3" data-from="left">
             <div class="bogen-titel">⚓ Schiff &amp; Besatzung</div>
             <div class="bildrahmen contain">
               <img src="aufgaben1.png" alt="Auftragskarten: Schiffsname finden, Wappen entwerfen, Segel gestalten, Flagge entwickeln, Otterfigur erfinden, Logbucheintrag schreiben"
-                   onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🛡️&lt;/div&gt;&lt;div&gt;6 Karten: Schiff &amp; Besatzung&lt;/div&gt;&lt;div class=ph-name&gt;aufgaben1.png&lt;/div&gt;&lt;/div&gt;';">
+                   onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🛡️&lt;/div&gt;&lt;div&gt;6 Karten: Schiff &amp; Besatzung&lt;/div&gt;&lt;div class=ph-name&gt;aufgaben1.png&lt;/div&gt;&lt;div class=ph-name style=color:#b8612f&gt;404: '+this.src+'&lt;/div&gt;&lt;/div&gt;';">
             </div>
           </div>
-          <div class="bogen">
+          <div class="bogen" data-step="4" data-from="right">
             <div class="bogen-titel">🧭 Reise &amp; Welt</div>
             <div class="bildrahmen contain">
               <img src="aufgaben2.png" alt="Auftragskarten: Reiseziele vergleichen, Route empfehlen, Schiffsausbau planen, Ausrüstungsliste erstellen, Ortssymbol gestalten, Begegnung planen"
-                   onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🗺️&lt;/div&gt;&lt;div&gt;6 Karten: Reise &amp; Welt&lt;/div&gt;&lt;div class=ph-name&gt;aufgaben2.png&lt;/div&gt;&lt;/div&gt;';">
+                   onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🗺️&lt;/div&gt;&lt;div&gt;6 Karten: Reise &amp; Welt&lt;/div&gt;&lt;div class=ph-name&gt;aufgaben2.png&lt;/div&gt;&lt;div class=ph-name style=color:#b8612f&gt;404: '+this.src+'&lt;/div&gt;&lt;/div&gt;';">
             </div>
           </div>
         </div>
       </div>
-      <span class="kompass">🧭</span>
+      <div class="wellen-deko" aria-hidden="true"></div>
+      <span class="kompass dreht">🧭</span>
     </div>
   </section>
 
@@ -511,19 +582,20 @@
   <section class="folie" data-titel="Los geht's">
     <div class="pergament">
       <div class="inhalt zentriert">
-        <div class="banner"><h2>Am Ende: <em>unsere</em> Geschichte</h2></div>
-        <p class="haupttext gross" style="margin:14px 0;">Aus all unseren Karten, Bildern und Entscheidungen entsteht zum Schuljahresende ein <strong>echtes Klassenbuch</strong> — eine Reise, die nur <em>wir</em> erlebt haben.</p>
+        <div class="banner schwebt" data-step="1"><h2>Am Ende: <em>unsere</em> Geschichte</h2></div>
+        <p class="haupttext gross" data-step="2" style="margin:14px 0;">Aus all unseren Karten, Bildern und Entscheidungen entsteht zum Schuljahresende ein <strong>echtes Klassenbuch</strong> — eine Reise, die nur <em>wir</em> erlebt haben.</p>
         <div class="body-row" style="flex:0 0 auto;justify-content:center;gap:18px;margin:10px 0 20px;">
-          <div style="text-align:center;"><div style="font-size:2.6rem;">📔</div><div style="font-size:.95rem;color:var(--tinte-soft);">Klassenbuch</div></div>
-          <div style="text-align:center;"><div style="font-size:2.6rem;">🗺️</div><div style="font-size:.95rem;color:var(--tinte-soft);">Weltkarte</div></div>
-          <div style="text-align:center;"><div style="font-size:2.6rem;">🎧</div><div style="font-size:.95rem;color:var(--tinte-soft);">Hörgeschichte</div></div>
-          <div style="text-align:center;"><div style="font-size:2.6rem;">🖼️</div><div style="font-size:.95rem;color:var(--tinte-soft);">Ausstellung</div></div>
+          <div data-step="3" data-from="zoom" class="treibt" style="text-align:center;"><div style="font-size:2.6rem;">📔</div><div style="font-size:.95rem;color:var(--tinte-soft);">Klassenbuch</div></div>
+          <div data-step="4" data-from="zoom" class="treibt" style="text-align:center;"><div style="font-size:2.6rem;">🗺️</div><div style="font-size:.95rem;color:var(--tinte-soft);">Weltkarte</div></div>
+          <div data-step="5" data-from="zoom" class="treibt" style="text-align:center;"><div style="font-size:2.6rem;">🎧</div><div style="font-size:.95rem;color:var(--tinte-soft);">Hörgeschichte</div></div>
+          <div data-step="6" data-from="zoom" class="treibt" style="text-align:center;"><div style="font-size:2.6rem;">🖼️</div><div style="font-size:.95rem;color:var(--tinte-soft);">Ausstellung</div></div>
         </div>
-        <div class="banner" style="background:linear-gradient(180deg,var(--blau),var(--tiefblau));border-color:var(--tiefblau);">
+        <div class="banner aufploppen" data-step="7" data-from="zoom" style="background:linear-gradient(180deg,var(--blau),var(--tiefblau));border-color:var(--tiefblau);">
           <h2 style="color:var(--weiss);text-shadow:0 1px 3px rgba(0,0,0,.4);">Leinen los — Kurs ins Unbekannte! ⚓</h2>
         </div>
       </div>
-      <span class="kompass">🧭</span>
+      <div class="wellen-deko" aria-hidden="true"></div>
+      <span class="kompass dreht">🧭</span>
     </div>
   </section>
 
@@ -550,24 +622,74 @@ const zaehler=document.createElement('span');
 zaehler.className='folie-zaehler';fortschritt.appendChild(zaehler);
 const punkte=Array.from(document.querySelectorAll('.punkt'));
 
-function zeige(i){
+function aktiveFolie(){return folien[aktuell];}
+function steps(folie){return Array.from(folie.querySelectorAll('[data-step]'))
+  .sort((a,b)=>(+a.dataset.step)-(+b.dataset.step));}
+
+// Wie viele Schritte sind auf dieser Folie schon sichtbar?
+function sichtbareSchritte(folie){
+  return steps(folie).filter(el=>el.classList.contains('da')).length;
+}
+function maxSchritte(folie){
+  const s=steps(folie);
+  return s.length? Math.max(...s.map(el=>+el.dataset.step)) : 0;
+}
+
+function zeigeSchritt(folie,n){
+  steps(folie).forEach(el=>{
+    if(+el.dataset.step<=n) el.classList.add('da');
+    else el.classList.remove('da');
+  });
+}
+
+function naechsterSchritt(){
+  const f=aktiveFolie();
+  const gezeigt=sichtbareSchritte(f);
+  const max=maxSchritte(f);
+  if(gezeigt<max){ zeigeSchritt(f, gezeigt+1); return true; }
+  return false; // nichts mehr aufzudecken
+}
+function vorherigerSchritt(){
+  const f=aktiveFolie();
+  const gezeigt=sichtbareSchritte(f);
+  if(gezeigt>0){ zeigeSchritt(f, gezeigt-1); return true; }
+  return false;
+}
+
+function zeige(i,alleSchritte){
   i=Math.max(0,Math.min(folien.length-1,i));
   folien[aktuell].classList.remove('aktiv');
   punkte[aktuell].classList.remove('aktiv');
   aktuell=i;
-  folien[aktuell].classList.add('aktiv');
+  const f=folien[aktuell];
+  f.classList.add('aktiv');
   punkte[aktuell].classList.add('aktiv');
   pfeilZur.disabled = aktuell===0;
-  pfeilVor.disabled = aktuell===folien.length-1;
+  pfeilVor.disabled = aktuell===folien.length-1 && maxSchritte(f)===sichtbareSchritte(f);
   zaehler.textContent=(aktuell+1)+' / '+folien.length;
-  if(folien[aktuell].dataset.titel==='Beispielwoche') simStart();
+  // Schritte zurücksetzen: beim Vorwärts-Betreten Schritt 1 zeigen,
+  // beim Rückwärts-Betreten alle Schritte (man kam "von hinten")
+  zeigeSchritt(f, alleSchritte ? maxSchritte(f) : Math.min(1,maxSchritte(f)));
+  if(f.dataset.titel==='Beispielwoche') simStart();
 }
-pfeilVor.addEventListener('click',()=>zeige(aktuell+1));
-pfeilZur.addEventListener('click',()=>zeige(aktuell-1));
+
+function vor(){
+  // erst nächsten Build-Step, sonst nächste Folie
+  if(naechsterSchritt()){ pfeilVor.disabled=false; return; }
+  if(aktuell<folien.length-1) zeige(aktuell+1,false);
+}
+function zurueck(){
+  // erst Build-Step zurück, sonst vorige Folie (komplett aufgedeckt)
+  if(vorherigerSchritt()) return;
+  if(aktuell>0) zeige(aktuell-1,true);
+}
+
+pfeilVor.addEventListener('click',vor);
+pfeilZur.addEventListener('click',zurueck);
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();zeige(aktuell+1);}
-  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();zeige(aktuell-1);}
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();vor();}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();zurueck();}
 });
 
 // Bedienhinweis ausblenden
@@ -597,7 +719,7 @@ const simSchritte=[
     marke:'Schritt 2 von 3 · Mittwoch — Begegnung',
     titel:'Wer klopft denn da?',
     erzaehl:'Auf einem alten Wrack sitzt ein junger Biber. Sein Floß ist kaputt, er kommt nicht mehr nach Hause. Er schaut euch ängstlich an.',
-    frage:'Was macht unsere Otterbesatzung?',
+    frage:'Was macht unsere Besatzung?',
     wahlen:[
       {emoji:'🔧',text:'Sein Floß reparieren',kosten:'kostet Wissen + Antrieb',res:'wissen',
        folge:'Mit Werkzeug und Geschick flickt ihr das Floß. Der Biber strahlt — und verrät euch einen geheimen Weg.'},
@@ -697,6 +819,16 @@ function simStart(){
   res={...startRes};simIndex=0;
   renderRes();renderSimSchritt();
 }
+
+/* =================== Deko: Wellenleisten füllen =================== */
+const wellenSVG=`
+<svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="w1">
+  <path d="M0 30 Q150 10 300 30 T600 30 T900 30 T1200 30 V60 H0 Z" fill="#2f6f95"/>
+</svg>
+<svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="w2">
+  <path d="M0 36 Q150 18 300 36 T600 36 T900 36 T1200 36 V60 H0 Z" fill="#6fa8c4"/>
+</svg>`;
+document.querySelectorAll('.wellen-deko').forEach(w=>w.innerHTML=wellenSVG);
 
 /* =================== Init =================== */
 zeige(0);
