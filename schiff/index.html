@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Kurs ins Unbekannte – Unser Klassenabenteuer</title>
+<style>
+  :root{
+    /* Maritime Storybook-Palette */
+    --tinte:        #2b2419;   /* dunkle Tinte – Haupttext */
+    --tinte-soft:   #4a3f2e;
+    --pergament:    #f0e3c4;   /* warmes Pergament */
+    --pergament-hi: #f7eed6;
+    --pergament-lo: #e3d3a8;
+    --seil:         #c9a24b;   /* Seil / Gold */
+    --seil-dark:    #9c7a2e;
+    --tiefblau:     #1f4e6b;   /* Meer tief */
+    --blau:         #2f6f95;
+    --blau-hell:    #6fa8c4;
+    --tuerkis:      #4a9aa8;
+    --rost:         #b8612f;   /* warmes Orange/Rost */
+    --rost-hell:    #d97a4a;
+    --gruen:        #5f8a4a;   /* Salbei/Wald */
+    --gruen-hell:   #7dbb6f;
+    --sand:         #d9c089;
+    --rot-flagge:   #b23b34;
+    --weiss:        #fffaf0;
+    --schatten:     rgba(43,36,25,0.28);
+
+    --antrieb:      #5f8a4a;
+    --wissen:       #2f6f95;
+    --zusammen:     #b8612f;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+  html,body{height:100%;}
+  body{
+    font-family:'Iowan Old Style','Palatino Linotype','Palatino','Georgia',serif;
+    background:#1a2733;
+    color:var(--tinte);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  :focus-visible{outline:3px solid var(--seil);outline-offset:3px;border-radius:6px;}
+
+  /* ---------- Bühne ---------- */
+  #buehne{
+    position:fixed;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    background:
+      radial-gradient(circle at 50% 40%, #243646 0%, #16222d 100%);
+  }
+
+  .folie{
+    position:absolute;inset:0;
+    display:none;
+    flex-direction:column;
+    opacity:0;
+    transition:opacity .45s ease;
+  }
+  .folie.aktiv{display:flex;opacity:1;}
+
+  /* Pergament-Innenfläche */
+  .pergament{
+    flex:1;
+    margin:18px;
+    border-radius:14px;
+    background:
+      radial-gradient(ellipse at 20% 0%, var(--pergament-hi) 0%, var(--pergament) 45%, var(--pergament-lo) 100%);
+    box-shadow:0 18px 50px rgba(0,0,0,.55), inset 0 0 60px rgba(160,120,50,.18);
+    position:relative;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  /* Seilrahmen */
+  .pergament::before{
+    content:"";position:absolute;inset:10px;
+    border:3px solid var(--seil);
+    border-radius:9px;
+    background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(156,122,46,.45) 6px 9px);
+    background-clip:padding-box;
+    -webkit-mask:linear-gradient(#000 0 0) padding-box;
+    pointer-events:none;
+    opacity:.8;
+  }
+  /* leichte Fleckigkeit */
+  .pergament::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(circle at 80% 90%, rgba(120,80,20,.12) 0%, transparent 40%),
+      radial-gradient(circle at 12% 78%, rgba(120,80,20,.10) 0%, transparent 35%);
+  }
+
+  .inhalt{
+    position:relative;z-index:2;
+    flex:1;
+    padding:34px 54px 26px;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+  }
+
+  /* ---------- Banner-Titel ---------- */
+  .banner{
+    align-self:center;
+    position:relative;
+    background:linear-gradient(180deg,var(--pergament-hi),var(--pergament-lo));
+    border:2px solid var(--seil-dark);
+    border-radius:8px;
+    padding:8px 46px;
+    box-shadow:0 4px 0 rgba(156,122,46,.35), 0 10px 22px var(--schatten);
+    margin-bottom:18px;
+  }
+  .banner::before,.banner::after{
+    content:"";position:absolute;top:50%;width:26px;height:38px;
+    background:var(--pergament-lo);
+    border:2px solid var(--seil-dark);
+    transform:translateY(-50%);
+    z-index:-1;
+  }
+  .banner::before{left:-20px;clip-path:polygon(0 50%,100% 0,100% 100%);}
+  .banner::after {right:-20px;clip-path:polygon(100% 50%,0 0,0 100%);}
+  .banner h1,.banner h2{
+    font-size:2.1rem;font-weight:700;color:var(--tinte);
+    letter-spacing:.5px;text-align:center;line-height:1.15;
+    text-shadow:0 1px 0 rgba(255,255,255,.5);
+  }
+  .banner .sub{display:block;font-size:1rem;font-weight:400;color:var(--tinte-soft);margin-top:2px;}
+
+  .anker-icon{display:inline-block;color:var(--blau);}
+
+  /* ---------- Layout-Helfer ---------- */
+  .zentriert{align-items:center;justify-content:center;text-align:center;}
+  .haupttext{font-size:1.25rem;line-height:1.6;color:var(--tinte-soft);max-width:62ch;}
+  .haupttext.gross{font-size:1.4rem;}
+  .body-row{flex:1;display:flex;gap:30px;align-items:center;min-height:0;}
+  .body-col{flex:1;display:flex;flex-direction:column;gap:14px;min-height:0;}
+
+  /* Bildrahmen */
+  .bildrahmen{
+    border:4px solid var(--seil-dark);
+    border-radius:10px;
+    background:var(--pergament-lo);
+    box-shadow:0 10px 26px var(--schatten), inset 0 0 0 2px rgba(255,250,240,.4);
+    overflow:hidden;
+    max-height:100%;
+  }
+  .bildrahmen img{display:block;width:100%;height:100%;object-fit:cover;}
+  .bildrahmen.contain img{object-fit:contain;background:var(--pergament-hi);}
+
+  /* Platzhalter, falls Bild fehlt */
+  .ph{
+    width:100%;height:100%;min-height:220px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:8px;color:var(--blau);text-align:center;padding:20px;
+    background:repeating-linear-gradient(45deg,var(--pergament-hi) 0 14px,var(--pergament-lo) 14px 28px);
+  }
+  .ph .ph-emoji{font-size:3rem;}
+  .ph .ph-name{font-size:.85rem;color:var(--tinte-soft);font-family:monospace;background:rgba(255,255,255,.5);padding:3px 8px;border-radius:5px;}
+
+  /* ---------- Ressourcen-Karten ---------- */
+  .res-row{display:flex;gap:22px;width:100%;justify-content:center;flex-wrap:wrap;}
+  .res-karte{
+    flex:1;min-width:200px;max-width:300px;
+    background:var(--weiss);
+    border:3px solid;border-radius:14px;
+    padding:20px 18px;text-align:center;
+    box-shadow:0 8px 20px var(--schatten);
+  }
+  .res-karte .res-emoji{font-size:3rem;line-height:1;}
+  .res-karte h3{font-size:1.5rem;margin:8px 0 4px;}
+  .res-karte .res-zweck{font-size:.95rem;color:var(--tinte-soft);font-style:italic;margin-bottom:10px;}
+  .res-karte .res-text{font-size:1rem;line-height:1.45;}
+  .res-karte.antrieb{border-color:var(--antrieb);} .res-karte.antrieb h3{color:var(--antrieb);}
+  .res-karte.wissen{border-color:var(--wissen);}   .res-karte.wissen h3{color:var(--wissen);}
+  .res-karte.zusammen{border-color:var(--zusammen);} .res-karte.zusammen h3{color:var(--zusammen);}
+
+  /* ---------- Wochen-Rhythmus ---------- */
+  .schritt-row{display:flex;gap:14px;width:100%;align-items:stretch;justify-content:center;flex-wrap:nowrap;}
+  .schritt{
+    flex:1;background:var(--weiss);border:2px solid var(--seil-dark);border-radius:12px;
+    padding:16px 14px;text-align:center;box-shadow:0 6px 16px var(--schatten);
+    display:flex;flex-direction:column;gap:8px;position:relative;
+  }
+  .schritt .nr{
+    position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+    width:30px;height:30px;border-radius:50%;background:var(--blau);color:var(--weiss);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;
+    box-shadow:0 3px 8px var(--schatten);
+  }
+  .schritt .s-emoji{font-size:2.4rem;margin-top:8px;}
+  .schritt h3{font-size:1.15rem;color:var(--tiefblau);}
+  .schritt p{font-size:.92rem;color:var(--tinte-soft);line-height:1.4;}
+  .pfeil-zw{align-self:center;font-size:1.8rem;color:var(--seil-dark);flex:0 0 auto;}
+
+  /* ---------- Simulation ---------- */
+  .sim-wrap{flex:1;display:flex;flex-direction:column;min-height:0;}
+  .sim-buehne{flex:1;display:flex;gap:26px;min-height:0;align-items:stretch;}
+  .sim-bild{flex:0 0 42%;display:flex;align-items:center;}
+  .sim-text{flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto;padding-right:6px;}
+  .sim-szene-titel{font-size:1.5rem;color:var(--tiefblau);font-weight:700;margin-bottom:6px;}
+  .sim-erzaehl{font-size:1.18rem;line-height:1.55;color:var(--tinte-soft);margin-bottom:14px;}
+  .sim-frage{font-size:1.22rem;font-weight:700;color:var(--rost);margin-bottom:12px;}
+
+  .wahl-liste{display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:6px;}
+  .wahl{
+    text-align:left;width:100%;cursor:pointer;
+    background:var(--weiss);border:2px solid var(--blau-hell);border-radius:12px;
+    padding:14px 18px;font-family:inherit;font-size:1.1rem;color:var(--tinte);
+    box-shadow:0 4px 12px var(--schatten);transition:transform .15s,border-color .15s,background .15s;
+    min-height:44px;display:flex;align-items:center;gap:12px;
+  }
+  .wahl:hover:not(:disabled){transform:translateY(-2px);border-color:var(--blau);background:var(--pergament-hi);}
+  .wahl:disabled{cursor:default;opacity:.55;}
+  .wahl.gewaehlt{border-color:var(--gruen);background:var(--sage-pale,#eef6e9);opacity:1;}
+  .wahl .w-emoji{font-size:1.7rem;flex:0 0 auto;}
+  .wahl .w-kosten{margin-left:auto;font-size:.85rem;color:var(--tinte-soft);font-style:italic;white-space:nowrap;}
+
+  .sim-folge{
+    background:var(--pergament-hi);border-left:5px solid var(--gruen);border-radius:0 12px 12px 0;
+    padding:14px 18px;font-size:1.1rem;line-height:1.5;color:var(--tinte-soft);
+    margin-top:6px;
+  }
+  .sim-folge strong{color:var(--gruen);}
+
+  /* Ressourcenleiste Sim */
+  .res-leiste{display:flex;gap:18px;justify-content:center;margin-bottom:14px;}
+  .res-chip{
+    display:flex;align-items:center;gap:8px;background:var(--weiss);
+    border:2px solid var(--seil-dark);border-radius:30px;padding:6px 16px 6px 10px;
+    font-size:1.05rem;font-weight:600;box-shadow:0 3px 10px var(--schatten);
+  }
+  .res-chip .chip-emoji{font-size:1.3rem;}
+  .res-chip .chip-wert{font-variant-numeric:tabular-nums;min-width:1.4ch;text-align:center;
+    background:var(--pergament-lo);border-radius:6px;padding:1px 7px;transition:background .3s;}
+  .res-chip.puls .chip-wert{animation:puls .6s ease;}
+  @keyframes puls{0%{background:var(--seil);color:#fff;transform:scale(1);}50%{transform:scale(1.35);}100%{background:var(--pergament-lo);transform:scale(1);}}
+  .res-chip.antrieb{color:var(--antrieb);} .res-chip.wissen{color:var(--wissen);} .res-chip.zusammen{color:var(--zusammen);}
+
+  .schritt-marke{font-size:.9rem;color:var(--tinte-soft);text-align:center;margin-bottom:10px;font-style:italic;}
+
+  /* ---------- Beitrags-Galerie ---------- */
+  .galerie{
+    flex:1;display:grid;
+    grid-template-columns:repeat(4,1fr);
+    grid-auto-rows:1fr;
+    gap:14px;min-height:0;overflow-y:auto;padding:4px;
+  }
+  .beitrag{
+    cursor:pointer;border:none;font-family:inherit;text-align:center;
+    background:var(--weiss);border:2px solid var(--seil-dark);border-radius:12px;
+    padding:14px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    box-shadow:0 5px 14px var(--schatten);transition:transform .15s,box-shadow .15s;
+    color:var(--tinte);min-height:44px;
+  }
+  .beitrag:hover{transform:translateY(-3px);box-shadow:0 10px 22px var(--schatten);}
+  .beitrag .b-emoji{font-size:2.4rem;line-height:1;}
+  .beitrag .b-titel{font-size:1rem;font-weight:700;line-height:1.25;}
+  .beitrag.offen{border-color:var(--gruen);background:var(--pergament-hi);}
+
+  /* Modal */
+  .modal-bg{
+    position:absolute;inset:0;z-index:30;display:none;
+    align-items:center;justify-content:center;padding:40px;
+    background:rgba(26,32,40,.55);backdrop-filter:blur(2px);
+  }
+  .modal-bg.auf{display:flex;}
+  .modal{
+    background:var(--pergament-hi);border:4px solid var(--seil-dark);border-radius:16px;
+    max-width:540px;width:100%;padding:30px 34px;text-align:center;
+    box-shadow:0 24px 60px rgba(0,0,0,.5);position:relative;
+    animation:pop .3s ease;
+  }
+  @keyframes pop{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .modal .m-emoji{font-size:3.4rem;}
+  .modal h3{font-size:1.7rem;color:var(--tiefblau);margin:8px 0 14px;}
+  .modal p{font-size:1.18rem;line-height:1.6;color:var(--tinte-soft);}
+  .modal .m-ressource{display:inline-block;margin-top:16px;font-size:.95rem;font-weight:700;
+    padding:5px 14px;border-radius:30px;}
+  .modal-schliessen{
+    position:absolute;top:10px;right:14px;background:none;border:none;cursor:pointer;
+    font-size:1.8rem;color:var(--tinte-soft);line-height:1;width:44px;height:44px;border-radius:50%;
+  }
+  .modal-schliessen:hover{color:var(--rost);background:rgba(0,0,0,.06);}
+
+  /* ---------- Navigation ---------- */
+  .nav-pfeil{
+    position:fixed;top:50%;transform:translateY(-50%);z-index:20;
+    width:58px;height:58px;border-radius:50%;cursor:pointer;
+    background:var(--pergament);border:3px solid var(--seil-dark);
+    color:var(--tiefblau);font-size:1.8rem;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 18px rgba(0,0,0,.45);transition:transform .15s,background .15s;
+  }
+  .nav-pfeil:hover:not(:disabled){background:var(--pergament-hi);transform:translateY(-50%) scale(1.08);}
+  .nav-pfeil:disabled{opacity:.3;cursor:default;}
+  #pfeil-zurueck{left:12px;} #pfeil-vor{right:12px;}
+
+  .fortschritt{
+    position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:20;
+    display:flex;gap:10px;align-items:center;
+    background:rgba(20,28,36,.6);padding:8px 16px;border-radius:30px;
+  }
+  .punkt{width:11px;height:11px;border-radius:50%;background:rgba(240,227,196,.4);
+    cursor:pointer;border:none;padding:0;transition:background .2s,transform .2s;}
+  .punkt.aktiv{background:var(--seil);transform:scale(1.35);}
+  .folie-zaehler{color:var(--pergament);font-size:.85rem;font-family:sans-serif;margin-left:6px;}
+
+  /* dezenter Kompass unten rechts */
+  .kompass{position:absolute;bottom:18px;right:24px;font-size:1.4rem;color:var(--seil-dark);opacity:.5;z-index:2;}
+
+  .hinweis-bedienung{
+    position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:25;
+    background:rgba(20,28,36,.78);color:var(--pergament);font-family:sans-serif;
+    font-size:.8rem;padding:6px 16px;border-radius:20px;
+    opacity:1;transition:opacity .6s;pointer-events:none;
+  }
+  .hinweis-bedienung.weg{opacity:0;}
+
+  /* kleinere Höhen abfangen */
+  @media (max-height:680px){
+    .inhalt{padding:22px 44px 18px;}
+    .banner h1,.banner h2{font-size:1.7rem;}
+    .res-karte .res-emoji{font-size:2.4rem;}
+    .beitrag .b-emoji{font-size:2rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hinweis-bedienung" id="bedienhinweis">Pfeiltasten ← →  oder  Leertaste zum Blättern · Karten antippen</div>
+
+<button class="nav-pfeil" id="pfeil-zurueck" aria-label="Zurück">‹</button>
+<button class="nav-pfeil" id="pfeil-vor" aria-label="Weiter">›</button>
+
+<div id="buehne">
+
+  <!-- ============ FOLIE 1 · Titel ============ -->
+  <section class="folie aktiv" data-titel="Start">
+    <div class="pergament">
+      <div class="inhalt zentriert" style="padding:0;">
+        <div class="bildrahmen" style="position:absolute;inset:14px;border-width:0;border-radius:11px;">
+          <img src="weltkarte.png" alt="Weltkarte Kurs ins Unbekannte"
+               onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🗺️&lt;/div&gt;&lt;div&gt;Weltkarte&lt;/div&gt;&lt;div class=ph-name&gt;weltkarte.png&lt;/div&gt;&lt;/div&gt;';">
+        </div>
+        <div style="position:relative;z-index:3;background:rgba(240,227,196,.82);backdrop-filter:blur(2px);
+                    border:3px solid var(--seil-dark);border-radius:16px;padding:30px 50px;box-shadow:0 14px 40px rgba(0,0,0,.5);">
+          <div class="banner" style="margin-bottom:14px;">
+            <h1>Kurs ins Unbekannte</h1>
+          </div>
+          <p class="haupttext gross" style="color:var(--tinte);">Unser gemeinsames Klassenabenteuer<br>auf dem Otterschiff <span class="anker-icon">⚓</span></p>
+          <p style="margin-top:16px;font-size:1.05rem;color:var(--tinte-soft);font-style:italic;">Tippt euch durch und seht, wie unsere Reise beginnt.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOLIE 2 · Euer Schiff ============ -->
+  <section class="folie" data-titel="Euer Schiff">
+    <div class="pergament">
+      <div class="inhalt">
+        <div class="banner"><h2>Das hier ist <em>euer</em> Schiff</h2></div>
+        <div class="body-row">
+          <div class="bildrahmen contain" style="flex:0 0 52%;align-self:stretch;">
+            <img src="schiff-ausmalen.png" alt="Großes Segelschiff zum Ausmalen"
+                 onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;⛵&lt;/div&gt;&lt;div&gt;Schiff zum Ausmalen&lt;/div&gt;&lt;div class=ph-name&gt;schiff-ausmalen.png&lt;/div&gt;&lt;/div&gt;';">
+          </div>
+          <div class="body-col" style="justify-content:center;">
+            <p class="haupttext">Noch ist es ein leeres Schiff. Es hat <strong>keinen Namen</strong>, leere <strong>Segel</strong> und ein leeres <strong>Wappen</strong>.</p>
+            <p class="haupttext">Das ändert sich bald — denn <strong>ihr</strong> seid die Otterbesatzung. Ihr entscheidet, wie das Schiff heißt, welche Farben die Segel bekommen und wofür eure Mannschaft steht.</p>
+            <div class="sim-folge" style="border-left-color:var(--blau);margin-top:4px;">
+              <strong style="color:var(--blau);">Eure erste Aufgabe:</strong> Wir geben dem Schiff zusammen einen Namen.
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="kompass">🧭</span>
+    </div>
+  </section>
+
+  <!-- ============ FOLIE 3 · Die drei Energien ============ -->
+  <section class="folie" data-titel="Schiffsenergie">
+    <div class="pergament">
+      <div class="inhalt">
+        <div class="banner"><h2>Womit fährt unser Schiff?</h2></div>
+        <p class="haupttext" style="align-self:center;text-align:center;margin-bottom:6px;">Unser Schiff fährt mit drei Arten von Energie. Wir sammeln sie <strong>gemeinsam</strong> — durch das, was wir im Unterricht tun.</p>
+        <div class="body-row" style="flex:0 0 auto;justify-content:center;margin:8px 0;">
+          <div class="res-row">
+            <div class="res-karte antrieb">
+              <div class="res-emoji">⚙️</div>
+              <h3>Antrieb</h3>
+              <p class="res-zweck">für verlässliches Arbeiten</p>
+              <p class="res-text">Ruhig anfangen, dranbleiben, Aufgaben fertig machen. <br><em>Bringt uns voran und auf neue Routen.</em></p>
+            </div>
+            <div class="res-karte wissen">
+              <div class="res-emoji">📖</div>
+              <h3>Wissen</h3>
+              <p class="res-zweck">für Lernen und gute Ideen</p>
+              <p class="res-text">Gut nachdenken, Fehler verbessern, Fragen stellen. <br><em>Hilft uns, Karten zu lesen und Rätsel zu lösen.</em></p>
+            </div>
+            <div class="res-karte zusammen">
+              <div class="res-emoji">🤝</div>
+              <h3>Zusammenhalt</h3>
+              <p class="res-zweck">für Helfen und Miteinander</p>
+              <p class="res-text">Sich helfen, fair streiten, zusammen arbeiten. <br><em>Brauchen wir für Expeditionen und Begegnungen.</em></p>
+            </div>
+          </div>
+        </div>
+        <p class="haupttext" style="align-self:center;text-align:center;font-style:italic;color:var(--tinte-soft);">
+          Wichtig: Einmal gesammelte Energie wird <strong>nie wieder weggenommen</strong>. Wir kommen mal schneller, mal langsamer voran — aber niemand ist schuld.
+        </p>
+      </div>
+      <span class="kompass">🧭</span>
+    </div>
+  </section>
+
+  <!-- ============ FOLIE 4 · So läuft eine Woche ============ -->
+  <section class="folie" data-titel="So läuft eine Woche">
+    <div class="pergament">
+      <div class="inhalt">
+        <div class="banner"><h2>So läuft eine Woche bei uns</h2></div>
+        <p class="haupttext" style="align-self:center;text-align:center;margin-bottom:18px;">Jede Woche dreht sich dieselbe Schleife — und unsere Reise kommt ein Stück weiter.</p>
+        <div class="body-row" style="flex:0 0 auto;justify-content:center;">
+          <div class="schritt-row">
+            <div class="schritt">
+              <span class="nr">1</span>
+              <div class="s-emoji">📚</div>
+              <h3>Im Unterricht</h3>
+              <p>Wir lernen und arbeiten zusammen. Dabei sammeln wir Antrieb, Wissen und Zusammenhalt.</p>
+            </div>
+            <span class="pfeil-zw">➜</span>
+            <div class="schritt">
+              <span class="nr">2</span>
+              <div class="s-emoji">🎨</div>
+              <h3>Verdiente Spielzeit</h3>
+              <p>Wer seine Pflichtaufgaben fertig hat, darf am Abenteuer weiterbauen: zeichnen, planen, erfinden.</p>
+            </div>
+            <span class="pfeil-zw">➜</span>
+            <div class="schritt">
+              <span class="nr">3</span>
+              <div class="s-emoji">🗳️</div>
+              <h3>Klassen-AG</h3>
+              <p>Einmal pro Woche entscheiden wir gemeinsam: Wohin reisen wir? Was bauen wir aus?</p>
+            </div>
+          </div>
+        </div>
+        <p class="haupttext" style="align-self:center;text-align:center;margin-top:18px;font-style:italic;color:var(--tinte-soft);">
+          Auf der nächsten Seite spielen wir <strong>eine Beispielwoche</strong> einfach mal durch.
+        </p>
+      </div>
+      <span class="kompass">🧭</span>
+    </div>
+  </section>
+
+  <!-- ============ FOLIE 5 · Simulation ============ -->
+  <section class="folie" data-titel="Beispielwoche">
+    <div class="pergament">
+      <div class="inhalt">
+        <div class="banner"><h2 id="sim-banner">Eine Beispielwoche</h2></div>
+
+        <div class="res-leiste" id="res-leiste">
+          <div class="res-chip antrieb" id="chip-antrieb"><span class="chip-emoji">⚙️</span>Antrieb <span class="chip-wert">3</span></div>
+          <div class="res-chip wissen" id="chip-wissen"><span class="chip-emoji">📖</span>Wissen <span class="chip-wert">2</span></div>
+          <div class="res-chip zusammen" id="chip-zusammen"><span class="chip-emoji">🤝</span>Zusammenhalt <span class="chip-wert">2</span></div>
+        </div>
+        <div class="schritt-marke" id="sim-marke"></div>
+
+        <div class="sim-wrap">
+          <div class="sim-buehne">
+            <div class="sim-bild">
+              <div class="bildrahmen" id="sim-bildrahmen" style="width:100%;aspect-ratio:4/3;max-height:100%;">
+                <div class="ph"><div class="ph-emoji">🌫️</div><div>Nebelbucht</div></div>
+              </div>
+            </div>
+            <div class="sim-text">
+              <div class="sim-szene-titel" id="sim-titel"></div>
+              <p class="sim-erzaehl" id="sim-erzaehl"></p>
+              <p class="sim-frage" id="sim-frage"></p>
+              <div class="wahl-liste" id="sim-wahlen"></div>
+              <div class="sim-folge" id="sim-folge" hidden></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="kompass">🧭</span>
+    </div>
+  </section>
+
+  <!-- ============ FOLIE 6 · Beitrags-Galerie ============ -->
+  <section class="folie" data-titel="Was du beitragen kannst">
+    <div class="pergament">
+      <div class="inhalt">
+        <div class="banner"><h2>Was <em>du</em> zum Abenteuer beitragen kannst</h2></div>
+        <p class="haupttext" style="align-self:center;text-align:center;margin-bottom:14px;">
+          Wenn deine Pflichtaufgaben fertig sind, darfst du etwas davon machen. Tippt eine Karte an!
+        </p>
+        <div class="galerie" id="galerie"><!-- per JS --></div>
+      </div>
+      <div class="modal-bg" id="modal-bg">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titel">
+          <button class="modal-schliessen" id="modal-zu" aria-label="Schließen">×</button>
+          <div class="m-emoji" id="modal-emoji"></div>
+          <h3 id="modal-titel"></h3>
+          <p id="modal-text"></p>
+          <div class="m-ressource" id="modal-res"></div>
+        </div>
+      </div>
+      <span class="kompass">🧭</span>
+    </div>
+  </section>
+
+  <!-- ============ FOLIE 7 · Abschluss ============ -->
+  <section class="folie" data-titel="Los geht's">
+    <div class="pergament">
+      <div class="inhalt zentriert">
+        <div class="banner"><h2>Am Ende: <em>unsere</em> Geschichte</h2></div>
+        <p class="haupttext gross" style="margin:14px 0;">Aus all unseren Karten, Bildern und Entscheidungen entsteht zum Schuljahresende ein <strong>echtes Klassenbuch</strong> — eine Reise, die nur <em>wir</em> erlebt haben.</p>
+        <div class="body-row" style="flex:0 0 auto;justify-content:center;gap:18px;margin:10px 0 20px;">
+          <div style="text-align:center;"><div style="font-size:2.6rem;">📔</div><div style="font-size:.95rem;color:var(--tinte-soft);">Klassenbuch</div></div>
+          <div style="text-align:center;"><div style="font-size:2.6rem;">🗺️</div><div style="font-size:.95rem;color:var(--tinte-soft);">Weltkarte</div></div>
+          <div style="text-align:center;"><div style="font-size:2.6rem;">🎧</div><div style="font-size:.95rem;color:var(--tinte-soft);">Hörgeschichte</div></div>
+          <div style="text-align:center;"><div style="font-size:2.6rem;">🖼️</div><div style="font-size:.95rem;color:var(--tinte-soft);">Ausstellung</div></div>
+        </div>
+        <div class="banner" style="background:linear-gradient(180deg,var(--blau),var(--tiefblau));border-color:var(--tiefblau);">
+          <h2 style="color:var(--weiss);text-shadow:0 1px 3px rgba(0,0,0,.4);">Leinen los — Kurs ins Unbekannte! ⚓</h2>
+        </div>
+      </div>
+      <span class="kompass">🧭</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="fortschritt" id="fortschritt"></div>
+
+<script>
+/* =================== Folien-Navigation =================== */
+const folien = Array.from(document.querySelectorAll('.folie'));
+let aktuell = 0;
+const pfeilVor = document.getElementById('pfeil-vor');
+const pfeilZur = document.getElementById('pfeil-zurueck');
+const fortschritt = document.getElementById('fortschritt');
+
+// Fortschrittspunkte bauen
+folien.forEach((f,i)=>{
+  const b=document.createElement('button');
+  b.className='punkt';b.setAttribute('aria-label',(i+1)+'. '+f.dataset.titel);
+  b.addEventListener('click',()=>zeige(i));
+  fortschritt.appendChild(b);
+});
+const zaehler=document.createElement('span');
+zaehler.className='folie-zaehler';fortschritt.appendChild(zaehler);
+const punkte=Array.from(document.querySelectorAll('.punkt'));
+
+function zeige(i){
+  i=Math.max(0,Math.min(folien.length-1,i));
+  folien[aktuell].classList.remove('aktiv');
+  punkte[aktuell].classList.remove('aktiv');
+  aktuell=i;
+  folien[aktuell].classList.add('aktiv');
+  punkte[aktuell].classList.add('aktiv');
+  pfeilZur.disabled = aktuell===0;
+  pfeilVor.disabled = aktuell===folien.length-1;
+  zaehler.textContent=(aktuell+1)+' / '+folien.length;
+  if(folien[aktuell].dataset.titel==='Beispielwoche') simStart();
+}
+pfeilVor.addEventListener('click',()=>zeige(aktuell+1));
+pfeilZur.addEventListener('click',()=>zeige(aktuell-1));
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();zeige(aktuell+1);}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();zeige(aktuell-1);}
+  if(e.key==='Escape')schliesseModal();
+});
+
+// Bedienhinweis ausblenden
+setTimeout(()=>document.getElementById('bedienhinweis').classList.add('weg'),5000);
+
+/* =================== Simulation (erfundene Beispielwoche) =================== */
+/* Neutraler Ort: "Nebelbucht" – nimmt die echten ersten Ziele nicht vorweg.   */
+const startRes={antrieb:3,wissen:2,zusammen:2};
+let res={...startRes};
+
+const simSchritte=[
+  {
+    marke:'Schritt 1 von 3 · Montag — Lagebericht',
+    titel:'Eine fremde Bucht im Nebel',
+    erzaehl:'Vor uns liegt eine stille Bucht voller Nebel. Niemand war hier je zuvor. Aus dem Dunst hören wir ein leises Klopfen — kommt es von einem Tier? Von einem alten Schiff?',
+    frage:'Wie wollen wir uns der Bucht nähern?',
+    wahlen:[
+      {emoji:'🔭',text:'Erst vom Ausguck genau beobachten',kosten:'kostet Wissen',res:'wissen',
+       folge:'Ihr entdeckt im Nebel halb versunkene Stege und ein verlassenes Floß. Gut, dass ihr vorsichtig wart!'},
+      {emoji:'🚣',text:'Mutig mit dem Beiboot hineinrudern',kosten:'kostet Antrieb',res:'antrieb',
+       folge:'Mit kräftigen Ruderschlägen gleitet ihr in die Bucht. Schnell, aber ihr müsst gut aufpassen.'},
+      {emoji:'📣',text:'Zusammen rufen und auf Antwort warten',kosten:'kostet Zusammenhalt',res:'zusammen',
+       folge:'Ihr ruft im Chor — und tatsächlich antwortet eine piepsige Stimme aus dem Nebel!'}
+    ]
+  },
+  {
+    marke:'Schritt 2 von 3 · Mittwoch — Begegnung',
+    titel:'Wer klopft denn da?',
+    erzaehl:'Auf einem alten Wrack sitzt ein junger Biber. Sein Floß ist kaputt, er kommt nicht mehr nach Hause. Er schaut euch ängstlich an.',
+    frage:'Was macht unsere Otterbesatzung?',
+    wahlen:[
+      {emoji:'🔧',text:'Sein Floß reparieren',kosten:'kostet Wissen + Antrieb',res:'wissen',
+       folge:'Mit Werkzeug und Geschick flickt ihr das Floß. Der Biber strahlt — und verrät euch einen geheimen Weg.'},
+      {emoji:'🤝',text:'Ihn mit an Bord nehmen',kosten:'kostet Zusammenhalt',res:'zusammen',
+       folge:'Der Biber klettert an Bord und wird euer erster Gast. Er kennt sich mit Brücken und Dämmen bestens aus!'},
+      {emoji:'🗺️',text:'Ihn nach der Bucht ausfragen',kosten:'kostet Wissen',res:'wissen',
+       folge:'Der Biber zeichnet euch eine kleine Karte. Jetzt wisst ihr, wo Untiefen lauern.'}
+    ]
+  },
+  {
+    marke:'Schritt 3 von 3 · Freitag — Klassen-AG',
+    titel:'Was nehmen wir mit auf die Reise?',
+    erzaehl:'Am Ende der Woche trefft ihr euch zur Klassen-AG. Die Bucht hat euch etwas geschenkt. Jetzt entscheidet ihr gemeinsam, was in unsere Geschichte kommt.',
+    frage:'Worüber stimmen wir ab?',
+    wahlen:[
+      {emoji:'📔',text:'Einen Logbuch-Eintrag über die Nebelbucht',kosten:'fürs Klassenbuch',res:'wissen',
+       folge:'Die Nebelbucht steht nun für immer in eurem Logbuch — Kapitel 1 ist geschrieben!'},
+      {emoji:'🦫',text:'Den Biber als feste Figur aufnehmen',kosten:'für die Geschichte',res:'zusammen',
+       folge:'„Balu der Biber" gehört jetzt zu eurer Reise. Vielleicht trefft ihr ihn später wieder?'},
+      {emoji:'🧭',text:'Die neue Karte auf die Weltkarte kleben',kosten:'für die Weltkarte',res:'wissen',
+       folge:'Ein neues Stück Welt ist aufgedeckt. Die Weltkarte wächst — und mit ihr euer Abenteuer.'}
+    ]
+  }
+];
+
+const simBilder=['nebelbucht.png','nebelbucht.png','nebelbucht.png']; // optional – sonst Platzhalter
+let simIndex=0, simGestartet=false;
+
+function setSimBild(){
+  const rahmen=document.getElementById('sim-bildrahmen');
+  const src=simBilder[simIndex];
+  const phs=['🌫️','🦫','🗳️'][simIndex];
+  const phl=['Nebelbucht','Begegnung','Klassen-AG'][simIndex];
+  const img=new Image();
+  img.alt=phl;img.onload=()=>{rahmen.innerHTML='';rahmen.appendChild(img);};
+  img.onerror=()=>{rahmen.innerHTML='<div class="ph"><div class="ph-emoji">'+phs+'</div><div>'+phl+'</div><div class="ph-name">'+src+'</div></div>';};
+  img.src=src;
+}
+
+function renderRes(pulsKey){
+  document.querySelector('#chip-antrieb .chip-wert').textContent=res.antrieb;
+  document.querySelector('#chip-wissen .chip-wert').textContent=res.wissen;
+  document.querySelector('#chip-zusammen .chip-wert').textContent=res.zusammen;
+  if(pulsKey){
+    const chip=document.getElementById('chip-'+pulsKey);
+    chip.classList.remove('puls');void chip.offsetWidth;chip.classList.add('puls');
+  }
+}
+
+function renderSimSchritt(){
+  const s=simSchritte[simIndex];
+  document.getElementById('sim-marke').textContent=s.marke;
+  document.getElementById('sim-titel').textContent=s.titel;
+  document.getElementById('sim-erzaehl').textContent=s.erzaehl;
+  document.getElementById('sim-frage').textContent=s.frage;
+  document.getElementById('sim-folge').hidden=true;
+  setSimBild();
+  const box=document.getElementById('sim-wahlen');
+  box.innerHTML='';
+  s.wahlen.forEach(w=>{
+    const btn=document.createElement('button');
+    btn.className='wahl';
+    btn.innerHTML='<span class="w-emoji">'+w.emoji+'</span><span>'+w.text+'</span><span class="w-kosten">'+w.kosten+'</span>';
+    btn.addEventListener('click',()=>waehle(w,btn));
+    box.appendChild(btn);
+  });
+}
+
+function waehle(w,btn){
+  // Energie steigt sichtbar (positiv – nie Abzug)
+  res[w.res]=Math.min(9,res[w.res]+1);
+  renderRes(w.res);
+  document.querySelectorAll('#sim-wahlen .wahl').forEach(b=>{b.disabled=true;});
+  btn.classList.add('gewaehlt');
+  const folge=document.getElementById('sim-folge');
+  const istLetzter=simIndex===simSchritte.length-1;
+  folge.innerHTML='<strong>Was passiert:</strong> '+w.folge+
+    (istLetzter
+      ? '<br><br>🎉 <strong>Eine Woche geschafft!</strong> So geht es Woche für Woche weiter — und unsere Reise wächst.'
+      : '<br><br><button id="sim-weiter" class="wahl" style="border-color:var(--gruen);background:var(--pergament);max-width:320px;margin-top:4px;"><span class="w-emoji">➜</span><span>Nächster Schritt der Woche</span></button>');
+  folge.hidden=false;
+  if(!istLetzter){
+    document.getElementById('sim-weiter').addEventListener('click',()=>{simIndex++;renderSimSchritt();});
+  }else{
+    // kleiner Neustart-Knopf
+    const nb=document.createElement('button');
+    nb.className='wahl';nb.style.cssText='border-color:var(--blau);background:var(--pergament);max-width:320px;margin-top:10px;';
+    nb.innerHTML='<span class="w-emoji">🔄</span><span>Beispielwoche neu starten</span>';
+    nb.addEventListener('click',()=>{res={...startRes};renderRes();simIndex=0;renderSimSchritt();});
+    folge.appendChild(nb);
+  }
+}
+
+function simStart(){
+  if(simGestartet)return;       // nur beim ersten Betreten initialisieren
+  simGestartet=true;
+  res={...startRes};simIndex=0;
+  renderRes();renderSimSchritt();
+}
+
+/* =================== Beitrags-Galerie =================== */
+const beitraege=[
+  {emoji:'⛵',titel:'Schiffsnamen vorschlagen',res:'wissen',
+   text:'Denk dir einen Namen für unser Schiff aus und schreib in einem Satz auf, warum er gut passt.'},
+  {emoji:'🛡️',titel:'Ein Wappen entwerfen',res:'zusammen',
+   text:'Zeichne ein Wappen für unser Schiff. Welche Bilder und Farben zeigen, wer wir sind?'},
+  {emoji:'🎨',titel:'Die Segel gestalten',res:'zusammen',
+   text:'Male die Segel an. Such dir Farben und Muster aus, die zu unserer Besatzung passen.'},
+  {emoji:'🚩',titel:'Eine Flagge entwickeln',res:'zusammen',
+   text:'Entwirf eine Flagge für die Otterbesatzung. Sie soll man schon von Weitem erkennen.'},
+  {emoji:'🦦',titel:'Eine Otterfigur erfinden',res:'wissen',
+   text:'Erfinde einen Otter aus unserer Mannschaft: Name, Aussehen und welche Aufgabe er an Bord hat.'},
+  {emoji:'📔',titel:'Logbuch zum Start schreiben',res:'wissen',
+   text:'Schreib einen kurzen Logbuch-Eintrag über unseren ersten Tag im Heimathafen.'},
+  {emoji:'🧭',titel:'Reiseziele vergleichen',res:'wissen',
+   text:'Schau dir die drei ersten Ziele an. Was ist an jedem spannend? Was könnte schwierig sein?'},
+  {emoji:'🗺️',titel:'Eine Route empfehlen',res:'wissen',
+   text:'Welches Ziel sollen wir zuerst ansteuern? Begründe deinen Vorschlag in zwei, drei Sätzen.'},
+  {emoji:'🔨',titel:'Einen Schiffsausbau planen',res:'antrieb',
+   text:'Überleg dir einen neuen Raum oder ein Werkzeug fürs Schiff. Wozu hilft es uns auf der Reise?'},
+  {emoji:'🎒',titel:'Eine Ausrüstungsliste machen',res:'antrieb',
+   text:'Was müssen wir für die erste Reise einpacken? Schreib eine kleine Liste mit Begründung.'},
+  {emoji:'🪧',titel:'Ein Schild oder Symbol gestalten',res:'zusammen',
+   text:'Gestalte ein Schild oder ein Zeichen für einen Ort auf unserer Weltkarte.'},
+  {emoji:'🐾',titel:'Ideen für eine Begegnung sammeln',res:'zusammen',
+   text:'Welches andere Tier könnten wir treffen? Was will es von uns — oder wir von ihm?'}
+];
+const resInfo={
+  antrieb:{label:'⚙️ Bringt Antrieb',farbe:'var(--antrieb)',bg:'#e9f1e3'},
+  wissen:{label:'📖 Bringt Wissen',farbe:'var(--wissen)',bg:'#e2eef4'},
+  zusammen:{label:'🤝 Bringt Zusammenhalt',farbe:'var(--zusammen)',bg:'#f5e6db'}
+};
+const galerie=document.getElementById('galerie');
+beitraege.forEach((b,i)=>{
+  const btn=document.createElement('button');
+  btn.className='beitrag';
+  btn.innerHTML='<span class="b-emoji">'+b.emoji+'</span><span class="b-titel">'+b.titel+'</span>';
+  btn.addEventListener('click',()=>{oeffneModal(b);btn.classList.add('offen');});
+  galerie.appendChild(btn);
+});
+
+const modalBg=document.getElementById('modal-bg');
+function oeffneModal(b){
+  document.getElementById('modal-emoji').textContent=b.emoji;
+  document.getElementById('modal-titel').textContent=b.titel;
+  document.getElementById('modal-text').textContent=b.text;
+  const r=resInfo[b.res];
+  const rEl=document.getElementById('modal-res');
+  rEl.textContent=r.label;rEl.style.color=r.farbe;rEl.style.background=r.bg;
+  modalBg.classList.add('auf');
+}
+function schliesseModal(){modalBg.classList.remove('auf');}
+document.getElementById('modal-zu').addEventListener('click',schliesseModal);
+modalBg.addEventListener('click',e=>{if(e.target===modalBg)schliesseModal();});
+
+/* =================== Init =================== */
+zeige(0);
+</script>
+</body>
+</html>
