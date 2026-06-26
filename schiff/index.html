@@ -241,48 +241,16 @@
   .schritt-marke{font-size:.9rem;color:var(--tinte-soft);text-align:center;margin-bottom:10px;font-style:italic;}
 
   /* ---------- Beitrags-Galerie ---------- */
-  .galerie{
-    flex:1;display:grid;
-    grid-template-columns:repeat(4,1fr);
-    grid-auto-rows:1fr;
-    gap:14px;min-height:0;overflow-y:auto;padding:4px;
+  /* Zwei Aufgabenbögen nebeneinander */
+  .boegen{flex:1;display:flex;gap:26px;min-height:0;align-items:stretch;}
+  .bogen{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0;}
+  .bogen-titel{
+    text-align:center;font-size:1.2rem;font-weight:700;color:var(--tiefblau);
+    background:var(--pergament-hi);border:2px solid var(--seil-dark);border-radius:10px;
+    padding:5px 12px;align-self:center;box-shadow:0 3px 8px var(--schatten);
   }
-  .beitrag{
-    cursor:pointer;border:none;font-family:inherit;text-align:center;
-    background:var(--weiss);border:2px solid var(--seil-dark);border-radius:12px;
-    padding:14px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-    box-shadow:0 5px 14px var(--schatten);transition:transform .15s,box-shadow .15s;
-    color:var(--tinte);min-height:44px;
-  }
-  .beitrag:hover{transform:translateY(-3px);box-shadow:0 10px 22px var(--schatten);}
-  .beitrag .b-emoji{font-size:2.4rem;line-height:1;}
-  .beitrag .b-titel{font-size:1rem;font-weight:700;line-height:1.25;}
-  .beitrag.offen{border-color:var(--gruen);background:var(--pergament-hi);}
-
-  /* Modal */
-  .modal-bg{
-    position:absolute;inset:0;z-index:30;display:none;
-    align-items:center;justify-content:center;padding:40px;
-    background:rgba(26,32,40,.55);backdrop-filter:blur(2px);
-  }
-  .modal-bg.auf{display:flex;}
-  .modal{
-    background:var(--pergament-hi);border:4px solid var(--seil-dark);border-radius:16px;
-    max-width:540px;width:100%;padding:30px 34px;text-align:center;
-    box-shadow:0 24px 60px rgba(0,0,0,.5);position:relative;
-    animation:pop .3s ease;
-  }
-  @keyframes pop{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
-  .modal .m-emoji{font-size:3.4rem;}
-  .modal h3{font-size:1.7rem;color:var(--tiefblau);margin:8px 0 14px;}
-  .modal p{font-size:1.18rem;line-height:1.6;color:var(--tinte-soft);}
-  .modal .m-ressource{display:inline-block;margin-top:16px;font-size:.95rem;font-weight:700;
-    padding:5px 14px;border-radius:30px;}
-  .modal-schliessen{
-    position:absolute;top:10px;right:14px;background:none;border:none;cursor:pointer;
-    font-size:1.8rem;color:var(--tinte-soft);line-height:1;width:44px;height:44px;border-radius:50%;
-  }
-  .modal-schliessen:hover{color:var(--rost);background:rgba(0,0,0,.06);}
+  .bogen .bildrahmen{flex:1;min-height:0;}
+  .bogen .bildrahmen img{object-position:top;}
 
   /* ---------- Navigation ---------- */
   .nav-pfeil{
@@ -415,6 +383,29 @@
     </div>
   </section>
 
+  <!-- ============ FOLIE 3b · Wie verdient ihr Energie ============ -->
+  <section class="folie" data-titel="Energie verdienen">
+    <div class="pergament">
+      <div class="inhalt">
+        <div class="banner"><h2>Wie bekommen wir diese Energie?</h2></div>
+        <div class="body-row">
+          <div class="bildrahmen contain" style="flex:0 0 54%;align-self:stretch;">
+            <img src="ressourcen.png" alt="Plakat: Drei Schalen mit Glassteinen – Grün Antrieb, Blau Wissen, Orange Zusammenhalt"
+                 onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🟢🔵🟠&lt;/div&gt;&lt;div&gt;Glassteine-Plakat&lt;/div&gt;&lt;div class=ph-name&gt;ressourcen.png&lt;/div&gt;&lt;/div&gt;';">
+          </div>
+          <div class="body-col" style="justify-content:center;">
+            <p class="haupttext">Für jede Energie gibt es eine <strong>Schale mit Glassteinen</strong>: <span style="color:var(--antrieb);font-weight:700;">grün</span> für Antrieb, <span style="color:var(--wissen);font-weight:700;">blau</span> für Wissen, <span style="color:var(--zusammen);font-weight:700;">orange</span> für Zusammenhalt.</p>
+            <p class="haupttext">Wenn jemand etwas <strong>besonders gut</strong> macht — richtig verlässlich arbeitet, klug mitdenkt oder anderen hilft — darf er ein bis zwei Steine aus der passenden Schale nehmen und sie dem Klassenleitungsteam geben.</p>
+            <div class="sim-folge" style="border-left-color:var(--rost);margin-top:4px;">
+              <strong style="color:var(--rost);">So wächst unser Vorrat:</strong> Die Steine zeigen unsere gesammelte Energie. Damit bringen wir das Schiff Stück für Stück voran.
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="kompass">🧭</span>
+    </div>
+  </section>
+
   <!-- ============ FOLIE 4 · So läuft eine Woche ============ -->
   <section class="folie" data-titel="So läuft eine Woche">
     <div class="pergament">
@@ -487,23 +478,29 @@
     </div>
   </section>
 
-  <!-- ============ FOLIE 6 · Beitrags-Galerie ============ -->
+  <!-- ============ FOLIE 6 · Beitrags-Übersicht (zwei Bögen) ============ -->
   <section class="folie" data-titel="Was du beitragen kannst">
     <div class="pergament">
       <div class="inhalt">
         <div class="banner"><h2>Was <em>du</em> zum Abenteuer beitragen kannst</h2></div>
-        <p class="haupttext" style="align-self:center;text-align:center;margin-bottom:14px;">
-          Wenn deine Pflichtaufgaben fertig sind, darfst du etwas davon machen. Tippt eine Karte an!
+        <p class="haupttext" style="align-self:center;text-align:center;margin-bottom:12px;">
+          Wenn deine Pflichtaufgaben fertig sind, darfst du dir eine dieser Karten aussuchen. Für jede Stärke ist etwas dabei!
         </p>
-        <div class="galerie" id="galerie"><!-- per JS --></div>
-      </div>
-      <div class="modal-bg" id="modal-bg">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titel">
-          <button class="modal-schliessen" id="modal-zu" aria-label="Schließen">×</button>
-          <div class="m-emoji" id="modal-emoji"></div>
-          <h3 id="modal-titel"></h3>
-          <p id="modal-text"></p>
-          <div class="m-ressource" id="modal-res"></div>
+        <div class="boegen">
+          <div class="bogen">
+            <div class="bogen-titel">⚓ Schiff &amp; Besatzung</div>
+            <div class="bildrahmen contain">
+              <img src="aufgaben1.png" alt="Auftragskarten: Schiffsname finden, Wappen entwerfen, Segel gestalten, Flagge entwickeln, Otterfigur erfinden, Logbucheintrag schreiben"
+                   onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🛡️&lt;/div&gt;&lt;div&gt;6 Karten: Schiff &amp; Besatzung&lt;/div&gt;&lt;div class=ph-name&gt;aufgaben1.png&lt;/div&gt;&lt;/div&gt;';">
+            </div>
+          </div>
+          <div class="bogen">
+            <div class="bogen-titel">🧭 Reise &amp; Welt</div>
+            <div class="bildrahmen contain">
+              <img src="aufgaben2.png" alt="Auftragskarten: Reiseziele vergleichen, Route empfehlen, Schiffsausbau planen, Ausrüstungsliste erstellen, Ortssymbol gestalten, Begegnung planen"
+                   onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🗺️&lt;/div&gt;&lt;div&gt;6 Karten: Reise &amp; Welt&lt;/div&gt;&lt;div class=ph-name&gt;aufgaben2.png&lt;/div&gt;&lt;/div&gt;';">
+            </div>
+          </div>
         </div>
       </div>
       <span class="kompass">🧭</span>
@@ -571,7 +568,6 @@ pfeilZur.addEventListener('click',()=>zeige(aktuell-1));
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();zeige(aktuell+1);}
   if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();zeige(aktuell-1);}
-  if(e.key==='Escape')schliesseModal();
 });
 
 // Bedienhinweis ausblenden
@@ -701,61 +697,6 @@ function simStart(){
   res={...startRes};simIndex=0;
   renderRes();renderSimSchritt();
 }
-
-/* =================== Beitrags-Galerie =================== */
-const beitraege=[
-  {emoji:'⛵',titel:'Schiffsnamen vorschlagen',res:'wissen',
-   text:'Denk dir einen Namen für unser Schiff aus und schreib in einem Satz auf, warum er gut passt.'},
-  {emoji:'🛡️',titel:'Ein Wappen entwerfen',res:'zusammen',
-   text:'Zeichne ein Wappen für unser Schiff. Welche Bilder und Farben zeigen, wer wir sind?'},
-  {emoji:'🎨',titel:'Die Segel gestalten',res:'zusammen',
-   text:'Male die Segel an. Such dir Farben und Muster aus, die zu unserer Besatzung passen.'},
-  {emoji:'🚩',titel:'Eine Flagge entwickeln',res:'zusammen',
-   text:'Entwirf eine Flagge für die Otterbesatzung. Sie soll man schon von Weitem erkennen.'},
-  {emoji:'🦦',titel:'Eine Otterfigur erfinden',res:'wissen',
-   text:'Erfinde einen Otter aus unserer Mannschaft: Name, Aussehen und welche Aufgabe er an Bord hat.'},
-  {emoji:'📔',titel:'Logbuch zum Start schreiben',res:'wissen',
-   text:'Schreib einen kurzen Logbuch-Eintrag über unseren ersten Tag im Heimathafen.'},
-  {emoji:'🧭',titel:'Reiseziele vergleichen',res:'wissen',
-   text:'Schau dir die drei ersten Ziele an. Was ist an jedem spannend? Was könnte schwierig sein?'},
-  {emoji:'🗺️',titel:'Eine Route empfehlen',res:'wissen',
-   text:'Welches Ziel sollen wir zuerst ansteuern? Begründe deinen Vorschlag in zwei, drei Sätzen.'},
-  {emoji:'🔨',titel:'Einen Schiffsausbau planen',res:'antrieb',
-   text:'Überleg dir einen neuen Raum oder ein Werkzeug fürs Schiff. Wozu hilft es uns auf der Reise?'},
-  {emoji:'🎒',titel:'Eine Ausrüstungsliste machen',res:'antrieb',
-   text:'Was müssen wir für die erste Reise einpacken? Schreib eine kleine Liste mit Begründung.'},
-  {emoji:'🪧',titel:'Ein Schild oder Symbol gestalten',res:'zusammen',
-   text:'Gestalte ein Schild oder ein Zeichen für einen Ort auf unserer Weltkarte.'},
-  {emoji:'🐾',titel:'Ideen für eine Begegnung sammeln',res:'zusammen',
-   text:'Welches andere Tier könnten wir treffen? Was will es von uns — oder wir von ihm?'}
-];
-const resInfo={
-  antrieb:{label:'⚙️ Bringt Antrieb',farbe:'var(--antrieb)',bg:'#e9f1e3'},
-  wissen:{label:'📖 Bringt Wissen',farbe:'var(--wissen)',bg:'#e2eef4'},
-  zusammen:{label:'🤝 Bringt Zusammenhalt',farbe:'var(--zusammen)',bg:'#f5e6db'}
-};
-const galerie=document.getElementById('galerie');
-beitraege.forEach((b,i)=>{
-  const btn=document.createElement('button');
-  btn.className='beitrag';
-  btn.innerHTML='<span class="b-emoji">'+b.emoji+'</span><span class="b-titel">'+b.titel+'</span>';
-  btn.addEventListener('click',()=>{oeffneModal(b);btn.classList.add('offen');});
-  galerie.appendChild(btn);
-});
-
-const modalBg=document.getElementById('modal-bg');
-function oeffneModal(b){
-  document.getElementById('modal-emoji').textContent=b.emoji;
-  document.getElementById('modal-titel').textContent=b.titel;
-  document.getElementById('modal-text').textContent=b.text;
-  const r=resInfo[b.res];
-  const rEl=document.getElementById('modal-res');
-  rEl.textContent=r.label;rEl.style.color=r.farbe;rEl.style.background=r.bg;
-  modalBg.classList.add('auf');
-}
-function schliesseModal(){modalBg.classList.remove('auf');}
-document.getElementById('modal-zu').addEventListener('click',schliesseModal);
-modalBg.addEventListener('click',e=>{if(e.target===modalBg)schliesseModal();});
 
 /* =================== Init =================== */
 zeige(0);
