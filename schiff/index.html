@@ -315,6 +315,40 @@
   .bogen .bildrahmen{flex:1;min-height:0;}
   .bogen .bildrahmen img{object-position:top;}
 
+  /* Anklickbare Bögen + Lupe-Hinweis */
+  .bogen.zoombar{cursor:zoom-in;}
+  .bogen.zoombar .bildrahmen{position:relative;transition:transform .15s,box-shadow .15s;}
+  .bogen.zoombar:hover .bildrahmen{transform:translateY(-3px);box-shadow:0 14px 30px var(--schatten);}
+  .lupe{
+    position:absolute;left:50%;bottom:10px;transform:translateX(-50%);
+    background:rgba(43,36,25,.78);color:var(--pergament);
+    font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:.8rem;
+    padding:5px 12px;border-radius:20px;white-space:nowrap;pointer-events:none;
+    opacity:0;transition:opacity .2s;
+  }
+  .bogen.zoombar:hover .lupe{opacity:1;}
+
+  /* Lightbox – vergrößerter Bogen mittig */
+  .lightbox{
+    position:absolute;inset:0;z-index:40;display:none;
+    align-items:center;justify-content:center;padding:24px;
+    background:rgba(20,28,36,.86);backdrop-filter:blur(3px);cursor:zoom-out;
+  }
+  .lightbox.auf{display:flex;animation:lbfade .25s ease;}
+  @keyframes lbfade{from{opacity:0;}to{opacity:1;}}
+  .lightbox img{
+    max-width:100%;max-height:100%;
+    border:5px solid var(--seil-dark);border-radius:12px;
+    box-shadow:0 24px 70px rgba(0,0,0,.6);background:var(--pergament-hi);
+    animation:lbpop .3s cubic-bezier(.34,1.4,.64,1);
+  }
+  @keyframes lbpop{from{transform:scale(.85);opacity:.4;}to{transform:scale(1);opacity:1;}}
+  .lightbox-hint{
+    position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+    color:var(--pergament);font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;
+    font-size:.85rem;background:rgba(43,36,25,.6);padding:5px 14px;border-radius:20px;
+  }
+
   /* ---------- Navigation ---------- */
   .nav-pfeil{
     position:fixed;top:50%;transform:translateY(-50%);z-index:20;
@@ -555,24 +589,31 @@
           Wenn deine Pflichtaufgaben fertig sind, darfst du dir eine dieser Karten aussuchen. Für jede Stärke ist etwas dabei!
         </p>
         <div class="boegen">
-          <div class="bogen" data-step="3" data-from="left">
+          <div class="bogen zoombar" data-step="3" data-from="left" data-zoom="aufgaben1.png" role="button" tabindex="0" aria-label="Karten Schiff und Besatzung groß anzeigen">
             <div class="bogen-titel">⚓ Schiff &amp; Besatzung</div>
             <div class="bildrahmen contain">
               <img src="aufgaben1.png" alt="Auftragskarten: Schiffsname finden, Wappen entwerfen, Segel gestalten, Flagge entwickeln, Otterfigur erfinden, Logbucheintrag schreiben"
                    onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🛡️&lt;/div&gt;&lt;div&gt;6 Karten: Schiff &amp; Besatzung&lt;/div&gt;&lt;div class=ph-name&gt;aufgaben1.png&lt;/div&gt;&lt;div class=ph-name style=color:#b8612f&gt;404: '+this.src+'&lt;/div&gt;&lt;/div&gt;';">
+              <span class="lupe">🔍 Tippen zum Vergrößern</span>
             </div>
           </div>
-          <div class="bogen" data-step="4" data-from="right">
+          <div class="bogen zoombar" data-step="4" data-from="right" data-zoom="aufgaben2.png" role="button" tabindex="0" aria-label="Karten Reise und Welt groß anzeigen">
             <div class="bogen-titel">🧭 Reise &amp; Welt</div>
             <div class="bildrahmen contain">
               <img src="aufgaben2.png" alt="Auftragskarten: Reiseziele vergleichen, Route empfehlen, Schiffsausbau planen, Ausrüstungsliste erstellen, Ortssymbol gestalten, Begegnung planen"
                    onerror="this.parentElement.innerHTML='&lt;div class=ph&gt;&lt;div class=ph-emoji&gt;🗺️&lt;/div&gt;&lt;div&gt;6 Karten: Reise &amp; Welt&lt;/div&gt;&lt;div class=ph-name&gt;aufgaben2.png&lt;/div&gt;&lt;div class=ph-name style=color:#b8612f&gt;404: '+this.src+'&lt;/div&gt;&lt;/div&gt;';">
+              <span class="lupe">🔍 Tippen zum Vergrößern</span>
             </div>
           </div>
         </div>
       </div>
       <div class="wellen-deko" aria-hidden="true"></div>
       <span class="kompass dreht">🧭</span>
+      <!-- Lightbox für vergrößerte Bögen -->
+      <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Vergrößerte Ansicht">
+        <img id="lightbox-img" src="" alt="">
+        <span class="lightbox-hint">Tippen zum Schließen</span>
+      </div>
     </div>
   </section>
 
@@ -686,6 +727,13 @@ pfeilVor.addEventListener('click',vor);
 pfeilZur.addEventListener('click',zurueck);
 
 document.addEventListener('keydown',e=>{
+  // Wenn die Lightbox offen ist: jede Navigationstaste schließt sie nur
+  if(document.getElementById('lightbox').classList.contains('auf')){
+    if(['ArrowRight','ArrowLeft',' ','PageDown','PageUp','Escape','Enter'].includes(e.key)){
+      e.preventDefault();schliesseLightbox();
+    }
+    return;
+  }
   if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();vor();}
   if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();zurueck();}
 });
@@ -817,6 +865,32 @@ function simStart(){
   res={...startRes};simIndex=0;
   renderRes();renderSimSchritt();
 }
+
+/* =================== Lightbox: Bögen groß anzeigen =================== */
+const lightbox=document.getElementById('lightbox');
+const lightboxImg=document.getElementById('lightbox-img');
+function oeffneLightbox(src,alt){
+  lightboxImg.src=src;
+  lightboxImg.alt=alt||'';
+  lightbox.classList.add('auf');
+}
+function schliesseLightbox(){
+  lightbox.classList.remove('auf');
+  lightboxImg.src='';
+}
+document.querySelectorAll('.bogen.zoombar').forEach(bg=>{
+  const oeffnen=e=>{
+    e.stopPropagation();
+    const img=bg.querySelector('img');
+    // Nur öffnen, wenn ein Bild existiert (bei Platzhalter wurde img durch .ph ersetzt)
+    if(img){
+      oeffneLightbox(bg.dataset.zoom, img.alt);
+    }
+  };
+  bg.addEventListener('click',oeffnen);
+  bg.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();oeffnen(e);} });
+});
+lightbox.addEventListener('click',schliesseLightbox);
 
 /* =================== Deko: Wellenleisten füllen =================== */
 const wellenSVG=`
