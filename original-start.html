@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRL Klasse 5 – Startpaket</title>
+<style>
+  :root {
+    --navy:        #1a2e4a;
+    --navy-mid:    #243b5e;
+    --navy-light:  #2e4d7a;
+    --accent:      #c8873a;
+    --accent-dim:  #d4a56a;
+    --sage:        #7dbb6f;
+    --bg:          #f5f3ef;
+    --bg-card:     #ffffff;
+    --text:        #1e2330;
+    --text-mid:    #3d4559;
+    --text-light:  #6b7591;
+    --border:      #ddd8ce;
+    --done-bg:     #eef6eb;
+    --done-text:   #3d6b35;
+
+    /* Cluster-Farben */
+    --c-lernen-bg:      #eef2fa;
+    --c-lernen-border:  #4a72b8;
+    --c-lernen-badge:   #2e5299;
+    --c-lernen-tint:    #dde6f5;
+
+    --c-struktur-bg:    #eef6eb;
+    --c-struktur-border:#5a9e4d;
+    --c-struktur-badge: #2d6b3f;
+    --c-struktur-tint:  #d6edcf;
+
+    --c-komm-bg:        #fff3e8;
+    --c-komm-border:    #c8873a;
+    --c-komm-badge:     #8a4f10;
+    --c-komm-tint:      #fde3c4;
+
+    --c-steuer-bg:      #f2eff8;
+    --c-steuer-border:  #7b5ea7;
+    --c-steuer-badge:   #52357a;
+    --c-steuer-tint:    #e0d8f0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ── Header ──────────────────────────────────── */
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 32px 40px 24px;
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-left {}
+  .header-kuerzel {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-size: 1.7rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  header h1 strong { font-weight: 700; }
+  .header-sub {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.45);
+  }
+  .header-stand {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.35);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .header-stand strong {
+    display: block;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.78rem;
+  }
+
+  /* ── Intro-Banner ────────────────────────────── */
+  .intro-banner {
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 40px;
+  }
+  .intro-banner-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+  .intro-banner-inner strong { font-weight: 700; }
+
+  /* ── Haupt-Layout ────────────────────────────── */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 36px 40px 24px;
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 700;
+    margin-bottom: 16px;
+    margin-top: 40px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* ── Kachel-Raster ───────────────────────────── */
+  .kachel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  /* ── Einzelne Kachel ─────────────────────────── */
+  .kachel {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    user-select: none;
+  }
+  .kachel:hover {
+    box-shadow: 0 3px 14px rgba(0,0,0,0.09);
+  }
+  .kachel.open {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  }
+
+  /* Cluster-Farben */
+  .kachel.lernen    { border-color: var(--c-lernen-border);  background: var(--c-lernen-bg); }
+  .kachel.struktur  { border-color: var(--c-struktur-border);background: var(--c-struktur-bg); }
+  .kachel.komm      { border-color: var(--c-komm-border);    background: var(--c-komm-bg); }
+  .kachel.steuer    { border-color: var(--c-steuer-border);  background: var(--c-steuer-bg); }
+
+  .kachel.open.lernen   { border-color: var(--c-lernen-border); }
+  .kachel.open.struktur { border-color: var(--c-struktur-border); }
+  .kachel.open.komm     { border-color: var(--c-komm-border); }
+  .kachel.open.steuer   { border-color: var(--c-steuer-border); }
+
+  /* Kachel-Header (immer sichtbar) */
+  .kachel-head {
+    padding: 16px 16px 14px;
+  }
+
+  .kachel-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .kachel-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .lernen  .kachel-badge { background: var(--c-lernen-badge); }
+  .struktur .kachel-badge { background: var(--c-struktur-badge); }
+  .komm    .kachel-badge { background: var(--c-komm-badge); }
+  .steuer  .kachel-badge { background: var(--c-steuer-badge); }
+
+  .kachel-chevron {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    transition: transform 0.25s;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .kachel.open .kachel-chevron { transform: rotate(180deg); }
+
+  .kachel-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .kachel-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--navy-mid);
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+
+  .kachel-teaser {
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    line-height: 1.45;
+    font-style: italic;
+  }
+
+  /* Kachel-Body (ausgeklappt) */
+  .kachel-body {
+    display: none;
+    padding: 16px;
+    border-top: 1.5px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    background: var(--bg-card);
+    border-radius: 0 0 10px 10px;
+  }
+  .lernen  .kachel-body { border-top-color: var(--c-lernen-border); }
+  .struktur .kachel-body { border-top-color: var(--c-struktur-border); }
+  .komm    .kachel-body { border-top-color: var(--c-komm-border); }
+  .steuer  .kachel-body { border-top-color: var(--c-steuer-border); }
+
+  .kachel.open .kachel-body { display: block; }
+
+  .kachel-body p { margin-bottom: 9px; }
+  .kachel-body p:last-child { margin-bottom: 0; }
+
+  .kachel-body ul {
+    margin: 8px 0;
+    padding-left: 16px;
+  }
+  .kachel-body ul li {
+    margin-bottom: 4px;
+    line-height: 1.45;
+  }
+
+  .kachel-body .zitat {
+    background: var(--bg);
+    border-left: 3px solid var(--accent);
+    padding: 9px 12px;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    margin: 10px 0;
+  }
+
+  .kachel-body .hinweis {
+    background: #fff8f0;
+    border: 1px solid #f0c89a;
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-size: 0.8rem;
+    color: #7a4a1a;
+    margin-top: 10px;
+  }
+  .kachel-body .hinweis::before { content: "⚠️ "; }
+
+  /* ── Accordion-Buttons ───────────────────────── */
+  .kachel-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .btn-small {
+    font-size: 0.76rem;
+    padding: 5px 14px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-small:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .btn-small.danger:hover { background: #b94040; border-color: #b94040; color: #fff; }
+
+  /* ── Checkliste ──────────────────────────────── */
+  .checklist-wrap {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .checklist-head {
+    display: grid;
+    grid-template-columns: 44px 1fr 2fr;
+    background: var(--navy);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .checklist-head div {
+    padding: 10px 14px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .checklist-head div:last-child { border-right: none; }
+
+  .checklist-row {
+    display: grid;
+    grid-template-columns: 44px 1fr 2fr;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+    align-items: stretch;
+  }
+  .checklist-row:last-child { border-bottom: none; }
+  .checklist-row.done { background: var(--done-bg); }
+
+  .check-cell {
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px 0;
+    border-right: 1px solid var(--border);
+  }
+  .check-cell input[type="checkbox"] {
+    width: 20px; height: 20px; cursor: pointer;
+    accent-color: var(--sage); flex-shrink: 0;
+  }
+  .label-cell {
+    padding: 12px 14px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--navy-mid);
+    border-right: 1px solid var(--border);
+    display: flex; align-items: center;
+  }
+  .checklist-row.done .label-cell {
+    color: var(--done-text);
+    text-decoration: line-through;
+    text-decoration-color: var(--sage);
+  }
+  .ergebnis-cell {
+    padding: 8px 14px;
+    display: flex; align-items: center;
+  }
+  .ergebnis-cell textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px 6px;
+    background: transparent;
+    resize: none;
+    min-height: 36px;
+    line-height: 1.45;
+    transition: border-color 0.15s, background 0.15s;
+    field-sizing: content;
+  }
+  .ergebnis-cell textarea:focus {
+    outline: none; border-color: var(--accent-dim); background: #fff;
+  }
+  .ergebnis-cell textarea::placeholder { color: #bbb5ab; font-style: italic; }
+
+  .progress-wrap {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 14px; font-size: 0.8rem; color: var(--text-light);
+  }
+  .progress-bar { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--sage); border-radius: 3px; transition: width 0.4s ease; }
+
+  /* ── Footer ──────────────────────────────────── */
+  footer {
+    max-width: 960px;
+    margin: 32px auto 0;
+    padding: 18px 40px 40px;
+    border-top: 1px solid var(--border);
+    font-size: 0.73rem;
+    color: var(--text-light);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 8px;
+  }
+  footer a { color: var(--text-light); text-decoration: none; border-bottom: 1px dotted var(--text-light); transition: color 0.15s; }
+  footer a:hover { color: var(--navy); }
+
+  /* ── Responsive: Tablet ──────────────────────── */
+  @media (max-width: 800px) {
+    .kachel-grid { grid-template-columns: repeat(2, 1fr); }
+    main { padding: 28px 24px 20px; }
+    header { padding: 24px 24px 20px; }
+    .intro-banner { padding: 12px 24px; }
+  }
+
+  /* ── Responsive: Mobil ───────────────────────── */
+  @media (max-width: 520px) {
+    .kachel-grid { grid-template-columns: 1fr; }
+    header { padding: 20px 16px; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+    .header-stand { text-align: left; }
+    .intro-banner { padding: 12px 16px; }
+    main { padding: 20px 14px 16px; }
+    .checklist-head, .checklist-row { grid-template-columns: 36px 1fr; }
+    .checklist-head div:last-child, .ergebnis-cell { display: none; }
+    footer { padding: 14px 16px 28px; flex-direction: column; align-items: flex-start; }
+  }
+
+  /* ── Druckbutton ─────────────────────────────── */
+  .btn-small.print {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .btn-small.print:hover {
+    background: var(--navy-light);
+    border-color: var(--navy-light);
+  }
+
+  /* ── Print / PDF ─────────────────────────────── */
+  @media print {
+    /* Seitenlayout */
+    @page { margin: 18mm 15mm 15mm; size: A4 portrait; }
+
+    /* Nicht drucken */
+    .kachel-actions,
+    #btn-expand, #btn-collapse,
+    .progress-wrap,
+    .intro-banner { display: none !important; }
+
+    /* Grundlayout */
+    body { background: #fff; font-size: 11pt; }
+    header { background: #1a2e4a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 14px 20px; }
+    footer { padding: 10px 0 0; margin-top: 16px; }
+    main { padding: 16px 0 0; max-width: 100%; }
+    .section-label { margin-top: 24px; }
+
+    /* Kacheln: alle aufgeklappt, als einspaltige Liste */
+    .kachel-grid { display: block; }
+    .kachel {
+      display: block !important;
+      page-break-inside: avoid;
+      margin-bottom: 10px;
+      border: 1pt solid #ccc;
+      border-radius: 6px;
+      overflow: visible;
+    }
+    .kachel-body {
+      display: block !important;  /* immer sichtbar beim Drucken */
+      border-top: 1pt solid #ddd;
+      padding: 10px 14px;
+      background: #fff !important;
+    }
+    .kachel-chevron { display: none; }
+    .kachel-head { padding: 10px 14px 8px; }
+    .kachel-icon { font-size: 1rem; }
+    .kachel-title { font-size: 10.5pt; }
+    .kachel-teaser { display: none; } /* Teaser redundant wenn Body sichtbar */
+    .kachel-body p, .kachel-body li { font-size: 9.5pt; }
+
+    /* Cluster-Farben erhalten */
+    .kachel.lernen   { background: #eef2fa !important; border-color: #4a72b8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .kachel.struktur { background: #eef6eb !important; border-color: #5a9e4d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .kachel.komm     { background: #fff3e8 !important; border-color: #c8873a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .kachel.steuer   { background: #f2eff8 !important; border-color: #7b5ea7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    .kachel-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .lernen  .kachel-badge { background: #2e5299 !important; }
+    .struktur .kachel-badge { background: #2d6b3f !important; }
+    .komm    .kachel-badge { background: #8a4f10 !important; }
+    .steuer  .kachel-badge { background: #52357a !important; }
+
+    /* Checkliste */
+    .checklist-wrap { border: 1pt solid #ccc; page-break-inside: avoid; }
+    .checklist-head { background: #1a2e4a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .checklist-row { grid-template-columns: 36px 1fr 2fr !important; }
+    .checklist-row.done { background: #eef6eb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    /* Textarea → als statischer Text rendern */
+    .ergebnis-cell textarea {
+      border: none !important;
+      background: transparent !important;
+      resize: none;
+      font-size: 9pt;
+      color: #333;
+      padding: 0;
+      min-height: unset;
+      height: auto;
+      overflow: visible;
+      white-space: pre-wrap;
+    }
+    .ergebnis-cell { display: flex !important; } /* mobil-hide aufheben */
+
+    /* Zitat / Hinweis */
+    .zitat { border-left: 3pt solid #c8873a !important; background: #f5f3ef !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hinweis { border: 1pt solid #f0c89a !important; background: #fff8f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    /* Seitenumbruch nach Kachelraster */
+    .kachel-grid + .kachel-actions { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-kuerzel">Pilotprojekt · SRL Klasse 5 · Schuljahr 2025/26</div>
+      <h1><strong>Startpaket</strong> – Was vor dem ersten Schultag feststehen muss</h1>
+      <div class="header-sub">Arbeitsdokument für das Klassenteam</div>
+    </div>
+    <div class="header-stand">
+      <strong>Stand</strong>
+      4. Juni 2026
+    </div>
+  </div>
+</header>
+
+<div class="intro-banner">
+  <div class="intro-banner-inner">
+    <strong>Vor den Sommerferien muss nicht das Pilotprojekt fertig sein.</strong>
+    Es muss nur der Start so klar sein, dass Kinder, Eltern und Lehrkräfte ab dem ersten Schultag wissen, woran sie sich orientieren können. Lieber fünf stabile Routinen als zwanzig schöne Vorlagen.
+  </div>
+</div>
+
+<main>
+
+  <div class="section-label">Neun Startentscheidungen – Kachel anklicken für Details</div>
+
+  <div class="kachel-grid">
+
+    <!-- 1 · Lernen -->
+    <div class="kachel lernen" data-id="1">
+      <div class="kachel-head">
+        <div class="kachel-top">
+          <span class="kachel-badge">Lernen</span>
+          <span class="kachel-chevron">▼</span>
+        </div>
+        <span class="kachel-icon">🤝</span>
+        <div class="kachel-title">Gemeinsames Mindestverständnis im Team</div>
+        <div class="kachel-teaser">Was meinen wir alle mit SRL – und was nicht? Wenige verbindliche Leitsätze, die das Team zusammenhalten.</div>
+      </div>
+      <div class="kachel-body">
+        <p>Das Team einigt sich auf wenige Leitsätze, die für alle verbindlich gelten – ohne dass alle alles gleich umsetzen müssen.</p>
+        <div class="zitat">„Wir machen kein Freiarbeits-Experiment. SRL in Klasse 5 heißt: stark strukturierter Anfang, klare Routinen, enge Begleitung – später mehr Eigenständigkeit."</div>
+        <p>Entscheidend ist eine erkennbare gemeinsame Orientierung, nicht vollständige Gleichförmigkeit. Das Team sollte sich auf 5–6 Leitsätze einigen.</p>
+      </div>
+    </div>
+
+    <!-- 2 · Lernen -->
+    <div class="kachel lernen" data-id="2">
+      <div class="kachel-head">
+        <div class="kachel-top">
+          <span class="kachel-badge">Lernen</span>
+          <span class="kachel-chevron">▼</span>
+        </div>
+        <span class="kachel-icon">🔁</span>
+        <div class="kachel-title">Routinen und Lernstrategien</div>
+        <div class="kachel-teaser">Was passiert am Stundenstart, in der Arbeitsphase, am Ende – und alle nennen es gleich. Plus: Rucksäcke als täglicher Anker.</div>
+      </div>
+      <div class="kachel-body">
+        <p>Für die ersten Schulwochen braucht es sehr wenige, aber stabile Routinen. Mehr würde überlasten.</p>
+        <ul>
+          <li><strong>Stundenstart:</strong> Was ist heute mein Ziel?</li>
+          <li><strong>Arbeitsphase:</strong> Hilfekette – erst selbst, dann Material, dann Mitschüler:in, dann Lehrkraft</li>
+          <li><strong>Zwischenstopp:</strong> Wo stehe ich gerade?</li>
+          <li><strong>Stundenende:</strong> Was habe ich geschafft? Was ist mein nächster Schritt?</li>
+        </ul>
+        <p>Ergänzend können zu Beginn des Tages oder der Woche kurze <strong>„Rucksack-Runden"</strong> eingebaut werden: Kinder teilen kurz mit, was sie beschäftigt oder belastet – so wird sichtbar, mit welchen Voraussetzungen sie in den Lerntag starten. Das stärkt das Klassenklima und informiert die Lehrkraft.</p>
+        <p><strong>Startauswahl Lernstrategien</strong> – maximal fünf für die ersten 6–8 Wochen:</p>
+        <ul>
+          <li>Ich setze mir ein Lernziel.</li>
+          <li>Ich markiere wichtige Stellen.</li>
+          <li>Ich notiere Stichpunkte.</li>
+          <li>Ich nutze Hilfen in einer festen Reihenfolge.</li>
+          <li>Ich schätze am Ende ein, wie gut ich vorangekommen bin.</li>
+        </ul>
+        <div class="hinweis">Alle Lehrkräfte verwenden dieselbe Sprache für dieselben Konzepte. Kein Fach nennt „Hilfekette" anders.</div>
+      </div>
+    </div>
+
+    <!-- 3 · Struktur -->
+    <div class="kachel struktur" data-id="3">
+      <div class="kachel-head">
+        <div class="kachel-top">
+          <span class="kachel-badge">Struktur</span>
+          <span class="kachel-chevron">▼</span>
+        </div>
+        <span class="kachel-icon">🕐</span>
+        <div class="kachel-title">Lernzeiten organisatorisch klären</div>
+        <div class="kachel-teaser">Welche Stunden, welche Fächer, wie viel Führung am Anfang – das muss vor dem Start feststehen, nicht improvisiert werden.</div>
+      </div>
+      <div class="kachel-body">
+        <p>Vor dem Start muss feststehen: welche Stunden, welche Fächer, welche Struktur – und wie eng die Führung am Anfang ist.</p>
+        <div class="zitat">„In Lernzeiten wird zunächst am Leitfach gearbeitet. Die Lehrkraft eröffnet, klärt Ziel und Material, begleitet die Arbeitsphase und schließt mit einer kurzen Reflexion ab."</div>
+        <div class="hinweis">Die große Öffnung – „Ich entscheide selbst, woran ich arbeite" – nicht vor den Herbstferien anpeilen.</div>
+      </div>
+    </div>
+
+    <!-- 4 · Struktur -->
+    <div class="kachel struktur" data-id="4">
+      <div class="kachel-head">
+        <div class="kachel-top">
+          <span class="kachel-badge">Struktur</span>
+          <span class="kachel-chevron">▼</span>
+        </div>
+        <span class="kachel-icon">🗓</span>
+        <div class="kachel-title">Mentorensystem und Zweiwochenplanung</div>
+        <div class="kachel-teaser">Wer begleitet wen, wie oft, mit welchen Fragen – und welche einfache Vorlage hilft Kindern, ihren Lernweg zu sehen.</div>
+      </div>
+      <div class="kachel-body">
+        <p>Beide Elemente gehören zusammen: Die Zweiwochenplanung gibt den Kindern Struktur, das Mentorengespräch gibt ihr Bedeutung.</p>
+        <p><strong>Mentorensystem</strong> – darf nicht nach den Sommerferien improvisiert werden. Vorher muss feststehen:</p>
+        <ul>
+          <li>Wer ist Mentor:in für welches Kind?</li>
+          <li>Wie oft finden Gespräche statt?</li>
+          <li>Wo werden sie dokumentiert?</li>
+          <li>Wann liegen die Gesprächszeiten realistisch im Stundenplan?</li>
+        </ul>
+        <p>Fünf verbindliche Leitfragen für den Start: Wie geht es dir? – Was hat gut geklappt? – Wo brauchst du Hilfe? – Was ist dein nächstes Ziel? – Was vereinbaren wir?</p>
+        <p><strong>Zweiwochenplanung</strong> – am Anfang reicht eine Seite: sichtbar, knapp, wiederkehrend.</p>
+        <ul>
+          <li>Meine Ziele für diese zwei Wochen (Deutsch, Mathe, Englisch, persönliches Lernziel)</li>
+          <li>Das möchte ich üben – Ankreuzen oder kurz eintragen</li>
+          <li>Das habe ich geschafft – kurze Rückmeldung</li>
+          <li>Das bespreche ich im Mentorengespräch – ein Satz oder Symbol</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 5 · Struktur -->
+    <div class="kachel struktur" data-id="5">
+      <div class="kachel-head">
+        <div class="kachel-top">
+          <span class="kachel-badge">Struktur</span>
+          <span class="kachel-chevron">▼</span>
+        </div>
+        <span class="kachel-icon">📦</span>
+        <div class="kachel-title">Ressourcen: Raum und Aufgabenpakete</div>
+        <div class="kachel-teaser">Drei Raumbereiche, ein einheitliches Paketformat – damit Kinder wissen, wo sie was finden, ohne jedes Mal gefragt werden zu müssen.</div>
+      </div>
+      <div class="kachel-body">
+        <p>Nicht perfekt, aber klar strukturiert. Vor dem ersten Schultag sollten drei Raumbereiche erkennbar sein:</p>
+        <ul>
+          <li><strong>Planung:</strong> Zielkarten, Wochen-/Zweiwochenplan, Strategiekarten</li>
+          <li><strong>Durchführung:</strong> Aufgabenpakete, Hilfekarten, Material</li>
+          <li><strong>Reflexion:</strong> Exit-Tickets, Selbsteinschätzung, Mentorengespräch-Notizen</li>
+        </ul>
+        <p><strong>Aufgabenpaket-Format</strong> – vor den Ferien muss nicht jedes Paket fertig sein, aber das einheitliche Format muss feststehen:</p>
+        <ul>
+          <li>Titel / Thema · Das lernst du · Das brauchst du</li>
+          <li>Pflichtaufgaben · Wahl- oder Zusatzaufgaben · Hilfen</li>
+          <li>Reflexion: Das kann ich jetzt / Das brauche ich noch</li>
+        </ul>
+        <p>Für die ersten Wochen sollten Pakete in mindestens Deutsch, Mathe und Englisch grob einsatzbereit sein.</p>
+        <div class="hinweis">Aufgabenpakete müssen verlässlich verfügbar sein – keine mündlichen Einzelanweisungen bei jeder Arbeitsphase.</div>
+      </div>
+    </div>
+
+    <!-- 6 · Kommunikation -->
+    <div class="kachel komm" data-id="6">
+      <div class="kachel-head">
+        <div class="kachel-top">
+          <span class="kachel-badge">Kommunikation</span>
+          <span class="kachel-chevron">▼</span>
+        </div>
+        <span class="kachel-icon">📊</span>
+        <div class="kachel-title">Grundrichtung der Rückmeldekultur klären</div>
+        <div class="kachel-teaser">Wie sprechen wir über Leistung – und was ist neben der Note noch sichtbar? Die gemeinsame Haltung muss vor dem Start stehen.</div>
+      </div>
+      <div class="kachel-body">
+        <p>Es muss nicht alles fachkonferenzfest geregelt sein. Aber die gemeinsame Haltung muss stehen:</p>
+        <div class="zitat">„Zu Beginn machen wir Kompetenzentwicklung sichtbar. Wir nutzen einfache Raster, Rückmeldungen und Gespräche. Noten bleiben Teil des Systems, sind aber nicht das einzige Steuerungsinstrument."</div>
+        <p>Das Team klärt: Wie sprechen wir über Leistung? Wann gibt es Noten? Was wird zunächst nur rückgemeldet?</p>
+      </div>
+    </div>
+
+    <!-- 7 · Kommunikation -->
+    <div class="kachel komm" data-id="7">
+      <div class="kachel-head">
+        <div class="kachel-top">
+          <span class="kachel-badge">Kommunikation</span>
+          <span class="kachel-chevron">▼</span>
+        </div>
+        <span class="kachel-icon">👪</span>
+        <div class="kachel-title">Elterninformation vorbereiten</div>
+        <div class="kachel-teaser">Eltern müssen verstehen: SRL bedeutet nicht weniger Struktur, sondern bewusstere. Eine klare Botschaft verhindert Missverständnisse von Anfang an.</div>
+      </div>
+      <div class="kachel-body">
+        <p>Für die reale Umsetzung entscheidend: Eltern müssen vor Schuljahresbeginn verstehen, was SRL bedeutet – und was es nicht bedeutet.</p>
+        <div class="zitat">„Ihr Kind wird nicht alleingelassen, sondern lernt Schritt für Schritt, das eigene Lernen besser zu planen, durchzuführen und zu reflektieren."</div>
+        <div class="hinweis">SRL bedeutet nicht weniger Struktur, sondern andere, bewusstere Struktur. Wird das nicht kommuniziert, kommt schnell: „Die Kinder müssen sich alles selbst beibringen."</div>
+      </div>
+    </div>
+
+    <!-- 8 · Steuerung -->
+    <div class="kachel steuer" data-id="8">
+      <div class="kachel-head">
+        <div class="kachel-top">
+          <span class="kachel-badge">Steuerung</span>
+          <span class="kachel-chevron">▼</span>
+        </div>
+        <span class="kachel-icon">🗺</span>
+        <div class="kachel-title">Den ersten Monat konkret planen</div>
+        <div class="kachel-teaser">Woche 1 startet mit WiLuK – Ankommen hat Vorrang. Erst danach werden SRL-Routinen schrittweise eingeführt.</div>
+      </div>
+      <div class="kachel-body">
+        <p>Nicht das ganze Jahr – nur der erste Monat. Der Start entscheidet, ob das Projekt als klare Lernkultur erlebt wird.</p>
+        <ul>
+          <li><strong>Woche 1 – WiLuK:</strong> <em>„Wir lernen uns kennen"</em> – bewährtes Konzept der HBG zum Schulstart in der Erprobungsstufe. Klassenfindung, Gebäude und Schulregeln kennenlernen, Zugang zu Stundenplan und Vertretungsplan. SRL-Routinen werden in dieser Woche erst vorbereitet, nicht eingefordert.</li>
+          <li><strong>Woche 2:</strong> Lernziel setzen, einfache Lernzeit, erste Reflexion – erste SRL-Routinen etablieren</li>
+          <li><strong>Woche 3:</strong> Hilfekette einführen, erste Aufgabenpakete nutzen</li>
+          <li><strong>Woche 4:</strong> Erste Mentorengespräche, erste Zweiwochenplanung auswerten</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 9 · Steuerung -->
+    <div class="kachel steuer" data-id="9">
+      <div class="kachel-head">
+        <div class="kachel-top">
+          <span class="kachel-badge">Steuerung</span>
+          <span class="kachel-chevron">▼</span>
+        </div>
+        <span class="kachel-icon">🔄</span>
+        <div class="kachel-title">Team-Abstimmungsstruktur festlegen</div>
+        <div class="kachel-teaser">Wann steuert das Team nach? Feste Termine und immer dieselben Fragen – damit Probleme früh erkannt werden, nicht erst nach den Herbstferien.</div>
+      </div>
+      <div class="kachel-body">
+        <p>Wann steuert das Team nach? Minimal realistisch:</p>
+        <ul>
+          <li>Kurze Abstimmung vor Schulstart</li>
+          <li>Nach zwei Wochen</li>
+          <li>Vor den Herbstferien</li>
+          <li>Danach regelmäßig in passenden Abständen</li>
+        </ul>
+        <p>Immer dieselben Fragen: Was funktioniert? – Was überfordert die Kinder? – Welche Routine sitzt noch nicht? – Welche Entscheidung müssen wir nachschärfen?</p>
+      </div>
+    </div>
+
+  </div><!-- /kachel-grid -->
+
+  <div class="kachel-actions">
+    <button class="btn-small" id="btn-expand">Alle aufklappen</button>
+    <button class="btn-small" id="btn-collapse">Alle zuklappen</button>
+  </div>
+
+  <!-- ── Checkliste ──────────────────────────── -->
+  <div class="section-label" style="margin-top: 48px;">Muss-Liste – Startentscheidungen im Überblick</div>
+
+  <div class="checklist-wrap">
+    <div class="checklist-head">
+      <div></div>
+      <div>Startentscheidung</div>
+      <div>Ergebnis / Vereinbarung des Teams</div>
+    </div>
+    <div class="checklist-row" id="row-1">
+      <div class="check-cell"><input type="checkbox" data-row="1"></div>
+      <div class="label-cell">Gemeinsames SRL-Verständnis</div>
+      <div class="ergebnis-cell"><textarea placeholder="5–6 Leitsätze eintragen …" data-row="1"></textarea></div>
+    </div>
+    <div class="checklist-row" id="row-2">
+      <div class="check-cell"><input type="checkbox" data-row="2"></div>
+      <div class="label-cell">Routinen und Lernstrategien</div>
+      <div class="ergebnis-cell"><textarea placeholder="Routinen, Rucksack-Format, Strategieauswahl …" data-row="2"></textarea></div>
+    </div>
+    <div class="checklist-row" id="row-3">
+      <div class="check-cell"><input type="checkbox" data-row="3"></div>
+      <div class="label-cell">Lernzeiten im Stundenplan</div>
+      <div class="ergebnis-cell"><textarea placeholder="Wann, welches Fach, welche Struktur …" data-row="3"></textarea></div>
+    </div>
+    <div class="checklist-row" id="row-4">
+      <div class="check-cell"><input type="checkbox" data-row="4"></div>
+      <div class="label-cell">Mentorensystem und Zweiwochenplanung</div>
+      <div class="ergebnis-cell"><textarea placeholder="Zuständigkeiten, Rhythmus, Vorlage …" data-row="4"></textarea></div>
+    </div>
+    <div class="checklist-row" id="row-5">
+      <div class="check-cell"><input type="checkbox" data-row="5"></div>
+      <div class="label-cell">Ressourcen: Raum und Aufgabenpakete</div>
+      <div class="ergebnis-cell"><textarea placeholder="Raumbereiche, Paket-Format, erste Pakete …" data-row="5"></textarea></div>
+    </div>
+    <div class="checklist-row" id="row-6">
+      <div class="check-cell"><input type="checkbox" data-row="6"></div>
+      <div class="label-cell">Rückmeldekultur</div>
+      <div class="ergebnis-cell"><textarea placeholder="Grundsatz zu Raster, Feedback, Noten …" data-row="6"></textarea></div>
+    </div>
+    <div class="checklist-row" id="row-7">
+      <div class="check-cell"><input type="checkbox" data-row="7"></div>
+      <div class="label-cell">Elterninformation</div>
+      <div class="ergebnis-cell"><textarea placeholder="Format, Zeitpunkt, Kernbotschaft …" data-row="7"></textarea></div>
+    </div>
+    <div class="checklist-row" id="row-8">
+      <div class="check-cell"><input type="checkbox" data-row="8"></div>
+      <div class="label-cell">Erster Monat geplant (inkl. WiLuK)</div>
+      <div class="ergebnis-cell"><textarea placeholder="Wochenplanung Woche 1–4 skizziert …" data-row="8"></textarea></div>
+    </div>
+    <div class="checklist-row" id="row-9">
+      <div class="check-cell"><input type="checkbox" data-row="9"></div>
+      <div class="label-cell">Team-Abstimmungsstruktur</div>
+      <div class="ergebnis-cell"><textarea placeholder="Termine, Formate, Fragen festgelegt …" data-row="9"></textarea></div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <span id="progress-text">0 von 9 erledigt</span>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="kachel-actions" style="margin-top:12px;">
+    <button class="btn-small print" id="btn-print">🖨 Drucken / Als PDF speichern</button>
+    <button class="btn-small danger" id="btn-reset">Eingaben zurücksetzen</button>
+  </div>
+
+</main>
+
+<footer>
+  <span>Arbeitsdokument Klassenteam · Pilotprojekt SRL Klasse 5 · HBG Dortmund · Stand: 4. Juni 2026</span>
+  <a href="https://srl-5.vercel.app" target="_blank" rel="noopener">Vollständiges Arbeitspapier → srl-5.vercel.app</a>
+</footer>
+
+<script>
+  const STORAGE_KEY = 'srl5_startpaket';
+
+  function loadData() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch { return {}; }
+  }
+  function saveData(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+  }
+
+  function updateRow(rowNum, checked) {
+    const row = document.getElementById('row-' + rowNum);
+    if (!row) return;
+    checked ? row.classList.add('done') : row.classList.remove('done');
+  }
+
+  function updateProgress() {
+    const total = 9;
+    const done = document.querySelectorAll('.checklist-row.done').length;
+    document.getElementById('progress-text').textContent = done + ' von ' + total + ' erledigt';
+    document.getElementById('progress-fill').style.width = (done / total * 100) + '%';
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const data = loadData();
+
+    // Kacheln: Click-Handler
+    document.querySelectorAll('.kachel').forEach(k => {
+      k.addEventListener('click', () => k.classList.toggle('open'));
+    });
+
+    // Checklist: Werte laden
+    for (let i = 1; i <= 9; i++) {
+      const cb = document.querySelector('input[data-row="' + i + '"]');
+      const ta = document.querySelector('textarea[data-row="' + i + '"]');
+      if (data['check_' + i]) { cb.checked = true; updateRow(i, true); }
+      if (data['text_' + i]) { ta.value = data['text_' + i]; }
+    }
+    updateProgress();
+
+    // Checkboxen
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const row = parseInt(cb.dataset.row);
+        const d = loadData(); d['check_' + row] = cb.checked; saveData(d);
+        updateRow(row, cb.checked); updateProgress();
+      });
+    });
+
+    // Textfelder (debounced)
+    let timer;
+    document.querySelectorAll('textarea').forEach(ta => {
+      ta.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          const row = parseInt(ta.dataset.row);
+          const d = loadData(); d['text_' + row] = ta.value; saveData(d);
+        }, 400);
+      });
+    });
+
+    // Alle auf/zu
+    document.getElementById('btn-expand').addEventListener('click', () => {
+      document.querySelectorAll('.kachel').forEach(k => k.classList.add('open'));
+    });
+    document.getElementById('btn-collapse').addEventListener('click', () => {
+      document.querySelectorAll('.kachel').forEach(k => k.classList.remove('open'));
+    });
+
+    // Reset
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (!confirm('Alle Häkchen und Einträge wirklich löschen?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      document.querySelectorAll('textarea').forEach(ta => ta.value = '');
+      document.querySelectorAll('.checklist-row').forEach(r => r.classList.remove('done'));
+      updateProgress();
+    });
+
+    // Drucken: alle Kacheln vor dem Druck aufklappen, danach Zustand wiederherstellen
+    document.getElementById('btn-print').addEventListener('click', () => {
+      const wasOpen = [];
+      document.querySelectorAll('.kachel').forEach((k, i) => {
+        wasOpen[i] = k.classList.contains('open');
+        k.classList.add('open');
+      });
+      window.print();
+      // Nach Druckdialog Zustand wiederherstellen
+      setTimeout(() => {
+        document.querySelectorAll('.kachel').forEach((k, i) => {
+          if (!wasOpen[i]) k.classList.remove('open');
+        });
+      }, 500);
+    });
+  });
+</script>
+</body>
+</html>
