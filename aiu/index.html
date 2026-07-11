@@ -10,6 +10,7 @@
 <link rel="manifest" href="app.webmanifest">
 <title>Kurs ins Unbekannte – Begleit-App</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="gems.css">
 </head>
 <body>
 <header id="appHeader"><div class="header-inner">
@@ -36,6 +37,17 @@
     <article class="card card-pad routine"><div class="row"><div class="routine-icon">🧭</div><div><div class="eyebrow">Aktuelle Lernroutine</div><h3 class="card-title" id="routineTitle"></h3><p id="routineText"></p></div></div></article>
     <article class="card card-pad next-unlock"><div class="eyebrow">Neu in dieser Woche</div><h3 class="card-title" id="unlockTitle"></h3><p id="unlockText"></p></article>
   </div>
+  <article class="card gems-card" id="gemsSection">
+    <div class="gems-head"><div><div class="eyebrow">Schatzkammer</div><h2 class="card-title">Ressourcen der Besatzung</h2><p>Neue Glassteine fallen sichtbar in das passende Gefäß.</p></div><span class="gems-live">✦ animierter Spielstand</span></div>
+    <div id="gems-canvas-wrap">
+      <canvas id="gems-canvas" aria-label="Drei animierte Glasgefäße mit den Ressourcen der Besatzung"></canvas>
+      <div class="gems-labels">
+        <div class="gems-label antrieb" id="gemLabel-antrieb"><strong id="gemValue-antrieb">0</strong><span>🌿 Antrieb</span><small id="gemMax-antrieb">von 30</small></div>
+        <div class="gems-label wissen" id="gemLabel-wissen"><strong id="gemValue-wissen">0</strong><span>📜 Wissen</span><small id="gemMax-wissen">von 30</small></div>
+        <div class="gems-label zusammenhalt" id="gemLabel-zusammenhalt"><strong id="gemValue-zusammenhalt">0</strong><span>🤝 Zusammenhalt</span><small id="gemMax-zusammenhalt">von 30</small></div>
+      </div>
+    </div>
+  </article>
   <div class="resources" id="resourceCards"></div>
   <div class="row spread" style="margin-top:18px"><h2 class="card-title">Ausbau des Schiffes</h2><button class="ghost" data-go="ausbau">Alle Ausbauten ansehen</button></div>
   <div class="upgrade-grid" id="upgradePreview"></div>
@@ -87,5 +99,6 @@
 <div class="modal-wrap" id="pinModal"><div class="modal" style="width:min(390px,100%)"><div class="modal-head"><div class="grow center"><h2>🔑 Kapitänskajüte</h2><p class="muted">Lehrkräfte-PIN eingeben</p></div><button class="icon-btn" id="pinCancel">✕</button></div><div class="modal-body"><div class="pin-dots" id="pinDots"></div><div class="pin-grid" id="pinGrid"></div><p class="center" style="color:var(--red);min-height:1.4em" id="pinError"></p></div></div></div>
 
 <div class="stamp" id="stamp">✓ AN BORD<br><span style="font-size:.8rem">wartet auf Sichtung</span></div><div class="toast" id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="app.js" defer></script>
 </body></html>
