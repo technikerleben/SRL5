@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173f5f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="app.webmanifest">
+<title>Kurs ins Unbekannte – Begleit-App</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header id="appHeader"><div class="header-inner">
+  <div class="emblem" id="headerEmblem">⚓</div><div class="brand"><h1 id="headerShip">Kurs ins Unbekannte</h1><p id="headerSub">Begleit-App der Klasse 5</p></div>
+  <div class="header-status"><strong id="headerWeek">Woche 1</strong><span class="small" id="headerPosition">Heimathafen</span><div class="session-pill" id="sessionPill">🔒 Beiträge geschlossen</div></div>
+  <button class="teacher-key" id="teacherOpen" aria-label="Lehrkräftebereich">🔑</button>
+</div></header>
+<main>
+<section class="view active" id="view-deck">
+  <article class="card chapter-card"><div class="chapter-inner">
+    <div class="progress-ribbon"><span class="eyebrow" id="phaseLabel">Einführung</span><div class="week-dots" id="weekDots"></div></div>
+    <h2 class="card-title" id="chapterTitle">Das Schiff wird übernommen</h2><p id="chapterStory"></p>
+  </div></article>
+  <div class="ship-board" aria-label="Interaktives Schiff">
+    <div class="sea-wave"></div><div class="mast"></div><div class="sail"></div>
+    <button class="hotspot hs-missions" data-go="missionen"><span class="hs-icon">📌</span>Auftragstafel</button>
+    <button class="hotspot hs-map" data-go="karte"><span class="hs-icon">🗺️</span>Kartentisch</button>
+    <button class="hotspot hs-log" data-go="logbuch"><span class="hs-icon">📖</span>Logbuch</button>
+    <button class="hotspot hs-council" data-go="rat"><span class="hs-icon">🗣️</span>Besatzungsrat</button>
+    <button class="hotspot hs-res" id="resourceHotspot"><span class="hs-icon">💎</span>Schatzkammer</button>
+    <button class="hotspot hs-teacher" id="teacherHotspot"><span class="hs-icon">🚪</span>Kapitänskajüte</button>
+  </div>
+  <div class="deck-grid">
+    <article class="card card-pad routine"><div class="row"><div class="routine-icon">🧭</div><div><div class="eyebrow">Aktuelle Lernroutine</div><h3 class="card-title" id="routineTitle"></h3><p id="routineText"></p></div></div></article>
+    <article class="card card-pad next-unlock"><div class="eyebrow">Neu in dieser Woche</div><h3 class="card-title" id="unlockTitle"></h3><p id="unlockText"></p></article>
+  </div>
+  <div class="resources" id="resourceCards"></div>
+  <div class="row spread" style="margin-top:18px"><h2 class="card-title">Ausbau des Schiffes</h2><button class="ghost" data-go="ausbau">Alle Ausbauten ansehen</button></div>
+  <div class="upgrade-grid" id="upgradePreview"></div>
+</section>
+
+<section class="view" id="view-missionen">
+  <div class="row spread"><div><div class="eyebrow">Auftragshafen</div><h2 class="card-title">Wähle deinen Beitrag</h2><p class="muted">Öffne eine Mission erst, wenn deine vereinbarte Lernaufgabe abgeschlossen und geprüft ist.</p></div><div class="session-pill" id="missionSessionPill">🔒 Beiträge geschlossen</div></div>
+  <div class="area-tabs" id="areaTabs"></div><div class="mission-grid" id="missionGrid"></div>
+</section>
+
+<section class="view" id="view-karte">
+  <div class="row spread"><div><div class="eyebrow">Kartenraum</div><h2 class="card-title">Die Welt wächst mit euren Ideen</h2></div><a class="ghost" id="mapExternal" target="_blank" rel="noopener">Karten-Designer öffnen</a></div>
+  <div class="map-shell"><article class="card map-frame"><iframe id="mapIframe" title="3D-Weltkarte"></iframe><div class="map-fallback hidden" id="mapFallback"><img id="mapImage" alt="Aktuelle Seekarte"><p id="mapCaption"></p></div></article>
+  <aside class="card card-pad"><h3 class="card-title">Aktuelle Reise</h3><p><strong>Position:</strong> <span id="mapPosition"></span></p><p id="mapWeekStory"></p><div class="location-list" id="mapIdeas"></div><button class="primary" id="newPlaceBtn" style="width:100%;margin-top:12px">✨ Einen neuen Ort vorschlagen</button></aside></div>
+</section>
+
+<section class="view" id="view-logbuch">
+  <div class="row spread"><div><div class="eyebrow">Logbuch</div><h2 class="card-title">Die Geschichte eurer Reise</h2></div><button class="primary" id="quickLogBtn">✍️ Beitrag einreichen</button></div>
+  <div class="log-layout"><article class="card book" id="logbookList"></article><aside class="card card-pad"><h3 class="card-title">Mögliche Beiträge</h3><p>Du kannst schreiben, zeichnen, ein Foto abgeben oder etwas einsprechen.</p><div class="stack"><button class="secondary" data-logprompt="Heute ist passiert …">Heute ist passiert …</button><button class="secondary" data-logprompt="Unsere Entscheidung war …">Unsere Entscheidung war …</button><button class="secondary" data-logprompt="Ich habe entdeckt …">Ich habe entdeckt …</button><button class="secondary" data-logprompt="Mein Vorschlag für die Geschichte …">Mein Vorschlag …</button></div></aside></div>
+</section>
+
+<section class="view" id="view-rat">
+  <div class="eyebrow">Besatzungsrat</div><h2 class="card-title" id="councilTitle"></h2><p id="councilDescription"></p>
+  <article class="card council-stage"><div id="councilState"></div><div class="council-options" id="councilOptions"></div></article>
+  <div class="card card-pad" style="margin-top:16px"><h3 class="card-title">Fundstücke der Woche</h3><p class="muted">Beiträge, die von der Lehrkraft für den Besatzungsrat markiert wurden.</p><div class="queue" id="shortlist"></div></div>
+</section>
+
+<section class="view" id="view-ausbau">
+  <div class="eyebrow">Schiffsausbau</div><h2 class="card-title">Was unser Schiff inzwischen kann</h2><p>Jeder Ausbau verändert die Möglichkeiten der Reise.</p><div class="upgrade-grid" id="upgradeGrid"></div>
+</section>
+
+<section class="view" id="view-lehrer">
+  <div class="row spread"><div><div class="eyebrow">Kapitänskajüte</div><h2 class="card-title">Lehrkräftebereich</h2></div><button class="danger" id="teacherLogout">Abmelden</button></div>
+  <div class="teacher-grid">
+    <article class="card control-group"><h3 class="card-title">Woche und Spielstand</h3><label class="caps" for="weekSelect">Aktuelle Woche</label><select id="weekSelect"></select><div class="stack" id="teacherResources" style="margin-top:14px"></div><button class="primary" id="saveRuntime" style="width:100%;margin-top:12px">Spielstand speichern</button></article>
+    <article class="card control-group"><h3 class="card-title">Schülerzugang</h3><p id="sessionTeacherText">Beiträge sind geschlossen.</p><div class="row"><button class="secondary session-start" data-min="10">10 Min.</button><button class="secondary session-start" data-min="15">15 Min.</button><button class="secondary session-start" data-min="30">30 Min.</button><button class="danger" id="sessionClose">Schließen</button></div><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><h3 class="card-title">Besatzungsrat</h3><div class="row"><button class="primary" id="councilOpen">Abstimmung öffnen</button><button class="secondary" id="councilClose">Schließen</button><button class="danger" id="councilReset">Stimmen löschen</button></div><div id="teacherCouncilResults" style="margin-top:12px"></div></article>
+    <article class="card control-group wide"><div class="row spread"><h3 class="card-title">Eingereichte Beiträge</h3><div class="row"><select id="queueFilter" style="width:auto"><option value="pending">Offen</option><option value="shortlist">Besatzungsrat</option><option value="approved">Übernommen</option><option value="all">Alle</option></select><button class="secondary" id="refreshQueue">Aktualisieren</button></div></div><div class="queue" id="teacherQueue"></div></article>
+    <article class="card control-group"><h3 class="card-title">Schiffsausbauten</h3><div id="teacherUpgrades" class="stack"></div></article>
+    <article class="card control-group"><h3 class="card-title">Sicherung und Export</h3><p class="small muted">Die Sicherung enthält Spielstand, Abstimmungen, freigegebene Einträge sowie Medienbeiträge des iPads.</p><div class="stack"><button class="primary" id="backupExport">Komplette Sicherung herunterladen</button><label class="secondary center" style="display:block">Sicherung importieren<input type="file" id="backupImport" accept="application/json" hidden></label><button class="secondary" id="configExport">Aktualisierte config.json herunterladen</button><button class="danger" id="clearLocal">Lokale Daten zurücksetzen</button></div></article>
+    <article class="card control-group wide"><h3 class="card-title">Aktuelle Freischaltungen</h3><div id="unlockPreview"></div></article>
+  </div>
+</section>
+</main>
+
+<nav class="bottom-nav" aria-label="Hauptnavigation"><button class="nav-btn active" data-view="deck"><span>⚓</span>Deck</button><button class="nav-btn" data-view="missionen"><span>📌</span>Aufträge</button><button class="nav-btn" data-view="karte"><span>🗺️</span>Karte</button><button class="nav-btn" data-view="logbuch"><span>📖</span>Logbuch</button><button class="nav-btn" data-view="rat"><span>🗣️</span>Rat</button></nav>
+
+<div class="modal-wrap" id="missionModal"><div class="modal"><div class="modal-head"><div class="grow"><div class="eyebrow" id="modalArea"></div><h2 id="modalTitle"></h2></div><button class="icon-btn modal-close">✕</button></div><div class="modal-body"><p id="modalTask"></p><div class="row"><span class="tag" id="modalResource"></span><span class="tag" id="modalTime"></span></div><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><label class="caps">Name oder Team</label><input type="text" id="submissionAuthor" maxlength="80" placeholder="z. B. Lea und Amir"><p class="caps">Wie möchtest du deinen Beitrag abgeben?</p><div class="output-choice" id="outputChoices"></div><div id="outputEditor" style="margin-top:14px"></div><div class="row spread" style="margin-top:16px"><span class="small muted">Der Beitrag wartet danach auf die Freigabe der Lehrkraft.</span><button class="primary" id="submitMission">Beitrag abgeben</button></div></div></div></div>
+
+<div class="modal-wrap" id="pinModal"><div class="modal" style="width:min(390px,100%)"><div class="modal-head"><div class="grow center"><h2>🔑 Kapitänskajüte</h2><p class="muted">Lehrkräfte-PIN eingeben</p></div><button class="icon-btn" id="pinCancel">✕</button></div><div class="modal-body"><div class="pin-dots" id="pinDots"></div><div class="pin-grid" id="pinGrid"></div><p class="center" style="color:var(--red);min-height:1.4em" id="pinError"></p></div></div></div>
+
+<div class="stamp" id="stamp">✓ AN BORD<br><span style="font-size:.8rem">wartet auf Sichtung</span></div><div class="toast" id="toast"></div>
+<script src="app.js" defer></script>
+</body></html>
