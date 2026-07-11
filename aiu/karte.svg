@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+<defs><linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8fd1dc"/><stop offset="1" stop-color="#267b9a"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-opacity=".22"/></filter></defs>
+<rect width="1200" height="760" fill="url(#sea)"/>
+<g fill="none" stroke="#d9f1f4" opacity=".35" stroke-width="5"><path d="M0 115 Q150 70 300 115 T600 115 T900 115 T1200 115"/><path d="M0 660 Q150 615 300 660 T600 660 T900 660 T1200 660"/></g>
+<g filter="url(#shadow)" stroke="#d0a642" stroke-width="8">
+<path d="M115 520 Q170 425 260 455 Q325 370 410 430 Q438 510 365 555 Q225 590 115 520" fill="#7dbb6f"/>
+<path d="M455 275 Q520 190 635 230 Q710 170 780 245 Q810 335 710 370 Q570 390 455 275" fill="#e6d0a3"/>
+<path d="M830 490 Q900 405 1005 440 Q1080 425 1110 515 Q1050 595 920 575 Q850 560 830 490" fill="#a6c990"/>
+</g>
+<g font-family="system-ui,sans-serif" font-weight="800" fill="#173f5f" text-anchor="middle"><text x="260" y="500" font-size="30">Heimathafen</text><text x="620" y="295" font-size="30">Leuchtturmhafen</text><text x="970" y="515" font-size="30">Grüne Insel</text></g>
+<g transform="translate(260 405)"><rect x="-48" y="0" width="96" height="38" rx="8" fill="#f7f2e7"/><path d="M-70 45 L70 45 L45 78 L-45 78 Z" fill="#8b512e"/><path d="M0 -80 V42" stroke="#704221" stroke-width="9"/><path d="M5 -75 L75 -28 L5 5 Z" fill="#f7f2e7" stroke="#d0a642" stroke-width="4"/></g>
+<g transform="translate(620 195)"><rect x="-16" y="-90" width="32" height="105" fill="#f7f2e7" stroke="#9b3b34" stroke-width="7"/><polygon points="-30,-90 30,-90 18,-120 -18,-120" fill="#9b3b34"/><circle cy="-72" r="10" fill="#ffd35d"/></g>
+<g fill="#173f5f"><circle cx="548" cy="520" r="8"/><circle cx="620" cy="500" r="8"/><circle cx="700" cy="470" r="8"/></g><path d="M365 500 Q520 555 830 510" fill="none" stroke="#173f5f" stroke-width="6" stroke-dasharray="14 14"/>
+<g opacity=".86"><path d="M1040 120 q50 -45 100 0 q-30 35 -50 25 q-25 10 -50 -25" fill="#f7f2e7"/><text x="1090" y="140" font-size="35" text-anchor="middle">?</text></g>
+</svg>
