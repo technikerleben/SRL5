@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Unser Segelschiff – HBG</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: transparent; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; }
+  #szene { position: fixed; inset: 0; }
+  canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="szene"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const container = document.getElementById('szene');
+  const szene = new THREE.Scene();
+  szene.fog = new THREE.Fog(0xBFDDF0, 45, 110);
+  const kamera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 300);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  container.appendChild(renderer.domElement);
+  const himmelCanvas = document.createElement('canvas');
+  himmelCanvas.width = 2; himmelCanvas.height = 256;
+  const hctx = himmelCanvas.getContext('2d');
+  const grad = hctx.createLinearGradient(0, 0, 0, 256);
+  grad.addColorStop(0.0, '#5EA8DC');
+  grad.addColorStop(0.55, '#A8D4EE');
+  grad.addColorStop(1.0, '#DCEFF9');
+  hctx.fillStyle = grad; hctx.fillRect(0, 0, 2, 256);
+  szene.background = new THREE.CanvasTexture(himmelCanvas);
+  szene.add(new THREE.HemisphereLight(0xCFE8FF, 0x2E6C96, 0.75));
+  const sonne = new THREE.DirectionalLight(0xFFF3D6, 1.15);
+  sonne.position.set(18, 26, 10);
+  sonne.castShadow = true;
+  sonne.shadow.mapSize.set(1024, 1024);
+  sonne.shadow.camera.left = -18; sonne.shadow.camera.right = 18;
+  sonne.shadow.camera.top = 18; sonne.shadow.camera.bottom = -18;
+  szene.add(sonne);
+  const sonnenScheibe = new THREE.Mesh(new THREE.CircleGeometry(3.2, 32),new THREE.MeshBasicMaterial({ color: 0xFFE9A8, fog: false }));
+  sonnenScheibe.position.set(34, 26, -60); sonnenScheibe.lookAt(0, 4, 0); szene.add(sonnenScheibe);
+  const matRumpf=new THREE.MeshPhongMaterial({color:0x8B5A2B,shininess:18});
+  const matRumpfDkl=new THREE.MeshPhongMaterial({color:0x5F3A1B,shininess:14});
+  const matDeck=new THREE.MeshPhongMaterial({color:0xC9A66B,shininess:8});
+  const matHolzHell=new THREE.MeshPhongMaterial({color:0xA9793F,shininess:10});
+  const matMast=new THREE.MeshPhongMaterial({color:0x7A4E24,shininess:12});
+  const matSegel=new THREE.MeshPhongMaterial({color:0xFFFFFF,side:THREE.DoubleSide,shininess:4});
+  const matFlagge=new THREE.MeshPhongMaterial({color:0xC0392B,side:THREE.DoubleSide});
+  const matFenster=new THREE.MeshPhongMaterial({color:0xFFE08A,emissive:0x7A5C10});
+  const matMetall=new THREE.MeshPhongMaterial({color:0x4A4F55,shininess:60});
+  const matBullauge=new THREE.MeshPhongMaterial({color:0x2C5E82,shininess:80});
+  const schiff = new THREE.Group(); szene.add(schiff);
+  const HALBBREITE=1.3;
+  const profil=new THREE.Shape();
+  profil.moveTo(-5.0,1.7); profil.lineTo(-5.0,0.2); profil.quadraticCurveTo(-4.7,-1.1,-3.0,-1.35); profil.lineTo(3.0,-1.35); profil.quadraticCurveTo(4.6,-1.15,5.5,0.5); profil.lineTo(5.9,1.15); profil.lineTo(4.9,0.95); profil.quadraticCurveTo(0.0,0.45,-3.6,0.95); profil.lineTo(-5.0,1.7);
+  const rumpfGeo=new THREE.ExtrudeGeometry(profil,{depth:HALBBREITE*2-0.5,bevelEnabled:true,bevelThickness:0.28,bevelSize:0.25,bevelSegments:3,curveSegments:16});
+  rumpfGeo.translate(0,0,-(HALBBREITE-0.25)); const rumpf=new THREE.Mesh(rumpfGeo,matRumpf); rumpf.castShadow=true; schiff.add(rumpf);
+  const streifenProfil=new THREE.Shape();
+  streifenProfil.moveTo(-5.0,0.2); streifenProfil.quadraticCurveTo(-4.7,-1.1,-3.0,-1.35); streifenProfil.lineTo(3.0,-1.35); streifenProfil.quadraticCurveTo(4.6,-1.15,5.2,-0.2); streifenProfil.lineTo(5.0,0.1); streifenProfil.lineTo(-5.0,0.2);
+  const streifenGeo=new THREE.ExtrudeGeometry(streifenProfil,{depth:HALBBREITE*2-0.4,bevelEnabled:true,bevelThickness:0.3,bevelSize:0.27,bevelSegments:3,curveSegments:12});
+  streifenGeo.translate(0,-0.04,-(HALBBREITE-0.2)); schiff.add(new THREE.Mesh(streifenGeo,matRumpfDkl));
+  const deck=new THREE.Mesh(new THREE.BoxGeometry(8.6,0.16,HALBBREITE*2-0.15),matDeck); deck.position.set(-0.2,0.62,0); deck.receiveShadow=true; schiff.add(deck);
+  const relingGrp=new THREE.Group(); const handlaufGeo=new THREE.CylinderGeometry(0.05,0.05,8.2,8);
+  [-1,1].forEach(seite=>{const handlauf=new THREE.Mesh(handlaufGeo,matHolzHell); handlauf.rotation.z=Math.PI/2; handlauf.position.set(-0.3,1.15,seite*(HALBBREITE-0.12)); relingGrp.add(handlauf); for(let x=-4.2;x<=3.7;x+=0.75){const pfosten=new THREE.Mesh(new THREE.BoxGeometry(0.08,0.5,0.08),matHolzHell); pfosten.position.set(x,0.92,seite*(HALBBREITE-0.12)); relingGrp.add(pfosten)}}); schiff.add(relingGrp);
+  const kajuete=new THREE.Mesh(new THREE.BoxGeometry(1.9,1.15,HALBBREITE*2-0.1),matHolzHell); kajuete.position.set(-4.0,1.35,0); kajuete.castShadow=true; schiff.add(kajuete);
+  const kajuetenDach=new THREE.Mesh(new THREE.BoxGeometry(2.15,0.14,HALBBREITE*2+0.1),matRumpfDkl); kajuetenDach.position.set(-4.0,1.98,0); schiff.add(kajuetenDach);
+  for(let i=-1;i<=1;i++){const fGrp=new THREE.Group(); const fRect=new THREE.Mesh(new THREE.BoxGeometry(0.34,0.42,0.05),matFenster); const fBogen=new THREE.Mesh(new THREE.CylinderGeometry(0.17,0.17,0.05,16,1,false,0,Math.PI),matFenster); fBogen.rotation.x=Math.PI/2; fBogen.rotation.z=Math.PI/2; fBogen.position.y=0.21; fGrp.add(fRect,fBogen); fGrp.position.set(-4.99,1.35,i*0.7); fGrp.rotation.y=-Math.PI/2; schiff.add(fGrp)}
+  const bullaugenX=[-2.6,-1.6,-0.6,0.4,1.4,2.4];
+  [-1,1].forEach(seite=>bullaugenX.forEach(x=>{const ring=new THREE.Mesh(new THREE.TorusGeometry(0.16,0.045,8,20),matMetall); const glas=new THREE.Mesh(new THREE.CircleGeometry(0.15,20),matBullauge); ring.position.set(x,-0.1,seite*(HALBBREITE+0.26)); glas.position.copy(ring.position); if(seite===-1){ring.rotation.y=Math.PI;glas.rotation.y=Math.PI} schiff.add(ring,glas)}));
+  const bugspriet=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.11,3.4,10),matMast); bugspriet.position.set(6.6,1.7,0); bugspriet.rotation.z=-Math.PI/2+0.38; schiff.add(bugspriet);
+  function dreieckSegel(p1,p2,p3,bauch){const geo=new THREE.BufferGeometry(); const N=12,pos=[]; const a=new THREE.Vector3(...p1),b=new THREE.Vector3(...p2),c=new THREE.Vector3(...p3); for(let i=0;i<N;i++){const t0=i/N,t1=(i+1)/N; const e0=b.clone().lerp(c,t0),e1=b.clone().lerp(c,t1); e0.z+=Math.sin(t0*Math.PI)*bauch; e1.z+=Math.sin(t1*Math.PI)*bauch; pos.push(a.x,a.y,a.z,e0.x,e0.y,e0.z,e1.x,e1.y,e1.z)} geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); geo.computeVertexNormals(); return new THREE.Mesh(geo,matSegel)}
+  const kluever1=dreieckSegel([7.7,2.15,0],[4.6,1.0,0],[3.4,6.2,0],0.45); const kluever2=dreieckSegel([6.4,1.6,0],[4.2,0.9,0],[2.9,4.6,0],0.35); kluever1.castShadow=kluever2.castShadow=true; schiff.add(kluever1,kluever2);
+  const flaggen=[];
+  function gebauchtesSegel(breite,hoehe,bauch){const geo=new THREE.PlaneGeometry(breite,hoehe,12,8); const p=geo.attributes.position; for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i); const sx=Math.cos((x/breite)*Math.PI); const sy=Math.sin(((y/hoehe)+0.5)*Math.PI); p.setZ(i,sx*sy*bauch)} geo.computeVertexNormals(); const segel=new THREE.Mesh(geo,matSegel); segel.castShadow=true; return segel}
+  function flagge(breite,hoehe){const geo=new THREE.PlaneGeometry(breite,hoehe,14,3); const mesh=new THREE.Mesh(geo,matFlagge); mesh.geometry.translate(breite/2,0,0); flaggen.push(mesh); return mesh}
+  function baueMast(x,hoehe,segelBreiten){const grp=new THREE.Group(); grp.position.x=x; const mast=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.16,hoehe,10),matMast); mast.position.y=0.6+hoehe/2; mast.castShadow=true; grp.add(mast); segelBreiten.forEach((sb,i)=>{const yRahe=0.6+hoehe*(i===0?0.52:0.82); const rahe=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.055,sb+0.5,8),matMast); rahe.rotation.x=Math.PI/2; rahe.position.y=yRahe; grp.add(rahe); const sh=hoehe*(i===0?0.30:0.24); const segel=gebauchtesSegel(sb,sh,0.55+sb*0.08); segel.rotation.y=Math.PI/2; segel.position.set(0.15,yRahe-sh/2-0.08,0); grp.add(segel)}); const korb=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.22,0.28,12,1,true),matHolzHell); korb.position.y=0.6+hoehe*0.68; grp.add(korb); const korbBoden=new THREE.Mesh(new THREE.CircleGeometry(0.22,12),matRumpfDkl); korbBoden.rotation.x=-Math.PI/2; korbBoden.position.y=korb.position.y-0.13; grp.add(korbBoden); const knauf=new THREE.Mesh(new THREE.SphereGeometry(0.09,10,8),matHolzHell); knauf.position.y=0.6+hoehe+0.08; grp.add(knauf); const fl=flagge(0.9,0.32); fl.position.set(0.03,0.6+hoehe-0.22,0); grp.add(fl); schiff.add(grp)}
+  baueMast(2.4,5.6,[2.4,1.8]); baueMast(0.0,6.8,[3.0,2.2]); baueMast(-2.4,5.9,[2.5,1.9]); schiff.add(dreieckSegel([-2.4,6.0,0],[-2.4,3.4,0],[-4.6,4.9,0],0.3));
+  const matSeil=new THREE.LineBasicMaterial({color:0x3A2B1A}); function seil(a,b){const g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...a),new THREE.Vector3(...b)]); schiff.add(new THREE.Line(g,matSeil))}
+  [[2.4,5.6],[0.0,6.8],[-2.4,5.9]].forEach(([mx,mh])=>[-1,1].forEach(s=>{seil([mx,0.6+mh*0.66,0],[mx+0.9,0.95,s*(HALBBREITE-0.15)]);seil([mx,0.6+mh*0.66,0],[mx-0.9,0.95,s*(HALBBREITE-0.15)])})); seil([7.9,2.2,0],[2.4,6.2,0]); seil([2.4,6.2,0],[0,7.4,0]); seil([0,7.4,0],[-2.4,6.5,0]);
+  const anker=new THREE.Group(); const ankerSchaft=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.9,8),matMetall); anker.add(ankerSchaft); const ankerRing=new THREE.Mesh(new THREE.TorusGeometry(0.11,0.035,8,16),matMetall); ankerRing.position.y=0.52; anker.add(ankerRing); const ankerStock=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.55,8),matMetall); ankerStock.rotation.z=Math.PI/2; ankerStock.position.y=0.36; anker.add(ankerStock); const ankerBogen=new THREE.Mesh(new THREE.TorusGeometry(0.32,0.05,8,20,Math.PI),matMetall); ankerBogen.rotation.z=Math.PI; ankerBogen.position.y=-0.42; anker.add(ankerBogen); [-1,1].forEach(s=>{const fluke=new THREE.Mesh(new THREE.ConeGeometry(0.09,0.24,6),matMetall);fluke.position.set(s*0.32,-0.30,0);anker.add(fluke)}); anker.position.set(4.3,0.15,HALBBREITE+0.35); anker.rotation.y=Math.PI/2; schiff.add(anker);
+  const WASSER_GROESSE=120,WASSER_SEG=72; const wasserGeo=new THREE.PlaneGeometry(WASSER_GROESSE,WASSER_GROESSE,WASSER_SEG,WASSER_SEG); wasserGeo.rotateX(-Math.PI/2); const wasserMat=new THREE.MeshPhongMaterial({color:0x2E7EB3,shininess:90,specular:0x9FD4F0,transparent:true,opacity:0.96,flatShading:false}); const wasser=new THREE.Mesh(wasserGeo,wasserMat); wasser.receiveShadow=true; szene.add(wasser);
+  function wellenHoehe(x,z,t){return Math.sin(x*0.28+t*1.1)*0.35+Math.sin(z*0.22+t*0.8)*0.28+Math.sin((x+z)*0.14+t*0.55)*0.22}
+  const wasserPos=wasserGeo.attributes.position,wasserAnzahl=wasserPos.count;
+  const matWolke=new THREE.MeshPhongMaterial({color:0xFFFFFF,transparent:true,opacity:0.92}); const wolken=[];
+  function wolke(x,y,z,s){const g=new THREE.Group(); [[0,0,0,1.6],[1.4,0.25,0.2,1.15],[-1.4,0.2,-0.15,1.2],[0.6,0.75,0,1.0],[-0.6,0.7,0.1,0.9]].forEach(k=>{const kugel=new THREE.Mesh(new THREE.SphereGeometry(k[3],14,12),matWolke);kugel.position.set(k[0],k[1],k[2]);kugel.scale.y=0.62;g.add(kugel)}); g.position.set(x,y,z);g.scale.setScalar(s);szene.add(g);wolken.push(g)}
+  wolke(-24,13,-34,1.4); wolke(16,16,-42,1.9); wolke(34,11,-20,1.1); wolke(-38,15,-10,1.5);
+  const moewen=[]; function moewe(radius,hoehe,tempo,phase){const g=new THREE.Group(); const fluegelGeo=new THREE.PlaneGeometry(0.9,0.25); fluegelGeo.translate(0.45,0,0); const matMoewe=new THREE.MeshBasicMaterial({color:0xFAFAFA,side:THREE.DoubleSide}); const l=new THREE.Mesh(fluegelGeo,matMoewe),r=new THREE.Mesh(fluegelGeo.clone(),matMoewe); r.rotation.y=Math.PI; g.add(l,r); szene.add(g); moewen.push({g,l,r,radius,hoehe,tempo,phase})}
+  moewe(14,9.5,0.35,0); moewe(18,11.5,0.28,2.1); moewe(11,8.0,0.42,4.0);
+  const azimut=0.72,elevation=0.30,ABSTAND=17;
+  function kameraSetzen(){kamera.position.set(Math.sin(azimut)*Math.cos(elevation)*ABSTAND,Math.sin(elevation)*ABSTAND+1.5,Math.cos(azimut)*Math.cos(elevation)*ABSTAND);kamera.lookAt(0,1.8,0)} kameraSetzen();
+  const uhr=new THREE.Clock();
+  function animieren(){requestAnimationFrame(animieren); const t=uhr.getElapsedTime(); for(let i=0;i<wasserAnzahl;i++){const x=wasserPos.getX(i),z=wasserPos.getZ(i);wasserPos.setY(i,wellenHoehe(x,z,t))} wasserPos.needsUpdate=true; wasserGeo.computeVertexNormals(); const hMitte=wellenHoehe(0,0,t),hBug=wellenHoehe(4,0,t),hHeck=wellenHoehe(-4,0,t),hLinks=wellenHoehe(0,-1.5,t),hRechts=wellenHoehe(0,1.5,t); schiff.position.y=0.55+hMitte*0.55; schiff.rotation.z=(hBug-hHeck)*0.075; schiff.rotation.x=(hRechts-hLinks)*0.16; schiff.rotation.y=Math.sin(t*0.18)*0.04; flaggen.forEach((f,fi)=>{const p=f.geometry.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i);p.setZ(i,Math.sin(x*5+t*7+fi)*0.09*x)}p.needsUpdate=true}); wolken.forEach((w,i)=>{w.position.x+=0.006+i*0.002;if(w.position.x>55)w.position.x=-55}); moewen.forEach(m=>{const a=t*m.tempo+m.phase;m.g.position.set(Math.cos(a)*m.radius,m.hoehe+Math.sin(a*2)*0.6,Math.sin(a)*m.radius);m.g.rotation.y=-a-Math.PI/2;const schlag=Math.sin(t*9+m.phase)*0.5;m.l.rotation.z=schlag;m.r.rotation.z=-schlag}); renderer.render(szene,kamera)}
+  animieren();
+  addEventListener('resize',()=>{kamera.aspect=innerWidth/innerHeight;kamera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+})();
+</script>
+</body>
+</html>
