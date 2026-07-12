@@ -1,4 +1,4 @@
-const CACHE='kiu-begleitapp-v2-3';
+const CACHE='kiu-begleitapp-v2-4';
 const CORE=[
   './',
   './index.html',
@@ -7,9 +7,11 @@ const CORE=[
   './app.js',
   './app-core.js',
   './config-loader.js',
+  './app-ship.js',
   './app-gems.js',
   './app-input.js',
   './app-teacher.js',
+  './segelschiff-header.html',
   './config-base.json',
   './weeks-01-05.json',
   './weeks-06-10.json',
