@@ -47,7 +47,6 @@
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -62,9 +61,9 @@
     }
 
     img, svg { display: block; max-width: 100%; }
-
+    a, button, input, textarea, select { font-family: var(--font-body); }
     a { color: inherit; }
-
+    strong { font-weight: 400; }
     .page { overflow: hidden; }
 
     .brandbar {
@@ -83,44 +82,33 @@
     }
 
     .wordmark {
-      display: inline-flex;
-      align-items: center;
-      gap: 14px;
-      text-decoration: none;
-    }
-
-    .wordmark__sign {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px 10px 18px 10px;
-      display: grid;
-      place-items: center;
-      color: var(--hbg-weiss);
-      background: var(--hbg-rot);
-      font-family: var(--font-title);
-      font-size: 22px;
-      letter-spacing: .03em;
-      box-shadow: 6px 6px 0 var(--hbg-blau-blass);
-    }
-
-    .wordmark__text {
-      display: grid;
-      line-height: 1.05;
-    }
-
-    .wordmark__text strong {
-      font-family: var(--font-title);
-      font-weight: 400;
+      display: inline-grid;
+      gap: 3px;
+      min-width: min(470px, 68vw);
+      padding: 10px 0 8px;
       color: var(--hbg-rot);
-      font-size: 20px;
-      letter-spacing: .035em;
+      text-decoration: none;
+      border-bottom: 5px solid var(--hbg-rot);
     }
 
-    .wordmark__text span {
-      margin-top: 5px;
+    .wordmark__name {
+      font-family: var(--font-title);
+      font-size: clamp(20px, 2.2vw, 28px);
+      font-weight: 400;
+      letter-spacing: .018em;
+      line-height: .95;
+      text-transform: uppercase;
+    }
+
+    .wordmark__meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
       color: var(--hbg-text-muted);
-      font-size: 13px;
-      letter-spacing: .08em;
+      font-size: 11px;
+      letter-spacing: .16em;
+      line-height: 1.2;
       text-transform: uppercase;
     }
 
@@ -142,7 +130,7 @@
     .hero__inner {
       width: min(1160px, calc(100% - 40px));
       margin: 0 auto;
-      min-height: 520px;
+      min-height: 560px;
       display: grid;
       grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
       align-items: center;
@@ -156,9 +144,9 @@
       gap: 10px;
       margin-bottom: 18px;
       padding: 8px 14px;
-      border: 1px solid rgba(255,255,255,.42);
+      border: 1px solid rgba(255, 255, 255, .42);
       border-radius: 999px;
-      background: rgba(255,255,255,.10);
+      background: rgba(255, 255, 255, .10);
       font-size: 14px;
       letter-spacing: .09em;
       text-transform: uppercase;
@@ -170,33 +158,38 @@
       height: 9px;
       border-radius: 50%;
       background: var(--hbg-weiss);
-      box-shadow: 0 0 0 5px rgba(255,255,255,.14);
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, .14);
     }
 
     h1, h2, h3 {
       margin: 0;
       font-family: var(--font-title);
       font-weight: 400;
-      line-height: .98;
+      line-height: 1.02;
       text-wrap: balance;
     }
 
     h1 {
       max-width: 760px;
-      font-size: clamp(48px, 7.2vw, 86px);
-      letter-spacing: .012em;
+      font-size: clamp(45px, 7vw, 82px);
+      letter-spacing: .005em;
     }
 
     .hero__lead {
-      max-width: 720px;
+      max-width: 760px;
       margin: 26px 0 0;
-      font-size: clamp(20px, 2.15vw, 27px);
+      font-size: clamp(20px, 2.05vw, 26px);
       line-height: 1.38;
     }
 
+    .hero__lead + .hero__lead {
+      margin-top: 18px;
+      font-size: clamp(18px, 1.65vw, 22px);
+    }
+
     .hero__lead strong {
-      font-weight: 400;
-      border-bottom: 3px solid rgba(255,255,255,.68);
+      color: var(--hbg-weiss);
+      border-bottom: 3px solid rgba(255, 255, 255, .68);
     }
 
     .hero__visual {
@@ -211,9 +204,9 @@
       width: min(330px, 100%);
       aspect-ratio: 1;
       border-radius: 50%;
-      background: rgba(255,255,255,.09);
-      border: 1px solid rgba(255,255,255,.26);
-      box-shadow: inset 0 0 0 18px rgba(255,255,255,.05), 0 25px 60px rgba(40, 4, 8, .22);
+      background: rgba(255, 255, 255, .09);
+      border: 1px solid rgba(255, 255, 255, .26);
+      box-shadow: inset 0 0 0 18px rgba(255, 255, 255, .05), 0 25px 60px rgba(40, 4, 8, .22);
     }
 
     .cycle-wheel::before {
@@ -227,24 +220,24 @@
       color: var(--hbg-rot);
       font-family: var(--font-title);
       font-size: clamp(34px, 5vw, 50px);
-      box-shadow: 0 12px 34px rgba(0,0,0,.17);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, .17);
     }
 
     .cycle-label {
       position: absolute;
       z-index: 1;
-      width: 132px;
-      padding: 11px 12px 10px;
+      min-width: 132px;
+      padding: 13px 14px;
       border-radius: 13px;
       color: var(--hbg-text);
       background: var(--hbg-weiss);
       text-align: center;
       font-size: 15px;
+      font-weight: 700;
       line-height: 1.1;
-      box-shadow: 0 12px 28px rgba(0,0,0,.15);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .15);
     }
 
-    .cycle-label strong { display: block; font-weight: 400; }
     .cycle-label--one { top: 3%; left: 50%; transform: translateX(-50%); }
     .cycle-label--two { right: -4%; bottom: 17%; }
     .cycle-label--three { left: -4%; bottom: 17%; }
@@ -252,7 +245,6 @@
     .section { padding: 78px 0; }
     .section--white { background: var(--hbg-weiss); }
     .section--tinted { background: var(--hbg-blau-ghost); }
-
     .container { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
 
     .section-heading {
@@ -265,7 +257,7 @@
 
     .section-heading h2 {
       color: var(--hbg-rot);
-      font-size: clamp(38px, 5vw, 58px);
+      font-size: clamp(36px, 5vw, 56px);
     }
 
     .section-heading p {
@@ -318,17 +310,24 @@
       background: var(--hbg-rot-ghost);
     }
 
-    .icon svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .icon svg {
+      width: 26px;
+      height: 26px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
     .card h3 {
       margin-bottom: 14px;
       color: var(--hbg-blau-dunkel);
-      font-size: 27px;
-      line-height: 1.05;
+      font-size: 25px;
+      line-height: 1.08;
     }
 
     .card:nth-child(even) h3 { color: var(--hbg-rot-dunkel); }
-
     .card p { margin: 0; font-size: 17px; line-height: 1.55; }
 
     .cycle-section {
@@ -340,7 +339,7 @@
 
     .cycle-section h2 {
       color: var(--hbg-blau-dunkel);
-      font-size: clamp(38px, 5vw, 58px);
+      font-size: clamp(36px, 5vw, 56px);
     }
 
     .cycle-section__intro p {
@@ -398,7 +397,7 @@
       border-radius: var(--radius-lg);
       color: var(--hbg-weiss);
       background: var(--hbg-blau-dunkel);
-      box-shadow: 0 20px 50px rgba(22,58,92,.18);
+      box-shadow: 0 20px 50px rgba(22, 58, 92, .18);
     }
 
     .parent-box::before {
@@ -409,13 +408,13 @@
       right: -90px;
       top: -130px;
       border-radius: 50%;
-      background: rgba(255,255,255,.07);
-      box-shadow: 0 0 0 40px rgba(255,255,255,.035);
+      background: rgba(255, 255, 255, .07);
+      box-shadow: 0 0 0 40px rgba(255, 255, 255, .035);
     }
 
     .parent-box h2 {
       position: relative;
-      font-size: clamp(38px, 5vw, 58px);
+      font-size: clamp(36px, 5vw, 56px);
     }
 
     .parent-box p {
@@ -432,7 +431,7 @@
       border-radius: var(--radius-md);
       color: var(--hbg-text);
       background: var(--hbg-weiss);
-      box-shadow: 0 16px 36px rgba(0,0,0,.18);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, .18);
     }
 
     .parent-box__note strong {
@@ -440,8 +439,8 @@
       margin-bottom: 8px;
       color: var(--hbg-rot);
       font-family: var(--font-title);
+      font-size: 23px;
       font-weight: 400;
-      font-size: 25px;
       line-height: 1.05;
     }
 
@@ -507,10 +506,7 @@
     @media (max-width: 900px) {
       body { font-size: 17px; }
       .brandbar__tag { display: none; }
-      .hero__inner,
-      .cycle-section,
-      .parent-box,
-      .section-heading { grid-template-columns: 1fr; }
+      .hero__inner, .cycle-section, .parent-box, .section-heading { grid-template-columns: 1fr; }
       .hero__inner { padding-top: 60px; }
       .hero__visual { min-height: 300px; }
       .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -519,19 +515,16 @@
     }
 
     @media (max-width: 620px) {
-      .brandbar__inner,
-      .hero__inner,
-      .container,
-      .footer-inner { width: min(100% - 28px, 1160px); }
-      .wordmark__text strong { font-size: 17px; }
-      .wordmark__text span { font-size: 11px; letter-spacing: .055em; }
-      .wordmark__sign { width: 42px; height: 42px; font-size: 19px; }
+      .brandbar__inner, .hero__inner, .container, .footer-inner { width: min(100% - 28px, 1160px); }
+      .wordmark { min-width: 0; width: 100%; }
+      .wordmark__name { font-size: 19px; }
+      .wordmark__meta { font-size: 9px; letter-spacing: .10em; }
       .hero__inner { min-height: auto; padding: 52px 0 58px; }
-      h1 { font-size: clamp(43px, 15vw, 62px); }
+      h1 { font-size: clamp(40px, 13vw, 60px); }
       .hero__lead { font-size: 20px; }
       .hero__visual { min-height: 260px; }
       .cycle-wheel { width: 260px; }
-      .cycle-label { width: 114px; font-size: 13px; padding: 9px; }
+      .cycle-label { min-width: 114px; font-size: 13px; padding: 10px; }
       .cycle-label--two { right: -2%; }
       .cycle-label--three { left: -2%; }
       .section { padding: 58px 0; }
@@ -565,13 +558,10 @@
   <div class="page">
     <header class="brandbar" aria-label="Heinrich-Böll-Gesamtschule Dortmund">
       <div class="brandbar__inner">
-        <!-- Textbasierter Logo-Platzhalter: Für die Veröffentlichung kann hier das offizielle HBG-Logo eingesetzt werden. -->
-        <div class="wordmark" aria-label="Heinrich-Böll-Gesamtschule Dortmund">
-          <span class="wordmark__sign" aria-hidden="true">HBG</span>
-          <span class="wordmark__text">
-            <strong>Heinrich-Böll-Gesamtschule</strong>
-            <span>Dortmund</span>
-          </span>
+        <!-- Rechteckiger Logo-Platzhalter gemäß HBG-CD. Für die Veröffentlichung durch die offizielle Logo-Datei ersetzen. -->
+        <div class="wordmark" data-logo-placeholder="true" title="Logo-Platzhalter – für die Veröffentlichung durch die offizielle Logodatei ersetzen" aria-label="Heinrich-Böll-Gesamtschule Dortmund">
+          <span class="wordmark__name">Heinrich-Böll-Gesamtschule</span>
+          <span class="wordmark__meta"><span>Dortmund</span></span>
         </div>
         <div class="brandbar__tag">Für dich. Für mich. Für uns.</div>
       </div>
@@ -584,15 +574,18 @@
             <div class="eyebrow">Pilotprojekt im neuen 5. Jahrgang</div>
             <h1 id="seitentitel">Selbstreguliert lernen – Schritt für Schritt</h1>
             <p class="hero__lead">
-              Das Pilotprojekt startet bewusst <strong>nicht sofort in voller Breite</strong>. Die Bausteine werden schrittweise eingeführt, eingeübt, erprobt und ausgewertet. Dabei werden die Kinder klar angeleitet und eng begleitet.
+              Unser Hauptziel ist, dass die Lernenden <strong>Schritt für Schritt Verantwortung für ihr eigenes Lernen übernehmen</strong>. Deshalb startet das Pilotprojekt bewusst nicht sofort in voller Breite: Die Bausteine werden klar angeleitet, gemeinsam eingeübt und nach und nach erweitert.
+            </p>
+            <p class="hero__lead">
+              Dabei greifen wir bekannte Strukturen und Abläufe aus der Grundschule auf. Viele Schüler*innen kennen offene Lernangebote bereits und sind es gewohnt, zeitweise selbstständig an Aufgaben zu arbeiten.
             </p>
           </div>
 
-          <div class="hero__visual" aria-label="Der SRL-Zyklus aus Vorbereitung, Durchführung und Reflexion">
+          <div class="hero__visual" aria-label="Der SRL-Zyklus aus Planung, Durchführung und Reflexion">
             <div class="cycle-wheel">
-              <div class="cycle-label cycle-label--one"><strong>Vorbereitung</strong>Ziele setzen</div>
-              <div class="cycle-label cycle-label--two"><strong>Durchführung</strong>Strategien nutzen</div>
-              <div class="cycle-label cycle-label--three"><strong>Reflexion</strong>Auswerten</div>
+              <div class="cycle-label cycle-label--one">Planung</div>
+              <div class="cycle-label cycle-label--two">Durchführung</div>
+              <div class="cycle-label cycle-label--three">Reflexion</div>
             </div>
           </div>
         </div>
@@ -611,15 +604,15 @@
                 <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 0-5 5v1.5A3.5 3.5 0 0 0 3.5 13v2A3.5 3.5 0 0 0 7 18.5h1.5L12 22l3.5-3.5H17a3.5 3.5 0 0 0 3.5-3.5v-2A3.5 3.5 0 0 0 17 9.5V8a5 5 0 0 0-5-5Z"/><path d="M9 10h.01M15 10h.01M9.5 14c1.6 1.2 3.4 1.2 5 0"/></svg>
               </div>
               <h3>Begleitung statt Überforderung</h3>
-              <p>Feste Abläufe, kleine Schritte und klare Hilfen geben Sicherheit. Eigenverantwortung wächst nach und nach.</p>
+              <p>Feste Abläufe, kleine Schritte und klare Hilfen geben Sicherheit. Die Verantwortung für das eigene Lernen wächst nach und nach.</p>
             </article>
 
             <article class="card">
               <div class="icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="7" r="2.5"/><path d="M2.5 20c.4-4.4 2.2-6.5 5.5-6.5s5.1 2.1 5.5 6.5M14 13.5c3.9-.5 6.3 1.5 7 5.5"/></svg>
               </div>
-              <h3>Feste Mentor*innen</h3>
-              <p>Eine feste Person aus dem Klassenteam begleitet jedes Kind. Gespräche richten den Blick auf Lernen, Ziele und Wohlbefinden.</p>
+              <h3>Schrittweise Lernberatung</h3>
+              <p>Auch die individuelle Lernberatung wird nach und nach eingeführt. In kurzen 1:1-Gesprächen richten Kind und Lehrkraft den Blick auf Lernziele, Planung und nächste Schritte.</p>
             </article>
 
             <article class="card">
@@ -668,7 +661,7 @@
             <article class="step">
               <div class="step__number" aria-hidden="true">1</div>
               <div>
-                <h3>Vorbereitung</h3>
+                <h3>Planung</h3>
                 <p>Ziele setzen und den eigenen Lernweg vorbereiten.</p>
               </div>
             </article>
@@ -710,7 +703,7 @@
           <div class="pilot-note">
             <div>
               <h2 id="pilot">Schrittweise erproben und auswerten</h2>
-              <p>Das Projekt wird nicht ab dem ersten Schultag in voller Breite umgesetzt. Einzelne Bausteine starten nacheinander, werden im Alltag erprobt und regelmäßig ausgewertet. Erfahrungen und Rückmeldungen bestimmen, was angepasst und als Nächstes eingeführt wird.</p>
+              <p>Das Projekt wird nicht ab dem ersten Schultag in voller Breite umgesetzt. Einzelne Bausteine – auch die individuelle Lernberatung – starten nacheinander, werden im Alltag erprobt und regelmäßig ausgewertet. Erfahrungen und Rückmeldungen bestimmen, was angepasst und als Nächstes eingeführt wird.</p>
             </div>
           </div>
         </div>
