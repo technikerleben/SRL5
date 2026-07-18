@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>B201 SRL-Raumkonzept 3D – optimiert</title>
+<style>
+:root {
+  --col-slate-dark:  #2C3D4C;
+  --col-slate:       #3E5668;
+  --col-slate-mid:   #6A8599;
+  --col-slate-pale:  #D0DCE6;
+  --col-slate-ghost: #EEF3F7;
+  --col-rust-dark:   #9E4E22;
+  --col-rust:        #D97A4A;
+  --col-rust-pale:   #F5DDD1;
+  --col-sage-dark:   #4D8B3F;
+  --col-sage:        #7DBB6F;
+  --col-sage-pale:   #DDF0D8;
+  --col-warning:     #C17B00;
+  --col-bg:          #F5F4F1;
+  --col-white:       #FFFFFF;
+  --col-text:        #1E2A35;
+  --col-text-muted:  #5A6A78;
+  --col-border:      #D4D0C8;
+  --col-shadow:      rgba(62,86,104,0.10);
+  --text-xs:   0.694rem;
+  --text-sm:   0.833rem;
+  --text-base: 1rem;
+  --text-md:   1.2rem;
+  --text-lg:   1.44rem;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--col-bg);
+  color: var(--col-text);
+  display: flex;
+  flex-direction: column;
+}
+:focus-visible { outline: 3px solid var(--col-slate); outline-offset: 2px; border-radius: 6px; }
+
+header {
+  background: var(--col-slate);
+  color: white;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  z-index: 10;
+}
+header h1 { font-size: var(--text-md); font-weight: 700; line-height: 1.2; }
+.header-meta { font-size: var(--text-xs); color: var(--col-slate-pale); text-transform: uppercase; letter-spacing: 0.06em; }
+.hbg-wordmark { display: inline-flex; align-items: flex-end; gap: 5px; }
+.hbg-wordmark__main { font-size: var(--text-md); font-weight: 800; color: white; }
+.hbg-wordmark__sub  { font-size: var(--text-xs); color: #EBA882; margin-bottom: 2px; }
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--col-white);
+  border-bottom: 1px solid var(--col-border);
+  flex-wrap: wrap;
+  align-items: center;
+  z-index: 10;
+}
+.layout-btn {
+  background: transparent;
+  color: var(--col-slate);
+  border: 2px solid var(--col-slate);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  min-height: 44px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.layout-btn:hover { background: var(--col-slate-ghost); }
+.layout-btn.active { background: var(--col-rust-dark); border-color: var(--col-rust-dark); color: white; }
+.tool-sep { width: 1px; align-self: stretch; background: var(--col-border); margin: 0 4px; }
+.view-btn {
+  background: transparent;
+  color: var(--col-text-muted);
+  border: 1px solid var(--col-border);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  min-height: 44px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.view-btn:hover { background: var(--col-slate-ghost); }
+.view-btn.active { background: var(--col-slate); border-color: var(--col-slate); color: white; }
+
+#stage { position: relative; flex: 1; min-height: 0; }
+#canvas-wrap { position: absolute; inset: 0; }
+canvas { display: block; touch-action: none; }
+
+#info-panel {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: 380px;
+  background: rgba(255,255,255,0.94);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px var(--col-shadow);
+  border-left: 4px solid var(--col-rust);
+  padding: 12px 16px;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  z-index: 5;
+}
+#info-panel h2 { font-size: var(--text-base); margin-bottom: 4px; color: var(--col-slate-dark); }
+#info-panel .stats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.stat-chip {
+  background: var(--col-slate-pale);
+  color: var(--col-slate-dark);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.stat-chip.move { background: var(--col-rust-pale); color: var(--col-rust-dark); }
+.stat-chip.fix  { background: var(--col-sage-pale); color: #2D5C25; }
+
+#legend {
+  display:none;
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(255,255,255,0.94);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px var(--col-shadow);
+  padding: 10px 14px;
+  font-size: var(--text-xs);
+  line-height: 1.9;
+  z-index: 5;
+}
+.leg-row { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.leg-dot { width: 14px; height: 14px; border-radius: 4px; flex: 0 0 auto; border: 1px solid rgba(0,0,0,0.15); }
+
+
+.editor-btn.active {
+  background: var(--col-sage-dark);
+  border-color: var(--col-sage-dark);
+  color: white;
+}
+.editor-btn:disabled, .config-select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.config-select {
+  min-height: 44px;
+  max-width: 210px;
+  border: 1px solid var(--col-border);
+  border-radius: 8px;
+  background: white;
+  color: var(--col-text);
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+#editor-hint {
+  display: none;
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  max-width: min(720px, calc(100% - 24px));
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: rgba(44,61,76,0.94);
+  color: white;
+  box-shadow: 0 2px 12px var(--col-shadow);
+  font-size: var(--text-sm);
+  text-align: center;
+  pointer-events: none;
+}
+#editor-hint.show { display: block; }
+#selection-label {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 7;
+  display: none;
+  padding: 8px 12px;
+  border-radius: 9px;
+  background: rgba(255,255,255,0.95);
+  border-left: 4px solid var(--col-sage-dark);
+  box-shadow: 0 2px 12px var(--col-shadow);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  pointer-events: none;
+}
+#selection-label.show { display: block; }
+body.editing canvas { cursor: grab; }
+body.editing canvas.dragging-furniture { cursor: grabbing; }
+
+@media (max-width: 820px) {
+  #legend { display: none; }
+  #info-panel { max-width: calc(100% - 24px); font-size: var(--text-xs); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Raum B201 · SRL-Raumkonzept</h1>
+    <div class="header-meta">SRL-Basisraum · 9 × 7 m · 26 Lernende, davon 1 Rollstuhlnutzer:in</div>
+  </div>
+  <div class="hbg-wordmark"><span class="hbg-wordmark__main">HBG</span><span class="hbg-wordmark__sub">SRL</span></div>
+</header>
+
+<div class="toolbar" role="toolbar" aria-label="Layout wählen">
+  <button class="layout-btn active" data-layout="lernbuero">🗂️ Lernbüro</button>
+  <button class="layout-btn" data-layout="gruppen">👥 Gruppeninseln</button>
+  <button class="layout-btn" data-layout="kino">🎬 Input / Halbkreis</button>
+  <button class="layout-btn" data-layout="kreis">⭕ Kreis / Klassenrat</button>
+  <span class="tool-sep" aria-hidden="true"></span>
+  <button class="view-btn active" id="btn-3d">3D</button>
+  <button class="view-btn" id="btn-top">Draufsicht</button>
+  <button class="view-btn" id="btn-radien">Wege & Radien</button>
+  <span class="tool-sep" aria-hidden="true"></span>
+  <button class="view-btn editor-btn" id="btn-edit" aria-pressed="false">✋ Möbel verschieben</button>
+  <button class="view-btn editor-btn" id="btn-rotate-left" disabled title="Ausgewähltes Möbel um 90° drehen">↶ 90°</button>
+  <button class="view-btn editor-btn" id="btn-rotate-right" disabled title="Ausgewähltes Möbel um 90° drehen">↷ 90°</button>
+  <button class="view-btn editor-btn" id="btn-save-config">💾 Speichern</button>
+  <button class="view-btn editor-btn" id="btn-export-config" title="Aktuelle Möbelanordnung als JSON-Datei exportieren">⬇️ JSON</button>
+  <button class="view-btn editor-btn" id="btn-export-png" title="Aktuelle Ansicht als PNG-Bild speichern">🖼️ PNG</button>
+  <select id="config-select" class="config-select" aria-label="Gespeicherte Konfiguration auswählen">
+    <option value="">Gespeicherte Konfigurationen</option>
+  </select>
+  <button class="view-btn editor-btn" id="btn-load-config" disabled>Öffnen</button>
+  <button class="view-btn editor-btn" id="btn-delete-config" disabled>🗑 Löschen</button>
+</div>
+
+<div id="stage">
+  <div id="canvas-wrap"></div>
+  <div id="editor-hint">Möbel anklicken und ziehen · Drehen über ↶/↷ oder Q/E · Positionen rasten in 10-cm-Schritten ein</div>
+  <div id="selection-label"></div>
+  <div id="info-panel" role="status" aria-live="polite">
+    <h2 id="info-title">Lernbüro</h2>
+    <div id="info-text"></div>
+    <div class="stats" id="info-stats"></div>
+  </div>
+  <div id="legend">
+    <div class="leg-row"><span class="leg-dot" style="background:#8E3B40"></span> Doppeltisch 130×50 (8 Tische fest)</div>
+    <div class="leg-row"><span class="leg-dot" style="background:#D97A4A"></span> Doppeltisch Mitte (beweglich)</div>
+    <div class="leg-row"><span class="leg-dot" style="background:#7DBB6F"></span> Stapelhocker (25 + Rollstuhlplatz)</div>
+    <div class="leg-row"><span class="leg-dot" style="background:#3E5668"></span> 2 Materialwagen / 2 Akustik-Stellwände</div>
+    <div class="leg-row"><span class="leg-dot" style="background:#C9A227"></span> 1 höhenverstellbarer Tisch (ohne Stuhl)</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+'use strict';
+/* =========================================================
+   B201 · 9m (x: -4.5..4.5, Fensterfront bei z=-3.5)
+          7m (z: -3.5..3.5, Tür + Nassbereich bei z=+3.5)
+   Wandtafel links (x=-4.5) · Digitale Tafel rechts (x=+4.5)
+   ========================================================= */
+
+const COL = {
+  floor:      0xEDEAE4,
+  grid:       0xD8D4CC,
+  wall:       0xC8D2DA,
+  window:     0xAFD3E8,
+  tableFix:   0x8E3B40,   // Schale (angelehnt an HBG-Rot, fest)
+  tableMove:  0xD97A4A,   // Rostorange = beweglich
+  chair:      0xB9CDBB,
+  hocker:     0x7DBB6F,
+  hockerDark: 0x4D8B3F,
+  slate:      0x3E5668,
+  slatePale:  0xD0DCE6,
+  bench:      0x6E8F79,
+  rug:        0xE4D7C3,
+  roll:       0xC9A227,
+  board:      0x2C3D4C,
+  wandtafel:  0x3E5C4A,
+  white:      0xFFFFFF
+};
+
+const ROOM = { W: 9, D: 7 };
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xF5F4F1);
+
+const wrap = document.getElementById('canvas-wrap');
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+wrap.appendChild(renderer.domElement);
+
+/* Licht */
+scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+const sun = new THREE.DirectionalLight(0xfff4e0, 0.85);
+sun.position.set(2, 9, -7);            // Licht von der Fensterfront
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -7; sun.shadow.camera.right = 7;
+sun.shadow.camera.top = 7;   sun.shadow.camera.bottom = -7;
+scene.add(sun);
+const fill = new THREE.DirectionalLight(0xdde8f0, 0.3);
+fill.position.set(-5, 6, 5);
+scene.add(fill);
+
+/* ---------- Hilfsfunktionen ---------- */
+const mat = (c, opt = {}) => new THREE.MeshLambertMaterial(Object.assign({ color: c }, opt));
+function box(w, h, d, c, opt) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat(c, opt));
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+function cyl(r, h, c, seg = 20) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, seg), mat(c));
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+
+/* Möbel werden zusätzlich für einen geometrischen Kollisionscheck registriert.
+   Kontrolliert werden die Endpositionen der vier Raumkonfigurationen. */
+const collisionItems = [];
+function registerCollision(name, obj, opts = {}) {
+  collisionItems.push({ name, obj, layouts: opts.layouts || null, movable: !!opts.movable, radius: opts.radius || null });
+  return obj;
+}
+function itemActive(item, layoutKey) {
+  if (layoutKey === 'custom') return item.obj.visible !== false;
+  return !item.layouts || item.layouts.includes(layoutKey);
+}
+function overlapAmount(aMin, aMax, bMin, bMax) {
+  return Math.min(aMax, bMax) - Math.max(aMin, bMin);
+}
+function validateCollisions(layoutKey) {
+  scene.updateMatrixWorld(true);
+  const active = collisionItems.filter(item => itemActive(item, layoutKey) && item.obj.visible !== false);
+  const entries = active.map(item => {
+    const center = new THREE.Vector3();
+    item.obj.getWorldPosition(center);
+    return { item, center, box: new THREE.Box3().setFromObject(item.obj) };
+  });
+  const hits = [];
+  const tol = 0.012; // Berührungen und Rundungsfehler nicht als Kollision werten
+  function pairCollides(a, b) {
+    const oy = overlapAmount(a.box.min.y, a.box.max.y, b.box.min.y, b.box.max.y);
+    if (oy <= tol) return false;
+    const ar = a.item.radius, br = b.item.radius;
+    if (ar && br) {
+      return Math.hypot(a.center.x - b.center.x, a.center.z - b.center.z) < ar + br - tol;
+    }
+    if (ar || br) {
+      const c = ar ? a : b;
+      const r = ar || br;
+      const bx = ar ? b.box : a.box;
+      const px = Math.max(bx.min.x, Math.min(c.center.x, bx.max.x));
+      const pz = Math.max(bx.min.z, Math.min(c.center.z, bx.max.z));
+      return Math.hypot(c.center.x - px, c.center.z - pz) < r - tol;
+    }
+    const ox = overlapAmount(a.box.min.x, a.box.max.x, b.box.min.x, b.box.max.x);
+    const oz = overlapAmount(a.box.min.z, a.box.max.z, b.box.min.z, b.box.max.z);
+    return ox > tol && oz > tol;
+  }
+  for (let i = 0; i < entries.length; i++) {
+    for (let j = i + 1; j < entries.length; j++) {
+      const a = entries[i], b = entries[j];
+      if (pairCollides(a, b)) hits.push(`${a.item.name} ↔ ${b.item.name}`);
+    }
+  }
+  /* Bewegliche Möbel dürfen weder aus dem Raum ragen noch in den Türschwenkbereich hineinragen. */
+  entries.filter(e => e.item.movable).forEach(e => {
+    if (e.box.min.x < -4.45 || e.box.max.x > 4.45 || e.box.min.z < -3.45 || e.box.max.z > 3.45) {
+      hits.push(`${e.item.name} ↔ Raumgrenze`);
+    }
+    const doorX = overlapAmount(e.box.min.x, e.box.max.x, 2.68, 3.78);
+    const doorZ = overlapAmount(e.box.min.z, e.box.max.z, 2.48, 3.48);
+    if (doorX > tol && doorZ > tol) hits.push(`${e.item.name} ↔ Türschwenkbereich`);
+  });
+  return [...new Set(hits)];
+}
+
+function label(text, opts = {}) {
+  const size = opts.size || 34;
+  const pad = 14;
+  const cv = document.createElement('canvas');
+  const ctx = cv.getContext('2d');
+  ctx.font = `600 ${size}px -apple-system, Helvetica, Arial`;
+  const w = Math.ceil(ctx.measureText(text).width) + pad * 2;
+  cv.width = w; cv.height = size + pad * 2;
+  const c2 = cv.getContext('2d');
+  c2.font = `600 ${size}px -apple-system, Helvetica, Arial`;
+  if (opts.bg) {
+    c2.fillStyle = opts.bg;
+    const r = 14;
+    c2.beginPath();
+    c2.moveTo(r, 0); c2.arcTo(cv.width, 0, cv.width, cv.height, r);
+    c2.arcTo(cv.width, cv.height, 0, cv.height, r);
+    c2.arcTo(0, cv.height, 0, 0, r); c2.arcTo(0, 0, cv.width, 0, r);
+    c2.fill();
+  }
+  c2.fillStyle = opts.color || '#3E5668';
+  c2.textBaseline = 'middle';
+  c2.fillText(text, pad, cv.height / 2 + 2);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.minFilter = THREE.LinearFilter;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true }));
+  const scale = opts.scale || 0.011;
+  sp.scale.set(cv.width * scale, cv.height * scale, 1);
+  sp.renderOrder = 20;
+  return sp;
+}
+
+/* ---------- Raumhülle ---------- */
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM.W, ROOM.D), mat(COL.floor));
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+scene.add(floor);
+
+(function roomGrid() {
+  const pts = [];
+  for (let x = -4.5; x <= 4.51; x += 0.5) {
+    pts.push(new THREE.Vector3(x, 0.002, -3.5), new THREE.Vector3(x, 0.002, 3.5));
+  }
+  for (let z = -3.5; z <= 3.51; z += 0.5) {
+    pts.push(new THREE.Vector3(-4.5, 0.002, z), new THREE.Vector3(4.5, 0.002, z));
+  }
+  const g = new THREE.BufferGeometry().setFromPoints(pts);
+  const l = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: COL.grid, transparent: true, opacity: 0.55 }));
+  scene.add(l);
+})();
+
+/* Wände in Raumhöhe · pro Seite eine Gruppe, damit die kamerazugewandten
+   Wände automatisch ausgeblendet werden (Puppenhaus-Prinzip) */
+const WALL_H = 2.55, WALL_T = 0.1;
+const walls = {
+  north: { g: new THREE.Group(), n: new THREE.Vector3(0, 0, -1), c: new THREE.Vector3(0, 1, -3.5) },
+  south: { g: new THREE.Group(), n: new THREE.Vector3(0, 0,  1), c: new THREE.Vector3(0, 1,  3.5) },
+  west:  { g: new THREE.Group(), n: new THREE.Vector3(-1, 0, 0), c: new THREE.Vector3(-4.5, 1, 0) },
+  east:  { g: new THREE.Group(), n: new THREE.Vector3( 1, 0, 0), c: new THREE.Vector3( 4.5, 1, 0) }
+};
+Object.values(walls).forEach(w => scene.add(w.g));
+
+function wallSeg(group, w, x, z, ry, color, h = WALL_H, y = null, opt = {}) {
+  const m = box(w, h, WALL_T, color, opt);
+  m.position.set(x, y === null ? h / 2 : y, z);
+  m.rotation.y = ry;
+  group.add(m);
+  return m;
+}
+/* Fensterfront (oben, 9 m): Brüstung 85 cm + Glas bis 2,45 m + Sturz */
+wallSeg(walls.north.g, ROOM.W, 0, -3.5 - WALL_T / 2, 0, COL.wall, 0.85);
+const glass = box(ROOM.W, 1.6, 0.05, COL.window, { transparent: true, opacity: 0.3 });
+glass.position.set(0, 0.85 + 0.8, -3.5 - WALL_T / 2);
+glass.castShadow = false;
+walls.north.g.add(glass);
+for (let i = -4.5; i <= 4.5; i += 1.5) {
+  const post = box(0.07, 1.6, 0.09, 0xFFFFFF);
+  post.position.set(Math.max(-4.46, Math.min(4.46, i)), 0.85 + 0.8, -3.5 - WALL_T / 2);
+  walls.north.g.add(post);
+}
+wallSeg(walls.north.g, ROOM.W, 0, -3.5 - WALL_T / 2, 0, COL.wall, WALL_H - 2.45, 2.45 + (WALL_H - 2.45) / 2);
+
+/* Seitenwände + Rückwand (mit Türöffnung x 2.7..3.7) */
+wallSeg(walls.west.g, ROOM.D + 0.2, -4.5 - WALL_T / 2, 0, Math.PI / 2, COL.wall);
+wallSeg(walls.east.g, ROOM.D + 0.2,  4.5 + WALL_T / 2, 0, Math.PI / 2, COL.wall);
+wallSeg(walls.south.g, 7.2, 2.7 - 7.2 / 2, 3.5 + WALL_T / 2, 0, COL.wall);          // links der Tür
+wallSeg(walls.south.g, 0.8, 3.7 + 0.4,     3.5 + WALL_T / 2, 0, COL.wall);          // rechts der Tür
+wallSeg(walls.south.g, 1.0, 3.2, 3.5 + WALL_T / 2, 0, COL.wall, WALL_H - 2.1, 2.1 + (WALL_H - 2.1) / 2); // Türsturz
+
+/* Türblatt + Schwenkbereich (gestrichelt) */
+const door = box(0.06, 2.05, 1.0, 0x8E3B40);
+door.position.set(3.7, 1.025, 3.0);
+walls.south.g.add(door);
+(function doorArc() {
+  const pts = [];
+  for (let a = Math.PI; a >= Math.PI / 2; a -= 0.06) {
+    pts.push(new THREE.Vector3(3.7 + Math.cos(a) * 1.0, 0.01, 3.5 + Math.sin(a) * -1.0));
+  }
+  const g = new THREE.BufferGeometry().setFromPoints(pts);
+  const l = new THREE.Line(g, new THREE.LineDashedMaterial({ color: 0x8E3B40, dashSize: 0.12, gapSize: 0.08 }));
+  l.computeLineDistances();
+  scene.add(l);
+})();
+
+/* Wandtafel links (z −1..1) & Digitale Tafel rechts */
+const wt = box(0.06, 1.05, 2.0, COL.wandtafel);
+wt.position.set(-4.44, 1.35, 0); walls.west.g.add(wt);
+const dt = box(0.06, 1.05, 2.0, COL.board);
+dt.position.set(4.44, 1.35, 0); walls.east.g.add(dt);
+
+/* Nassbereich unten links */
+const nass = box(1.4, 0.9, 0.55, 0x9FB6C6);
+nass.position.set(-3.8, 0.45, 3.18); scene.add(nass);
+registerCollision('Nassbereich', nass);
+const sink = box(0.5, 0.06, 0.35, 0xEFF4F7);
+sink.position.set(-3.8, 0.91, 3.18); scene.add(sink);
+
+/* Keine festen Beschriftungen im Raum */
+
+/* ---------- Möbel-Baukasten ---------- */
+function makeTable(color) {
+  const g = new THREE.Group();
+  const top = box(1.3, 0.05, 0.5, color);
+  top.position.y = 0.72;
+  g.add(top);
+  [[-0.58, -0.18], [0.58, -0.18], [-0.58, 0.18], [0.58, 0.18]].forEach(([x, z]) => {
+    const leg = box(0.05, 0.7, 0.05, 0x707A82);
+    leg.position.set(x, 0.35, z);
+    g.add(leg);
+  });
+  return g;
+}
+function makeChair() {
+  const g = new THREE.Group();
+  const seat = box(0.38, 0.05, 0.38, COL.chair);
+  seat.position.y = 0.45; g.add(seat);
+  const back = box(0.38, 0.35, 0.05, COL.chair);
+  back.position.set(0, 0.66, 0.19); g.add(back);
+  [[-0.15, -0.15], [0.15, -0.15], [-0.15, 0.15], [0.15, 0.15]].forEach(([x, z]) => {
+    const leg = box(0.035, 0.44, 0.035, 0x707A82);
+    leg.position.set(x, 0.22, z); g.add(leg);
+  });
+  return g;
+}
+/* Blickrichtung Stuhl (default): schaut nach −z, Lehne bei +z */
+
+function makeHocker() {
+  const g = new THREE.Group();
+  const seat = cyl(0.17, 0.05, COL.hocker);
+  seat.position.y = 0.45; g.add(seat);
+  const legs = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.17, 0.43, 12, 1, true), mat(COL.hockerDark, { side: THREE.DoubleSide }));
+  legs.position.y = 0.215; legs.castShadow = true;
+  g.add(legs);
+  return g;
+}
+function makeWagen() {
+  const g = new THREE.Group();
+  const body = box(0.38, 0.72, 0.55, COL.slate);
+  body.position.y = 0.40; g.add(body);
+  const white = box(0.40, 0.48, 0.03, 0xF4F7F9);
+  white.position.set(0, 0.46, 0.285); g.add(white);
+  [[-0.15, -0.20], [0.15, -0.20], [-0.15, 0.20], [0.15, 0.20]].forEach(([x, z]) => {
+    const w = cyl(0.035, 0.08, 0x555F66, 10);
+    w.position.set(x, 0.04, z); g.add(w);
+  });
+  return g;
+}
+function makeStellwand() {
+  const g = new THREE.Group();
+  const panel = box(1.5, 1.05, 0.06, 0xE9E2D5);
+  panel.position.y = 0.7; g.add(panel);
+  const frame = box(1.56, 0.05, 0.1, COL.slate);
+  frame.position.y = 1.25; g.add(frame);
+  [[-0.65], [0.65]].forEach(([x]) => {
+    const foot = box(0.08, 0.16, 0.5, COL.slate);
+    foot.position.set(x, 0.08, 0); g.add(foot);
+  });
+  return g;
+}
+function makeBank(len = 1.6) {
+  const g = new THREE.Group();
+  const seat = box(len, 0.08, 0.42, COL.bench);
+  seat.position.y = 0.42; g.add(seat);
+  const base = box(len - 0.15, 0.38, 0.36, 0x5B7A66);
+  base.position.y = 0.19; g.add(base);
+  return g;
+}
+function makeWuerfel() {
+  const g = new THREE.Group();
+  const c = box(0.42, 0.42, 0.42, 0xD9C9A8);
+  c.position.y = 0.21; g.add(c);
+  return g;
+}
+function makeFlexTisch() {
+  const g = new THREE.Group();
+  const top = box(0.95, 0.05, 0.65, COL.roll);
+  top.position.y = 0.76; g.add(top);
+  [[-0.42, 0], [0.42, 0]].forEach(([x]) => {
+    const leg = box(0.05, 0.74, 0.06, 0x707A82);
+    leg.position.set(x, 0.37, 0.24); g.add(leg);
+    const leg2 = box(0.05, 0.74, 0.06, 0x707A82);
+    leg2.position.set(x, 0.37, -0.24); g.add(leg2);
+  });
+  const sym = label('↕', { color: '#2C3D4C', size: 40, scale: 0.008 });
+  sym.position.y = 1.1;
+  g.add(sym);
+  return g;
+}
+
+function makeLowShelf(len = 1.0) {
+  const g = new THREE.Group();
+  const body = box(0.42, 0.82, len, 0x9FB6C6);
+  body.position.y = 0.41; g.add(body);
+  const top = box(0.45, 0.04, len + 0.02, 0xEFF4F7);
+  top.position.y = 0.84; g.add(top);
+  return g;
+}
+function makeStandingTable() {
+  const g = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.05, 24), mat(0xE3D6BC));
+  top.scale.x = 1.55;
+  top.position.y = 0.98; g.add(top);
+  const stem = cyl(0.05, 0.96, 0x707A82, 12);
+  stem.position.y = 0.48; g.add(stem);
+  const foot = cyl(0.24, 0.04, 0x707A82, 20);
+  foot.position.y = 0.02; g.add(foot);
+  return g;
+}
+function makeCoachTisch() {
+  const g = new THREE.Group();
+  const top = box(0.9, 0.05, 0.56, 0xE3D6BC);
+  top.position.y = 0.74; g.add(top);
+  /* Beine weit außen: von beiden Längsseiten gut unterfahrbar */
+  [[-0.39, -0.22], [0.39, -0.22], [-0.39, 0.22], [0.39, 0.22]].forEach(([x, z]) => {
+    const leg = box(0.045, 0.72, 0.045, 0x707A82);
+    leg.position.set(x, 0.36, z); g.add(leg);
+  });
+  return g;
+}
+
+/* ---------- SCHALE (Tische fest, je ein Stuhl ausleihbar) ---------- */
+const shellGroup = new THREE.Group();
+scene.add(shellGroup);
+const shellTables = [];
+const shellChairs = [];
+const borrowedChairs = [];
+let shellDeskIndex = 0;
+
+function shellTablePlusChairs(x, z, ry) {
+  const deskNo = ++shellDeskIndex;
+  const t = makeTable(COL.tableFix);
+  t.position.set(x, 0, z);
+  t.rotation.y = ry;
+  shellGroup.add(t);
+  shellTables.push({ obj: t, home: { x, z, ry } });
+  registerCollision(`Lernbürotisch ${deskNo}`, t);
+
+  [-0.33, 0.33].forEach((off, chairIndex) => {
+    const c = makeChair();
+    /* Stuhl auf der Raumseite, Blick zur Wand */
+    const local = new THREE.Vector3(off, 0, 0.28).applyAxisAngle(new THREE.Vector3(0, 1, 0), ry);
+    c.position.set(x + local.x, 0, z + local.z);
+    c.rotation.y = ry;
+    shellGroup.add(c);
+    const home = { x: c.position.x, z: c.position.z, ry: c.rotation.y };
+    shellChairs.push({ obj: c, home, deskNo, chairIndex });
+    registerCollision(`Lernbürostuhl ${deskNo}.${chairIndex + 1}`, c, { movable: chairIndex === 1 });
+    /* Von jedem der acht Lernbürotische kann genau ein Stuhl in die Mitte wechseln. */
+    if (chairIndex === 1) borrowedChairs.push({ obj: c, home, deskNo });
+  });
+}
+/* ry = Blickrichtung der Lernenden (zur Wand), Stuhl steht auf der Raumseite */
+/* Fensterfront: 4 Tische, Blick zum Fenster */
+[-3.5, -2.1, -0.7, 0.7].forEach(x => shellTablePlusChairs(x, -3.2, 0));
+/* Untere Wand: 2 Tische; rechts bleibt die barrierefreie Ankunftszone frei */
+[-2.1, -0.65].forEach(x => shellTablePlusChairs(x, 3.2, Math.PI));
+/* Linke Wand: 2 Tische direkt an der Wand; die Wandtafel bleibt frei */
+[[-1.65], [1.65]].forEach(([z]) => shellTablePlusChairs(-4.2, z, Math.PI / 2));
+
+/* Lernlounge oben rechts: feste Bank auf normaler Sitzhöhe, zwei Sitzwürfel,
+   kleiner Tisch und ein gleichwertiger freier Rollstuhlplatz. */
+const rug = new THREE.Mesh(new THREE.CircleGeometry(0.95, 32), mat(COL.rug));
+rug.rotation.x = -Math.PI / 2;
+rug.position.set(3.55, 0.005, -2.25);
+rug.receiveShadow = true;
+scene.add(rug);
+const bank1 = makeBank(1.45);
+bank1.position.set(3.55, 0, -3.15);
+scene.add(bank1);
+registerCollision('Lounge-Bank', bank1);
+const loungeCubes = [];
+[[3.15, -1.90], [3.85, -1.70]].forEach(([x, z], i) => {
+  const w = makeWuerfel();
+  w.position.set(x, 0, z);
+  w.rotation.y = i ? -0.25 : 0.25;
+  scene.add(w);
+  loungeCubes.push(w);
+  registerCollision(`Lounge-Sitzwürfel ${i + 1}`, w);
+});
+const loungeTable = makeCoachTisch();
+loungeTable.scale.set(0.72, 0.72, 0.72);
+loungeTable.position.set(3.75, 0, -2.35);
+scene.add(loungeTable);
+registerCollision('Lounge-Tisch', loungeTable);
+const loungeSpot = new THREE.Mesh(new THREE.CircleGeometry(0.34, 24), mat(0xAFC8DE, { transparent: true, opacity: 0.75 }));
+loungeSpot.rotation.x = -Math.PI / 2;
+loungeSpot.position.set(2.95, 0.008, -2.35);
+scene.add(loungeSpot);
+
+/* Materialtheke unter der linken Tafel: zwei halbhohe Regale, zusammen 2 m. */
+const materialShelfA = makeLowShelf(1.0);
+materialShelfA.position.set(-4.00, 0, -0.50);
+scene.add(materialShelfA);
+registerCollision('Materialtheke A', materialShelfA);
+const materialShelfB = makeLowShelf(1.0);
+materialShelfB.position.set(-4.00, 0, 0.50);
+scene.add(materialShelfB);
+registerCollision('Materialtheke B', materialShelfB);
+
+/* Hoher Schrank in der Ecke neben der Tür an der Wand der digitalen Tafel. */
+const tallCabinet = box(0.55, 2.00, 1.00, 0x6A8599);
+tallCabinet.position.set(4.12, 1.00, 2.90);
+scene.add(tallCabinet);
+registerCollision('Hochschrank Ecke', tallCabinet);
+
+/* Zwei schmale Materialwagen parken in derselben Ecke entlang der rechten Wand. */
+const materialWagons = [];
+[[4.02, 1.95], [4.02, 1.30]].forEach(([x, z], i) => {
+  const w = makeWagen();
+  w.position.set(x, 0, z);
+  w.rotation.y = Math.PI / 2;
+  scene.add(w);
+  materialWagons.push(w);
+  registerCollision(`Materialwagen ${i + 1}`, w);
+});
+
+/* Mobiler ovaler Stehtisch für kurze Inputs oder Beratungen nahe der digitalen Tafel. */
+const standingTable = makeStandingTable();
+standingTable.position.set(3.00, 0, 0.55);
+scene.add(standingTable);
+registerCollision('Mobiler Stehtisch', standingTable);
+
+/* ---------- BEWEGLICHE MITTE ---------- */
+
+const moveGroup = new THREE.Group();
+scene.add(moveGroup);
+
+/* Vier Mitteltische: je zwei feste Stühle. In der Gruppenstellung kommen
+   je zwei ausgeliehene Stühle aus der Schale hinzu. */
+const mTables = [];
+const midTableChairs = [];
+for (let i = 0; i < 4; i++) {
+  const g = new THREE.Group();
+  g.add(makeTable(COL.tableMove));
+  [-0.33, 0.33].forEach(off => {
+    const c = makeChair();
+    c.position.set(off, 0, 0.32);
+    g.add(c);
+    midTableChairs.push(c);
+  });
+  moveGroup.add(g);
+  mTables.push(g);
+  registerCollision(`Mitteltisch ${i + 1}`, g, { movable: true });
+}
+
+/* Zwei identische flexible Einzeltische: einer kann direkt mit dem Rollstuhl,
+   der zweite mit einem regulären Stuhl genutzt werden. */
+const flexTischA = makeFlexTisch();
+moveGroup.add(flexTischA);
+registerCollision('Höhenverstellbarer Tisch', flexTischA, { movable: true });
+
+/* Ein mobiles Raumteilerelement. */
+const wand2 = makeStellwand();
+moveGroup.add(wand2);
+registerCollision('Akustik-Stellwand', wand2, { movable: true });
+const wand3 = new THREE.Group();
+wand3.visible = false;
+
+/* Zusätzliche lose Stühle für Input und Sitzkreis; Hocker entfallen vollständig. */
+const looseChairs = [];
+for (let i = 0; i < 25; i++) {
+  const c = makeChair();
+  c.visible = false;
+  moveGroup.add(c);
+  looseChairs.push(c);
+  registerCollision(`Loser Stuhl ${i + 1}`, c, { layouts: ['kino', 'kreis'], movable: true });
+}
+const hockers = [];
+/* Integrierter Rollstuhlplatz (Marker, wandert mit) */
+const rollSpot = new THREE.Mesh(new THREE.CircleGeometry(0.34, 24), mat(0xAFC8DE));
+rollSpot.rotation.x = -Math.PI / 2;
+rollSpot.position.y = 0.007;
+const rollGroup = new THREE.Group();
+rollGroup.add(rollSpot);
+moveGroup.add(rollGroup);
+
+/* ---------- Interaktiver Möbel-Editor ---------- */
+const editorItems = [];
+const editorById = new Map();
+let editorIdCounter = 0;
+function registerEditorItem(root, name) {
+  if (!root) return;
+  const id = `item-${++editorIdCounter}`;
+  const item = { id, name, root };
+  root.userData.editorId = id;
+  root.traverse(obj => { obj.userData.editorRoot = root; obj.userData.editorId = id; });
+  editorItems.push(item);
+  editorById.set(id, item);
+}
+
+shellTables.forEach((entry, i) => registerEditorItem(entry.obj, `Roter Doppeltisch ${i + 1}`));
+shellChairs.forEach((entry, i) => registerEditorItem(entry.obj, `Stuhl außen ${i + 1}`));
+mTables.forEach((table, i) => registerEditorItem(table, `Oranger Doppeltisch ${i + 1}`));
+registerEditorItem(flexTischA, 'Höhenverstellbarer Tisch');
+registerEditorItem(wand2, 'Mobiler Raumteiler');
+registerEditorItem(standingTable, 'Ovaler Stehtisch');
+materialWagons.forEach((wagen, i) => registerEditorItem(wagen, `Materialwagen ${i + 1}`));
+registerEditorItem(bank1, 'Lounge-Bank');
+loungeCubes.forEach((cube, i) => registerEditorItem(cube, `Polstersitz ${i + 1}`));
+registerEditorItem(loungeTable, 'Lounge-Tisch');
+registerEditorItem(rollGroup, 'Rollstuhlplatz');
+looseChairs.forEach((chair, i) => registerEditorItem(chair, `Stuhl Input/Kreis ${i + 1}`));
+
+/* Hauptwege (mind. 120 cm) und Wendekreise (150 cm), zuschaltbar.
+   Die Route verläuft vom Türbereich zunächst nach links und anschließend
+   durch die freie Mittelachse; Lounge und Materialecke bleiben ausgespart. */
+const radiusGroup = new THREE.Group();
+function accessStrip(w, d, x, z) {
+  const p = new THREE.Mesh(
+    new THREE.PlaneGeometry(w, d),
+    mat(0xAFC8DE, { transparent: true, opacity: 0.22, side: THREE.DoubleSide })
+  );
+  p.rotation.x = -Math.PI / 2;
+  p.position.set(x, 0.012, z);
+  radiusGroup.add(p);
+}
+accessStrip(1.20, 1.05, 3.20, 2.94); // Ankunft und Tür
+accessStrip(2.30, 1.20, 2.62, 2.38); // Querung in die freie Mittelachse
+accessStrip(1.20, 3.60, 2.05, 0.58); // Hauptachse
+accessStrip(2.40, 1.20, 3.25, 0.00); // digitale Tafel
+accessStrip(1.20, 1.35, 1.72, -1.90); // Abzweig zur Lounge
+[[3.20, 2.72], [2.05, 0.0], [1.72, -2.05]].forEach(([x, z]) => {
+  const ring = new THREE.Mesh(
+    new THREE.RingGeometry(0.72, 0.75, 48),
+    mat(0x3E5668, { transparent: true, opacity: 0.62, side: THREE.DoubleSide })
+  );
+  ring.rotation.x = -Math.PI / 2;
+  ring.position.set(x, 0.018, z);
+  radiusGroup.add(ring);
+});
+radiusGroup.visible = false;
+scene.add(radiusGroup);
+
+/* ---------- Hocker-Positionsgeneratoren ---------- */
+function hockerTowers() {
+  const out = [];
+  const towerZ = [-2.75, -2.18, -1.60, 1.72, 2.30];
+  for (let i = 0; i < 25; i++) {
+    const tower = Math.floor(i / 5);
+    const idx = i % 5;
+    out.push({ x: 4.12, z: towerZ[tower], y: idx * 0.10, ry: idx * 0.28 });
+  }
+  return out;
+}
+/* Vier flache, leicht gebogene Reihen. Die vordere Reihe lässt in der Mitte
+   eine 110 cm breite Lücke für den Rollstuhlplatz. */
+function chairHalbkreis() {
+  const out = [];
+  const rows = [
+    { x: 3.65, zs: [-2.15, -1.29, -0.43, 0.43, 1.29, 2.15] },
+    { x: 2.90, zs: [-2.25, -1.50, -0.75, 0, 0.75, 1.50, 2.25] },
+    { x: 2.15, zs: [-2.05, -1.23, -0.41, 0.41, 1.23, 2.05] },
+    { x: 1.40, zs: [-1.95, -1.17, -0.39, 0.39, 1.17, 1.95] }
+  ];
+  rows.forEach(row => row.zs.forEach(z => {
+    const curve = 0.08 * Math.pow(Math.abs(z) / 2.25, 2);
+    out.push({ x: row.x - curve, z, y: 0, ry: -Math.PI / 2 });
+  }));
+  return out;
+}
+function chairKreis() {
+  const out = [];
+  const cx = 0.10, cz = 0.0, r = 2.00, slots = 26;
+  for (let i = 0; i < slots; i++) {
+    if (i === 0) continue; // Lücke für den Rollstuhlplatz an der rechten Seite
+    const a = (i / slots) * Math.PI * 2;
+    out.push({ x: cx + Math.cos(a) * r, z: cz + Math.sin(a) * r, y: 0, ry: -a + Math.PI / 2 });
+  }
+  return out;
+}
+
+/* ---------- Layout-Definitionen ---------- */
+const P = Math.PI;
+const LAYOUTS = {
+  lernbuero: {
+    name: 'SRL-Basisraum / Lernbüro',
+    text: 'Dauerhafte Grundstellung und Standardansicht: Das orangefarbene Mittelcluster besteht aus zwei geschlossenen Reihen entlang der langen Raumachse. Auf jeder Längsseite stehen vier Stühle. Der höhenverstellbare Tisch steht quer davor nahe der Materialtheke.',
+    seats: '24 Stuhlplätze + Lounge/Polsterplätze + 1 Rollstuhlplatz',
+    mt: [
+      { x: -0.95, z: -0.25, ry: P },
+      { x:  0.35, z: -0.25, ry: P },
+      { x: -0.95, z:  0.25, ry: 0 },
+      { x:  0.35, z:  0.25, ry: 0 }
+    ],
+    flexA: { x: -2.45, z: 0.00, ry: P / 2 },
+    wand2: { x: 1.65, z: -2.10, ry: P / 2 },
+    wand3: { x: 0.0, z: 0.0, ry: 0 },
+    rollSpot: { x: -2.45, z: 0.00 },
+    stand: { x: 3.00, z: 0.55, ry: 0 },
+    chairs: null
+  },
+  gruppen: {
+    name: 'Gruppeninseln',
+    text: 'Fünf Gruppencluster. Die unteren orangenen Tische haben ihre Stühle auf der Außenseite. Der höhenverstellbare Tisch steht oben mittig am richtigen Ort und bleibt quer ausgerichtet.',
+    seats: '5 Cluster im Raum + Rollstuhlplatz integriert',
+    shell: [
+      { x: -2.10, z: -2.60, ry: -P / 2 }, { x: -1.60, z: -2.60, ry:  P / 2 },
+      { x:  0.40, z: -2.60, ry: -P / 2 }, { x:  0.90, z: -2.60, ry:  P / 2 },
+      { x: -2.10, z:  2.55, ry: -P / 2 }, { x: -1.60, z:  2.55, ry:  P / 2 },
+      { x:  0.40, z:  2.55, ry: -P / 2 }, { x:  0.90, z:  2.55, ry:  P / 2 }
+    ],
+    mt: [
+      { x: -0.35, z:  0.05, ry: -P / 2 },
+      { x:  0.15, z:  0.05, ry:  P / 2 },
+      { x: -1.85, z:  1.65, ry: 0 },
+      { x:  0.65, z:  1.65, ry: 0 }
+    ],
+    flexA: { x: 0.55, z: -1.55, ry: 0 },
+    wand2: { x: 1.95, z: -2.15, ry: P / 2 },
+    wand3: { x:  0.0, z:  0.0, ry: 0 },
+    rollSpot: { x: 0.55, z: -1.55 },
+    stand: { x: 3.15, z: 0.95, ry: 0 },
+    chairs: null
+  },
+  kino: {
+    name: 'Input / Halbkreis',
+    text: 'Die Input-Konfiguration zeigt die Tische genau wie im Lernbüro. Der zweireihige Mittelcluster, der höhenverstellbare Tisch und der Stehtisch bleiben an denselben Positionen. Die Stühle stehen in vier breiten Reihen mit größerem Abstand zwischen den Reihen.',
+    seats: '25 Stühle + 1 Rollstuhlplatz = 26',
+    mt: [
+      { x: -0.95, z: -0.25, ry: P },
+      { x:  0.35, z: -0.25, ry: P },
+      { x: -0.95, z:  0.25, ry: 0 },
+      { x:  0.35, z:  0.25, ry: 0 }
+    ],
+    flexA: { x: -2.45, z: 0.00, ry: P / 2 },
+    wand2: { x: 1.65, z: -2.10, ry: P / 2 },
+    wand3: { x: 0.0, z: 0.0, ry: 0 },
+    rollSpot: { x: -2.45, z: 0.00 },
+    stand: { x: 3.00, z: 0.55, ry: 0 },
+    chairs: chairHalbkreis
+  },
+  kreis: {
+    name: 'Kreis / Klassenrat',
+    text: 'Für den Sitzkreis bleiben die roten Tische an ihren Wandpositionen. Die orangefarbenen Tische rücken vor die Materialregale an die linke Raumseite, damit in der Mitte Platz für den Kreis entsteht. Der Türbereich bleibt frei; den Kreis bilden 25 lose Stühle.',
+    seats: '25 Stühle + 1 Rollstuhlplatz = 26',
+    mt: [
+      { x: -2.70, z: -1.95, ry: P / 2 },
+      { x: -2.70, z: -0.65, ry: P / 2 },
+      { x: -2.70, z:  0.65, ry: P / 2 },
+      { x: -2.70, z:  1.95, ry: P / 2 }
+    ],
+    flexA: { x: -1.85, z: 2.55, ry: 0 },
+    wand2: { x: 2.05, z: 2.00, ry: P / 2 },
+    wand3: { x: 0.0, z: 0.0, ry: 0 },
+    rollSpot: { x: 2.10, z: 0.00 },
+    stand: { x: 3.35, z: -1.35, ry: 0 },
+    chairs: chairKreis
+  }
+};
+
+/* Vom Nutzer exportierte Standardanordnungen */
+const IMPORTED_PRESETS = {"lernbuero":{"name":"Lernbüro 2","savedAt":"2026-07-18T18:40:35.462Z","items":{"item-1":{"x":-3.5,"y":0,"z":-3.2,"ry":0,"visible":true},"item-2":{"x":-2.1,"y":0,"z":-3.2,"ry":0,"visible":true},"item-3":{"x":-0.7,"y":0,"z":-3.2,"ry":0,"visible":true},"item-4":{"x":0.7,"y":0,"z":-3.2,"ry":0,"visible":true},"item-5":{"x":-2.1,"y":0,"z":3.2,"ry":3.141592653589793,"visible":true},"item-6":{"x":-0.65,"y":0,"z":3.2,"ry":3.141592653589793,"visible":true},"item-7":{"x":-4.2,"y":0,"z":-1.65,"ry":1.5707963267948966,"visible":true},"item-8":{"x":-4.2,"y":0,"z":1.65,"ry":1.5707963267948966,"visible":true},"item-9":{"x":-3.83,"y":0,"z":-2.92,"ry":0,"visible":true},"item-10":{"x":-3.17,"y":0,"z":-2.92,"ry":0,"visible":true},"item-11":{"x":-2.43,"y":0,"z":-2.92,"ry":0,"visible":true},"item-12":{"x":-1.77,"y":0,"z":-2.92,"ry":0,"visible":true},"item-13":{"x":-1.03,"y":0,"z":-2.92,"ry":0,"visible":true},"item-14":{"x":-0.36999999999999994,"y":0,"z":-2.92,"ry":0,"visible":true},"item-15":{"x":0.36999999999999994,"y":0,"z":-2.92,"ry":0,"visible":true},"item-16":{"x":1.03,"y":0,"z":-2.92,"ry":0,"visible":true},"item-17":{"x":-1.77,"y":0,"z":2.92,"ry":3.141592653589793,"visible":true},"item-18":{"x":-2.43,"y":0,"z":2.92,"ry":3.141592653589793,"visible":true},"item-19":{"x":-0.32,"y":0,"z":2.92,"ry":3.141592653589793,"visible":true},"item-20":{"x":-0.98,"y":0,"z":2.92,"ry":3.141592653589793,"visible":true},"item-21":{"x":-3.9200000000000004,"y":0,"z":-1.3199999999999998,"ry":1.5707963267948966,"visible":true},"item-22":{"x":-3.92,"y":0,"z":-1.98,"ry":1.5707963267948966,"visible":true},"item-23":{"x":-3.9200000000000004,"y":0,"z":1.98,"ry":1.5707963267948966,"visible":true},"item-24":{"x":-3.92,"y":0,"z":1.3199999999999998,"ry":1.5707963267948966,"visible":true},"item-25":{"x":-1.5,"y":0,"z":-0.3,"ry":3.141592653589793,"visible":true},"item-26":{"x":-0.2,"y":0,"z":-0.3,"ry":3.141592653589793,"visible":true},"item-27":{"x":-1.5,"y":0,"z":0.2,"ry":0,"visible":true},"item-28":{"x":-0.2,"y":0,"z":0.2,"ry":0,"visible":true},"item-29":{"x":-2.45,"y":0,"z":0,"ry":1.5707963267948966,"visible":true},"item-30":{"x":1.65,"y":0,"z":-2.1,"ry":1.5707963267948966,"visible":true},"item-31":{"x":3,"y":0,"z":0.55,"ry":0,"visible":true},"item-32":{"x":4.02,"y":0,"z":1.95,"ry":1.5707963267948966,"visible":true},"item-33":{"x":4.02,"y":0,"z":1.3,"ry":1.5707963267948966,"visible":true},"item-34":{"x":3.55,"y":0,"z":-3.15,"ry":0,"visible":true},"item-35":{"x":3.15,"y":0,"z":-1.9,"ry":0.25,"visible":true},"item-36":{"x":3.85,"y":0,"z":-1.7,"ry":-0.25,"visible":true},"item-37":{"x":3.75,"y":0,"z":-2.35,"ry":0,"visible":true},"item-38":{"x":-2.45,"y":0,"z":0,"ry":0,"visible":true},"item-39":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-40":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-41":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-42":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-43":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-44":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-45":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-46":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-47":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-48":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-49":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-50":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-51":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-52":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-53":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-54":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-55":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-56":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-57":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-58":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-59":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-60":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-61":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-62":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-63":{"x":0,"y":0,"z":0,"ry":0,"visible":false}}},"kino":{"name":"Input 2","savedAt":"2026-07-18T18:40:29.513Z","items":{"item-1":{"x":-3.5,"y":0,"z":-3.2,"ry":0,"visible":true},"item-2":{"x":-2.1,"y":0,"z":-3.2,"ry":0,"visible":true},"item-3":{"x":-0.7,"y":0,"z":-3.2,"ry":0,"visible":true},"item-4":{"x":0.7,"y":0,"z":-3.2,"ry":0,"visible":true},"item-5":{"x":-2.1,"y":0,"z":3.2,"ry":3.141593,"visible":true},"item-6":{"x":-0.65,"y":0,"z":3.2,"ry":3.141593,"visible":true},"item-7":{"x":-4.2,"y":0,"z":-1.65,"ry":1.570796,"visible":true},"item-8":{"x":-4.2,"y":0,"z":1.65,"ry":1.570796,"visible":true},"item-9":{"x":-3.83,"y":0,"z":-2.92,"ry":0,"visible":false},"item-10":{"x":-3.17,"y":0,"z":-2.92,"ry":0,"visible":false},"item-11":{"x":-2.43,"y":0,"z":-2.92,"ry":0,"visible":false},"item-12":{"x":-1.77,"y":0,"z":-2.92,"ry":0,"visible":false},"item-13":{"x":-1.03,"y":0,"z":-2.92,"ry":0,"visible":false},"item-14":{"x":-0.37,"y":0,"z":-2.92,"ry":0,"visible":false},"item-15":{"x":0.37,"y":0,"z":-2.92,"ry":0,"visible":false},"item-16":{"x":1.03,"y":0,"z":-2.92,"ry":0,"visible":false},"item-17":{"x":-1.77,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-18":{"x":-2.43,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-19":{"x":-0.32,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-20":{"x":-0.98,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-21":{"x":-3.92,"y":0,"z":-1.32,"ry":1.570796,"visible":false},"item-22":{"x":-3.92,"y":0,"z":-1.98,"ry":1.570796,"visible":false},"item-23":{"x":-3.92,"y":0,"z":1.98,"ry":1.570796,"visible":false},"item-24":{"x":-3.92,"y":0,"z":1.32,"ry":1.570796,"visible":false},"item-25":{"x":-1.6,"y":0,"z":-0.3,"ry":3.141593,"visible":true},"item-26":{"x":-1.6,"y":0,"z":0.2,"ry":0,"visible":true},"item-27":{"x":-1.6,"y":0,"z":-0.8,"ry":0,"visible":true},"item-28":{"x":-1.6,"y":0,"z":0.7,"ry":3.141593,"visible":true},"item-29":{"x":-2.55,"y":0,"z":0,"ry":1.570796,"visible":true},"item-30":{"x":1.2,"y":0,"z":-1.55,"ry":1.570796,"visible":true},"item-31":{"x":3.35,"y":0,"z":1.65,"ry":0,"visible":true},"item-32":{"x":4.02,"y":0,"z":1.95,"ry":1.5707963267948966,"visible":true},"item-33":{"x":4.02,"y":0,"z":1.3,"ry":1.5707963267948966,"visible":true},"item-34":{"x":3.55,"y":0,"z":-3.15,"ry":0,"visible":true},"item-35":{"x":3.15,"y":0,"z":-1.9,"ry":0.25,"visible":true},"item-36":{"x":3.85,"y":0,"z":-1.7,"ry":-0.25,"visible":true},"item-37":{"x":3.75,"y":0,"z":-2.35,"ry":0,"visible":true},"item-38":{"x":-3.25,"y":0,"z":0,"ry":0,"visible":true},"item-39":{"x":3.576953086419753,"y":0,"z":-2.15,"ry":-1.5707963267948966,"visible":true},"item-40":{"x":3.623703111111111,"y":0,"z":-1.29,"ry":-1.5707963267948966,"visible":true},"item-41":{"x":3.64707812345679,"y":0,"z":-0.43,"ry":-1.5707963267948966,"visible":true},"item-42":{"x":3.64707812345679,"y":0,"z":0.43,"ry":-1.5707963267948966,"visible":true},"item-43":{"x":3.623703111111111,"y":0,"z":1.29,"ry":-1.5707963267948966,"visible":true},"item-44":{"x":3.576953086419753,"y":0,"z":2.15,"ry":-1.5707963267948966,"visible":true},"item-45":{"x":2.82,"y":0,"z":-2.25,"ry":-1.5707963267948966,"visible":true},"item-46":{"x":2.8644444444444446,"y":0,"z":-1.5,"ry":-1.5707963267948966,"visible":true},"item-47":{"x":2.891111111111111,"y":0,"z":-0.75,"ry":-1.5707963267948966,"visible":true},"item-48":{"x":2.9,"y":0,"z":0,"ry":-1.5707963267948966,"visible":true},"item-49":{"x":2.891111111111111,"y":0,"z":0.75,"ry":-1.5707963267948966,"visible":true},"item-50":{"x":2.8644444444444446,"y":0,"z":1.5,"ry":-1.5707963267948966,"visible":true},"item-51":{"x":2.82,"y":0,"z":2.25,"ry":-1.5707963267948966,"visible":true},"item-52":{"x":2.08359012345679,"y":0,"z":-2.05,"ry":-1.5707963267948966,"visible":true},"item-53":{"x":2.1260924444444442,"y":0,"z":-1.23,"ry":-1.5707963267948966,"visible":true},"item-54":{"x":2.1473436049382717,"y":0,"z":-0.41,"ry":-1.5707963267948966,"visible":true},"item-55":{"x":2.1473436049382717,"y":0,"z":0.41,"ry":-1.5707963267948966,"visible":true},"item-56":{"x":2.1260924444444442,"y":0,"z":1.23,"ry":-1.5707963267948966,"visible":true},"item-57":{"x":2.08359012345679,"y":0,"z":2.05,"ry":-1.5707963267948966,"visible":true},"item-58":{"x":1.339911111111111,"y":0,"z":-1.95,"ry":-1.5707963267948966,"visible":true},"item-59":{"x":1.3783679999999998,"y":0,"z":-1.17,"ry":-1.5707963267948966,"visible":true},"item-60":{"x":1.3975964444444444,"y":0,"z":-0.39,"ry":-1.5707963267948966,"visible":true},"item-61":{"x":1.3975964444444444,"y":0,"z":0.39,"ry":-1.5707963267948966,"visible":true},"item-62":{"x":1.3783679999999998,"y":0,"z":1.17,"ry":-1.5707963267948966,"visible":true},"item-63":{"x":1.339911111111111,"y":0,"z":1.95,"ry":-1.5707963267948966,"visible":true}}},"gruppen":{"name":"Gruppen 2","savedAt":"2026-07-18T18:40:19.869Z","items":{"item-1":{"x":-2.1,"y":0,"z":-2.6,"ry":-1.570796,"visible":true},"item-2":{"x":-1.6,"y":0,"z":-2.6,"ry":1.570796,"visible":true},"item-3":{"x":0.4,"y":0,"z":-2.6,"ry":-1.570796,"visible":true},"item-4":{"x":0.9,"y":0,"z":-2.6,"ry":1.570796,"visible":true},"item-5":{"x":-2.1,"y":0,"z":2.55,"ry":-1.570796,"visible":true},"item-6":{"x":-1.6,"y":0,"z":2.55,"ry":1.570796,"visible":true},"item-7":{"x":0.4,"y":0,"z":2.55,"ry":-1.570796,"visible":true},"item-8":{"x":0.9,"y":0,"z":2.55,"ry":1.570796,"visible":true},"item-9":{"x":-2.42,"y":0,"z":-2.82,"ry":-1.570796,"visible":true},"item-10":{"x":-2.42,"y":0,"z":-2.38,"ry":-1.570796,"visible":true},"item-11":{"x":-1.28,"y":0,"z":-2.38,"ry":1.570796,"visible":true},"item-12":{"x":-1.28,"y":0,"z":-2.82,"ry":1.570796,"visible":true},"item-13":{"x":0.08,"y":0,"z":-2.82,"ry":-1.570796,"visible":true},"item-14":{"x":0.08,"y":0,"z":-2.38,"ry":-1.570796,"visible":true},"item-15":{"x":1.22,"y":0,"z":-2.38,"ry":1.570796,"visible":true},"item-16":{"x":1.22,"y":0,"z":-2.82,"ry":1.570796,"visible":true},"item-17":{"x":-2.42,"y":0,"z":2.33,"ry":-1.570796,"visible":true},"item-18":{"x":-2.42,"y":0,"z":2.77,"ry":-1.570796,"visible":true},"item-19":{"x":-1.28,"y":0,"z":2.77,"ry":1.570796,"visible":true},"item-20":{"x":-1.28,"y":0,"z":2.33,"ry":1.570796,"visible":true},"item-21":{"x":0.08,"y":0,"z":2.33,"ry":-1.570796,"visible":true},"item-22":{"x":0.08,"y":0,"z":2.77,"ry":-1.570796,"visible":true},"item-23":{"x":1.22,"y":0,"z":2.77,"ry":1.570796,"visible":true},"item-24":{"x":1.22,"y":0,"z":2.33,"ry":1.570796,"visible":true},"item-25":{"x":-0.3,"y":0,"z":0.1,"ry":-1.570796,"visible":true},"item-26":{"x":0.2,"y":0,"z":0.1,"ry":1.570796,"visible":true},"item-27":{"x":-1.85,"y":0,"z":1.65,"ry":3.141593,"visible":true},"item-28":{"x":0.65,"y":0,"z":1.65,"ry":3.141593,"visible":true},"item-29":{"x":-1.8,"y":0,"z":-1.6,"ry":3.141592653589793,"visible":true},"item-30":{"x":1.95,"y":0,"z":-2.15,"ry":1.570796,"visible":true},"item-31":{"x":3.1,"y":0,"z":0.1,"ry":0,"visible":true},"item-32":{"x":4.02,"y":0,"z":1.95,"ry":1.5707963267948966,"visible":true},"item-33":{"x":4.02,"y":0,"z":1.3,"ry":1.5707963267948966,"visible":true},"item-34":{"x":3.55,"y":0,"z":-3.15,"ry":0,"visible":true},"item-35":{"x":3.15,"y":0,"z":-1.9,"ry":0.25,"visible":true},"item-36":{"x":3.85,"y":0,"z":-1.7,"ry":-0.25,"visible":true},"item-37":{"x":3.75,"y":0,"z":-2.35,"ry":0,"visible":true},"item-38":{"x":1.28,"y":0,"z":-1.625,"ry":0,"visible":true},"item-39":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-40":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-41":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-42":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-43":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-44":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-45":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-46":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-47":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-48":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-49":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-50":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-51":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-52":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-53":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-54":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-55":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-56":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-57":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-58":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-59":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-60":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-61":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-62":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-63":{"x":0,"y":0,"z":0,"ry":0,"visible":false}}}};
+
+/* ---------- Layout anwenden + Bewegungen zählen ---------- */
+let currentLayout = null;
+const EPS = 0.02;
+function moved(obj, target) {
+  return Math.abs(obj.position.x - target.x) > EPS ||
+         Math.abs(obj.position.z - target.z) > EPS ||
+         Math.abs(((obj.rotation.y - target.ry) % (2 * P))) > 0.05;
+}
+function applyLayout(key, animate = true) {
+  if (typeof deselectEditorItem === 'function') deselectEditorItem();
+  const L = LAYOUTS[key];
+  const imported = IMPORTED_PRESETS[key] || null;
+  let count = 0;
+  const dur = animate ? 1.1 : 0;
+  let useLooseChairs = false;
+
+  const tween = (obj, t, delay = 0) => {
+    if (moved(obj, t)) count++;
+    if (animate) {
+      gsap.to(obj.position, {
+        x: t.x,
+        y: Number.isFinite(t.y) ? t.y : obj.position.y,
+        z: t.z,
+        duration: dur,
+        delay,
+        ease: 'power2.inOut'
+      });
+      gsap.to(obj.rotation, { y: t.ry, duration: dur, delay, ease: 'power2.inOut' });
+      gsap.fromTo(obj.scale, { x: 1, y: 1, z: 1 }, {
+        x: 1.04, y: 1.04, z: 1.04,
+        duration: 0.3, delay, yoyo: true, repeat: 1
+      });
+    } else {
+      obj.position.set(t.x, Number.isFinite(t.y) ? t.y : obj.position.y, t.z);
+      obj.rotation.y = t.ry;
+    }
+  };
+
+  if (imported) {
+    /* Die drei Hauptbuttons laden exakt die vom Nutzer exportierten Positionen. */
+    editorItems.forEach((item, i) => {
+      const state = imported.items[item.id];
+      if (!state) return;
+      item.root.visible = state.visible !== false;
+      tween(item.root, {
+        x: Number(state.x) || 0,
+        y: Number(state.y) || 0,
+        z: Number(state.z) || 0,
+        ry: Number(state.ry) || 0
+      }, i * 0.008);
+    });
+
+    useLooseChairs = looseChairs.some(chair => chair.visible !== false);
+    midTableChairs.forEach(chair => { chair.visible = !useLooseChairs; });
+    hockers.forEach(h => { h.visible = false; h.position.set(20, -5, 20); });
+  } else {
+    L.mt.forEach((t, i) => tween(mTables[i], t, i * 0.06));
+    tween(flexTischA, L.flexA, 0.08);
+    tween(standingTable, L.stand || { x: 3.00, z: 0.55, ry: 0 }, 0.10);
+    tween(wand2, L.wand2, 0.16);
+    tween(wand3, L.wand3 || { x: 0, z: 0, ry: 0 }, 0.20);
+
+    shellTables.forEach((entry, i) => {
+      const target = L.shell ? L.shell[i] : entry.home;
+      tween(entry.obj, target, 0.03 + i * 0.02);
+    });
+    shellChairs.forEach((entry, i) => {
+      let target = entry.home;
+      if (L.shell) {
+        const t = L.shell[entry.deskNo - 1];
+        const off = entry.chairIndex === 0 ? -0.22 : 0.22;
+        const local = new THREE.Vector3(off, 0, 0.32)
+          .applyAxisAngle(new THREE.Vector3(0, 1, 0), t.ry);
+        target = { x: t.x + local.x, z: t.z + local.z, ry: t.ry };
+      }
+      tween(entry.obj, target, 0.04 + i * 0.015);
+    });
+
+    if (!L.shell) {
+      borrowedChairs.forEach((entry, i) => {
+        const target = L.borrowed ? L.borrowed[i] : entry.home;
+        tween(entry.obj, target, 0.08 + i * 0.025);
+      });
+    }
+
+    useLooseChairs = typeof L.chairs === 'function';
+    const chairPositions = useLooseChairs ? L.chairs() : [];
+    shellChairs.forEach(entry => { entry.obj.visible = !useLooseChairs; });
+    midTableChairs.forEach(ch => { ch.visible = !useLooseChairs; });
+    looseChairs.forEach(ch => { ch.visible = useLooseChairs; });
+    hockers.forEach(h => { h.visible = false; h.position.set(20, -5, 20); });
+
+    if (useLooseChairs) {
+      chairPositions.forEach((t, i) => {
+        const ch = looseChairs[i];
+        if (animate) {
+          gsap.to(ch.position, {
+            x: t.x, z: t.z, y: t.y,
+            duration: dur, delay: 0.15 + i * 0.012,
+            ease: 'power2.inOut'
+          });
+          gsap.to(ch.rotation, {
+            y: t.ry, duration: dur, delay: 0.15 + i * 0.012,
+            ease: 'power2.inOut'
+          });
+        } else {
+          ch.position.set(t.x, t.y, t.z);
+          ch.rotation.y = t.ry;
+        }
+      });
+    }
+
+    if (animate) {
+      gsap.to(rollGroup.position, {
+        x: L.rollSpot.x, z: L.rollSpot.z,
+        duration: dur, delay: 0.2, ease: 'power2.inOut'
+      });
+    } else {
+      rollGroup.position.set(L.rollSpot.x, 0, L.rollSpot.z);
+    }
+  }
+
+  document.getElementById('info-title').textContent = imported ? imported.name : L.name;
+  document.getElementById('info-text').textContent = imported
+    ? 'Übernommene, im Raumplaner gespeicherte Möbelanordnung.'
+    : L.text;
+  const stats = document.getElementById('info-stats');
+  stats.innerHTML = '';
+  const chip = (txt, cls) => {
+    const s = document.createElement('span');
+    s.className = 'stat-chip ' + (cls || '');
+    s.textContent = txt;
+    stats.appendChild(s);
+  };
+  chip('🪑 ' + L.seats);
+  if (imported) chip('📥 Übernommene Konfiguration', 'fix');
+  if (currentLayout !== null && currentLayout !== key) {
+    chip('🔄 ' + count + ' Möbel bewegt', 'move');
+    if (useLooseChairs) chip('🪑 Stühle für Input/Kreis', 'move');
+  }
+
+  currentLayout = key;
+  const auditDelay = animate ? (dur + 0.45) * 1000 : 0;
+  window.setTimeout(() => {
+    if (currentLayout !== key) return;
+    const old = document.getElementById('collision-chip');
+    if (old) old.remove();
+    const hits = validateCollisions(key);
+    const s = document.createElement('span');
+    s.id = 'collision-chip';
+    s.className = 'stat-chip ' + (hits.length ? 'move' : 'fix');
+    s.textContent = hits.length ? `⚠️ ${hits.length} Kollisionen` : '✅ Kollisionscheck: frei';
+    s.title = hits.join('\n');
+    stats.appendChild(s);
+    window.__collisionReport = window.__collisionReport || {};
+    window.__collisionReport[key] = hits;
+  }, auditDelay);
+  try { localStorage.setItem('b201-layout', key); } catch (e) {}
+}
+
+/* ---------- Kamera & Steuerung ---------- */
+const camState = { theta: 0.6, phi: 1.02, dist: 11.5, target: new THREE.Vector3(0, 0, 0.2), top: false };
+function updateCam() {
+  if (camState.top) {
+    camera.position.set(camState.target.x, 13.5, camState.target.z + 0.02);
+    camera.up.set(0, 0, -1);
+  } else {
+    camera.up.set(0, 1, 0);
+    const { theta, phi, dist, target } = camState;
+    camera.position.set(
+      target.x + dist * Math.sin(phi) * Math.sin(theta),
+      target.y + dist * Math.cos(phi),
+      target.z + dist * Math.sin(phi) * Math.cos(theta)
+    );
+  }
+  camera.lookAt(camState.target);
+}
+let dragging = false, lastX = 0, lastY = 0, pinchDist = 0;
+let editMode = false;
+let furnitureDragging = false;
+let selectedEditorItem = null;
+const dom = renderer.domElement;
+const raycaster = new THREE.Raycaster();
+const pointerNdc = new THREE.Vector2();
+const floorDragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+const dragPoint = new THREE.Vector3();
+const dragOffset = new THREE.Vector3();
+const selectionBox = new THREE.BoxHelper(new THREE.Object3D(), 0x4D8B3F);
+selectionBox.visible = false;
+scene.add(selectionBox);
+
+function setPointerNdc(e) {
+  const rect = dom.getBoundingClientRect();
+  pointerNdc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  pointerNdc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+}
+function selectionName() {
+  return selectedEditorItem ? selectedEditorItem.name : '';
+}
+function updateSelectionUi() {
+  const labelEl = document.getElementById('selection-label');
+  const has = !!selectedEditorItem;
+  labelEl.textContent = has ? `Ausgewählt: ${selectionName()}` : '';
+  labelEl.classList.toggle('show', has && editMode);
+  document.getElementById('btn-rotate-left').disabled = !has;
+  document.getElementById('btn-rotate-right').disabled = !has;
+}
+function selectEditorItem(item) {
+  selectedEditorItem = item || null;
+  if (selectedEditorItem) {
+    selectionBox.setFromObject(selectedEditorItem.root);
+    selectionBox.visible = true;
+  } else {
+    selectionBox.visible = false;
+  }
+  updateSelectionUi();
+}
+function deselectEditorItem() { selectEditorItem(null); }
+function snap10cm(value) { return Math.round(value * 10) / 10; }
+function keepInsideRoom(root) {
+  scene.updateMatrixWorld(true);
+  const b = new THREE.Box3().setFromObject(root);
+  let dx = 0, dz = 0;
+  if (b.min.x < -4.42) dx += -4.42 - b.min.x;
+  if (b.max.x >  4.42) dx +=  4.42 - b.max.x;
+  if (b.min.z < -3.42) dz += -3.42 - b.min.z;
+  if (b.max.z >  3.42) dz +=  3.42 - b.max.z;
+  root.position.x += dx;
+  root.position.z += dz;
+}
+function markAsCustom() {
+  currentLayout = 'custom';
+  document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('info-title').textContent = 'Eigene Konfiguration';
+  document.getElementById('info-text').textContent = 'Die Möbelpositionen wurden manuell verändert. Speichere die Anordnung, damit du sie später wieder öffnen kannst.';
+  updateCustomCollisionChip();
+}
+function updateCustomCollisionChip() {
+  const stats = document.getElementById('info-stats');
+  if (!stats) return;
+  let chip = document.getElementById('collision-chip');
+  if (!chip) {
+    chip = document.createElement('span');
+    chip.id = 'collision-chip';
+    stats.appendChild(chip);
+  }
+  const hits = validateCollisions('custom');
+  chip.className = 'stat-chip ' + (hits.length ? 'move' : 'fix');
+  chip.textContent = hits.length ? `⚠️ ${hits.length} Kollisionen` : '✅ Kollisionscheck: frei';
+  chip.title = hits.join('\n');
+}
+
+function editorPointerDown(e) {
+  if (!editMode || e.button !== 0) return false;
+  setPointerNdc(e);
+  raycaster.setFromCamera(pointerNdc, camera);
+  const roots = editorItems.map(item => item.root).filter(root => root.visible !== false);
+  const hits = raycaster.intersectObjects(roots, true);
+  if (!hits.length) {
+    deselectEditorItem();
+    return true;
+  }
+  const root = hits[0].object.userData.editorRoot || hits[0].object;
+  const id = root.userData.editorId || hits[0].object.userData.editorId;
+  const item = editorById.get(id);
+  if (!item) return true;
+  selectEditorItem(item);
+  raycaster.ray.intersectPlane(floorDragPlane, dragPoint);
+  dragOffset.copy(dragPoint).sub(item.root.position);
+  furnitureDragging = true;
+  dom.classList.add('dragging-furniture');
+  dom.setPointerCapture(e.pointerId);
+  return true;
+}
+
+dom.addEventListener('pointerdown', e => {
+  if (editorPointerDown(e)) return;
+  dragging = true;
+  lastX = e.clientX;
+  lastY = e.clientY;
+  dom.setPointerCapture(e.pointerId);
+});
+dom.addEventListener('pointerup', e => {
+  if (furnitureDragging) {
+    furnitureDragging = false;
+    dom.classList.remove('dragging-furniture');
+    if (selectedEditorItem) {
+      keepInsideRoom(selectedEditorItem.root);
+      selectionBox.setFromObject(selectedEditorItem.root);
+      markAsCustom();
+    }
+  }
+  dragging = false;
+});
+dom.addEventListener('pointercancel', () => {
+  furnitureDragging = false;
+  dragging = false;
+  dom.classList.remove('dragging-furniture');
+});
+dom.addEventListener('pointermove', e => {
+  if (furnitureDragging && selectedEditorItem) {
+    setPointerNdc(e);
+    raycaster.setFromCamera(pointerNdc, camera);
+    if (raycaster.ray.intersectPlane(floorDragPlane, dragPoint)) {
+      selectedEditorItem.root.position.x = snap10cm(dragPoint.x - dragOffset.x);
+      selectedEditorItem.root.position.z = snap10cm(dragPoint.z - dragOffset.z);
+      keepInsideRoom(selectedEditorItem.root);
+      selectionBox.setFromObject(selectedEditorItem.root);
+    }
+    return;
+  }
+  if (!dragging || camState.top || editMode) return;
+  const dx = e.clientX - lastX, dy = e.clientY - lastY;
+  lastX = e.clientX; lastY = e.clientY;
+  camState.theta -= dx * 0.006;
+  camState.phi = Math.min(1.45, Math.max(0.25, camState.phi - dy * 0.005));
+  updateCam();
+});
+dom.addEventListener('wheel', e => {
+  e.preventDefault();
+  camState.dist = Math.min(20, Math.max(5, camState.dist + e.deltaY * 0.01));
+  updateCam();
+}, { passive: false });
+dom.addEventListener('touchstart', e => {
+  if (e.touches.length === 2) {
+    pinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  }
+}, { passive: true });
+dom.addEventListener('touchmove', e => {
+  if (e.touches.length === 2) {
+    const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    camState.dist = Math.min(20, Math.max(5, camState.dist * (pinchDist / d)));
+    pinchDist = d;
+    updateCam();
+  }
+}, { passive: true });
+
+function resize() {
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+window.addEventListener('resize', resize);
+
+/* ---------- UI ---------- */
+document.querySelectorAll('.layout-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyLayout(btn.dataset.layout, true);
+  });
+});
+const btn3d = document.getElementById('btn-3d');
+const btnTop = document.getElementById('btn-top');
+btn3d.addEventListener('click', () => {
+  camState.top = false;
+  btn3d.classList.add('active'); btnTop.classList.remove('active');
+  updateCam();
+});
+btnTop.addEventListener('click', () => {
+  camState.top = true;
+  btnTop.classList.add('active'); btn3d.classList.remove('active');
+  updateCam();
+});
+document.getElementById('btn-radien').addEventListener('click', function () {
+  radiusGroup.visible = !radiusGroup.visible;
+  this.classList.toggle('active', radiusGroup.visible);
+});
+
+/* ---------- Editor-UI & gespeicherte Konfigurationen ---------- */
+const CONFIG_STORAGE_KEY = 'b201-custom-configs-v1';
+const btnEdit = document.getElementById('btn-edit');
+const btnRotateLeft = document.getElementById('btn-rotate-left');
+const btnRotateRight = document.getElementById('btn-rotate-right');
+const btnSaveConfig = document.getElementById('btn-save-config');
+const btnExportConfig = document.getElementById('btn-export-config');
+const btnExportPng = document.getElementById('btn-export-png');
+const btnLoadConfig = document.getElementById('btn-load-config');
+const btnDeleteConfig = document.getElementById('btn-delete-config');
+const configSelect = document.getElementById('config-select');
+const editorHint = document.getElementById('editor-hint');
+
+function setEditMode(on) {
+  editMode = !!on;
+  document.body.classList.toggle('editing', editMode);
+  btnEdit.classList.toggle('active', editMode);
+  btnEdit.setAttribute('aria-pressed', String(editMode));
+  btnEdit.textContent = editMode ? '✓ Bearbeiten aktiv' : '✋ Möbel verschieben';
+  editorHint.classList.toggle('show', editMode);
+  if (!editMode) {
+    furnitureDragging = false;
+    dom.classList.remove('dragging-furniture');
+    deselectEditorItem();
+  }
+}
+function rotateSelected(direction) {
+  if (!selectedEditorItem) return;
+  selectedEditorItem.root.rotation.y += direction * Math.PI / 2;
+  selectedEditorItem.root.rotation.y = Math.round(selectedEditorItem.root.rotation.y / (Math.PI / 2)) * (Math.PI / 2);
+  keepInsideRoom(selectedEditorItem.root);
+  selectionBox.setFromObject(selectedEditorItem.root);
+  markAsCustom();
+}
+function getSavedConfigs() {
+  try { return JSON.parse(localStorage.getItem(CONFIG_STORAGE_KEY) || '{}'); }
+  catch (e) { return {}; }
+}
+function setSavedConfigs(configs) {
+  localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(configs));
+}
+function refreshConfigSelect(selectName = '') {
+  const configs = getSavedConfigs();
+  const names = Object.keys(configs).sort((a,b) => a.localeCompare(b, 'de'));
+  configSelect.innerHTML = '<option value="">Gespeicherte Konfigurationen</option>';
+  names.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    configSelect.appendChild(opt);
+  });
+  if (selectName && configs[selectName]) configSelect.value = selectName;
+  const hasSelection = !!configSelect.value;
+  btnLoadConfig.disabled = !hasSelection;
+  btnDeleteConfig.disabled = !hasSelection;
+}
+function captureEditorState() {
+  const items = {};
+  editorItems.forEach(({id, root}) => {
+    items[id] = {
+      x: root.position.x,
+      y: root.position.y,
+      z: root.position.z,
+      ry: root.rotation.y,
+      visible: root.visible !== false
+    };
+  });
+  return { version: 1, savedAt: new Date().toISOString(), items };
+}
+function applyEditorState(state, name) {
+  if (!state || !state.items) return;
+  deselectEditorItem();
+  Object.entries(state.items).forEach(([id, value]) => {
+    const item = editorById.get(id);
+    if (!item) return;
+    item.root.position.set(Number(value.x) || 0, Number(value.y) || 0, Number(value.z) || 0);
+    item.root.rotation.y = Number(value.ry) || 0;
+    item.root.visible = value.visible !== false;
+  });
+  scene.updateMatrixWorld(true);
+  currentLayout = 'custom';
+  document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('info-title').textContent = name || 'Eigene Konfiguration';
+  document.getElementById('info-text').textContent = 'Gespeicherte Möbelanordnung. Aktiviere „Möbel verschieben“, um sie weiter zu bearbeiten.';
+  const stats = document.getElementById('info-stats');
+  stats.innerHTML = '';
+  const chip = document.createElement('span');
+  chip.className = 'stat-chip fix';
+  chip.textContent = '💾 Gespeicherte Konfiguration';
+  stats.appendChild(chip);
+  updateCustomCollisionChip();
+}
+
+function safeFilename(value, fallback = 'b201-konfiguration') {
+  const clean = String(value || fallback)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
+  return clean || fallback;
+}
+function triggerDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+function exportCurrentConfig() {
+  const title = configSelect.value || document.getElementById('info-title').textContent || 'B201 Konfiguration';
+  const payload = {
+    format: 'B201-Raumkonzept',
+    version: 1,
+    name: title,
+    room: { widthMeters: ROOM.W, depthMeters: ROOM.D },
+    exportedAt: new Date().toISOString(),
+    camera: {
+      top: camState.top,
+      theta: camState.theta,
+      phi: camState.phi,
+      dist: camState.dist,
+      target: { x: camState.target.x, y: camState.target.y, z: camState.target.z }
+    },
+    configuration: captureEditorState()
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+  triggerDownload(blob, safeFilename(title) + '.json');
+}
+function exportPngScreenshot() {
+  const title = configSelect.value || document.getElementById('info-title').textContent || 'B201 Ansicht';
+  deselectEditorItem();
+  scene.updateMatrixWorld(true);
+  updateWalls();
+  renderer.render(scene, camera);
+
+  const canvas = renderer.domElement;
+  if (canvas.toBlob) {
+    canvas.toBlob(blob => {
+      if (!blob) return;
+      triggerDownload(blob, safeFilename(title) + '.png');
+    }, 'image/png');
+  } else {
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = safeFilename(title) + '.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+}
+
+btnEdit.addEventListener('click', () => setEditMode(!editMode));
+btnRotateLeft.addEventListener('click', () => rotateSelected(-1));
+btnRotateRight.addEventListener('click', () => rotateSelected(1));
+btnExportConfig.addEventListener('click', exportCurrentConfig);
+btnExportPng.addEventListener('click', exportPngScreenshot);
+btnSaveConfig.addEventListener('click', () => {
+  const suggestion = configSelect.value || document.getElementById('info-title').textContent || 'Meine Konfiguration';
+  const name = window.prompt('Name der Konfiguration:', suggestion);
+  if (!name || !name.trim()) return;
+  const cleanName = name.trim();
+  const configs = getSavedConfigs();
+  if (configs[cleanName] && !window.confirm(`„${cleanName}“ überschreiben?`)) return;
+  configs[cleanName] = captureEditorState();
+  setSavedConfigs(configs);
+  refreshConfigSelect(cleanName);
+  document.getElementById('info-title').textContent = cleanName;
+});
+configSelect.addEventListener('change', () => {
+  const has = !!configSelect.value;
+  btnLoadConfig.disabled = !has;
+  btnDeleteConfig.disabled = !has;
+});
+btnLoadConfig.addEventListener('click', () => {
+  const name = configSelect.value;
+  if (!name) return;
+  const configs = getSavedConfigs();
+  applyEditorState(configs[name], name);
+});
+btnDeleteConfig.addEventListener('click', () => {
+  const name = configSelect.value;
+  if (!name || !window.confirm(`Konfiguration „${name}“ löschen?`)) return;
+  const configs = getSavedConfigs();
+  delete configs[name];
+  setSavedConfigs(configs);
+  refreshConfigSelect();
+});
+window.addEventListener('keydown', e => {
+  if (!editMode || !selectedEditorItem) return;
+  if (e.key.toLowerCase() === 'q') { e.preventDefault(); rotateSelected(-1); }
+  if (e.key.toLowerCase() === 'e') { e.preventDefault(); rotateSelected(1); }
+});
+refreshConfigSelect();
+
+/* Automatischer Prüfmodus für die technische Abnahme im Browser:
+   file.html?audit=1 schreibt die Resultate aller vier Layouts ins DOM. */
+function runCollisionAudit() {
+  const previous = currentLayout || 'lernbuero';
+  const report = {};
+  Object.keys(LAYOUTS).forEach(key => {
+    applyLayout(key, false);
+    scene.updateMatrixWorld(true);
+    report[key] = validateCollisions(key);
+  });
+  applyLayout(previous, false);
+  const pre = document.createElement('pre');
+  pre.id = 'collision-audit';
+  pre.style.display = 'none';
+  pre.textContent = JSON.stringify(report);
+  document.body.appendChild(pre);
+  window.__collisionAudit = report;
+}
+
+/* ---------- Start ---------- */
+resize();
+updateCam();
+let startLayout = 'lernbuero';
+document.querySelectorAll('.layout-btn').forEach(b => b.classList.toggle('active', b.dataset.layout === startLayout));
+applyLayout(startLayout, false);
+currentLayout = startLayout;
+if (new URLSearchParams(window.location.search).get('audit') === '1') runCollisionAudit();
+
+/* Wände zwischen Kamera und Raum ausblenden (in der Draufsicht bleiben alle sichtbar) */
+const _v = new THREE.Vector3();
+function updateWalls() {
+  Object.values(walls).forEach(w => {
+    _v.copy(camera.position).sub(w.c).normalize();
+    w.g.visible = _v.dot(w.n) < 0.08;
+  });
+}
+
+(function loop() {
+  requestAnimationFrame(loop);
+  updateWalls();
+  if (selectionBox.visible && selectedEditorItem) selectionBox.setFromObject(selectedEditorItem.root);
+  renderer.render(scene, camera);
+})();
+</script>
+</body>
+</html>
