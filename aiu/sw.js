@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v6-0-spielgefuehl';
+const VERSION='v6-1-projekttitel';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',

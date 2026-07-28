@@ -1,4 +1,4 @@
-# Modernisierung der Begleit-App „Kurs ins Unbekannte"
+# Modernisierung der Begleit-App „Aufbruch ins Unbekannte"
 
 > **Stand 27.07.2026:** Phase 0 bis 3 sind umgesetzt und geprüft.
 > Einzelheiten in `PHASE-0-1-UMSETZUNG.md`, `PHASE-2-UMSETZUNG.md` und `PHASE-3-UMSETZUNG.md`. Offene Punkte in Phase 0 sind die,
