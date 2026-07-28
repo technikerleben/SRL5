@@ -1,0 +1,81 @@
+name: AIU Tests
+
+on:
+  push:
+    paths:
+      - "aiu/**"
+  pull_request:
+    paths:
+      - "aiu/**"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aiu/tests
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: aiu/tests/package.json
+
+      - name: Abhängigkeiten installieren
+        run: npm install
+
+      - name: Smoke-Test ausführen
+        run: npm run smoke
+
+  visual:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aiu/tests
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Referenzbilder suchen
+        id: baselines
+        shell: bash
+        run: |
+          if find . -type f -path "*-snapshots/*.png" -print -quit | grep -q .; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "Keine Referenzbilder vorhanden; visueller Test wird übersprungen."
+          fi
+
+      - name: Node.js einrichten
+        if: steps.baselines.outputs.present == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: aiu/tests/package.json
+
+      - name: Abhängigkeiten installieren
+        if: steps.baselines.outputs.present == 'true'
+        run: npm install
+
+      - name: Chromium installieren
+        if: steps.baselines.outputs.present == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Visuelle Tests ausführen
+        if: steps.baselines.outputs.present == 'true'
+        run: npm run visual -- --reporter=html
+
+      - name: Playwright-Bericht hochladen
+        if: always() && steps.baselines.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiu-playwright-report
+          path: aiu/tests/playwright-report/
+          if-no-files-found: warn
+          retention-days: 14
