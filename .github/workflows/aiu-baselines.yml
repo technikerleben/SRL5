@@ -1,0 +1,49 @@
+name: AIU Referenzbilder aktualisieren
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-baselines:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aiu/tests
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: aiu/tests/package.json
+
+      - name: Abhängigkeiten installieren
+        run: npm install
+
+      - name: Chromium installieren
+        run: npx playwright install --with-deps chromium
+
+      # Playwright-Screenshots sind plattformabhängig. Referenzbilder deshalb
+      # ausschließlich auf diesem Linux-Runner erzeugen, niemals lokal auf macOS.
+      - name: Referenzbilder erzeugen
+        run: npm run visual:update
+
+      - name: Referenzbilder committen
+        working-directory: .
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- ':(glob)aiu/tests/**/*-snapshots/*.png'
+          if git diff --cached --quiet; then
+            echo "Keine geänderten Referenzbilder."
+          else
+            git commit -m "Update AIU visual baselines"
+            git push
+          fi
