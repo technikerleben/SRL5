@@ -189,6 +189,24 @@ const w2 = await boot('?ui=all');
   /* ---- Phase 3 ---- */
   check('Spielgefühl an', w2.AIU_JUICE.an() === true && w2.AIU_SOUND.an() === true);
   check('Tonschalter sichtbar', $('#soundToggle')?.hidden === false);
+  G('runtime.week = 1');
+  w2.AIU_STORE.emitSync(...w2.AIU_TOPICS);
+  await wait(120);
+  check('Teaser in Woche 1 sichtbar', $('#teaserEntry')?.hidden === false);
+  check('Teaser auch im Lehrkräftebereich vorhanden', !!$('#teacherTeaserOpen'));
+  $('#teaserOpen').click();
+  check('Teaser im Datenschutzmodus eingebettet', $('#teaserPlayerHost iframe')?.getAttribute('src')?.startsWith('https://www.youtube-nocookie.com/embed/E9rTkmztZA8'));
+  $('#teaserClose').click();
+  check('Schließen stoppt das Video', !$('#teaserModal')?.classList.contains('open') && !$('#teaserPlayerHost iframe'));
+  Object.defineProperty(w2.navigator,'onLine',{configurable:true,value:false});
+  $('#teacherTeaserOpen').click();
+  check('Offline-Hinweis statt leerem Player', ($('#teaserPlayerHost')?.textContent||'').includes('Internetverbindung') && !$('#teaserPlayerHost iframe'));
+  $('#teaserClose').click();
+  Object.defineProperty(w2.navigator,'onLine',{configurable:true,value:true});
+  G('runtime.week = 2');
+  w2.AIU_STORE.emitSync(...w2.AIU_TOPICS);
+  await wait(120);
+  check('Große Teaser-Schaltfläche ab Woche 2 verborgen', $('#teaserEntry')?.hidden === true);
 
   // Woche 2 hat einen Meilenstein bei Antrieb
   G('runtime.week = 2');
