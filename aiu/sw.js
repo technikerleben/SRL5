@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v10-segelnde-moewen';
+const VERSION='v11-ruhige-meeresfelder';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
