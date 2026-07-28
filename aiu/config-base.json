@@ -30,7 +30,7 @@
   },
   "map": {
     "image": "startkarte.svg",
-    "routeImage": "karte.svg",
+    "routeImage": "startkarte.svg",
     "source": "startkarte.json",
     "caption": "Die Startkarte zeigt den Heimathafen und die bisher bekannte Welt.",
     "viewerUrl": "",
@@ -108,7 +108,7 @@
     {
       "date": "2026-09-01",
       "title": "Ein Schiff wartet im Hafen",
-      "text": "Die Besatzung versammelt sich zum ersten Mal. Das Schiff liegt noch namenlos im Heimathafen. Der alte Hafenmeister zeigt eine geheimnisvolle Karte. Die Reise beginnt.",
+      "text": "Die Besatzung versammelt sich zum ersten Mal. Das Schiff liegt noch namenlos im Heimathafen. Die Hafenmeisterin zeigt die Startkarte mit den bekannten Hafenorten und den noch nicht besuchten Zielen. Die Reise beginnt.",
       "week": 1
     }
   ]

@@ -4,7 +4,7 @@
     "phase": "einfuehrung",
     "chapter": "Das Schiff wird übernommen",
     "short": "Das Schiff gehört uns",
-    "story": "Im Heimathafen liegt ein großes Segelschiff, das lange niemand mehr genutzt hat. Es hat noch keinen Namen, sein Wappen ist leer und die Segel warten auf eure Ideen. Der alte Hafenmeister übergibt der Klasse den Schlüssel zum Schiff.",
+    "story": "Im Heimathafen liegt ein großes Segelschiff, das lange niemand mehr genutzt hat. Es hat noch keinen Namen, sein Wappen ist leer und die Segel warten auf eure Ideen. Die Hafenmeisterin übergibt der Klasse den Schlüssel zum Schiff.",
     "routine": {
       "title": "Wir bringen unsere Ideen ein",
       "text": "Du kannst etwas zur Reise beitragen – durch Schreiben, Zeichnen, Bauen oder eine gute Begründung."
@@ -83,8 +83,8 @@
     "srlFokus": "durchfuehrung",
     "ort": {
       "name": "Heimathafen",
-      "x": 190,
-      "y": 530
+      "id": "home",
+      "route": []
     }
   },
   {
@@ -92,7 +92,7 @@
     "phase": "einfuehrung",
     "chapter": "Antrieb für die Reise",
     "short": "Wir beginnen verlässlich",
-    "story": "Der Hafenmeister prüft das Schiff. Die Segel sind bereit, aber ohne Antrieb bleibt es am Anleger. Antrieb entsteht, wenn eine Besatzung verlässlich beginnt und an ihrer Aufgabe arbeitet.",
+    "story": "Die Hafenmeisterin prüft das Schiff. Von der Hafenwiese aus soll die Besatzung ein Startzeichen gut erkennen können. Antrieb entsteht, wenn alle verlässlich beginnen und an ihrer Aufgabe arbeiten.",
     "routine": {
       "title": "Wir beginnen selbstständig",
       "text": "Lege dein Material bereit und beginne nach dem Startsignal mit deiner vereinbarten Aufgabe."
@@ -110,7 +110,7 @@
         "area": "werft",
         "resource": "antrieb",
         "title": "Ein Startsignal gestalten",
-        "task": "Entwirf ein gut sichtbares Zeichen für den Beginn der Lernzeit.",
+        "task": "Entwirf ein Zeichen, das man von der Hafenwiese aus gut auf dem Schiff erkennen kann. Es soll den Beginn der Lernzeit anzeigen.",
         "time": "10–15 Min.",
         "outputs": [
           "drawing",
@@ -166,9 +166,9 @@
     },
     "srlFokus": "planung",
     "ort": {
-      "name": "Heimathafen",
-      "x": 190,
-      "y": 530
+      "name": "Hafenwiese",
+      "id": "home-meadow",
+      "route": []
     }
   },
   {
@@ -176,7 +176,7 @@
     "phase": "einfuehrung",
     "chapter": "Wissen weist den Weg",
     "short": "Wir prüfen und verbessern",
-    "story": "Auf dem Kartentisch liegen drei alte Karten. Einige Linien sind verwischt, manche Hinweise widersprechen sich. Nur wer prüft, verbessert und gute Fragen stellt, findet einen sicheren Weg.",
+    "story": "Die Hafenmeisterin breitet eine große Karte aus. Der Heimathafen und die umliegenden Inseln sind eingezeichnet. Viele Orte sind bekannt, aber noch nicht erkundet. Drei Wege führen über die Erste offene See.",
     "routine": {
       "title": "Wir prüfen und verbessern",
       "text": "Prüfe am Ende eine Lösung oder verbessere einen Teil deiner Arbeit."
@@ -210,7 +210,7 @@
         "area": "kartenraum",
         "resource": "wissen",
         "title": "Drei Reiseziele untersuchen",
-        "task": "Wähle einen der drei Orte und notiere, was dort interessant oder schwierig sein könnte.",
+        "task": "Untersuche die Leuchtturmbucht, die Bucht der Grünen Insel oder die Nebelbucht. Notiere, was dort interessant oder schwierig sein könnte.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -224,7 +224,7 @@
         "id": "w3-frage",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Eine Frage an den Hafenmeister",
+        "title": "Eine Frage an die Hafenmeisterin",
         "task": "Welche Information braucht die Klasse vor der ersten Reise unbedingt?",
         "time": "10–15 Min.",
         "outputs": [
@@ -245,16 +245,16 @@
       "title": "Welchen Ort wollen wir genauer untersuchen?",
       "description": "Noch wird nicht gereist. Die Klasse entscheidet, über welchen Ort sie mehr erfahren möchte.",
       "choices": [
-        "Leuchtturmhafen",
-        "Grüne Insel",
+        "Leuchtturmbucht",
+        "Bucht der Grünen Insel",
         "Nebelbucht"
       ]
     },
     "srlFokus": "reflexion",
     "ort": {
       "name": "Heimathafen",
-      "x": 190,
-      "y": 530
+      "id": "home",
+      "route": []
     }
   },
   {
@@ -262,7 +262,7 @@
     "phase": "einfuehrung",
     "chapter": "Zusammenhalt an Bord",
     "short": "Wir helfen, ohne abzunehmen",
-    "story": "Beim Beladen des Schiffes merkt die Besatzung: Niemand kann alles allein. Gute Hilfe macht andere stärker. Wer einfach die Aufgabe übernimmt, hilft nur für einen kurzen Moment.",
+    "story": "In der Südlichen Hafenbucht übt die Besatzung das Ablegen und Anlegen. Das gelingt nur, wenn alle aufeinander achten, Hinweise geben und ihre Aufgaben nicht einfach anderen abnehmen.",
     "routine": {
       "title": "Wir helfen mit Fragen und Hinweisen",
       "text": "Frage zuerst, was schon versucht wurde. Gib dann einen Hinweis, aber übernimm nicht die Aufgabe."
@@ -340,9 +340,9 @@
     },
     "srlFokus": "durchfuehrung",
     "ort": {
-      "name": "Heimathafen",
-      "x": 190,
-      "y": 530
+      "name": "Südliche Hafenbucht",
+      "id": "home-coast",
+      "route": []
     }
   },
   {
@@ -350,7 +350,7 @@
     "phase": "einfuehrung",
     "chapter": "Der Auftragshafen öffnet",
     "short": "Du wählst deinen Beitrag",
-    "story": "Drei Türen öffnen sich: die Werft, der Kartenraum und das Logbuch. Wer seine vereinbarte Lernaufgabe abgeschlossen und geprüft hat, kann dort die gemeinsame Reise mitgestalten.",
+    "story": "Vor der Ausfahrt prüft die Besatzung ihre Ausrüstung. Am Strand werden angespülte Gegenstände untersucht, im Küstenwald wird geeignetes Material gesucht. Wer seine Lernaufgabe abgeschlossen, geprüft und verbessert hat, kann eine freiwillige Mission wählen.",
     "routine": {
       "title": "Wir schließen unsere Lernaufgabe sinnvoll ab",
       "text": "Bearbeite deinen vereinbarten Auftrag vollständig, prüfe ihn und verbessere notwendige Stellen. Danach kannst du eine Mission wählen."
@@ -387,8 +387,8 @@
         "id": "w5-route",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Eine Route empfehlen",
-        "task": "Wähle ein erstes Reiseziel und begründe deine Empfehlung.",
+        "title": "Material für die Reise prüfen",
+        "task": "Prüfe Gegenstände vom Strand und Material aus dem Küstenwald. Notiere oder zeichne, was für die Reise nützlich ist.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -418,7 +418,7 @@
         "area": "kartenraum",
         "resource": "zusammenhalt",
         "title": "Fünf Dinge für die Reise",
-        "task": "Der Platz ist knapp. Wähle gemeinsam fünf wichtige Gegenstände aus und begründet eure Auswahl.",
+        "task": "Der Platz ist knapp. Wählt gemeinsam fünf wichtige Dinge für die Reise aus und begründet eure Auswahl.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -430,19 +430,19 @@
       }
     ],
     "council": {
-      "title": "Wohin soll die erste Reise gehen?",
-      "description": "Die Beiträge aus dem Kartenraum helfen bei der Entscheidung.",
+      "title": "Welche Vorbereitung hat jetzt Vorrang?",
+      "description": "Die Klasse entscheidet, welche Vorbereitung vor der Ausfahrt gemeinsam abgeschlossen wird.",
       "choices": [
-        "Leuchtturmhafen",
-        "Grüne Insel",
-        "Nebelbucht"
+        "Ausrüstung ordnen",
+        "Ersten Ausbau auswählen",
+        "Logbuch ergänzen"
       ]
     },
     "srlFokus": "reflexion",
     "ort": {
-      "name": "Heimathafen",
-      "x": 190,
-      "y": 530
+      "name": "Vorbereitung im Heimathafen",
+      "id": "home",
+      "route": []
     }
   }
 ]

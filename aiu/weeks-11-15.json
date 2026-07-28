@@ -2,9 +2,9 @@
   {
     "number": 11,
     "phase": "vollbetrieb",
-    "chapter": "Die Nebelbucht",
-    "short": "Die Nebelbucht",
-    "story": "Im dichten Nebel sind Lichtzeichen und Glockenschläge zu hören. Niemand weiß, wer sie sendet.",
+    "chapter": "Spuren und weite Sicht",
+    "short": "Wald und Hügel",
+    "story": "Im Wald der vielen Spuren entdeckt die Besatzung Zeichen früherer Besucher. Vom Hügel der weiten Sicht sind weitere Inseln am Horizont zu erkennen. Nun müssen Spuren und Aussicht zusammenpassen.",
     "routine": {
       "title": "Wir bleiben auch bei Unsicherheit handlungsfähig",
       "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
@@ -28,8 +28,8 @@
         "id": "w11-code",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Eine Signalfolge deuten",
-        "task": "Erfinde oder entschlüssle ein einfaches Signal.",
+        "title": "Spuren im Wald ordnen",
+        "task": "Zeichne oder beschreibe die Spuren und ordne sie in eine mögliche Reihenfolge.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -42,8 +42,8 @@
         "id": "w11-nebel",
         "area": "werft",
         "resource": "antrieb",
-        "title": "Ein Nebelsignal bauen",
-        "task": "Entwirf ein Signal für schlechte Sicht.",
+        "title": "Den Horizont kartieren",
+        "task": "Zeichne die Inseln und Wasserwege, die vom Hügel aus zu erkennen sind.",
         "time": "10–15 Min.",
         "outputs": [
           "drawing",
@@ -56,8 +56,8 @@
         "id": "w11-ausguck",
         "area": "logbuch",
         "resource": "wissen",
-        "title": "Bericht des Ausgucks",
-        "task": "Erzähle, was im Nebel zu sehen und zu hören ist.",
+        "title": "Bericht vom Hügel",
+        "task": "Erzähle, wie die Spuren im Wald und die Sicht vom Hügel zusammenhängen könnten.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -69,27 +69,31 @@
       }
     ],
     "council": {
-      "title": "Die Nebelbucht",
-      "description": "Die Besatzung entscheidet gemeinsam über den nächsten Schritt.",
+      "title": "Welcher Hinweis weist den nächsten Weg?",
+      "description": "Die Besatzung verbindet ihre Beobachtungen aus Wald und Hügel.",
       "choices": [
-        "Auf das Signal antworten",
-        "Ankern und beobachten",
-        "Beiboot losschicken"
+        "Spuren im Wald",
+        "Inseln am Horizont",
+        "Beide Hinweise verbinden"
       ]
     },
     "srlFokus": "durchfuehrung",
     "ort": {
-      "name": "Nebelbucht",
-      "x": 940,
-      "y": 455
+      "name": "Hügel der weiten Sicht",
+      "id": "green-hill",
+      "route": [
+        "green-coast",
+        "green-forest",
+        "green-hill"
+      ]
     }
   },
   {
     "number": 12,
     "phase": "vollbetrieb",
-    "chapter": "Der Hafen der vielen Wege",
-    "short": "Der Hafen der vielen Wege",
-    "story": "Auf dem großen Markt gibt es mehr Vorräte und Informationen, als das Schiff tragen kann.",
+    "chapter": "Die Wasserstraße zwischen den Inseln",
+    "short": "Durch die Wasserstraße",
+    "story": "Zwischen der Grünen Insel und der südlichen Inselgruppe verläuft eine schmale Wasserstraße. Die Besatzung bereitet die Weiterfahrt vor und achtet auf Strömung, Bojen und ausreichend Platz.",
     "routine": {
       "title": "Wir setzen begründete Prioritäten",
       "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
@@ -113,8 +117,8 @@
         "id": "w12-liste",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Eine Vorratsliste",
-        "task": "Wähle fünf wichtige Dinge und begründe deine Auswahl.",
+        "title": "Fahrt durch die Wasserstraße planen",
+        "task": "Ordne die wichtigsten Schritte für eine sichere Fahrt durch die Wasserstraße.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -127,8 +131,8 @@
         "id": "w12-lager",
         "area": "werft",
         "resource": "antrieb",
-        "title": "Das Lager verbessern",
-        "task": "Entwirf eine übersichtliche Lagerordnung.",
+        "title": "Deck für die Durchfahrt sichern",
+        "task": "Entwirf eine übersichtliche Ordnung, damit bei der engen Durchfahrt nichts verrutscht.",
         "time": "10–15 Min.",
         "outputs": [
           "drawing",
@@ -141,8 +145,8 @@
         "id": "w12-handel",
         "area": "logbuch",
         "resource": "zusammenhalt",
-        "title": "Ein faires Tauschgespräch",
-        "task": "Schreibe oder sprich ein kurzes Gespräch über einen fairen Tausch.",
+        "title": "Signal an andere Schiffe",
+        "task": "Formuliere oder zeichne ein klares Signal für eine Begegnung in der schmalen Wasserstraße.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -153,27 +157,31 @@
       }
     ],
     "council": {
-      "title": "Der Hafen der vielen Wege",
-      "description": "Die Besatzung entscheidet gemeinsam über den nächsten Schritt.",
+      "title": "Wie fahren wir durch die Wasserstraße?",
+      "description": "Die Besatzung legt fest, worauf sie bei der Durchfahrt besonders achtet.",
       "choices": [
-        "Vorräte ergänzen",
-        "Informationen sammeln",
-        "Lager ausbauen"
+        "Strömung beobachten",
+        "Bojen genau folgen",
+        "Signale vorbereiten"
       ]
     },
     "srlFokus": "planung",
     "ort": {
-      "name": "Hafen der vielen Wege",
-      "x": 1050,
-      "y": 390
+      "name": "Wasserstraße zwischen den Inseln",
+      "id": "east-sound",
+      "route": [
+        "green-hill",
+        "green-coast",
+        "east-sound"
+      ]
     }
   },
   {
     "number": 13,
     "phase": "vollbetrieb",
-    "chapter": "Die Sturmklippen",
-    "short": "Die Sturmklippen",
-    "story": "Starker Wind und hohe Felsen verlangen eine gute Vorbereitung.",
+    "chapter": "Die Nebelbucht",
+    "short": "Licht und Glocken im Nebel",
+    "story": "In der Nebelbucht erscheinen drei ruhige Lichtpunkte. Vom Ufer erklingen Glocken in einer festen Reihenfolge. Die Bedeutung ist unbekannt. Die Besatzung beobachtet erst genau, bevor sie antwortet.",
     "routine": {
       "title": "Wir bleiben ausdauernd und arbeiten sorgfältig",
       "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
@@ -197,8 +205,8 @@
         "id": "w13-check",
         "area": "kartenraum",
         "resource": "antrieb",
-        "title": "Sturm-Checkliste",
-        "task": "Ordne die wichtigsten Vorbereitungen.",
+        "title": "Lichtfolge notieren",
+        "task": "Stelle die Reihenfolge der drei Lichtpunkte übersichtlich dar.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -211,8 +219,8 @@
         "id": "w13-segel",
         "area": "werft",
         "resource": "wissen",
-        "title": "Verstärkte Segel",
-        "task": "Entwirf eine Verbesserung für die Segel.",
+        "title": "Glockenfolge darstellen",
+        "task": "Zeichne oder beschreibe die Reihenfolge der Glockentöne.",
         "time": "10–15 Min.",
         "outputs": [
           "drawing",
@@ -225,8 +233,8 @@
         "id": "w13-wetter",
         "area": "logbuch",
         "resource": "wissen",
-        "title": "Wetterbericht",
-        "task": "Formuliere einen verständlichen Wetterbericht für die Besatzung.",
+        "title": "Licht und Klang vergleichen",
+        "task": "Prüfe, ob Lichtpunkte und Glockentöne zusammengehören könnten. Begründe deine Vermutung.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -237,27 +245,30 @@
       }
     ],
     "council": {
-      "title": "Die Sturmklippen",
-      "description": "Die Besatzung entscheidet gemeinsam über den nächsten Schritt.",
+      "title": "Wie reagieren wir auf die Zeichen?",
+      "description": "Die Besatzung entscheidet erst nach genauer Beobachtung über eine vorsichtige Antwort.",
       "choices": [
-        "Schutzbucht suchen",
-        "Segel verstärken",
-        "Klippen umfahren"
+        "Mit Licht antworten",
+        "Mit Klang antworten",
+        "Weiter beobachten"
       ]
     },
     "srlFokus": "durchfuehrung",
     "ort": {
-      "name": "Sturmklippen",
-      "x": 1010,
-      "y": 280
+      "name": "Nebelbucht",
+      "id": "fog-bay",
+      "route": [
+        "east-sound",
+        "fog-bay"
+      ]
     }
   },
   {
     "number": 14,
     "phase": "vollbetrieb",
-    "chapter": "Die Insel der geteilten Wege",
-    "short": "Die Insel der geteilten Wege",
-    "story": "Zwei Gemeinschaften benötigen Hilfe, sind sich aber über die Reihenfolge uneinig.",
+    "chapter": "Die Insel der leisen Zeichen",
+    "short": "Zeichen am Ufer",
+    "story": "Am Ufer der leisen Glocken findet die Besatzung Zeichen aus Holz, Stein und Glas. Auf der Insel der leisen Zeichen wiederholt sich dieselbe Reihenfolge. Gemeinsam versucht die Klasse, ihre Bedeutung zu entschlüsseln.",
     "routine": {
       "title": "Wir hören verschiedene Sichtweisen an",
       "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
@@ -281,8 +292,8 @@
         "id": "w14-sichten",
         "area": "kartenraum",
         "resource": "zusammenhalt",
-        "title": "Beide Sichtweisen ordnen",
-        "task": "Halte fest, was beiden Gruppen wichtig ist.",
+        "title": "Zeichen aus drei Materialien ordnen",
+        "task": "Halte die Zeichen aus Holz, Stein und Glas fest und ordne ihre Reihenfolge.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -295,8 +306,8 @@
         "id": "w14-kompromiss",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Einen Kompromiss entwickeln",
-        "task": "Entwickle eine Lösung, die beide Anliegen berücksichtigt.",
+        "title": "Eine Bedeutung prüfen",
+        "task": "Entwickle eine mögliche Bedeutung und prüfe, ob sie zu Licht- und Glockenfolge passt.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -310,8 +321,8 @@
         "id": "w14-treff",
         "area": "werft",
         "resource": "zusammenhalt",
-        "title": "Ein gemeinsamer Treffpunkt",
-        "task": "Entwirf einen Ort, an dem beide Gruppen beraten können.",
+        "title": "Eine Antwort aus Zeichen",
+        "task": "Entwirf eine ruhige Antwort mit Holz, Stein und Glas.",
         "time": "10–15 Min.",
         "outputs": [
           "drawing",
@@ -322,27 +333,31 @@
       }
     ],
     "council": {
-      "title": "Die Insel der geteilten Wege",
-      "description": "Die Besatzung entscheidet gemeinsam über den nächsten Schritt.",
+      "title": "Welche Deutung übernehmen wir ins Logbuch?",
+      "description": "Die Besatzung vergleicht die Erklärungen und wählt eine gemeinsame vorläufige Deutung.",
       "choices": [
-        "Weg reparieren",
-        "Wasserstelle sichern",
-        "Gemeinsamen Plan entwickeln"
+        "Willkommenszeichen",
+        "Wegbeschreibung",
+        "Bitte um Aufmerksamkeit"
       ]
     },
     "srlFokus": "durchfuehrung",
     "ort": {
-      "name": "Insel der geteilten Wege",
-      "x": 905,
-      "y": 185
+      "name": "Insel der leisen Zeichen",
+      "id": "quiet-island",
+      "route": [
+        "fog-bay",
+        "fog-coast",
+        "quiet-island"
+      ]
     }
   },
   {
     "number": 15,
     "phase": "vollbetrieb",
-    "chapter": "Das Tor zur unbekannten See",
-    "short": "Das Tor zur unbekannten See",
-    "story": "Hinter zwei hohen Felsen beginnt ein neuer, kaum kartierter Teil der Welt. Die Klasse blickt zurück und entscheidet über die nächste Reise.",
+    "chapter": "Das Südliche Fahrwasser",
+    "short": "Die Karte wächst weiter",
+    "story": "Hinter dem Südlichen Inselwald öffnet sich das Südliche Fahrwasser. Die Besatzung blickt auf die erste Reise zurück und entscheidet, an welchem Kartenrand die Welt als Nächstes erweitert werden soll.",
     "routine": {
       "title": "Wir reflektieren unseren Fortschritt",
       "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
@@ -367,7 +382,7 @@
         "area": "logbuch",
         "resource": "wissen",
         "title": "Unser wichtigster Moment",
-        "task": "Halte einen wichtigen Moment der bisherigen Reise fest.",
+        "task": "Halte einen wichtigen Moment zwischen Heimathafen und Südlichem Fahrwasser fest.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -395,8 +410,8 @@
         "id": "w15-naechste",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Die nächste Route",
-        "task": "Empfiehl ein neues Gebiet für die nächste Reisephase.",
+        "title": "Den nächsten Kartenrand wählen",
+        "task": "Empfiehl, an welchem offenen Rand der Startkarte die nächste Region angeschlossen werden soll.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -408,19 +423,23 @@
       }
     ],
     "council": {
-      "title": "Das Tor zur unbekannten See",
-      "description": "Die Besatzung entscheidet gemeinsam über den nächsten Schritt.",
+      "title": "Wo soll die Karte weiterwachsen?",
+      "description": "Die erste Reise endet im Südlichen Fahrwasser. Die Klasse bestimmt die Richtung der nächsten Kartenphase.",
       "choices": [
-        "Inselgruppe",
-        "Kalte Küste",
-        "Großes Flusssystem"
+        "Weiter nach Süden",
+        "Zur Weite im Osten",
+        "Zurück zur nördlichen Strömung"
       ]
     },
     "srlFokus": "reflexion",
     "ort": {
-      "name": "Tor zur unbekannten See",
-      "x": 1085,
-      "y": 110
+      "name": "Südliches Fahrwasser",
+      "id": "south-open",
+      "route": [
+        "quiet-island",
+        "quiet-forest",
+        "south-open"
+      ]
     }
   }
 ]

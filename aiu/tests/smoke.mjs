@@ -90,9 +90,13 @@ const w1 = await boot('?ui=aus');
   // Daten aus Phase 1 und 2
   check('SRL-Feld vorhanden', G('CFG').weeks[0].missions[0].srl === 'durchfuehrung', G('CFG').weeks[0].missions[0].srl);
   check('Wochenfokus vorhanden', !!G('CFG').weeks[0].srlFokus, G('CFG').weeks[0].srlFokus);
-  check('Ortskoordinaten vorhanden', G('CFG').weeks.every(w => w.ort && typeof w.ort.x === 'number'));
+  check('Hexfeld-IDs für alle Wochen vorhanden', G('CFG').weeks.every(w => w.ort && typeof w.ort.id === 'string'));
+  check('Alle Wochenorte existieren auf der Startkarte', G('CFG').weeks.every(w => G('CFG').map.data.tiles.some(f => f.id === w.ort.id)));
+  check('Alle Routenfelder existieren auf der Startkarte', G('CFG').weeks.flatMap(w => w.ort.route || []).every(id => G('CFG').map.data.tiles.some(f => f.id === id)));
   check('Startkarte eingebunden', G('CFG').map.image === 'startkarte.svg' && G('CFG').map.source === 'startkarte.json');
-  check('Routenkarte bleibt getrennt', G('CFG').map.routeImage === 'karte.svg');
+  check('Routenkarte nutzt dieselbe Startkarte', G('CFG').map.routeImage === 'startkarte.svg');
+  check('Feste Route beginnt an der Hafenausfahrt', G('CFG').weeks[5].ort.route.join('|') === 'home|harbor-exit|first-sea');
+  check('Keine scheinbare freie Zielwahl vor der Ausfahrt', !G('CFG').weeks[4].council.choices.some(x => /Leuchtturm|Grüne Insel|Nebelbucht/.test(x)));
   check('Alle Symbole im Sprite', w1.document.querySelectorAll('#icon-sprite symbol').length === 28, String(w1.document.querySelectorAll('#icon-sprite symbol').length));
 
   // Router und Sperren
@@ -171,8 +175,10 @@ const w2 = await boot('?ui=all');
   check('Route gezeichnet', !!$('#routeCard polyline'));
   check('Nebelmaske vorhanden', !!$('#routeCard mask#nebelMaske'));
   const loecher = w2.document.querySelectorAll('#routeCard mask circle').length;
-  check('Nur besuchte Orte sind frei', loecher === 9, String(loecher));
-  check('Aktuelle Position benannt', ($('#routeCard')?.textContent || '').includes('Fluss der zwei Wege'));
+  check('Nur Start- und Routenfelder sind frei', loecher === 12, String(loecher));
+  check('Aktuelle Position benannt', ($('#routeCard')?.textContent || '').includes('Mittleres Fahrwasser'));
+  check('Fortschritt liegt auf der Startkarte', $('#routeCard image')?.getAttribute('href') === 'startkarte.svg');
+  check('Positionsanzeige folgt der aktuellen Woche', ($('#mapPosition')?.textContent || '').includes('Mittleres Fahrwasser'));
 
   check('Schiffsthema hat Abonnenten', (w2.AIU_STORE?.topicsInUse() || []).includes('ship'));
 

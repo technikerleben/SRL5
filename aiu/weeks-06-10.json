@@ -4,7 +4,7 @@
     "phase": "einfuehrung",
     "chapter": "Die erste Ausfahrt",
     "short": "Der ganze Spielkreislauf",
-    "story": "Das Schiff ist bereit. Die Vorräte sind verstaut, die Karte liegt auf dem Tisch und die Besatzung kennt ihre wichtigsten Routinen. Jetzt wird zum ersten Mal eine Route beschlossen.",
+    "story": "Das Schiff verlässt den Heimathafen. An der Hafenausfahrt markieren Bojen die sichere Fahrrinne. Dahinter beginnt die Erste offene See. Die Besatzung muss den Kurs aufmerksam planen und gemeinsam halten.",
     "routine": {
       "title": "Wir planen, handeln und blicken zurück",
       "text": "Nutze die Lernzeit, bringe einen Beitrag ein und überlege anschließend, was gut funktioniert hat."
@@ -28,8 +28,8 @@
         "id": "w6-route",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Die erste Route vorbereiten",
-        "task": "Vergleiche die möglichen Ziele und bereite eine Empfehlung für den Besatzungsrat vor.",
+        "title": "Die Hafenausfahrt vorbereiten",
+        "task": "Untersuche die Bojen und zeichne eine sichere Route durch die Hafenausfahrt bis zur Ersten offenen See.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -87,27 +87,31 @@
       }
     ],
     "council": {
-      "title": "Erste Route und erster Ausbau",
-      "description": "Die Klasse entscheidet über das erste Ziel und einen Ausbau.",
+      "title": "Welcher erste Ausbau kommt an Bord?",
+      "description": "Die Route steht fest. Die Klasse entscheidet, welcher Ausbau die nächsten Erkundungen unterstützen soll.",
       "choices": [
-        "Leuchtturmhafen + Kartenraum",
-        "Grüne Insel + Beiboot",
-        "Nebelbucht + Ausguck"
+        "Kartenraum ausbauen",
+        "Ausguck bauen",
+        "Stauraum ordnen"
       ]
     },
     "srlFokus": "zyklus",
     "ort": {
-      "name": "Ausfahrt",
-      "x": 330,
-      "y": 520
+      "name": "Erste offene See",
+      "id": "first-sea",
+      "route": [
+        "home",
+        "harbor-exit",
+        "first-sea"
+      ]
     }
   },
   {
     "number": 7,
     "phase": "vollbetrieb",
-    "chapter": "Der Leuchtturmhafen",
-    "short": "Der Leuchtturmhafen",
-    "story": "Ein unzuverlässiges Leuchtfeuer gefährdet die Hafeneinfahrt. Die Besatzung untersucht Signale, Wege und Reparaturmöglichkeiten.",
+    "chapter": "Die Leuchtturmbucht",
+    "short": "Die Leuchtturmbucht",
+    "story": "Bei der Annäherung bemerkt die Besatzung, dass das sonst regelmäßige Leuchtfeuer einzelne Signale auslässt. Im Hafen ist weiterhin niemand zu sehen. Die Besatzung untersucht das Licht und bereitet eine vorsichtige Ankunft vor.",
     "routine": {
       "title": "Wir nutzen Rückmeldungen für den nächsten Schritt",
       "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
@@ -159,8 +163,8 @@
         "id": "w7-bericht",
         "area": "logbuch",
         "resource": "wissen",
-        "title": "Ankunft im Leuchtturmhafen",
-        "task": "Halte die schwierige Hafeneinfahrt fest.",
+        "title": "Ankunft in der Leuchtturmbucht",
+        "task": "Halte fest, wie die Besatzung die aussetzenden Lichtsignale bemerkt und sicher in die Bucht gelangt.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -172,8 +176,8 @@
       }
     ],
     "council": {
-      "title": "Der Leuchtturmhafen",
-      "description": "Die Besatzung entscheidet gemeinsam über den nächsten Schritt.",
+      "title": "Das aussetzende Leuchtfeuer",
+      "description": "Die Besatzung entscheidet, womit sie die Untersuchung beginnt.",
       "choices": [
         "Leuchtfeuer untersuchen",
         "Signalflaggen entwickeln",
@@ -182,17 +186,21 @@
     },
     "srlFokus": "reflexion",
     "ort": {
-      "name": "Leuchtturmhafen",
-      "x": 470,
-      "y": 470
+      "name": "Leuchtturmbucht",
+      "id": "light-harbor",
+      "route": [
+        "first-sea",
+        "north-passage",
+        "light-harbor"
+      ]
     }
   },
   {
     "number": 8,
     "phase": "vollbetrieb",
-    "chapter": "Die Grüne Insel",
-    "short": "Die Grüne Insel",
-    "story": "Dichte Pflanzen, unbekannte Wege und auffällige Spuren führen ins Inselinnere. Die Klasse plant eine Expedition.",
+    "chapter": "Felsen und Wiese am Leuchtturm",
+    "short": "Spuren am Leuchtturm",
+    "story": "Hinter dem Leuchtturm führen ein gepflegter Weg und Spuren alter Metallteile über die Felsen zu einer Wiese. Die Besatzung untersucht, was beides mit dem aussetzenden Licht zu tun haben könnte.",
     "routine": {
       "title": "Wir planen unseren nächsten Arbeitsschritt",
       "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
@@ -216,8 +224,8 @@
         "id": "w8-route",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Eine Inselroute empfehlen",
-        "task": "Vergleiche Strandweg und Waldweg.",
+        "title": "Die Spuren vergleichen",
+        "task": "Vergleiche den Weg über die Felsen mit dem gepflegten Weg zur Wiese. Welche Spur sollte zuerst untersucht werden?",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -231,8 +239,8 @@
         "id": "w8-zeichen",
         "area": "werft",
         "resource": "zusammenhalt",
-        "title": "Ein Expeditionszeichen",
-        "task": "Gestalte ein Zeichen, mit dem sich die Gruppe orientieren kann.",
+        "title": "Alte Metallteile untersuchen",
+        "task": "Zeichne die gefundenen Metallteile und markiere Stellen, die für das Leuchtfeuer wichtig sein könnten.",
         "time": "10–15 Min.",
         "outputs": [
           "drawing",
@@ -245,8 +253,8 @@
         "id": "w8-fund",
         "area": "logbuch",
         "resource": "wissen",
-        "title": "Ein unbekannter Fund",
-        "task": "Beschreibe, zeichne oder erzähle eine Spur oder Pflanze.",
+        "title": "Ein Fund am Leuchtturm",
+        "task": "Beschreibe, zeichne oder erzähle, was die Besatzung zwischen Felsen und Wiese findet.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -258,27 +266,31 @@
       }
     ],
     "council": {
-      "title": "Die Grüne Insel",
-      "description": "Die Besatzung entscheidet gemeinsam über den nächsten Schritt.",
+      "title": "Welche Spur untersuchen wir zuerst?",
+      "description": "Die Besatzung ordnet ihre Beobachtungen und legt den ersten Untersuchungsschritt fest.",
       "choices": [
-        "Strandweg",
-        "Waldweg",
-        "Zuerst kartieren"
+        "Metallteile prüfen",
+        "Weg zur Wiese verfolgen",
+        "Beobachtungen verbinden"
       ]
     },
     "srlFokus": "planung",
     "ort": {
-      "name": "Grüne Insel",
-      "x": 600,
-      "y": 505
+      "name": "Wiese hinter dem Leuchtturm",
+      "id": "light-meadow",
+      "route": [
+        "light-harbor",
+        "light-rocks",
+        "light-meadow"
+      ]
     }
   },
   {
     "number": 9,
     "phase": "vollbetrieb",
-    "chapter": "Der Fluss der zwei Wege",
-    "short": "Der Fluss der zwei Wege",
-    "story": "Mehrere Wasserarme, Schilf und wechselnde Strömungen machen die Weiterfahrt schwierig.",
+    "chapter": "Das Mittlere Fahrwasser",
+    "short": "Beobachtungen auf See",
+    "story": "Auf dem Mittleren Fahrwasser verändert sich die Strömung. Bojen, Seevögel und eine Walspur geben Hinweise auf den weiteren Weg. Die Besatzung sammelt Beobachtungen und hält sie genau fest.",
     "routine": {
       "title": "Wir holen gezielt Hilfe, wenn wir sie brauchen",
       "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
@@ -302,8 +314,8 @@
         "id": "w9-boot",
         "area": "werft",
         "resource": "antrieb",
-        "title": "Ein Beiboot entwerfen",
-        "task": "Zeige, wie ein Beiboot für flache Gewässer aussehen könnte.",
+        "title": "Beobachtungskarte anlegen",
+        "task": "Zeichne eine einfache Karte mit Bojen, Strömung und beobachteten Tieren.",
         "time": "10–15 Min.",
         "outputs": [
           "drawing",
@@ -316,8 +328,8 @@
         "id": "w9-delta",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Den besten Flussarm finden",
-        "task": "Ordne Hinweise und entscheide dich für einen Weg.",
+        "title": "Hinweise auf See ordnen",
+        "task": "Ordne die Beobachtungen und erkläre, welcher Hinweis für die Weiterfahrt besonders wichtig ist.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -330,8 +342,8 @@
         "id": "w9-warnung",
         "area": "logbuch",
         "resource": "zusammenhalt",
-        "title": "Warnung für spätere Reisende",
-        "task": "Formuliere eine hilfreiche Warnung für andere Schiffe.",
+        "title": "Hinweis für spätere Reisende",
+        "task": "Formuliere einen hilfreichen Hinweis für andere Schiffe im Mittleren Fahrwasser.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -342,27 +354,33 @@
       }
     ],
     "council": {
-      "title": "Der Fluss der zwei Wege",
-      "description": "Die Besatzung entscheidet gemeinsam über den nächsten Schritt.",
+      "title": "Welcher Hinweis hilft uns am meisten?",
+      "description": "Die Besatzung entscheidet, welche Beobachtung sie für die Weiterfahrt nutzt.",
       "choices": [
-        "Beiboot einsetzen",
         "Strömung beobachten",
-        "Ortskundige fragen"
+        "Bojenfolge nutzen",
+        "Tierspuren vergleichen"
       ]
     },
     "srlFokus": "durchfuehrung",
     "ort": {
-      "name": "Fluss der zwei Wege",
-      "x": 720,
-      "y": 470
+      "name": "Mittleres Fahrwasser",
+      "id": "east-channel",
+      "route": [
+        "light-meadow",
+        "light-harbor",
+        "north-passage",
+        "first-sea",
+        "east-channel"
+      ]
     }
   },
   {
     "number": 10,
     "phase": "vollbetrieb",
-    "chapter": "Die Bucht der alten Schiffe",
-    "short": "Die Bucht der alten Schiffe",
-    "story": "Zwischen Wracks und Treibholz soll ein altes Kartenteil verborgen sein.",
+    "chapter": "Die Bucht der Grünen Insel",
+    "short": "Drei Wege auf der Grünen Insel",
+    "story": "In der Bucht der Grünen Insel führen drei Wege ins Inselinnere: ein Küstenweg, ein Waldweg und ein Hügelweg. Die Besatzung vergleicht die Wege und bereitet eine Expedition vor.",
     "routine": {
       "title": "Wir prüfen Risiken, bevor wir handeln",
       "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
@@ -386,8 +404,8 @@
         "id": "w10-bergung",
         "area": "werft",
         "resource": "antrieb",
-        "title": "Eine Bergungsvorrichtung",
-        "task": "Entwirf eine sichere Möglichkeit, eine Kiste aus einem Wrack zu bergen.",
+        "title": "Ausrüstung für drei Wege",
+        "task": "Wähle Ausrüstung, die auf dem Küstenweg, dem Waldweg und dem Hügelweg helfen kann.",
         "time": "10–15 Min.",
         "outputs": [
           "drawing",
@@ -400,8 +418,8 @@
         "id": "w10-wrack",
         "area": "kartenraum",
         "resource": "wissen",
-        "title": "Ein Wrack auswählen",
-        "task": "Vergleiche Hinweise und entscheide, welches Wrack untersucht werden sollte.",
+        "title": "Drei Wege vergleichen",
+        "task": "Vergleiche Küstenweg, Waldweg und Hügelweg. Begründe, welcher Weg zuerst untersucht werden sollte.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -414,8 +432,8 @@
         "id": "w10-fund",
         "area": "logbuch",
         "resource": "wissen",
-        "title": "Fundbericht",
-        "task": "Dokumentiere einen Gegenstand aus der Bucht.",
+        "title": "Ankunft an der Grünen Insel",
+        "task": "Dokumentiere die Bucht und die drei sichtbaren Wege.",
         "time": "10–15 Min.",
         "outputs": [
           "text",
@@ -427,19 +445,22 @@
       }
     ],
     "council": {
-      "title": "Die Bucht der alten Schiffe",
-      "description": "Die Besatzung entscheidet gemeinsam über den nächsten Schritt.",
+      "title": "Welchen Weg untersuchen wir zuerst?",
+      "description": "Alle drei Wege bleiben auf der Karte. Die Entscheidung bestimmt den Schwerpunkt der Expedition.",
       "choices": [
-        "Wrack von außen prüfen",
-        "Bergung vorbereiten",
-        "Auf ruhiges Wetter warten"
+        "Küstenweg",
+        "Waldweg",
+        "Hügelweg"
       ]
     },
     "srlFokus": "planung",
     "ort": {
-      "name": "Bucht der alten Schiffe",
-      "x": 835,
-      "y": 510
+      "name": "Bucht der Grünen Insel",
+      "id": "green-coast",
+      "route": [
+        "east-channel",
+        "green-coast"
+      ]
     }
   }
 ]

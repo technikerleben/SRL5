@@ -89,30 +89,37 @@ function renderMissions(filter='all'){const areas=[['all','✨','Alle'],...Objec
   const ms=currentWeek.missions.filter(m=>(filter==='all'||m.area===filter)&&(!srlOn||srlFilter==='all'||m.srl===srlFilter)&&unlocked(m.area==='werft'?'missionen':m.area));
   $('#missionGrid').innerHTML=ms.length?ms.map(m=>`<article class="card mission-card"><div class="row spread"><span class="tag ${m.resource}">${sym(CFG.resources[m.resource]?.icon||'✨')} ${esc(m.resource)}</span><span class="small muted">${sym('⏱')} ${esc(m.time)}</span></div>${srlBadge(m.srl)}<h3>${sym(AREA[m.area]?.[0]||'📌')} ${esc(m.title)}</h3><p>${esc(m.task)}</p><div class="output-icons">${m.outputs.map(o=>sym(OUTPUT[o]?.[0]||'')).join(' ')}</div><button class="primary" data-mission="${m.id}">${studentOpen()?'Mission öffnen':'Mission ansehen'}</button></article>`).join(''):`<article class="card card-pad"><p>${srlOn&&srlFilter!=='all'?'In dieser Phase gibt es diese Woche keine Mission.':'In diesem Bereich gibt es diese Woche noch keine Mission.'}</p></article>`;
   $$('[data-mission]').forEach(b=>b.onclick=()=>openMission(b.dataset.mission))}
-/* Eigene Seekarte: zurueckgelegte Route, Nebel ueber allem, was noch nicht besucht wurde. */
+/* Die Route nutzt dieselben Hexfeld-IDs wie Startkarte und Kartendesigner. */
 function renderRouteMap(){const card=$('#routeCard');if(!card)return;
-  const orte=(CFG.weeks||[]).filter(w=>w.ort&&typeof w.ort.x==='number');
-  const show=flag('mapRoute')&&orte.length>0;
+  const orte=(CFG.weeks||[]).filter(w=>w.ort&&w.ort.id);
+  const felder=CFG.map?.data?.tiles||[];
+  const feldIndex=Object.fromEntries(felder.map(feld=>[feld.id,feld]));
+  const punkt=id=>{const feld=feldIndex[id];if(!feld)return null;return{x:173.20508075688772*(Number(feld.q)+Number(feld.r)/2),y:150*Number(feld.r)}};
+  const show=flag('mapRoute')&&orte.length>0&&felder.length>0;
   card.classList.toggle('hidden',!show);
   if(!show){card.innerHTML='';return}
   const jetzt=Number(runtime.week)||1;
-  const besucht=orte.filter(w=>w.number<=jetzt);
-  const punkte=besucht.map(w=>`${w.ort.x},${w.ort.y}`).join(' ');
-  const aktuell=besucht[besucht.length-1]||orte[0];
-  const loecher=besucht.map(w=>`<circle cx="${w.ort.x}" cy="${w.ort.y}" r="150" fill="black"/>`).join('');
-  const linie=besucht.length>1?`<polyline points="${punkte}" fill="none" stroke="#173f5f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="16 16"/>`:'';
-  const marken=orte.map(w=>{const offen=w.number<=jetzt;const hier=w.number===aktuell.number;
-    return `<g opacity="${offen?1:.25}"><circle cx="${w.ort.x}" cy="${w.ort.y}" r="${hier?18:12}" fill="${hier?'#d0a642':'#173f5f'}" stroke="#f7f2e7" stroke-width="4"/>`+
-      (offen?`<text x="${w.ort.x}" y="${w.ort.y-26}" text-anchor="middle" font-size="26" font-weight="700" fill="#173f5f" stroke="#f7f2e7" stroke-width="6" paint-order="stroke">${esc(w.ort.name)}</text>`:'')+`</g>`}).join('');
+  const aktiveWochen=orte.filter(w=>w.number<=jetzt);
+  const aktuell=aktiveWochen[aktiveWochen.length-1]||orte[0];
+  const routenIds=aktiveWochen.flatMap(w=>w.ort.route||[]).filter((id,index,alle)=>punkt(id)&&(!index||id!==alle[index-1]));
+  const besuchtIds=new Set(felder.filter(feld=>feld.besucht).map(feld=>feld.id));
+  routenIds.forEach(id=>besuchtIds.add(id));
+  aktiveWochen.forEach(w=>besuchtIds.add(w.ort.id));
+  const punkte=routenIds.map(id=>{const p=punkt(id);return`${p.x},${p.y}`}).join(' ');
+  const loecher=[...besuchtIds].map(id=>{const p=punkt(id);return p?`<circle cx="${p.x}" cy="${p.y}" r="125" fill="black"/>`:''}).join('');
+  const linie=routenIds.length>1?`<polyline points="${punkte}" fill="none" stroke="#173f5f" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="20 16"/>`:'';
+  const marken=aktiveWochen.map(w=>{const p=punkt(w.ort.id);if(!p)return'';const hier=w.number===aktuell.number;
+    return `<g><circle cx="${p.x}" cy="${p.y}" r="${hier?20:13}" fill="${hier?'#d0a642':'#173f5f'}" stroke="#f7f2e7" stroke-width="5"/>`+
+      `<text x="${p.x}" y="${p.y-30}" text-anchor="middle" font-size="27" font-weight="700" fill="#173f5f" stroke="#f7f2e7" stroke-width="7" paint-order="stroke">${esc(w.ort.name)}</text></g>`}).join('');
   card.innerHTML=`<h3>Unsere Reise</h3><p class="small muted">Woche ${jetzt} von ${orte.length} · ${esc(aktuell.ort.name)}</p>
-    <svg class="route-map" viewBox="0 0 1200 760" role="img" aria-label="Seekarte mit der bisher zurueckgelegten Route">
-      <defs><mask id="nebelMaske"><rect width="1200" height="760" fill="white"/>${loecher}</mask></defs>
-      <image href="${esc(CFG.map.routeImage||CFG.map.image||'karte.svg')}" x="0" y="0" width="1200" height="760"/>
-      <rect width="1200" height="760" fill="#dfe7ea" opacity=".9" mask="url(#nebelMaske)"/>
+    <svg class="route-map" viewBox="-683.0127018922193 -700 2059 1550" role="img" aria-label="Startkarte mit der bisher zurückgelegten Route">
+      <defs><mask id="nebelMaske" maskUnits="userSpaceOnUse" x="-683.0127018922193" y="-700" width="2059" height="1550"><rect x="-683.0127018922193" y="-700" width="2059" height="1550" fill="white"/>${loecher}</mask></defs>
+      <image href="${esc(CFG.map.routeImage||CFG.map.image||'startkarte.svg')}" x="-683.0127018922193" y="-700" width="2059" height="1550"/>
+      <rect x="-683.0127018922193" y="-700" width="2059" height="1550" fill="#dfe7ea" opacity=".9" mask="url(#nebelMaske)"/>
       ${linie}${marken}
     </svg>
     <div class="route-legend"><span><i style="background:#d0a642"></i>hier sind wir</span><span><i style="background:#173f5f"></i>besuchte Orte</span><span><i style="background:#dfe7ea;border:1px solid #c6ced1"></i>noch im Nebel</span></div>`}
-function renderMap(){renderRouteMap();const map=CFG.map;$('#mapExternal').href=map.editorUrl;$('#mapImage').src=map.image;$('#mapCaption').textContent=map.caption;$('#mapPosition').textContent=CFG.ship.position;$('#mapWeekStory').textContent=currentWeek.story;$('#mapIdeas').innerHTML=(currentWeek.council?.choices||[]).map(x=>`<div class="location-item">${sym('📍')} ${esc(x)}</div>`).join('');const iframe=$('#mapIframe'),fallback=$('#mapFallback');if(map.viewerUrl){iframe.src=map.viewerUrl;iframe.classList.remove('hidden');fallback.classList.add('hidden')}else{iframe.classList.add('hidden');fallback.classList.remove('hidden')}}
+function renderMap(){renderRouteMap();const map=CFG.map;$('#mapExternal').href=map.editorUrl;$('#mapImage').src=map.image;$('#mapCaption').textContent=map.caption;$('#mapPosition').textContent=currentWeek.ort?.name||CFG.ship.position;$('#mapWeekStory').textContent=currentWeek.story;$('#mapIdeas').innerHTML=(currentWeek.council?.choices||[]).map(x=>`<div class="location-item">${sym('📍')} ${esc(x)}</div>`).join('');const iframe=$('#mapIframe'),fallback=$('#mapFallback');if(map.viewerUrl){iframe.src=map.viewerUrl;iframe.classList.remove('hidden');fallback.classList.add('hidden')}else{iframe.classList.add('hidden');fallback.classList.remove('hidden')}}
 function renderLogbook(){const all=[...CFG.logbook,...runtime.localLogbook].sort((a,b)=>String(b.date).localeCompare(String(a.date)));$('#logbookList').innerHTML=all.map(e=>`<article class="log-entry ${e.local?'local':''}"><div class="eyebrow">${formatDate(e.date)} · Woche ${e.week||'–'}</div><h3>${esc(e.title||'Logbucheintrag')}</h3><p>${esc(e.text)}</p>${e.author?`<div class="small muted">Beitrag von ${esc(e.author)}</div>`:''}</article>`).join('')}
 async function renderCouncil(){const c=currentWeek.council||{title:'Besatzungsrat',description:'',choices:[]};$('#councilTitle').textContent=c.title;$('#councilDescription').textContent=c.description;let results=Array(c.choices.length).fill(0);try{results=await syncVoteCounts(currentWeek.number,c.choices.length)}catch(error){console.warn(error)}const total=results.reduce((a,b)=>a+b,0);$('#councilState').innerHTML=runtime.councilOpen?'<span class="session-pill open">🟢 Abstimmung geöffnet</span>':`<span class="session-pill">🔒 Abstimmung geschlossen${total?` · ${total} Stimmen`:''}</span>`;$('#councilOptions').innerHTML=c.choices.map((x,i)=>`<button class="vote-card" data-vote="${i}" ${runtime.councilOpen&&studentOpen()?'':'disabled'}>${esc(x)}${!runtime.councilOpen&&total?`<div class="vote-count">${results[i]}</div>`:''}</button>`).join('');$$('[data-vote]').forEach(b=>b.onclick=()=>castVote(Number(b.dataset.vote)));renderShortlist()}
 async function renderShortlist(){const list=(await dbAll()).filter(x=>x.status==='shortlist'&&x.week===currentWeek.number);$('#shortlist').innerHTML=list.length?list.map(x=>`<article class="card submission"><strong>${esc(x.missionTitle)}</strong><p>${esc(x.text||'Bild-, Zeichen- oder Audiobeitrag')}</p><span class="small muted">${esc(x.author||'ohne Namen')}</span></article>`).join(''):'<p class="muted">Noch keine Fundstücke markiert.</p>'}

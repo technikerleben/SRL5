@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v8-startkarte';
+const VERSION='v9-feste-route';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
@@ -23,7 +23,6 @@ const CORE=[
   './weeks-01-05.json',
   './weeks-06-10.json',
   './weeks-11-15.json',
-  './karte.svg',
   './startkarte.svg',
   './startkarte.json',
   './icon.svg',
