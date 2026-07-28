@@ -31,8 +31,10 @@ jobs:
       - name: Smoke-Test ausführen
         run: npm run smoke
 
-  visual:
+  baseline-check:
     runs-on: ubuntu-latest
+    outputs:
+      present: ${{ steps.baselines.outputs.present }}
     defaults:
       run:
         working-directory: aiu/tests
@@ -51,8 +53,18 @@ jobs:
             echo "Keine Referenzbilder vorhanden; visueller Test wird übersprungen."
           fi
 
+  visual:
+    needs: baseline-check
+    if: needs.baseline-check.outputs.present == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aiu/tests
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
       - name: Node.js einrichten
-        if: steps.baselines.outputs.present == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -60,19 +72,16 @@ jobs:
           cache-dependency-path: aiu/tests/package.json
 
       - name: Abhängigkeiten installieren
-        if: steps.baselines.outputs.present == 'true'
         run: npm install
 
       - name: Chromium installieren
-        if: steps.baselines.outputs.present == 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Visuelle Tests ausführen
-        if: steps.baselines.outputs.present == 'true'
         run: npm run visual -- --reporter=html
 
       - name: Playwright-Bericht hochladen
-        if: always() && steps.baselines.outputs.present == 'true'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aiu-playwright-report
