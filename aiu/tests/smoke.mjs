@@ -91,6 +91,8 @@ const w1 = await boot('?ui=aus');
   check('SRL-Feld vorhanden', G('CFG').weeks[0].missions[0].srl === 'durchfuehrung', G('CFG').weeks[0].missions[0].srl);
   check('Wochenfokus vorhanden', !!G('CFG').weeks[0].srlFokus, G('CFG').weeks[0].srlFokus);
   check('Ortskoordinaten vorhanden', G('CFG').weeks.every(w => w.ort && typeof w.ort.x === 'number'));
+  check('Startkarte eingebunden', G('CFG').map.image === 'startkarte.svg' && G('CFG').map.source === 'startkarte.json');
+  check('Routenkarte bleibt getrennt', G('CFG').map.routeImage === 'karte.svg');
   check('Alle Symbole im Sprite', w1.document.querySelectorAll('#icon-sprite symbol').length === 28, String(w1.document.querySelectorAll('#icon-sprite symbol').length));
 
   // Router und Sperren
@@ -165,6 +167,7 @@ const w2 = await boot('?ui=all');
   w2.AIU_STORE.emitSync(...w2.AIU_TOPICS);
   await wait(200);
   check('Reisekarte sichtbar', !$('#routeCard')?.classList.contains('hidden'));
+  check('Startkarte statt leerem Designer sichtbar', $('#mapIframe')?.classList.contains('hidden') && !$('#mapFallback')?.classList.contains('hidden') && $('#mapImage')?.getAttribute('src') === 'startkarte.svg');
   check('Route gezeichnet', !!$('#routeCard polyline'));
   check('Nebelmaske vorhanden', !!$('#routeCard mask#nebelMaske'));
   const loecher = w2.document.querySelectorAll('#routeCard mask circle').length;

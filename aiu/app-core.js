@@ -107,7 +107,7 @@ function renderRouteMap(){const card=$('#routeCard');if(!card)return;
   card.innerHTML=`<h3>Unsere Reise</h3><p class="small muted">Woche ${jetzt} von ${orte.length} · ${esc(aktuell.ort.name)}</p>
     <svg class="route-map" viewBox="0 0 1200 760" role="img" aria-label="Seekarte mit der bisher zurueckgelegten Route">
       <defs><mask id="nebelMaske"><rect width="1200" height="760" fill="white"/>${loecher}</mask></defs>
-      <image href="${esc(CFG.map.image||'karte.svg')}" x="0" y="0" width="1200" height="760"/>
+      <image href="${esc(CFG.map.routeImage||CFG.map.image||'karte.svg')}" x="0" y="0" width="1200" height="760"/>
       <rect width="1200" height="760" fill="#dfe7ea" opacity=".9" mask="url(#nebelMaske)"/>
       ${linie}${marken}
     </svg>

@@ -29,9 +29,11 @@
     "position": "Heimathafen"
   },
   "map": {
-    "image": "karte.svg",
-    "caption": "Die bekannte Welt beginnt im Heimathafen.",
-    "viewerUrl": "https://aiu-kartendesigner2.vercel.app/",
+    "image": "startkarte.svg",
+    "routeImage": "karte.svg",
+    "source": "startkarte.json",
+    "caption": "Die Startkarte zeigt den Heimathafen und die bisher bekannte Welt.",
+    "viewerUrl": "",
     "editorUrl": "https://aiu-kartendesigner2.vercel.app/"
   },
   "game": {

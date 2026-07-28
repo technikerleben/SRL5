@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v7-1-kiosk';
+const VERSION='v8-startkarte';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
@@ -24,6 +24,8 @@ const CORE=[
   './weeks-06-10.json',
   './weeks-11-15.json',
   './karte.svg',
+  './startkarte.svg',
+  './startkarte.json',
   './icon.svg',
   './app.webmanifest',
   './vendor/three.min.js',
