@@ -299,34 +299,7 @@
 <text class="label" x="779.42" y="201.00" aria-label="Wasserstraße zwischen den Inseln"><tspan x="779.42" dy="0">Wasserstraße</tspan><tspan x="779.42" dy="23">zwischen den Inseln</tspan></text>
 <text class="label" x="952.63" y="212.00" aria-label="Weite im Osten"><tspan x="952.63" dy="0">Weite im Osten</tspan></text>
 <text class="label" x="779.42" y="512.00" aria-label="Südliches Fahrwasser"><tspan x="779.42" dy="0">Südliches Fahrwasser</tspan></text>
-<text class="label" x="-173.21" y="-249.00" aria-label="Flaches Wasser Nord (0,-2)"><tspan x="-173.21" dy="0">Flaches Wasser Nord</tspan><tspan x="-173.21" dy="23">(0,-2)</tspan></text>
-<text class="label" x="-346.41" y="-249.00" aria-label="Flaches Wasser NordWest (-1,-2)"><tspan x="-346.41" dy="0">Flaches Wasser</tspan><tspan x="-346.41" dy="23">NordWest (-1,-2)</tspan></text>
-<text class="label" x="-433.01" y="-99.00" aria-label="Flaches Wasser NordWest (-2,-1)"><tspan x="-433.01" dy="0">Flaches Wasser</tspan><tspan x="-433.01" dy="23">NordWest (-2,-1)</tspan></text>
-<text class="label" x="-346.41" y="51.00" aria-label="Flaches Wasser West (-2,0)"><tspan x="-346.41" dy="0">Flaches Wasser West</tspan><tspan x="-346.41" dy="23">(-2,0)</tspan></text>
-<text class="label" x="-259.81" y="201.00" aria-label="Flaches Wasser SüdWest (-2,1)"><tspan x="-259.81" dy="0">Flaches Wasser</tspan><tspan x="-259.81" dy="23">SüdWest (-2,1)</tspan></text>
-<text class="label" x="86.60" y="201.00" aria-label="Flaches Wasser Süd (0,1)"><tspan x="86.60" dy="0">Flaches Wasser Süd</tspan><tspan x="86.60" dy="23">(0,1)</tspan></text>
-<text class="label" x="-173.21" y="351.00" aria-label="Flaches Wasser SüdWest (-2,2)"><tspan x="-173.21" dy="0">Flaches Wasser</tspan><tspan x="-173.21" dy="23">SüdWest (-2,2)</tspan></text>
-<text class="label" x="0.00" y="351.00" aria-label="Flaches Wasser SüdWest (-1,2)"><tspan x="0.00" dy="0">Flaches Wasser</tspan><tspan x="0.00" dy="23">SüdWest (-1,2)</tspan></text>
-<text class="label" x="86.60" y="-99.00" aria-label="Flaches Wasser NordOst (1,-1)"><tspan x="86.60" dy="0">Flaches Wasser</tspan><tspan x="86.60" dy="23">NordOst (1,-1)</tspan></text>
-<text class="label" x="0.00" y="-249.00" aria-label="Flaches Wasser NordOst (1,-2)"><tspan x="0.00" dy="0">Flaches Wasser</tspan><tspan x="0.00" dy="23">NordOst (1,-2)</tspan></text>
-<text class="label" x="259.81" y="201.00" aria-label="Flaches Wasser SüdOst (1,1)"><tspan x="259.81" dy="0">Flaches Wasser</tspan><tspan x="259.81" dy="23">SüdOst (1,1)</tspan></text>
-<text class="label" x="173.21" y="-249.00" aria-label="Flaches Wasser NordOst (2,-2)"><tspan x="173.21" dy="0">Flaches Wasser</tspan><tspan x="173.21" dy="23">NordOst (2,-2)</tspan></text>
-<text class="label" x="346.41" y="351.00" aria-label="Flaches Wasser SüdOst (1,2)"><tspan x="346.41" dy="0">Flaches Wasser</tspan><tspan x="346.41" dy="23">SüdOst (1,2)</tspan></text>
-<text class="label" x="519.62" y="351.00" aria-label="Flaches Wasser SüdOst (2,2)"><tspan x="519.62" dy="0">Flaches Wasser</tspan><tspan x="519.62" dy="23">SüdOst (2,2)</tspan></text>
-<text class="label" x="433.01" y="-399.00" aria-label="Flaches Wasser NordOst (4,-3)"><tspan x="433.01" dy="0">Flaches Wasser</tspan><tspan x="433.01" dy="23">NordOst (4,-3)</tspan></text>
-<text class="label" x="259.81" y="-399.00" aria-label="Flaches Wasser NordOst (3,-3)"><tspan x="259.81" dy="0">Flaches Wasser</tspan><tspan x="259.81" dy="23">NordOst (3,-3)</tspan></text>
-<text class="label" x="606.22" y="501.00" aria-label="Flaches Wasser SüdOst (2,3)"><tspan x="606.22" dy="0">Flaches Wasser</tspan><tspan x="606.22" dy="23">SüdOst (2,3)</tspan></text>
-<text class="label" x="692.82" y="651.00" aria-label="Flaches Wasser SüdOst (2,4)"><tspan x="692.82" dy="0">Flaches Wasser</tspan><tspan x="692.82" dy="23">SüdOst (2,4)</tspan></text>
-<text class="label" x="866.03" y="651.00" aria-label="Flaches Wasser SüdOst (3,4)"><tspan x="866.03" dy="0">Flaches Wasser</tspan><tspan x="866.03" dy="23">SüdOst (3,4)</tspan></text>
-<text class="label" x="692.82" y="-249.00" aria-label="Flaches Wasser NordOst (5,-2)"><tspan x="692.82" dy="0">Flaches Wasser</tspan><tspan x="692.82" dy="23">NordOst (5,-2)</tspan></text>
-<text class="label" x="606.22" y="-399.00" aria-label="Flaches Wasser NordOst (5,-3)"><tspan x="606.22" dy="0">Flaches Wasser</tspan><tspan x="606.22" dy="23">NordOst (5,-3)</tspan></text>
-<text class="label" x="1039.23" y="351.00" aria-label="Flaches Wasser SüdOst (5,2)"><tspan x="1039.23" dy="0">Flaches Wasser</tspan><tspan x="1039.23" dy="23">SüdOst (5,2)</tspan></text>
-<text class="label" x="1125.83" y="501.00" aria-label="Flaches Wasser SüdOst (5,3)"><tspan x="1125.83" dy="0">Flaches Wasser</tspan><tspan x="1125.83" dy="23">SüdOst (5,3)</tspan></text>
-<text class="label" x="1039.23" y="651.00" aria-label="Flaches Wasser SüdOst (4,4)"><tspan x="1039.23" dy="0">Flaches Wasser</tspan><tspan x="1039.23" dy="23">SüdOst (4,4)</tspan></text>
-<text class="label" x="952.63" y="-99.00" aria-label="Flaches Wasser NordOst (6,-1)"><tspan x="952.63" dy="0">Flaches Wasser</tspan><tspan x="952.63" dy="23">NordOst (6,-1)</tspan></text>
-<text class="label" x="866.03" y="-249.00" aria-label="Flaches Wasser NordOst (6,-2)"><tspan x="866.03" dy="0">Flaches Wasser</tspan><tspan x="866.03" dy="23">NordOst (6,-2)</tspan></text>
-<text class="label" x="1039.23" y="51.00" aria-label="Flaches Wasser Ost (6,0)"><tspan x="1039.23" dy="0">Flaches Wasser Ost</tspan><tspan x="1039.23" dy="23">(6,0)</tspan></text>
-<text class="label" x="1125.83" y="201.00" aria-label="Flaches Wasser SüdOst (6,1)"><tspan x="1125.83" dy="0">Flaches Wasser</tspan><tspan x="1125.83" dy="23">SüdOst (6,1)</tspan></text></g>
+</g>
   <g inkscape:groupmode="layer" inkscape:label="Schiff" id="schiff"><g id="schiff-symbol" transform="translate(0.00 0.00)" aria-label="Schiff">
     <ellipse cx="0" cy="18" rx="31" ry="11" fill="#8a7155" stroke="#2c3d4c" stroke-width="4"/>
     <path d="M0,-43 L0,15 L34,5 Z" fill="#f5f4f1" stroke="#2c3d4c" stroke-width="4" stroke-linejoin="round"/>
