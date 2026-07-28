@@ -36,3 +36,100 @@ main{max-width:1280px;margin:auto;padding:20px 16px 100px}.view{display:none}.vi
 @media(max-width:900px){.deck-grid,.map-shell,.log-layout{grid-template-columns:1fr}.mission-grid{grid-template-columns:repeat(2,1fr)}.teacher-grid{grid-template-columns:1fr}.teacher-grid .wide{grid-column:auto}.resources{grid-template-columns:1fr}.map-frame,.map-frame iframe{min-height:480px;height:480px}.ship-board{min-height:510px}.hotspot{min-width:95px;font-size:.78rem}.hs-log{right:5%;top:9%}.hs-council{left:5%;top:9%}.upgrade-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){main{padding:12px 10px 94px}.header-inner{padding:8px 10px}.emblem{width:44px;height:44px}.header-status .small{display:none}.bottom-nav{bottom:5px}.mission-grid,.council-options,.upgrade-grid{grid-template-columns:1fr}.output-choice{grid-template-columns:repeat(2,1fr)}.ship-board{min-height:530px}.mast{top:31%;height:220px}.sail{top:33%;width:90px;height:105px}.hotspot{min-width:88px;max-width:116px;padding:8px 5px}.hotspot .hs-icon{font-size:1.5rem}.hs-missions{left:2%;bottom:17%}.hs-map{right:2%;bottom:17%}.hs-res{bottom:3%}.hs-teacher{top:54%}.chapter-inner{padding:16px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+
+/* ================================================================
+   Phase 2 – Sichtbarer Kern
+   Alles hier haengt an einem Feature-Schalter (ui.*) und ist ohne
+   diesen wirkungslos. Reihenfolge beachten: dieser Block steht
+   bewusst am Ende und ueberschreibt die Grundschriften.
+   ================================================================ */
+
+@font-face{font-family:'Alegreya';src:url('fonts/alegreya-latin-400-normal.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Alegreya';src:url('fonts/alegreya-latin-700-normal.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Atkinson Hyperlegible';src:url('fonts/atkinson-hyperlegible-latin-400-normal.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Atkinson Hyperlegible';src:url('fonts/atkinson-hyperlegible-latin-700-normal.woff2') format('woff2');font-weight:700;font-display:swap}
+
+:root{
+  --font-text:'Atkinson Hyperlegible',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-display:'Alegreya',Georgia,serif;
+  --srl-planung:#173f5f;--srl-durchfuehrung:#d97a4a;--srl-reflexion:#5f8f57;
+}
+body.schriften{font-family:var(--font-text)}
+body.schriften .brand h1,body.schriften .card-title,body.schriften .mission-card h3,
+body.schriften .log-entry h3,body.schriften .modal-head h2,body.schriften .resource-value,
+body.schriften .vote-count{font-family:var(--font-display)}
+body.schriften .brand h1{letter-spacing:.01em}
+
+/* --- Icons ---------------------------------------------------- */
+.ico{width:1em;height:1em;display:inline-block;vertical-align:-.13em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hs-icon .ico,.nav-btn span .ico{width:1em;height:1em;stroke-width:1.7}
+.upgrade .big .ico{width:.9em;height:.9em}
+.routine-icon .ico{width:1em;height:1em;stroke-width:1.5}
+.tag .ico{width:.95em;height:.95em;stroke-width:2}
+.output-icons .ico{width:1.05em;height:1.05em}
+.session-pill .ico{width:.95em;height:.95em}
+
+/* --- SRL-Phasen ----------------------------------------------- */
+.srl-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:.68rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:.06em;border:2px solid currentColor;background:#fff}
+.srl-badge.planung{color:var(--srl-planung)}
+.srl-badge.durchfuehrung{color:var(--srl-durchfuehrung)}
+.srl-badge.reflexion{color:var(--srl-reflexion)}
+.srl-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:.7rem;font-weight:900;
+  text-transform:uppercase;letter-spacing:.08em;color:#fff;background:var(--sea);margin-left:auto}
+.srl-chip.durchfuehrung{background:var(--srl-durchfuehrung)}
+.srl-chip.reflexion{background:var(--srl-reflexion)}
+.srl-chip.zyklus{background:linear-gradient(90deg,var(--srl-planung),var(--srl-durchfuehrung) 50%,var(--srl-reflexion))}
+.srl-tabs{margin-top:8px}
+.srl-tabs .area-tab.active.planung{background:var(--srl-planung);border-color:var(--srl-planung)}
+.srl-tabs .area-tab.active.durchfuehrung{background:var(--srl-durchfuehrung);border-color:var(--srl-durchfuehrung)}
+.srl-tabs .area-tab.active.reflexion{background:var(--srl-reflexion);border-color:var(--srl-reflexion)}
+.mission-card .srl-badge{align-self:flex-start}
+
+/* --- Reisekarte mit Route und Nebel ---------------------------- */
+.route-card{padding:14px;margin-bottom:16px}
+.route-card h3{font-family:var(--font-display,Georgia,serif);color:var(--sea);margin:0 0 4px}
+.route-map{width:100%;height:auto;display:block;border-radius:14px;border:2px solid var(--gold);background:#8fd1dc}
+.route-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:.76rem;font-weight:700;color:var(--ink-soft)}
+.route-legend span{display:inline-flex;align-items:center;gap:6px}
+.route-legend i{width:14px;height:14px;border-radius:50%;display:inline-block}
+
+/* --- Trefferflaechen auf dem Schiffsbrett ---------------------- */
+.ship-board .hotspot{min-height:52px}
+@media(max-width:560px){.ship-board .hotspot{min-height:48px}}
+
+
+/* ================================================================
+   Phase 3 – Spielgefuehl
+   Partikel, Merkstriche, erzaehlerische Einblendung, Tonschalter.
+   Alles wirkungslos ohne ui.juice bzw. ui.sound.
+   ================================================================ */
+
+.juice-funke{position:fixed;z-index:9999;width:9px;height:9px;border-radius:50%;pointer-events:none;
+  transform:translate(-50%,-50%);box-shadow:0 0 8px rgba(255,255,255,.55)}
+
+.bar{position:relative}
+.bar-mark{position:absolute;top:-3px;width:3px;height:calc(100% + 6px);background:var(--gold,#d0a642);
+  border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.7);pointer-events:none}
+
+#toast.erzaehlung{display:flex;align-items:center;gap:10px;max-width:min(92vw,430px);
+  background:#f7f2e7;color:var(--ink,#1c2b30);border:2px solid var(--gold,#d0a642);
+  border-radius:14px;padding:12px 16px;box-shadow:0 12px 28px rgba(11,47,75,.24);
+  font-weight:700;line-height:1.35;text-align:left}
+#toast.erzaehlung .ico{width:1.4em;height:1.4em;color:var(--gold,#d0a642);flex:0 0 auto}
+#toast.erzaehlung.show{animation:zettelRein .42s cubic-bezier(.2,.9,.3,1)}
+@keyframes zettelRein{from{transform:translate(-50%,14px) rotate(-1.5deg);opacity:0}to{transform:translate(-50%,0) rotate(0);opacity:1}}
+
+.sound-toggle{border:2px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;
+  border-radius:999px;min-width:44px;min-height:44px;font-size:1.05rem;cursor:pointer;line-height:1}
+.sound-toggle:hover{background:rgba(255,255,255,.28)}
+.sound-toggle.aus{opacity:.6}
+.sound-toggle[hidden]{display:none}
+
+/* Ruhige Variante: keine Bewegung, aber die Rueckmeldung bleibt sichtbar. */
+@media(prefers-reduced-motion:reduce){
+  .juice-funke{display:none}
+  #toast.erzaehlung.show{animation:none}
+  .bar-mark{height:calc(100% + 10px);top:-5px}
+}

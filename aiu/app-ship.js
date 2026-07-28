@@ -52,3 +52,31 @@
   `;
   document.head.appendChild(style);
 })();
+
+/* ------------------------------------------------------------------
+   Bruecke zum Schiff: der Spielstand der Ausbauten wird an die Szene
+   im iframe geschickt. Ohne ui.shipLayers bleibt alles unsichtbar,
+   das Schiff sieht dann aus wie bisher.
+   ------------------------------------------------------------------ */
+(function verbindeSchiffMitAusbauten(){
+  const frame=document.querySelector('.ship-scene-frame');
+  if(!frame||typeof AIU_STORE==='undefined')return;
+  let bereit=false;
+
+  function zustand(){
+    if(typeof flag!=='function'||!flag('shipLayers'))return {};
+    if(typeof runtime==='undefined'||!runtime)return {};
+    return runtime.upgrades||{};
+  }
+  function senden(){
+    if(!bereit||!frame.contentWindow)return;
+    try{frame.contentWindow.postMessage({type:'aiu:upgrades',upgrades:zustand()},'*')}
+    catch(fehler){console.warn('Schiffsszene nicht erreichbar',fehler)}
+  }
+  window.addEventListener('message',ereignis=>{
+    if(ereignis.data&&ereignis.data.type==='aiu:ship-ready'){bereit=true;senden()}
+  });
+  /* Falls die Szene schon geladen war, bevor wir zugehoert haben. */
+  frame.addEventListener('load',()=>{bereit=true;senden()});
+  AIU_STORE.on('ship',senden,'Schiffsausbauten');
+})();

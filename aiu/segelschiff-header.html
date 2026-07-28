@@ -14,7 +14,7 @@
 </head>
 <body>
 <div id="szene"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="vendor/three.min.js"></script>
 <script>
 (() => {
   'use strict';
@@ -86,6 +86,88 @@
   const matSeil=new THREE.LineBasicMaterial({color:0x3A2B1A}); function seil(a,b){const g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...a),new THREE.Vector3(...b)]); schiff.add(new THREE.Line(g,matSeil))}
   [[2.4,5.6],[0.0,6.8],[-2.4,5.9]].forEach(([mx,mh])=>[-1,1].forEach(s=>{seil([mx,0.6+mh*0.66,0],[mx+0.9,0.95,s*(HALBBREITE-0.15)]);seil([mx,0.6+mh*0.66,0],[mx-0.9,0.95,s*(HALBBREITE-0.15)])})); seil([7.9,2.2,0],[2.4,6.2,0]); seil([2.4,6.2,0],[0,7.4,0]); seil([0,7.4,0],[-2.4,6.5,0]);
   const anker=new THREE.Group(); const ankerSchaft=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.9,8),matMetall); anker.add(ankerSchaft); const ankerRing=new THREE.Mesh(new THREE.TorusGeometry(0.11,0.035,8,16),matMetall); ankerRing.position.y=0.52; anker.add(ankerRing); const ankerStock=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.55,8),matMetall); ankerStock.rotation.z=Math.PI/2; ankerStock.position.y=0.36; anker.add(ankerStock); const ankerBogen=new THREE.Mesh(new THREE.TorusGeometry(0.32,0.05,8,20,Math.PI),matMetall); ankerBogen.rotation.z=Math.PI; ankerBogen.position.y=-0.42; anker.add(ankerBogen); [-1,1].forEach(s=>{const fluke=new THREE.Mesh(new THREE.ConeGeometry(0.09,0.24,6),matMetall);fluke.position.set(s*0.32,-0.30,0);anker.add(fluke)}); anker.position.set(4.3,0.15,HALBBREITE+0.35); anker.rotation.y=Math.PI/2; schiff.add(anker);
+
+  /* ------------------------------------------------------------------
+     Schiffsausbauten. Jede Gruppe gehoert zu einem Eintrag aus
+     CFG.shipUpgrades und wird vom Elternfenster per postMessage
+     ein- und ausgeblendet. Vor der Freischaltung ist nichts sichtbar.
+     ------------------------------------------------------------------ */
+  const ausbauten={};
+  function ausbauGruppe(id){const g=new THREE.Group();g.visible=false;g.scale.setScalar(0.001);g.userData.ziel=0;schiff.add(g);ausbauten[id]=g;return g}
+
+  // Kartenraum: Kartentisch mit aufgerollter Seekarte auf dem Achterdeck
+  (()=>{const g=ausbauGruppe('kartenraum');
+    const platte=new THREE.Mesh(new THREE.BoxGeometry(1.25,0.09,0.85),matHolzHell);platte.position.set(-2.5,1.05,0);platte.castShadow=true;g.add(platte);
+    [[-0.5,-0.32],[0.5,-0.32],[-0.5,0.32],[0.5,0.32]].forEach(([dx,dz])=>{const bein=new THREE.Mesh(new THREE.CylinderGeometry(0.045,0.045,0.38,6),matMast);bein.position.set(-2.5+dx,0.82,dz);g.add(bein)});
+    const rolle=new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.09,0.8,10),matSegel);rolle.rotation.x=Math.PI/2;rolle.position.set(-2.45,1.15,0.1);g.add(rolle);
+    const lampe=new THREE.Mesh(new THREE.SphereGeometry(0.09,10,8),new THREE.MeshPhongMaterial({color:0xFFD98A,emissive:0x6b4c10}));lampe.position.set(-2.05,1.2,-0.28);g.add(lampe);})();
+
+  // Beiboot: an Davits an der Steuerbordseite
+  (()=>{const g=ausbauGruppe('beiboot');
+    const rumpfGeoBoot=new THREE.SphereGeometry(0.62,16,10,0,Math.PI*2,0,Math.PI/2);
+    const boot=new THREE.Mesh(rumpfGeoBoot,matHolzHell);boot.rotation.x=Math.PI;boot.scale.set(1.55,0.62,0.75);boot.position.set(-1.1,0.95,HALBBREITE+0.5);boot.castShadow=true;g.add(boot);
+    [-0.75,0.75].forEach(dx=>{const davit=new THREE.Mesh(new THREE.TorusGeometry(0.3,0.045,8,14,Math.PI/1.6),matMetall);davit.position.set(-1.1+dx,1.25,HALBBREITE+0.2);davit.rotation.y=Math.PI/2;g.add(davit)});
+    const ruder=new THREE.Mesh(new THREE.BoxGeometry(1.1,0.05,0.1),matMast);ruder.position.set(-1.1,1.05,HALBBREITE+0.5);ruder.rotation.z=0.06;g.add(ruder);})();
+
+  // Ausguck: erweiterte Plattform mit Fernrohr am Grossmast
+  (()=>{const g=ausbauGruppe('ausguck');
+    const plattform=new THREE.Mesh(new THREE.CylinderGeometry(0.62,0.5,0.12,14),matHolzHell);plattform.position.set(0,5.35,0);plattform.castShadow=true;g.add(plattform);
+    const gelaender=new THREE.Mesh(new THREE.TorusGeometry(0.58,0.035,8,20),matMetall);gelaender.rotation.x=Math.PI/2;gelaender.position.set(0,5.62,0);g.add(gelaender);
+    for(let i=0;i<8;i++){const winkel=i/8*Math.PI*2;const stab=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.3,5),matMetall);stab.position.set(Math.cos(winkel)*0.56,5.5,Math.sin(winkel)*0.56);g.add(stab)}
+    const rohr=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.11,0.85,10),matMetall);rohr.position.set(0.35,5.75,0.2);rohr.rotation.z=Math.PI/2.6;rohr.rotation.y=0.5;g.add(rohr);
+    const laterne=new THREE.Mesh(new THREE.BoxGeometry(0.16,0.22,0.16),new THREE.MeshPhongMaterial({color:0xFFE7A8,emissive:0x7a5a12}));laterne.position.set(-0.35,5.62,0);g.add(laterne);})();
+
+  // Werkstatt: kleiner Verschlag mit Werkzeugbrett auf dem Vordeck
+  (()=>{const g=ausbauGruppe('werkstatt');
+    const huette=new THREE.Mesh(new THREE.BoxGeometry(1.3,0.95,1.5),matHolzHell);huette.position.set(3.6,1.25,0);huette.castShadow=true;g.add(huette);
+    const dach=new THREE.Mesh(new THREE.BoxGeometry(1.55,0.12,1.75),matRumpfDkl);dach.position.set(3.6,1.78,0);g.add(dach);
+    const tuer=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.62,0.5),matMast);tuer.position.set(2.94,1.1,0);g.add(tuer);
+    const brett=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.5,0.9),matMast);brett.position.set(4.27,1.4,0);g.add(brett);
+    [[-0.25,0.2],[0,-0.2],[0.22,0.05]].forEach(([dy,dz])=>{const werkzeug=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.28,0.06),matMetall);werkzeug.position.set(4.32,1.4+dy,dz);g.add(werkzeug)});})();
+
+  // Groesseres Lager: gestapelte Kisten und Faesser mittschiffs
+  (()=>{const g=ausbauGruppe('lager');
+    const kisten=[[1.35,0.95,-0.55,0.62],[1.35,0.95,0.35,0.55],[1.4,1.5,-0.5,0.5],[0.75,0.92,0.55,0.5]];
+    kisten.forEach(([x,y,z,s])=>{const kiste=new THREE.Mesh(new THREE.BoxGeometry(s,s*0.8,s),matHolzHell);kiste.position.set(x,y,z);kiste.rotation.y=(x+z)*0.4;kiste.castShadow=true;g.add(kiste);
+      const band=new THREE.Mesh(new THREE.BoxGeometry(s*1.02,0.05,s*1.02),matRumpfDkl);band.position.copy(kiste.position);band.rotation.y=kiste.rotation.y;g.add(band)});
+    [[0.55,-0.4],[0.6,0.5]].forEach(([x,z])=>{const fass=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.24,0.62,12),matMast);fass.position.set(x,1.0,z);fass.castShadow=true;g.add(fass);
+      const reif=new THREE.Mesh(new THREE.TorusGeometry(0.28,0.03,6,16),matMetall);reif.rotation.x=Math.PI/2;reif.position.set(x,1.05,z);g.add(reif)});})();
+
+  // Versammlungsraum: Baenke im Halbkreis und Wimpel am Grossmast
+  (()=>{const g=ausbauGruppe('versammlung');
+    for(let i=0;i<5;i++){const winkel=-Math.PI/2+i/4*Math.PI;const bank=new THREE.Mesh(new THREE.BoxGeometry(0.62,0.1,0.24),matHolzHell);
+      bank.position.set(-0.9+Math.cos(winkel)*1.15,0.85,Math.sin(winkel)*0.95);bank.rotation.y=-winkel;bank.castShadow=true;g.add(bank);
+      const fuss=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.22,0.12),matMast);fuss.position.set(bank.position.x,0.73,bank.position.z);fuss.rotation.y=-winkel;g.add(fuss)}
+    const wimpel=new THREE.Mesh(new THREE.PlaneGeometry(0.7,0.26),new THREE.MeshPhongMaterial({color:0xD0A642,side:THREE.DoubleSide}));
+    wimpel.geometry.translate(0.35,0,0);wimpel.position.set(0.1,4.2,0);flaggen.push(wimpel);g.add(wimpel);})();
+
+  /* Sanftes Ein- und Ausblenden statt hartem Umschalten. */
+  function ausbautenSetzen(zustand){
+    Object.entries(ausbauten).forEach(([id,gruppe])=>{
+      const an=!!(zustand&&zustand[id]);
+      gruppe.userData.ziel=an?1:0;
+      if(an)gruppe.visible=true;
+    });
+  }
+  function ausbautenAnimieren(dt){
+    Object.values(ausbauten).forEach(gruppe=>{
+      const ziel=gruppe.userData.ziel;
+      const jetzt=gruppe.scale.x;
+      if(Math.abs(jetzt-ziel)<0.004){if(ziel===0)gruppe.visible=false;return}
+      const naechster=jetzt+(ziel-jetzt)*Math.min(1,dt*4.5);
+      gruppe.scale.setScalar(Math.max(0.001,naechster));
+    });
+  }
+  window.addEventListener('message',ereignis=>{
+    const daten=ereignis.data;
+    if(!daten||daten.type!=='aiu:upgrades')return;
+    ausbautenSetzen(daten.upgrades||{});
+  });
+  /* Nur zum Pruefen: welcher Ausbau ist gerade sichtbar? */
+  window.aiuAusbauStatus=()=>Object.fromEntries(Object.entries(ausbauten).map(([id,g])=>[id,g.visible&&g.scale.x>0.5]));
+  /* Dem Elternfenster melden, dass die Szene bereit ist. */
+  try{parent.postMessage({type:'aiu:ship-ready'},'*')}catch(fehler){}
+
   const WASSER_GROESSE=120,WASSER_SEG=72; const wasserGeo=new THREE.PlaneGeometry(WASSER_GROESSE,WASSER_GROESSE,WASSER_SEG,WASSER_SEG); wasserGeo.rotateX(-Math.PI/2); const wasserMat=new THREE.MeshPhongMaterial({color:0x2E7EB3,shininess:90,specular:0x9FD4F0,transparent:true,opacity:0.96,flatShading:false}); const wasser=new THREE.Mesh(wasserGeo,wasserMat); wasser.receiveShadow=true; szene.add(wasser);
   function wellenHoehe(x,z,t){return Math.sin(x*0.28+t*1.1)*0.35+Math.sin(z*0.22+t*0.8)*0.28+Math.sin((x+z)*0.14+t*0.55)*0.22}
   const wasserPos=wasserGeo.attributes.position,wasserAnzahl=wasserPos.count;
@@ -97,7 +179,8 @@
   const azimut=0.72,elevation=0.30,ABSTAND=17;
   function kameraSetzen(){kamera.position.set(Math.sin(azimut)*Math.cos(elevation)*ABSTAND,Math.sin(elevation)*ABSTAND+1.5,Math.cos(azimut)*Math.cos(elevation)*ABSTAND);kamera.lookAt(0,1.8,0)} kameraSetzen();
   const uhr=new THREE.Clock();
-  function animieren(){requestAnimationFrame(animieren); const t=uhr.getElapsedTime(); for(let i=0;i<wasserAnzahl;i++){const x=wasserPos.getX(i),z=wasserPos.getZ(i);wasserPos.setY(i,wellenHoehe(x,z,t))} wasserPos.needsUpdate=true; wasserGeo.computeVertexNormals(); const hMitte=wellenHoehe(0,0,t),hBug=wellenHoehe(4,0,t),hHeck=wellenHoehe(-4,0,t),hLinks=wellenHoehe(0,-1.5,t),hRechts=wellenHoehe(0,1.5,t); schiff.position.y=0.55+hMitte*0.55; schiff.rotation.z=(hBug-hHeck)*0.075; schiff.rotation.x=(hRechts-hLinks)*0.16; schiff.rotation.y=Math.sin(t*0.18)*0.04; flaggen.forEach((f,fi)=>{const p=f.geometry.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i);p.setZ(i,Math.sin(x*5+t*7+fi)*0.09*x)}p.needsUpdate=true}); wolken.forEach((w,i)=>{w.position.x+=0.006+i*0.002;if(w.position.x>55)w.position.x=-55}); moewen.forEach(m=>{const a=t*m.tempo+m.phase;m.g.position.set(Math.cos(a)*m.radius,m.hoehe+Math.sin(a*2)*0.6,Math.sin(a)*m.radius);m.g.rotation.y=-a-Math.PI/2;const schlag=Math.sin(t*9+m.phase)*0.5;m.l.rotation.z=schlag;m.r.rotation.z=-schlag}); renderer.render(szene,kamera)}
+  let letzteZeit=0;
+  function animieren(){requestAnimationFrame(animieren); const t=uhr.getElapsedTime(); const dt=Math.min(0.05,t-letzteZeit); letzteZeit=t; ausbautenAnimieren(dt); for(let i=0;i<wasserAnzahl;i++){const x=wasserPos.getX(i),z=wasserPos.getZ(i);wasserPos.setY(i,wellenHoehe(x,z,t))} wasserPos.needsUpdate=true; wasserGeo.computeVertexNormals(); const hMitte=wellenHoehe(0,0,t),hBug=wellenHoehe(4,0,t),hHeck=wellenHoehe(-4,0,t),hLinks=wellenHoehe(0,-1.5,t),hRechts=wellenHoehe(0,1.5,t); schiff.position.y=0.55+hMitte*0.55; schiff.rotation.z=(hBug-hHeck)*0.075; schiff.rotation.x=(hRechts-hLinks)*0.16; schiff.rotation.y=Math.sin(t*0.18)*0.04; flaggen.forEach((f,fi)=>{const p=f.geometry.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i);p.setZ(i,Math.sin(x*5+t*7+fi)*0.09*x)}p.needsUpdate=true}); wolken.forEach((w,i)=>{w.position.x+=0.006+i*0.002;if(w.position.x>55)w.position.x=-55}); moewen.forEach(m=>{const a=t*m.tempo+m.phase;m.g.position.set(Math.cos(a)*m.radius,m.hoehe+Math.sin(a*2)*0.6,Math.sin(a)*m.radius);m.g.rotation.y=-a-Math.PI/2;const schlag=Math.sin(t*9+m.phase)*0.5;m.l.rotation.z=schlag;m.r.rotation.z=-schlag}); renderer.render(szene,kamera)}
   animieren();
   addEventListener('resize',()=>{kamera.aspect=innerWidth/innerHeight;kamera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 })();

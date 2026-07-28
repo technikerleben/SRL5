@@ -1,10 +1,14 @@
-const CACHE='kiu-begleitapp-v3-1';
+/* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
+const VERSION='v6-0-spielgefuehl';
+const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
   './index.html',
   './styles.css',
   './gems.css',
   './app.js',
+  './app-store.js',
+  './app-juice.js',
   './app-core.js',
   './config-loader.js',
   './sync-config.js',
@@ -20,7 +24,13 @@ const CORE=[
   './weeks-11-15.json',
   './karte.svg',
   './icon.svg',
-  './app.webmanifest'
+  './app.webmanifest',
+  './vendor/three.min.js',
+  './vendor/supabase.js',
+  './fonts/alegreya-latin-400-normal.woff2',
+  './fonts/alegreya-latin-700-normal.woff2',
+  './fonts/atkinson-hyperlegible-latin-400-normal.woff2',
+  './fonts/atkinson-hyperlegible-latin-700-normal.woff2'
 ];
 self.addEventListener('install',event=>event.waitUntil(
   caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())

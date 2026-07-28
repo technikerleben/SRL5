@@ -11,7 +11,15 @@ function makeVessel(key,index){const group=new THREE.Group();group.position.x=(i
   const rimMaterial=new THREE.MeshStandardMaterial({color:0xd0a642,roughness:.27,metalness:.68});
   const topRing=new THREE.Mesh(new THREE.TorusGeometry(VESSEL_RADIUS,.055,10,40),rimMaterial);topRing.rotation.x=Math.PI/2;topRing.position.y=3;group.add(topRing);
   const bottomRing=new THREE.Mesh(new THREE.TorusGeometry(VESSEL_RADIUS*.93,.035,8,36),rimMaterial);bottomRing.rotation.x=Math.PI/2;bottomRing.position.y=.08;group.add(bottomRing);
-  gemsState.scene.add(group);return{key,group,gems:[],colors:GEM_COLORS[key]}}
+  gemsState.scene.add(group);return{key,group,gems:[],colors:GEM_COLORS[key],marke:null}}
+/* Meilenstein als goldener Ring in Hoehe der Zielfuellung. */
+function gemsMilestones(){if(!gemsState.initialized)return;gemsState.vessels.forEach(vessel=>{
+  const ziel=(typeof currentWeek!=='undefined'&&currentWeek?.milestones)?currentWeek.milestones[vessel.key]?.target:0;
+  if(vessel.marke){vessel.group.remove(vessel.marke);vessel.marke.geometry.dispose();vessel.marke.material.dispose();vessel.marke=null}
+  if(!ziel||typeof flag!=='function'||!flag('juice'))return;
+  const hoehe=Math.min(2.85,GEM_RADIUS*2+.13+Math.floor(Math.max(0,ziel-1)/8)*.39);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(VESSEL_RADIUS*.99,.022,8,44),new THREE.MeshStandardMaterial({color:0xd0a642,roughness:.3,metalness:.7,transparent:true,opacity:.85}));
+  ring.rotation.x=Math.PI/2;ring.position.y=hoehe;vessel.group.add(ring);vessel.marke=ring});}
 function gemsInit(){if(gemsState.initialized)return;const canvas=$('#gems-canvas'),wrap=$('#gems-canvas-wrap');if(!canvas||!wrap)return;if(typeof THREE==='undefined'){wrap.insertAdjacentHTML('beforeend','<div class="gems-fallback">Die 3D-Schatzkammer konnte nicht geladen werden.<br>Die Zahlen darunter bleiben weiterhin verfügbar.</div>');return}
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputEncoding=THREE.sRGBEncoding;renderer.setClearColor(0x000000,0);
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(34,1,.1,60),clock=new THREE.Clock();gemsState.renderer=renderer;gemsState.scene=scene;gemsState.camera=camera;gemsState.clock=clock;
@@ -26,4 +34,7 @@ function gemsUpdate(initial=false){if(!gemsState.initialized)return;gemsState.ve
     while(vessel.gems.length<wanted){const index=vessel.gems.length,color=vessel.colors[index%2],mesh=new THREE.Mesh(new THREE.IcosahedronGeometry(GEM_RADIUS,1),new THREE.MeshPhysicalMaterial({color,roughness:.12,metalness:.04,transparent:true,opacity:.94,clearcoat:1,clearcoatRoughness:.1,emissive:color,emissiveIntensity:.07}));const target=targets[index];mesh.position.copy(target);mesh.rotation.set(random()*Math.PI,random()*Math.PI,random()*Math.PI);if(!gemsState.reduced){mesh.position.y=initial?3.8+index*.075:4.2}vessel.group.add(mesh);vessel.gems.push({mesh,target,velocity:0,settled:gemsState.reduced,spin:(random()-.5)*3.2})}
     vessel.gems.forEach((gem,index)=>gem.target=targets[index])})}
 function gemsAnimate(){if(!gemsState.initialized)return;requestAnimationFrame(gemsAnimate);const dt=Math.min(gemsState.clock.getDelta(),.05),time=gemsState.clock.getElapsedTime();gemsState.vessels.forEach((vessel,index)=>{if(!gemsState.reduced)vessel.group.rotation.y=Math.sin(time*.28+index*2.1)*.095;vessel.gems.forEach(gem=>{if(!gem.settled){gem.velocity-=9.2*dt;gem.mesh.position.y+=gem.velocity*dt;gem.mesh.rotation.x+=gem.spin*dt;gem.mesh.rotation.z+=gem.spin*.65*dt;if(gem.mesh.position.y<=gem.target.y){if(Math.abs(gem.velocity)>1.15){gem.velocity=-gem.velocity*.31;gem.mesh.position.y=gem.target.y}else{gem.mesh.position.copy(gem.target);gem.settled=true}}}else if(!gemsState.reduced){gem.mesh.rotation.y+=dt*.2}})});gemsState.renderer.render(gemsState.scene,gemsState.camera)}
-const renderWithoutGems=render;render=function(...args){const result=renderWithoutGems(...args);requestAnimationFrame(()=>{if(!gemsState.initialized)gemsInit();else gemsUpdate(false)});return result};
+/* Anmeldung am Store statt Ueberschreiben von render(). */
+function gemsRefresh(){if(!gemsState.initialized)gemsInit();else gemsUpdate(false);gemsMilestones()}
+AIU_STORE.on('resources',gemsRefresh,'Schatzkammer');
+AIU_STORE.on('locks',gemsRefresh,'Schatzkammer (Schloesser)');
