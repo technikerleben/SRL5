@@ -133,3 +133,30 @@ body.schriften .brand h1{letter-spacing:.01em}
   #toast.erzaehlung.show{animation:none}
   .bar-mark{height:calc(100% + 10px);top:-5px}
 }
+
+
+/* ================================================================
+   Buehnenmodus fuer den Beamer (?ansicht=beamer, setzt ui.stageMode voraus)
+   Grosse Darstellung, keine Bedienelemente, aus der letzten Reihe lesbar.
+   ================================================================ */
+body.buehne{font-size:132%}
+body.buehne .bottom-nav,
+body.buehne .teacher-key,
+body.buehne .hotspot,
+body.buehne .primary,
+body.buehne .area-tabs,
+body.buehne .sound-toggle,
+body.buehne #newPlaceBtn,
+body.buehne #quickLogBtn{display:none!important}
+body.buehne .app{padding-bottom:24px;max-width:none}
+body.buehne .brand h1{font-size:2.4rem}
+body.buehne .card-title,body.buehne .mission-card h3{font-size:1.5rem}
+body.buehne .resource-value{font-size:3.4rem}
+body.buehne .srl-chip,body.buehne .srl-badge{font-size:.9rem}
+body.buehne .small,body.buehne .muted{font-size:1rem}
+body.buehne .modal-wrap{display:none!important}
+#buehneVerlassen{position:fixed;right:14px;bottom:14px;z-index:9998;opacity:.28;
+  border:2px solid var(--sea,#173f5f);background:#f7f2e7;color:var(--sea,#173f5f);
+  border-radius:999px;padding:10px 16px;font-weight:700;font-size:.85rem;cursor:pointer;min-height:44px}
+#buehneVerlassen:hover,#buehneVerlassen:focus{opacity:1}
+@media(min-width:1600px){body.buehne{font-size:150%}}

@@ -12,16 +12,16 @@
     "className": "Klasse 5"
   },
   "ui": {
-    "_hinweis": "Feature-Schalter der Modernisierung. Standard: aus. Erst einschalten, wenn die Etappe abgenommen ist. Zum Gegenlesen ohne Aenderung hier: ?ui=all oder ?ui=icons,srlPhases an die Adresse haengen. icons umfasst Symbole und Webschriften. juice umfasst Zahlenlauf, Partikel, Merkstriche und Haptik; sound den synthetisierten Klang samt Stummschalter.",
-    "shipLayers": false,
-    "mapRoute": false,
-    "icons": false,
-    "srlPhases": false,
-    "juice": false,
-    "sound": false,
+    "_hinweis": "Feature-Schalter. scene und realtime gehoeren zu noch nicht gebauten Phasen. Uebersteuerung ohne Aenderung hier: ?ui=all zum Gegenlesen, ?ui=aus als Notausstieg. Geraetebezogenes Verhalten steuern Startparameter, nicht diese Datei: ?kiosk=1, ?ton=aus, ?ansicht=beamer – siehe app-kiosk.js.",
+    "shipLayers": true,
+    "mapRoute": true,
+    "icons": true,
+    "srlPhases": true,
+    "juice": true,
+    "sound": true,
     "scene": false,
     "realtime": false,
-    "stageMode": false
+    "stageMode": true
   },
   "ship": {
     "name": "??? – Das Schiff wird noch benannt",

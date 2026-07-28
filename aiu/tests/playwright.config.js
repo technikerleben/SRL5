@@ -17,7 +17,8 @@ export default defineConfig({
   },
   projects: [
     { name: 'ipad-quer', use: { ...devices['Desktop Chrome'], viewport: { width: 1180, height: 820 } } },
-    { name: 'iphone', use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 }, isMobile: false } }
+    { name: 'iphone', use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 }, isMobile: false } },
+    { name: 'kiosk-pc', use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 } } }
   ],
   webServer: {
     command: 'python3 -m http.server 4173 --bind 127.0.0.1 --directory ../..',

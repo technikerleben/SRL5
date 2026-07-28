@@ -12,6 +12,7 @@
     {src:'app-ship.js',required:false},
     {src:'app-gems.js',required:false},
     {src:'app-juice.js',required:false},
+    {src:'app-kiosk.js',required:false},
     {src:'app-input.js',required:true},
     {src:'app-teacher.js',required:true}
   ];

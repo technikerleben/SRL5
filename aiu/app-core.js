@@ -6,10 +6,13 @@ const OUTPUT={text:['✍️','Text'],drawing:['🎨','Zeichnung'],photo:['📷',
 const AREA={werft:['🔨','Werft'],kartenraum:['🗺️','Kartenraum'],logbuch:['📖','Logbuch']};
 const RES_COLOR={antrieb:'#2f7a55',wissen:'#2876a3',zusammenhalt:'#d46e2a'};
 /* Feature-Schalter aus config-base.json (ui.*). Fehlt der Block, bleibt alles aus.
-   Zum Gegenlesen laesst sich jeder Schalter per Adresszeile einschalten:
-   ?ui=all oder ?ui=icons,srlPhases  – der gespeicherte Spielstand bleibt unberuehrt. */
-const AIU_FLAG_OVERRIDE=(()=>{try{const raw=new URLSearchParams(location.search).get('ui');if(!raw)return null;if(raw==='all')return 'all';return raw.split(',').map(x=>x.trim()).filter(Boolean)}catch(error){return null}})();
-function flag(name){if(AIU_FLAG_OVERRIDE==='all')return true;if(Array.isArray(AIU_FLAG_OVERRIDE)&&AIU_FLAG_OVERRIDE.includes(name))return true;try{return !!(CFG&&CFG.ui&&CFG.ui[name])}catch(error){return false}}
+   Per Adresszeile uebersteuerbar, ohne die Konfiguration anzufassen:
+     ?ui=all                 alles einschalten (zum Gegenlesen)
+     ?ui=icons,srlPhases     einzelne Schalter einschalten
+     ?ui=aus                 alles abschalten (Notausstieg im Unterricht)
+   Der gespeicherte Spielstand bleibt in allen Faellen unberuehrt. */
+const AIU_FLAG_OVERRIDE=(()=>{try{const raw=new URLSearchParams(location.search).get('ui');if(!raw)return null;const wert=raw.trim().toLowerCase();if(wert==='all')return 'all';if(['aus','off','none','0'].includes(wert))return 'aus';return raw.split(',').map(x=>x.trim()).filter(Boolean)}catch(error){return null}})();
+function flag(name){if(AIU_FLAG_OVERRIDE==='aus')return false;if(AIU_FLAG_OVERRIDE==='all')return true;if(Array.isArray(AIU_FLAG_OVERRIDE)&&AIU_FLAG_OVERRIDE.includes(name))return true;try{return !!(CFG&&CFG.ui&&CFG.ui[name])}catch(error){return false}}
 /* Zuordnung Emoji -> Symbol aus dem Sprite in index.html. */
 const ICONS={'⚓':'anchor','📌':'board','🗺':'map','📖':'book','🗣':'speech','💎':'gem','🚪':'door','🧭':'compass','🌿':'leaf','📜':'scroll','🤝':'hands','✍':'pen','🎨':'brush','📷':'camera','🎙':'mic','🔨':'hammer','✨':'sparkle','🔒':'lock','⏱':'clock','🛶':'boat','🔭':'spyglass','📦':'crate','🔑':'key','📍':'marker','✓':'check','🟢':'check','☁':'cloud','💻':'device','⚠':'warning'};
 function icon(name,cls=''){return `<svg class="ico ${cls}" aria-hidden="true"><use href="#ico-${name}"></use></svg>`}

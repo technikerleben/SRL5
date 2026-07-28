@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v6-1-projekttitel';
+const VERSION='v7-1-kiosk';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
@@ -9,6 +9,7 @@ const CORE=[
   './app.js',
   './app-store.js',
   './app-juice.js',
+  './app-kiosk.js',
   './app-core.js',
   './config-loader.js',
   './sync-config.js',

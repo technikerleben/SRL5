@@ -41,7 +41,7 @@ async function boot(query = '') {
   // Ladereihenfolge wie in index.html und app.js. app-ship.js baut ein iframe
   // auf, das jsdom nicht ausfuehrt – die Bruecke wird separat geprueft.
   const order = ['vendor/three.min.js', 'app-store.js', 'app-core.js', 'config-loader.js', 'sync-config.js',
-    'app-sync.js', 'app-ship.js', 'app-gems.js', 'app-juice.js', 'app-input.js', 'app-teacher.js'];
+    'app-sync.js', 'app-ship.js', 'app-gems.js', 'app-juice.js', 'app-kiosk.js', 'app-input.js', 'app-teacher.js'];
   for (const file of order) {
     try {
       const tag = window.document.createElement('script');
@@ -60,9 +60,10 @@ const check = (name, ok, detail = '') => checks.push({ name, ok, detail });
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 /* =================================================================
-   Durchlauf 1: Auslieferungszustand, alle Schalter aus
+   Durchlauf 1: alles abgeschaltet (?ui=aus) – die App muss sich exakt so
+   verhalten wie vor der Modernisierung, egal was in der Konfiguration steht
    ================================================================= */
-const w1 = await boot();
+const w1 = await boot('?ui=aus');
 {
   const G = expr => w1.eval(expr);
   const $ = sel => w1.document.querySelector(sel);
@@ -139,7 +140,7 @@ const w2 = await boot('?ui=all');
   const G = expr => w2.eval(expr);
   const $ = sel => w2.document.querySelector(sel);
 
-  check('Übersteuerung greift', G("flag('icons')") === true && G('CFG').ui.icons === false);
+  check('Übersteuerung greift', G("flag('icons')") === true);
   check('Icons an: Symbole gesetzt', w2.document.querySelectorAll('.ico').length > 10, String(w2.document.querySelectorAll('.ico').length));
   check('Icons an: Navigation ohne Emoji', !($('.nav-btn span')?.textContent || '').includes('⚓'));
   check('Icons an: Schriftklasse gesetzt', w2.document.body.classList.contains('schriften'));
@@ -171,6 +172,10 @@ const w2 = await boot('?ui=all');
   check('Aktuelle Position benannt', ($('#routeCard')?.textContent || '').includes('Fluss der zwei Wege'));
 
   check('Schiffsthema hat Abonnenten', (w2.AIU_STORE?.topicsInUse() || []).includes('ship'));
+
+  /* ---- Kioskbetrieb: Startparameter werden erkannt ---- */
+  check('Ohne Parameter kein Kioskbetrieb', w2.AIU_START.kiosk === false && w2.AIU_START.beamer === false);
+  check('Bühnenmodus nicht aktiv', !w2.document.body.classList.contains('buehne'));
 
   /* ---- Phase 3 ---- */
   check('Spielgefühl an', w2.AIU_JUICE.an() === true && w2.AIU_SOUND.an() === true);
@@ -215,7 +220,34 @@ const w2 = await boot('?ui=all');
   check('Stummschalter gespeichert', w2.localStorage.getItem('kiu-v2-ton') === 'aus' && $('#soundToggle').getAttribute('aria-pressed') === 'false');
 }
 
-console.log('\nSmoke-Test (Phase 1 und 2)\n' + '='.repeat(60));
+/* =================================================================
+   Durchlauf 3: Kiosk-PC und Beamer-Tablet
+   ================================================================= */
+const w3 = await boot('?ui=all&kiosk=1&ton=aus&ansicht=beamer&leerlauf=7');
+{
+  const $ = sel => w3.document.querySelector(sel);
+  check('Kioskbetrieb erkannt', w3.AIU_START.kiosk === true);
+  check('Leerlaufzeit übernommen', w3.AIU_START.leerlaufMinuten === 7, String(w3.AIU_START.leerlaufMinuten));
+  check('Ton per Startparameter stumm', w3.localStorage.getItem('kiu-v2-ton') === 'aus');
+  check('Bühnenmodus aktiv', w3.document.body.classList.contains('buehne'));
+  check('Ausstieg aus der Bühne vorhanden', !!$('#buehneVerlassen'));
+  check('Bühne verlassen funktioniert', (() => { $('#buehneVerlassen').click(); return !w3.document.body.classList.contains('buehne'); })());
+
+  // Rueckkehr zum Deck raeumt Fenster und Anmeldung ab
+  w3.sessionStorage.setItem('kiu-v2-teacher-auth', '1');
+  $('#missionModal')?.classList.add('open');
+  w3.AIU_KIOSK.zurueckZumDeck();
+  await wait(150);
+  check('Rückkehr schließt das Missionsfenster', !$('#missionModal')?.classList.contains('open'));
+  check('Rückkehr meldet die Kajüte ab', !w3.sessionStorage.getItem('kiu-v2-teacher-auth'));
+  check('Rückkehr landet auf dem Deck', $('#view-deck')?.classList.contains('active'));
+}
+
+/* Ohne ui.stageMode darf die Beamer-Ansicht nicht greifen. */
+const w4 = await boot('?ui=aus&ansicht=beamer');
+check('Bühne ohne Schalter bleibt aus', !w4.document.body.classList.contains('buehne'));
+
+console.log('\nSmoke-Test (Phase 1 bis 3 und Kioskbetrieb)\n' + '='.repeat(60));
 let failed = 0;
 for (const c of checks) {
   if (!c.ok) failed++;
