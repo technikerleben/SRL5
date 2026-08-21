@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>An der Steuer – Aufbruch ins Unbekannte</title>
+<style>
+  :root {
+    --col-slate:      #3E5668;
+    --col-slate-dark: #2C3D4C;
+    --col-bg:         #F5F4F1;
+    --col-text:       #1E2A35;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; background: var(--col-bg); }
+  #szene { position: fixed; inset: 0; }
+  canvas { display: block; touch-action: none; cursor: grab; }
+  canvas:active { cursor: grabbing; }
+
+  .hinweis {
+    position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 10;
+    background: rgba(44,61,76,0.75); color: #fff;
+    font-size: 0.8rem; padding: 6px 14px; border-radius: 999px;
+    pointer-events: none; user-select: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="szene"></div>
+
+<div class="hinweis">Ziehen mit Finger oder Maus: umschauen</div>
+
+<script src="./vendor/three.min.js"></script>
+<script>
+(() => {
+  'use strict';
+
+  // ---------------------------------------------------------------
+  // Grundaufbau: Szene, Kamera, Renderer
+  // ---------------------------------------------------------------
+  const container = document.getElementById('szene');
+  const szene = new THREE.Scene();
+  szene.fog = new THREE.Fog(0xBFDDF0, 45, 110);
+
+  const kamera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 300);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  container.appendChild(renderer.domElement);
+
+  // Himmel als sanfter Farbverlauf (Canvas-Textur)
+  const himmelCanvas = document.createElement('canvas');
+  himmelCanvas.width = 2; himmelCanvas.height = 256;
+  const hctx = himmelCanvas.getContext('2d');
+  const grad = hctx.createLinearGradient(0, 0, 0, 256);
+  grad.addColorStop(0.0, '#5EA8DC');
+  grad.addColorStop(0.55, '#A8D4EE');
+  grad.addColorStop(1.0, '#DCEFF9');
+  hctx.fillStyle = grad; hctx.fillRect(0, 0, 2, 256);
+  szene.background = new THREE.CanvasTexture(himmelCanvas);
+
+  // ---------------------------------------------------------------
+  // Licht
+  // ---------------------------------------------------------------
+  szene.add(new THREE.HemisphereLight(0xCFE8FF, 0x2E6C96, 0.75));
+
+  const sonne = new THREE.DirectionalLight(0xFFF3D6, 1.15);
+  sonne.position.set(18, 26, 10);
+  sonne.castShadow = true;
+  sonne.shadow.mapSize.set(2048, 2048);
+  sonne.shadow.camera.left = -18; sonne.shadow.camera.right = 18;
+  sonne.shadow.camera.top = 18;   sonne.shadow.camera.bottom = -18;
+  szene.add(sonne);
+
+  // Sichtbare Sonnenscheibe
+  const sonnenScheibe = new THREE.Mesh(
+    new THREE.CircleGeometry(3.2, 32),
+    new THREE.MeshBasicMaterial({ color: 0xFFE9A8, fog: false })
+  );
+  sonnenScheibe.position.set(34, 26, -60);
+  sonnenScheibe.lookAt(0, 4, 0);
+  szene.add(sonnenScheibe);
+
+  // ---------------------------------------------------------------
+  // Materialien
+  // ---------------------------------------------------------------
+  const matRumpf      = new THREE.MeshPhongMaterial({ color: 0x8B5A2B, shininess: 18 });
+  const matRumpfDkl   = new THREE.MeshPhongMaterial({ color: 0x5F3A1B, shininess: 14 });
+  const matDeck       = new THREE.MeshPhongMaterial({ color: 0xC9A66B, shininess: 8 });
+  const matHolzHell   = new THREE.MeshPhongMaterial({ color: 0xA9793F, shininess: 10 });
+  const matMast       = new THREE.MeshPhongMaterial({ color: 0x7A4E24, shininess: 12 });
+  const matSegel      = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide, shininess: 4 });
+  const matFlagge     = new THREE.MeshPhongMaterial({ color: 0xC0392B, side: THREE.DoubleSide });
+  const matFenster    = new THREE.MeshPhongMaterial({ color: 0xFFE08A, emissive: 0x7A5C10 });
+  const matMetall     = new THREE.MeshPhongMaterial({ color: 0x4A4F55, shininess: 60 });
+  const matBullauge   = new THREE.MeshPhongMaterial({ color: 0x2C5E82, shininess: 80 });
+
+  // ---------------------------------------------------------------
+  // Schiff (alles in einer Gruppe, die später schaukelt)
+  // ---------------------------------------------------------------
+  const schiff = new THREE.Group();
+  szene.add(schiff);
+
+  const HALBBREITE = 1.3;
+
+  // Breite des Rumpfs abhängig von der Länge:
+  // mittschiffs volle Breite, zum Bug spitz zulaufend, am Heck leicht gerundet
+  function breitenFaktor(x) {
+    if (x > 1.5) {
+      const t = Math.min((x - 1.5) / 4.4, 1);
+      return 1 - 0.93 * Math.pow(t, 1.6);   // spitzer Bug
+    }
+    if (x < -3.2) {
+      const t = Math.min((-x - 3.2) / 1.8, 1);
+      return 1 - 0.22 * Math.pow(t, 2);     // sanft gerundetes Heck
+    }
+    return 1;
+  }
+
+  function geometrieVerjuengen(geo, offsetX = 0) {
+    const p = geo.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      p.setZ(i, p.getZ(i) * breitenFaktor(p.getX(i) + offsetX));
+    }
+    p.needsUpdate = true;
+    geo.computeVertexNormals();
+  }
+
+  // ---- Rumpf: Seitenprofil als Shape, quer extrudiert ----
+  const profil = new THREE.Shape();
+  profil.moveTo(-5.0,  1.7);                       // Heck oben (erhöht)
+  profil.lineTo(-5.0,  0.2);
+  profil.quadraticCurveTo(-4.7, -1.1, -3.0, -1.35); // Heck-Rundung unten
+  profil.lineTo( 3.0, -1.35);                       // Kiel
+  profil.quadraticCurveTo( 4.6, -1.15, 5.5, 0.5);   // Bug-Schwung nach oben
+  profil.lineTo( 5.9,  1.15);                       // Bugspitze
+  profil.lineTo( 4.9,  0.95);
+  profil.quadraticCurveTo( 0.0,  0.45, -3.6, 0.95); // Deckslinie (Sprung)
+  profil.lineTo(-5.0,  1.7);
+
+  const rumpfGeo = new THREE.ExtrudeGeometry(profil, {
+    depth: HALBBREITE * 2 - 0.5,
+    bevelEnabled: true,
+    bevelThickness: 0.28,
+    bevelSize: 0.25,
+    bevelSegments: 3,
+    curveSegments: 16
+  });
+  rumpfGeo.translate(0, 0, -(HALBBREITE - 0.25));
+  geometrieVerjuengen(rumpfGeo);
+  const rumpf = new THREE.Mesh(rumpfGeo, matRumpf);
+  rumpf.castShadow = true;
+  schiff.add(rumpf);
+
+  // Dunkler Unterwasser-Streifen (schmalerer zweiter Rumpf)
+  const streifenProfil = new THREE.Shape();
+  streifenProfil.moveTo(-5.0, 0.2);
+  streifenProfil.quadraticCurveTo(-4.7, -1.1, -3.0, -1.35);
+  streifenProfil.lineTo(3.0, -1.35);
+  streifenProfil.quadraticCurveTo(4.6, -1.15, 5.2, -0.2);
+  streifenProfil.lineTo(5.0, 0.1);
+  streifenProfil.lineTo(-5.0, 0.2);
+  const streifenGeo = new THREE.ExtrudeGeometry(streifenProfil, {
+    depth: HALBBREITE * 2 - 0.4, bevelEnabled: true,
+    bevelThickness: 0.3, bevelSize: 0.27, bevelSegments: 3, curveSegments: 12
+  });
+  streifenGeo.translate(0, -0.04, -(HALBBREITE - 0.2));
+  geometrieVerjuengen(streifenGeo);
+  const streifen = new THREE.Mesh(streifenGeo, matRumpfDkl);
+  schiff.add(streifen);
+
+  // ---- Deck (folgt der Rumpfform) ----
+  const deckGeo = new THREE.BoxGeometry(8.9, 0.16, HALBBREITE * 2 - 0.15, 28, 1, 1);
+  geometrieVerjuengen(deckGeo, -0.05); // Offset = spätere x-Position des Decks
+  const deck = new THREE.Mesh(deckGeo, matDeck);
+  deck.position.set(-0.05, 0.62, 0);
+  deck.receiveShadow = true;
+  schiff.add(deck);
+
+  // ---- Reling (Pfosten + Handlauf) ----
+  const relingGrp = new THREE.Group();
+  const RELING_Z = HALBBREITE - 0.12;
+  [-1, 1].forEach(seite => {
+    // Gerader Handlauf mittschiffs
+    const handlauf = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 6.6, 8), matHolzHell);
+    handlauf.rotation.z = Math.PI / 2;
+    handlauf.position.set(-0.9, 1.15, seite * RELING_Z);
+    relingGrp.add(handlauf);
+
+    // Schräges Handlauf-Stück, das zum Bug hin zusammenläuft
+    const zA = RELING_Z * breitenFaktor(2.4);
+    const zB = RELING_Z * breitenFaktor(4.7);
+    const len = Math.hypot(4.7 - 2.4, zB - zA);
+    const bugRail = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, len, 8), matHolzHell);
+    bugRail.rotation.z = Math.PI / 2;
+    bugRail.rotation.y = seite * Math.atan2(zA - zB, 4.7 - 2.4);
+    bugRail.position.set((2.4 + 4.7) / 2, 1.12, seite * (zA + zB) / 2);
+    relingGrp.add(bugRail);
+
+    // Pfosten folgen der Rumpfbreite
+    for (let x = -4.2; x <= 4.4; x += 0.75) {
+      const pfosten = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.5, 0.08), matHolzHell);
+      pfosten.position.set(x, 0.92, seite * RELING_Z * breitenFaktor(x));
+      relingGrp.add(pfosten);
+    }
+  });
+  schiff.add(relingGrp);
+
+  // ---- Heckaufbau mit Fenstern ----
+  const kajuete = new THREE.Mesh(new THREE.BoxGeometry(1.3, 1.15, HALBBREITE * 2 - 0.1), matHolzHell);
+  kajuete.position.set(-4.3, 1.35, 0);
+  kajuete.castShadow = true;
+  schiff.add(kajuete);
+
+  const kajuetenDach = new THREE.Mesh(new THREE.BoxGeometry(1.55, 0.14, HALBBREITE * 2 + 0.1), matRumpfDkl);
+  kajuetenDach.position.set(-4.3, 1.98, 0);
+  schiff.add(kajuetenDach);
+
+  // Drei „Bogenfenster" am Heck (Kreis + Rechteck = Bogen)
+  for (let i = -1; i <= 1; i++) {
+    const fGrp = new THREE.Group();
+    const fRect = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.42, 0.05), matFenster);
+    const fBogen = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.05, 16, 1, false, 0, Math.PI), matFenster);
+    fBogen.rotation.x = Math.PI / 2;
+    fBogen.rotation.z = Math.PI / 2;
+    fBogen.position.y = 0.21;
+    fGrp.add(fRect, fBogen);
+    fGrp.position.set(-4.99, 1.35, i * 0.7);
+    fGrp.rotation.y = -Math.PI / 2;
+    schiff.add(fGrp);
+  }
+
+  // ---- Bullaugen an beiden Rumpfseiten ----
+  const bullaugenX = [-2.6, -1.6, -0.6, 0.4, 1.4, 2.4];
+  [-1, 1].forEach(seite => {
+    bullaugenX.forEach(x => {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.045, 8, 20), matMetall);
+      const glas = new THREE.Mesh(new THREE.CircleGeometry(0.15, 20), matBullauge);
+      ring.position.set(x, -0.1, seite * (HALBBREITE + 0.26) * breitenFaktor(x));
+      glas.position.copy(ring.position);
+      if (seite === -1) { ring.rotation.y = Math.PI; glas.rotation.y = Math.PI; }
+      schiff.add(ring, glas);
+    });
+  });
+
+  // ---- Bugspriet + Klüversegel (Dreieck) ----
+  const bugspriet = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.11, 3.4, 10), matMast);
+  bugspriet.position.set(6.6, 1.7, 0);
+  bugspriet.rotation.z = -Math.PI / 2 + 0.38;
+  schiff.add(bugspriet);
+
+  function dreieckSegel(p1, p2, p3, bauch) {
+    // Gebogenes Dreieckssegel aus Einzel-Dreiecken (Fächer)
+    const geo = new THREE.BufferGeometry();
+    const N = 12, pos = [];
+    const a = new THREE.Vector3(...p1), b = new THREE.Vector3(...p2), c = new THREE.Vector3(...p3);
+    for (let i = 0; i < N; i++) {
+      const t0 = i / N, t1 = (i + 1) / N;
+      const e0 = b.clone().lerp(c, t0), e1 = b.clone().lerp(c, t1);
+      e0.z += Math.sin(t0 * Math.PI) * bauch;
+      e1.z += Math.sin(t1 * Math.PI) * bauch;
+      pos.push(a.x, a.y, a.z, e0.x, e0.y, e0.z, e1.x, e1.y, e1.z);
+    }
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.computeVertexNormals();
+    return new THREE.Mesh(geo, matSegel);
+  }
+  const kluever1 = dreieckSegel([7.9, 2.6, 0], [4.9, 2.45, 0], [3.5, 6.2, 0], 0.4);
+  const kluever2 = dreieckSegel([6.2, 2.45, 0], [4.4, 2.35, 0], [3.1, 4.7, 0], 0.3);
+  kluever1.castShadow = kluever2.castShadow = true;
+  schiff.add(kluever1, kluever2);
+
+  // ---- Mast-Baukasten: Mast, Rahen, gebauchte Rahsegel, Ausguck, Flagge ----
+  const flaggen = []; // fürs Wehen animiert
+
+  function gebauchtesSegel(breite, hoehe, bauch) {
+    const geo = new THREE.PlaneGeometry(breite, hoehe, 12, 8);
+    const p = geo.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      const x = p.getX(i), y = p.getY(i);
+      const sx = Math.cos((x / breite) * Math.PI);      // seitlich straff
+      const sy = Math.sin(((y / hoehe) + 0.5) * Math.PI); // oben/unten befestigt
+      p.setZ(i, sx * sy * bauch);
+    }
+    geo.computeVertexNormals();
+    const segel = new THREE.Mesh(geo, matSegel);
+    segel.castShadow = true;
+    return segel;
+  }
+
+  function flagge(breite, hoehe) {
+    const geo = new THREE.PlaneGeometry(breite, hoehe, 14, 3);
+    const mesh = new THREE.Mesh(geo, matFlagge);
+    mesh.geometry.translate(breite / 2, 0, 0); // Drehpunkt an der Stange
+    flaggen.push(mesh);
+    return mesh;
+  }
+
+  function baueMast(x, hoehe, segelBreiten) {
+    const grp = new THREE.Group();
+    grp.position.x = x;
+
+    const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.16, hoehe, 10), matMast);
+    mast.position.y = 0.6 + hoehe / 2;
+    mast.castShadow = true;
+    grp.add(mast);
+
+    // Zwei Rahen mit Segeln übereinander
+    segelBreiten.forEach((sb, i) => {
+      const yRahe = 0.6 + hoehe * (i === 0 ? 0.60 : 0.85);
+      const rahe = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, sb + 0.5, 8), matMast);
+      rahe.rotation.x = Math.PI / 2;
+      rahe.position.y = yRahe;
+      grp.add(rahe);
+
+      const sh = hoehe * (i === 0 ? 0.26 : 0.22);
+      const segel = gebauchtesSegel(sb, sh, 0.55 + sb * 0.08);
+      segel.rotation.y = Math.PI / 2;       // Fläche quer zur Fahrtrichtung
+      segel.position.set(0.15, yRahe - sh / 2 - 0.08, 0);
+      grp.add(segel);
+    });
+
+    // Ausguck (Mastkorb)
+    const korb = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.22, 0.28, 12, 1, true), matHolzHell);
+    korb.material = matHolzHell;
+    korb.position.y = 0.6 + hoehe * 0.68;
+    grp.add(korb);
+    const korbBoden = new THREE.Mesh(new THREE.CircleGeometry(0.22, 12), matRumpfDkl);
+    korbBoden.rotation.x = -Math.PI / 2;
+    korbBoden.position.y = korb.position.y - 0.13;
+    grp.add(korbBoden);
+
+    // Mastspitze + Flagge
+    const knauf = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), matHolzHell);
+    knauf.position.y = 0.6 + hoehe + 0.08;
+    grp.add(knauf);
+    const fl = flagge(0.9, 0.32);
+    fl.position.set(0.03, 0.6 + hoehe - 0.22, 0);
+    grp.add(fl);
+
+    schiff.add(grp);
+    return grp;
+  }
+
+  baueMast( 2.4, 5.6, [2.4, 1.8]);   // Fockmast
+  baueMast( 0.0, 6.8, [3.0, 2.2]);   // Großmast
+  baueMast(-2.4, 5.9, [2.5, 1.9]);   // Besanmast
+
+  // Kleines Gaffelsegel am Heck (wie in der Vorlage)
+  const gaffel = dreieckSegel([-2.4, 6.0, 0], [-2.4, 3.4, 0], [-4.6, 4.9, 0], 0.3);
+  schiff.add(gaffel);
+
+  // ---- Wanten (Seile, schräg zum Mast) ----
+  const matSeil = new THREE.LineBasicMaterial({ color: 0x3A2B1A });
+  function seil(a, b) {
+    const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...a), new THREE.Vector3(...b)]);
+    schiff.add(new THREE.Line(g, matSeil));
+  }
+  [[2.4, 5.6], [0.0, 6.8], [-2.4, 5.9]].forEach(([mx, mh]) => {
+    [-1, 1].forEach(s => {
+      seil([mx, 0.6 + mh * 0.66, 0], [mx + 0.9, 0.95, s * (HALBBREITE - 0.15) * breitenFaktor(mx + 0.9)]);
+      seil([mx, 0.6 + mh * 0.66, 0], [mx - 0.9, 0.95, s * (HALBBREITE - 0.15) * breitenFaktor(mx - 0.9)]);
+    });
+  });
+  seil([7.9, 2.2, 0], [2.4, 0.6 + 5.6, 0]);   // Stag Bugspriet → Fockmast
+  seil([2.4, 0.6 + 5.6, 0], [0, 0.6 + 6.8, 0]);
+  seil([0, 0.6 + 6.8, 0], [-2.4, 0.6 + 5.9, 0]);
+
+  // ---- Anker am Bug ----
+  const anker = new THREE.Group();
+  const ankerSchaft = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.9, 8), matMetall);
+  anker.add(ankerSchaft);
+  const ankerRing = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.035, 8, 16), matMetall);
+  ankerRing.position.y = 0.52;
+  anker.add(ankerRing);
+  const ankerStock = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.55, 8), matMetall);
+  ankerStock.rotation.z = Math.PI / 2;
+  ankerStock.position.y = 0.36;
+  anker.add(ankerStock);
+  const ankerBogen = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.05, 8, 20, Math.PI), matMetall);
+  ankerBogen.rotation.z = Math.PI;
+  ankerBogen.position.y = -0.42;
+  anker.add(ankerBogen);
+  [-1, 1].forEach(s => {
+    const fluke = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.24, 6), matMetall);
+    fluke.position.set(s * 0.32, -0.30, 0);
+    anker.add(fluke);
+  });
+  anker.position.set(3.9, 0.15, (HALBBREITE + 0.32) * breitenFaktor(3.9));
+  anker.rotation.y = Math.PI / 2;
+  schiff.add(anker);
+
+  // ---- Steuerrad auf dem Hauptdeck vor der Kajüte ----
+  const DECK_Y = 0.70;                // Oberkante Deck
+  const AUGEN_Y = DECK_Y + 1.50;      // Augenhöhe des Steuermanns
+  const steuerstand = new THREE.Group();
+  steuerstand.position.set(-2.62, DECK_Y, 0.45);
+  schiff.add(steuerstand);
+
+  // Ständer (Sockel + Säule + Achse)
+  const sockel = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.14, 0.45), matRumpfDkl);
+  sockel.position.y = 0.07;
+  steuerstand.add(sockel);
+  const saeule = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.13, 0.75, 10), matHolzHell);
+  saeule.position.y = 0.5;
+  steuerstand.add(saeule);
+  const achse = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.35, 8), matMetall);
+  achse.rotation.z = Math.PI / 2;
+  achse.position.y = 0.88;
+  steuerstand.add(achse);
+
+  // Drehbarer Teil: Felge, Speichen, Griffe
+  const radSpin = new THREE.Group();
+  radSpin.position.y = 0.88;
+  radSpin.rotation.y = Math.PI / 2;          // Radebene quer zur Fahrtrichtung
+  steuerstand.add(radSpin);
+
+  const felge = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.055, 10, 28), matRumpf);
+  radSpin.add(felge);
+  const nabe = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.16, 12), matRumpfDkl);
+  nabe.rotation.x = Math.PI / 2;
+  radSpin.add(nabe);
+  for (let i = 0; i < 8; i++) {
+    const w = (i / 8) * Math.PI * 2;
+    const speiche = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1.04, 8), matHolzHell);
+    speiche.rotation.z = w;
+    radSpin.add(speiche);
+    const griff = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.035, 0.24, 8), matRumpfDkl);
+    griff.rotation.z = w;
+    griff.position.set(Math.sin(-w) * 0.64, Math.cos(w) * 0.64, 0);
+    radSpin.add(griff);
+  }
+  radSpin.traverse(o => { if (o.isMesh) o.castShadow = true; });
+
+  // ---------------------------------------------------------------
+  // Wasser: großes Netz, dessen Punkte in Wellen bewegt werden
+  // ---------------------------------------------------------------
+  const WASSER_GROESSE = 140, WASSER_SEG = 110;
+  const wasserGeo = new THREE.PlaneGeometry(WASSER_GROESSE, WASSER_GROESSE, WASSER_SEG, WASSER_SEG);
+  wasserGeo.rotateX(-Math.PI / 2);
+  const wasserMat = new THREE.MeshPhongMaterial({
+    color: 0x2E7EB3, shininess: 90, specular: 0x9FD4F0,
+    transparent: true, opacity: 0.96, flatShading: false
+  });
+  const wasser = new THREE.Mesh(wasserGeo, wasserMat);
+  wasser.receiveShadow = true;
+  szene.add(wasser);
+
+  // Wellenfunktion (auch fürs Schaukeln des Schiffs genutzt)
+  function wellenHoehe(x, z, t) {
+    return Math.sin(x * 0.28 + t * 1.1) * 0.35
+         + Math.sin(z * 0.22 + t * 0.8) * 0.28
+         + Math.sin((x + z) * 0.14 + t * 0.55) * 0.22;
+  }
+
+  const wasserPos = wasserGeo.attributes.position;
+  const wasserAnzahl = wasserPos.count;
+
+  // ---------------------------------------------------------------
+  // Wolken (weiche Kugelhaufen)
+  // ---------------------------------------------------------------
+  const matWolke = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.92 });
+  const wolken = [];
+  function wolke(x, y, z, s) {
+    const g = new THREE.Group();
+    [[0,0,0,1.6],[1.4,0.25,0.2,1.15],[-1.4,0.2,-0.15,1.2],[0.6,0.75,0,1.0],[-0.6,0.7,0.1,0.9]].forEach(k => {
+      const kugel = new THREE.Mesh(new THREE.SphereGeometry(k[3], 14, 12), matWolke);
+      kugel.position.set(k[0], k[1], k[2]);
+      kugel.scale.y = 0.62;
+      g.add(kugel);
+    });
+    g.position.set(x, y, z);
+    g.scale.setScalar(s);
+    szene.add(g);
+    wolken.push(g);
+  }
+  wolke(-24, 13, -34, 1.4);
+  wolke( 16, 16, -42, 1.9);
+  wolke( 34, 11, -20, 1.1);
+  wolke(-38, 15, -10, 1.5);
+
+  // ---------------------------------------------------------------
+  // Kamera: Ich-Perspektive des Steuermanns hinter dem Steuerrad
+  // Der "Kopf" hängt am Schiff und schaukelt automatisch mit.
+  // ---------------------------------------------------------------
+  kamera.fov = 62;
+  kamera.updateProjectionMatrix();
+
+  const kopf = new THREE.Group();
+  kopf.position.set(-3.35, AUGEN_Y, 0.45);        // steht auf dem Hauptdeck hinter dem Rad
+  kopf.rotation.y = -Math.PI / 2;                 // Blick Richtung Bug (+x)
+  schiff.add(kopf);
+  kopf.add(kamera);
+  kamera.position.set(0, 0, 0);
+  kamera.rotation.set(0, 0, 0);
+
+  // Umschauen per Ziehen (Gieren am Kopf, Nicken an der Kamera)
+  let blickGier = 0, blickNick = -0.06;
+  let ziehen = false, letztesX = 0, letztesY = 0;
+
+  function blickSetzen() {
+    blickGier = Math.max(-1.4, Math.min(1.4, blickGier));
+    blickNick = Math.max(-0.7, Math.min(0.55, blickNick));
+    kopf.rotation.y = -Math.PI / 2 + blickGier;
+    kamera.rotation.x = blickNick;
+  }
+  blickSetzen();
+
+  function zeigerStart(x, y) { ziehen = true; letztesX = x; letztesY = y; }
+  function zeigerBewegt(x, y) {
+    if (!ziehen) return;
+    blickGier += (x - letztesX) * 0.0035;
+    blickNick += (y - letztesY) * 0.0028;
+    letztesX = x; letztesY = y;
+    blickSetzen();
+  }
+  renderer.domElement.addEventListener('mousedown', e => zeigerStart(e.clientX, e.clientY));
+  addEventListener('mousemove', e => zeigerBewegt(e.clientX, e.clientY));
+  addEventListener('mouseup', () => ziehen = false);
+  renderer.domElement.addEventListener('touchstart', e => zeigerStart(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+  renderer.domElement.addEventListener('touchmove',  e => zeigerBewegt(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+  addEventListener('touchend', () => ziehen = false);
+
+  // ---------------------------------------------------------------
+  // Animation
+  // ---------------------------------------------------------------
+  const uhr = new THREE.Clock();
+
+  function animieren() {
+    requestAnimationFrame(animieren);
+    const t = uhr.getElapsedTime();
+
+    // Wasser bewegen
+    for (let i = 0; i < wasserAnzahl; i++) {
+      const x = wasserPos.getX(i), z = wasserPos.getZ(i);
+      wasserPos.setY(i, wellenHoehe(x, z, t));
+    }
+    wasserPos.needsUpdate = true;
+    wasserGeo.computeVertexNormals();
+
+    // Schiff schaukelt passend zu den Wellen unter dem Rumpf
+    const hMitte = wellenHoehe(0, 0, t);
+    const hBug   = wellenHoehe(4, 0, t);
+    const hHeck  = wellenHoehe(-4, 0, t);
+    const hLinks = wellenHoehe(0, -1.5, t);
+    const hRechts = wellenHoehe(0, 1.5, t);
+
+    schiff.position.y = 0.55 + hMitte * 0.55;
+    schiff.rotation.z = (hBug - hHeck) * 0.075;     // Stampfen (Bug hoch/runter)
+    schiff.rotation.x = (hRechts - hLinks) * 0.16;  // Rollen (seitliches Schaukeln)
+    schiff.rotation.y = Math.sin(t * 0.18) * 0.04;  // ganz leichtes Gieren
+
+    // Steuermann korrigiert den Kurs: Rad dreht gegen das Gieren
+    radSpin.rotation.z = -Math.sin(t * 0.18) * 1.4 + Math.sin(t * 0.9) * 0.12;
+
+    // Ganz leichtes zusätzliches Kopfwippen (Schrittausgleich)
+    kopf.position.y = AUGEN_Y + Math.sin(t * 1.7) * 0.025;
+
+    // Flaggen wehen
+    flaggen.forEach((f, fi) => {
+      const p = f.geometry.attributes.position;
+      for (let i = 0; i < p.count; i++) {
+        const x = p.getX(i);
+        p.setZ(i, Math.sin(x * 5 + t * 7 + fi) * 0.09 * x);
+      }
+      p.needsUpdate = true;
+    });
+
+    // Wolken ziehen langsam
+    wolken.forEach((w, i) => {
+      w.position.x += 0.006 + i * 0.002;
+      if (w.position.x > 55) w.position.x = -55;
+    });
+
+    renderer.render(szene, kamera);
+  }
+  animieren();
+
+  // ---------------------------------------------------------------
+  // Größenänderung
+  // ---------------------------------------------------------------
+  addEventListener('resize', () => {
+    kamera.aspect = innerWidth / innerHeight;
+    kamera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+})();
+</script>
+</body>
+</html>

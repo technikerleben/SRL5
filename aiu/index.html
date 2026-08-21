@@ -46,7 +46,7 @@
 <symbol id="ico-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
 </defs></svg>
 <header id="appHeader"><div class="header-inner">
-  <div class="emblem" id="headerEmblem">⚓</div><div class="brand"><h1 id="headerShip">Aufbruch ins Unbekannte</h1><p id="headerSub">Begleit-App der Klasse 5</p></div>
+  <div class="emblem" id="headerEmblem">⚓</div><div class="brand"><h1 id="headerShip">Aufbruch ins Unbekannte</h1><p id="headerSub">Ein Klassenspiel für die Otterklasse 5.3</p></div>
   <div class="header-status"><button id="soundToggle" class="sound-toggle" type="button" hidden aria-pressed="true" aria-label="Ton ein- oder ausschalten"></button><strong id="headerWeek">Woche 1</strong><span class="small" id="headerPosition">Heimathafen</span><div class="session-pill" id="sessionPill">🔒 Beiträge geschlossen</div></div>
   <button class="teacher-key" id="teacherOpen" aria-label="Lehrkräftebereich">🔑</button>
 </div></header>
@@ -63,8 +63,8 @@
   <div class="ship-board" aria-label="Interaktives Schiff">
     <div class="sea-wave"></div><div class="mast"></div><div class="sail"></div>
     <div class="ship-view-switch" role="group" aria-label="Ansicht des Schiffes">
-      <button type="button" class="active" data-ship-scene="./segelschiff-header.html" aria-pressed="true">Schiff</button>
-      <button type="button" data-ship-scene="./steuermann.html" aria-pressed="false" disabled>Steuermann <small>folgt</small></button>
+      <button type="button" class="active" data-ship-view="schiff" data-ship-scene="./segelschiff-header.html" aria-pressed="true">Schiff</button>
+      <button type="button" data-ship-view="steuer" data-ship-scene="./segelschiff-steuermann.html" data-interactive="true" aria-pressed="false">Steuer</button>
     </div>
     <button class="hotspot hotspot-main hs-missions" data-priority="primary" data-go="missionen"><span class="hs-icon">📌</span>Auftragstafel</button>
     <button class="hotspot hotspot-main hs-map" data-priority="primary" data-go="karte"><span class="hs-icon">🗺️</span>Kartentisch</button>

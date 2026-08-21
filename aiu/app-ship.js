@@ -37,6 +37,9 @@
       pointer-events:none;
       background:transparent;
     }
+    .ship-board.scene-interactive .ship-scene-frame{
+      pointer-events:auto;
+    }
     .ship-board .hotspot{
       z-index:3;
     }
@@ -61,9 +64,10 @@
       candidate.classList.toggle('active',active);
       candidate.setAttribute('aria-pressed',String(active));
     });
+    board.classList.toggle('scene-interactive',button.dataset.interactive==='true');
     if(frame.getAttribute('src')!==button.dataset.shipScene){
       frame.src=button.dataset.shipScene;
-      frame.title=button.textContent.trim().startsWith('Steuermann')?'Blick des Steuermanns über das Schiffsdeck':'Animiertes Segelschiff auf dem Meer';
+      frame.title=button.dataset.shipView==='steuer'?'Blick von der Steuer über das Schiffsdeck':'Animiertes Segelschiff auf dem Meer';
     }
   }
   sceneButtons.forEach(button=>button.addEventListener('click',()=>switchScene(button)));

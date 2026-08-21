@@ -187,7 +187,13 @@ const w2 = await boot('?ui=all');
   const ansichten=[...w2.document.querySelectorAll('[data-ship-scene]')];
   check('Umschalter hat beide Schiffsansichten', ansichten.length===2, String(ansichten.length));
   check('Schiffsansicht ist aktiv', ansichten[0]?.classList.contains('active')&&ansichten[0]?.getAttribute('aria-pressed')==='true');
-  check('Steuermann wartet auf die neue Datei', ansichten[1]?.disabled===true&&ansichten[1]?.dataset.shipScene==='./steuermann.html');
+  check('Steueransicht ist aktivierbar', ansichten[1]?.disabled===false&&ansichten[1]?.textContent.trim()==='Steuer'&&ansichten[1]?.dataset.shipScene==='./segelschiff-steuermann.html');
+  ansichten[1].click();
+  check('Steueransicht wird eingeschaltet', ansichten[1]?.classList.contains('active')&&ansichten[1]?.getAttribute('aria-pressed')==='true'&&w2.document.querySelector('.ship-scene-frame')?.getAttribute('src')==='./segelschiff-steuermann.html');
+  check('Steueransicht nimmt Ziehgesten an', w2.document.querySelector('.ship-board')?.classList.contains('scene-interactive'));
+  ansichten[0].click();
+  check('Schiffsansicht bleibt umschaltbar', ansichten[0]?.classList.contains('active')&&!w2.document.querySelector('.ship-board')?.classList.contains('scene-interactive'));
+  check('Klassenspiel ist korrekt benannt', $('#headerSub')?.textContent==='Ein Klassenspiel für die Otterklasse 5.3', $('#headerSub')?.textContent);
 
   /* ---- Kioskbetrieb: Startparameter werden erkannt ---- */
   check('Ohne Parameter kein Kioskbetrieb', w2.AIU_START.kiosk === false && w2.AIU_START.beamer === false);
