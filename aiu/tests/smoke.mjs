@@ -181,6 +181,19 @@ const w2 = await boot('?ui=all');
   check('Positionsanzeige folgt der aktuellen Woche', ($('#mapPosition')?.textContent || '').includes('Mittleres Fahrwasser'));
 
   check('Schiffsthema hat Abonnenten', (w2.AIU_STORE?.topicsInUse() || []).includes('ship'));
+  const hauptbereiche=[...w2.document.querySelectorAll('.ship-board [data-priority="primary"]')];
+  check('Vier Hauptbereiche sind hervorgehoben', hauptbereiche.length===4, String(hauptbereiche.length));
+  check('Kapitänskajüte ist nachgeordnet', $('#teacherHotspot')?.dataset.priority==='secondary');
+  const ansichten=[...w2.document.querySelectorAll('[data-ship-scene]')];
+  check('Umschalter hat beide Schiffsansichten', ansichten.length===2, String(ansichten.length));
+  check('Schiffsansicht ist aktiv', ansichten[0]?.classList.contains('active')&&ansichten[0]?.getAttribute('aria-pressed')==='true');
+  check('Steueransicht ist aktivierbar', ansichten[1]?.disabled===false&&ansichten[1]?.textContent.trim()==='Steuer'&&ansichten[1]?.dataset.shipScene==='./segelschiff-steuermann.html');
+  ansichten[1].click();
+  check('Steueransicht wird eingeschaltet', ansichten[1]?.classList.contains('active')&&ansichten[1]?.getAttribute('aria-pressed')==='true'&&w2.document.querySelector('.ship-scene-frame')?.getAttribute('src')==='./segelschiff-steuermann.html');
+  check('Steueransicht nimmt Ziehgesten an', w2.document.querySelector('.ship-board')?.classList.contains('scene-interactive'));
+  ansichten[0].click();
+  check('Schiffsansicht bleibt umschaltbar', ansichten[0]?.classList.contains('active')&&!w2.document.querySelector('.ship-board')?.classList.contains('scene-interactive'));
+  check('Klassenspiel ist korrekt benannt', $('#headerSub')?.textContent==='Ein Klassenspiel für die Otterklasse 5.3', $('#headerSub')?.textContent);
 
   /* ---- Kioskbetrieb: Startparameter werden erkannt ---- */
   check('Ohne Parameter kein Kioskbetrieb', w2.AIU_START.kiosk === false && w2.AIU_START.beamer === false);

@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v12-teaser';
+const VERSION='v14-steueransicht';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
@@ -19,6 +19,7 @@ const CORE=[
   './app-input.js',
   './app-teacher.js',
   './segelschiff-header.html',
+  './segelschiff-steuermann.html',
   './config-base.json',
   './weeks-01-05.json',
   './weeks-06-10.json',
