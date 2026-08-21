@@ -8,7 +8,9 @@
 
   const frame=document.createElement('iframe');
   frame.className='ship-scene-frame';
-  frame.src='./segelschiff-header.html';
+  const sceneButtons=[...board.querySelectorAll('[data-ship-scene]')];
+  const initialButton=sceneButtons.find(button=>button.classList.contains('active')&&!button.disabled)||sceneButtons.find(button=>!button.disabled);
+  frame.src=initialButton?.dataset.shipScene||'./segelschiff-header.html';
   frame.title='Animiertes Segelschiff auf dem Meer';
   frame.loading='eager';
   frame.tabIndex=-1;
@@ -51,6 +53,20 @@
     }
   `;
   document.head.appendChild(style);
+
+  function switchScene(button){
+    if(!button||button.disabled||!button.dataset.shipScene)return;
+    sceneButtons.forEach(candidate=>{
+      const active=candidate===button;
+      candidate.classList.toggle('active',active);
+      candidate.setAttribute('aria-pressed',String(active));
+    });
+    if(frame.getAttribute('src')!==button.dataset.shipScene){
+      frame.src=button.dataset.shipScene;
+      frame.title=button.textContent.trim().startsWith('Steuermann')?'Blick des Steuermanns über das Schiffsdeck':'Animiertes Segelschiff auf dem Meer';
+    }
+  }
+  sceneButtons.forEach(button=>button.addEventListener('click',()=>switchScene(button)));
 })();
 
 /* ------------------------------------------------------------------

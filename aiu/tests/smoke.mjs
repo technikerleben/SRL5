@@ -181,6 +181,13 @@ const w2 = await boot('?ui=all');
   check('Positionsanzeige folgt der aktuellen Woche', ($('#mapPosition')?.textContent || '').includes('Mittleres Fahrwasser'));
 
   check('Schiffsthema hat Abonnenten', (w2.AIU_STORE?.topicsInUse() || []).includes('ship'));
+  const hauptbereiche=[...w2.document.querySelectorAll('.ship-board [data-priority="primary"]')];
+  check('Vier Hauptbereiche sind hervorgehoben', hauptbereiche.length===4, String(hauptbereiche.length));
+  check('Kapitänskajüte ist nachgeordnet', $('#teacherHotspot')?.dataset.priority==='secondary');
+  const ansichten=[...w2.document.querySelectorAll('[data-ship-scene]')];
+  check('Umschalter hat beide Schiffsansichten', ansichten.length===2, String(ansichten.length));
+  check('Schiffsansicht ist aktiv', ansichten[0]?.classList.contains('active')&&ansichten[0]?.getAttribute('aria-pressed')==='true');
+  check('Steuermann wartet auf die neue Datei', ansichten[1]?.disabled===true&&ansichten[1]?.dataset.shipScene==='./steuermann.html');
 
   /* ---- Kioskbetrieb: Startparameter werden erkannt ---- */
   check('Ohne Parameter kein Kioskbetrieb', w2.AIU_START.kiosk === false && w2.AIU_START.beamer === false);

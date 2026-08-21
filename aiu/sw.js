@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v12-teaser';
+const VERSION='v13-schiffsauswahl';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
