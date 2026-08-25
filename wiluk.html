@@ -285,14 +285,6 @@ td .g-name{font-family:var(--font-title);font-size:1.02rem;letter-spacing:.02em}
 td .g-hint{display:block;color:var(--hbg-text-muted);font-size:.82rem;margin-top:.2rem}
 .rec{border-left:4px solid var(--hbg-rot)}
 
-/* ---------- Vorlagen ---------- */
-.tpl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
-.tpl{background:var(--hbg-weiss);border:2px dashed var(--hbg-border);padding:1.1rem}
-.tpl .t-day{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--hbg-blau);margin-bottom:.5rem}
-.tpl p{margin:0;font-family:var(--font-title);font-size:1.22rem;line-height:1.25;color:var(--hbg-rot-dunkel)}
-.tpl .lines{margin-top:.9rem;border-top:1px solid var(--hbg-border);height:0}
-.tpl .lines i{display:block;border-bottom:1px solid var(--hbg-border);height:1.55rem}
-
 .checklist{background:var(--hbg-weiss);border:1px solid var(--hbg-border);padding:1rem 1.15rem}
 .checklist h3{color:var(--hbg-blau-dunkel);font-size:1.15rem;margin-bottom:.7rem;text-transform:uppercase}
 .checklist ul{list-style:none;margin:0;padding:0;columns:2;column-gap:1.6rem}
@@ -387,7 +379,7 @@ footer .motto{font-family:var(--font-title);color:var(--hbg-rot);letter-spacing:
   .panel:first-of-type{page-break-before:auto}
   .plan{grid-template-columns:4.4rem repeat(3,1fr)}
   .plan [data-day]{display:flex!important}
-  .card,.tpl,.checklist,.notes{break-inside:avoid}
+  .card,.checklist,.notes{break-inside:avoid}
   a[href]::after{content:""}
 }
 </style>
@@ -413,7 +405,6 @@ footer .motto{font-family:var(--font-title);color:var(--hbg-rot);letter-spacing:
     <button role="tab" id="tab-ablauf" aria-controls="panel-ablauf" aria-selected="true">Ablaufplan</button>
     <button role="tab" id="tab-bausteine" aria-controls="panel-bausteine" aria-selected="false">Bausteine</button>
     <button role="tab" id="tab-spiele" aria-controls="panel-spiele" aria-selected="false">Kennenlernspiele</button>
-    <button role="tab" id="tab-vorlagen" aria-controls="panel-vorlagen" aria-selected="false">Kopiervorlagen</button>
     <button role="tab" id="tab-material" aria-controls="panel-material" aria-selected="false">Material &amp; Notizen</button>
   </div>
 </nav>
@@ -486,38 +477,6 @@ footer .motto{font-family:var(--font-title);color:var(--hbg-rot);letter-spacing:
         </thead>
         <tbody id="spiele-body"></tbody>
       </table>
-    </div>
-  </section>
-
-  <!-- ============ VORLAGEN ============ -->
-  <section class="panel" id="panel-vorlagen" role="tabpanel" aria-labelledby="tab-vorlagen" hidden>
-    <div class="section-head">
-      <h2>Kopiervorlagen</h2>
-      <p>Tagesziel morgens sichtbar aufhängen, Reflexionsfrage am Tagesende vorlesen. Eine Frage pro Tag genügt.</p>
-    </div>
-
-    <h3 class="headline" style="color:var(--hbg-blau-dunkel);text-transform:uppercase;font-size:1.1rem;margin:1.4rem 0 .8rem">Tagesziele</h3>
-    <div class="tpl-grid">
-      <div class="tpl"><div class="t-day">Freitag</div><p>Ich lerne heute drei neue Namen und spreche mit einem Kind, das ich noch nicht kenne.</p></div>
-      <div class="tpl"><div class="t-day">Montag</div><p>Ich frage nach, wenn ich etwas nicht weiß.</p></div>
-      <div class="tpl"><div class="t-day">Dienstag</div><p>Ich sage meine Meinung und lasse andere ihre sagen.</p></div>
-    </div>
-
-    <h3 class="headline" style="color:var(--hbg-blau-dunkel);text-transform:uppercase;font-size:1.1rem;margin:1.8rem 0 .8rem">Tagesreflexion</h3>
-    <div class="tpl-grid">
-      <div class="tpl"><div class="t-day">Freitag</div><p>Was ist dir heute schon vertrauter geworden?</p></div>
-      <div class="tpl"><div class="t-day">Montag</div><p>Was hat bei deiner Arbeit heute gut funktioniert?</p></div>
-      <div class="tpl"><div class="t-day">Dienstag</div><p>Was möchtest du für unsere Klasse beibehalten?</p></div>
-    </div>
-
-    <h3 class="headline" style="color:var(--hbg-blau-dunkel);text-transform:uppercase;font-size:1.1rem;margin:1.8rem 0 .8rem">Wunschkarten für unseren Klassenraum</h3>
-    <div class="tpl-grid" id="wunschkarten"></div>
-
-    <div class="notice" style="margin-top:1.8rem;border-left-color:var(--hbg-blau)">
-      <ul style="margin:0;padding-left:1.15rem">
-        <li>Der Planungsbogen, die Ausschneidebögen und der Reflexionsbogen liegen als eigenes PDF vor: <em>So sah mein Klassenraum aus</em>. Freitag wird nur Teil 1 (Ankreuzen) bearbeitet, Montag folgen Teil 2 und Teil 3.</li>
-        <li>Pro Kind ein leeres DIN-A3-Blatt sowie ein Ausschneidebogensatz je Grundschulgruppe.</li>
-      </ul>
     </div>
   </section>
 
@@ -1135,16 +1094,6 @@ function buildSpiele(){
   });
 })();
 ["f-focus","f-max","f-nomat"].forEach(id=>document.getElementById(id).addEventListener("change",buildSpiele));
-
-/* ============ WUNSCHKARTEN ============ */
-(function(){
-  const wrap = document.getElementById("wunschkarten");
-  for(let i=0;i<6;i++){
-    const d = el("div","tpl");
-    d.innerHTML = '<div class="t-day">Mein Wunsch für die 5.3</div><p>Ich wünsche mir …</p><div class="lines"><i></i><i></i><i></i></div>';
-    wrap.appendChild(d);
-  }
-})();
 
 /* ============ CHECKLISTEN & NOTIZEN ============ */
 (function(){
