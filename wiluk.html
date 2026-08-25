@@ -254,6 +254,14 @@ main{padding:clamp(1.5rem,4vw,2.75rem) 0 4rem}
   border:1px solid var(--hbg-border);background:var(--hbg-weiss);padding:.5rem .6rem;
 }
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:1rem}
+.card-group{margin-bottom:1.8rem}
+.card-group:last-child{margin-bottom:0}
+.card-group-head{
+  display:flex;align-items:baseline;gap:.75rem;margin:0 0 .75rem;
+  border-bottom:2px solid var(--hbg-rot-blass);padding-bottom:.4rem;
+}
+.card-group-head h3{margin:0;color:var(--hbg-blau-dunkel);font-size:1.22rem;text-transform:uppercase}
+.card-group-head span{color:var(--hbg-text-muted);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
 .card{
   background:var(--hbg-weiss);border:1px solid var(--hbg-border);border-top:4px solid var(--hbg-rot);
   padding:1rem;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:.5rem;
@@ -435,7 +443,7 @@ footer .motto{font-family:var(--font-title);color:var(--hbg-rot);letter-spacing:
   <section class="panel" id="panel-bausteine" role="tabpanel" aria-labelledby="tab-bausteine" hidden>
     <div class="section-head">
       <h2>Bausteine</h2>
-      <p>Jeder Baustein steht für sich. Für die Durchführung reicht die jeweilige Karte – Reihenfolge und Zeiten stehen im Ablaufplan.</p>
+      <p>Die Bausteine sind nach Tagen und innerhalb jedes Tages chronologisch wie im Ablaufplan geordnet.</p>
     </div>
     <div class="filterbar">
       <label for="f-day">Tag</label>
@@ -448,7 +456,7 @@ footer .motto{font-family:var(--font-title);color:var(--hbg-rot);letter-spacing:
       <label for="f-search">Suche</label>
       <input type="search" id="f-search" placeholder="Baustein oder Stichwort">
     </div>
-    <div class="cards" id="cards"></div>
+    <div id="cards"></div>
   </section>
 
   <!-- ============ SPIELE ============ -->
@@ -1031,8 +1039,29 @@ function setupTimer(minutes){
 }
 
 /* ============ BAUSTEINKARTEN ============ */
-const CARD_ORDER = ["ankommen","namen","namen2","organisation","arbeitsplatz","wege","grPlanung","regeln","grDurch","aufraeumen","galerie","rallye","diensteEinstieg","dienste","wahl","regelnFolgen","wuensche","abschluss","abschlussKurz"];
-const CARD_DAY = {ankommen:"fr mo di",namen:"fr",namen2:"fr",organisation:"fr mo",arbeitsplatz:"mo",wege:"fr",grPlanung:"fr",regeln:"mo",grDurch:"mo",aufraeumen:"mo",galerie:"mo",rallye:"mo",diensteEinstieg:"di",dienste:"di",wahl:"di",regelnFolgen:"di",wuensche:"di",abschluss:"fr mo di",abschlussKurz:"fr"};
+const CARD_GROUPS = [
+  {key:"wiederkehrend", label:"Wiederkehrend", hint:"an jedem WILUK-Tag", ids:["ankommen"]},
+  {key:"fr", label:"Freitag, 4. September", hint:"chronologisch", ids:["namen","organisation","grPlanung","namen2","wege","abschlussKurz"]},
+  {key:"mo", label:"Montag, 7. September", hint:"chronologisch", ids:["arbeitsplatz","regeln","grDurch","aufraeumen","galerie","rallye"]},
+  {key:"di", label:"Dienstag, 8. September", hint:"chronologisch", ids:["diensteEinstieg","dienste","wahl","regelnFolgen","wuensche","abschluss"]}
+];
+
+function cardMatches(id,q){
+  if(!q) return true;
+  const b = B[id];
+  const hay = (b.titel+" "+b.kern+" "+b.worum+" "+b.material.join(" ")+" "+b.hinweise.join(" ")).toLowerCase();
+  return hay.indexOf(q) !== -1;
+}
+
+function makeCard(id){
+  const b = B[id];
+  const c = el("button","card" + (b.ton === "t-blau" ? " t-blau" : ""));
+  c.type = "button";
+  c.innerHTML = '<span class="c-day">'+esc(b.tag)+'</span><h3>'+esc(b.titel)+'</h3><p class="c-kern">'+esc(b.kern)+'</p>'
+              + '<span class="c-foot"><span class="pill is-min">'+b.min+' Min</span></span>';
+  c.addEventListener("click",()=>openDrawer(id));
+  return c;
+}
 
 function buildCards(){
   const wrap = document.getElementById("cards");
@@ -1040,20 +1069,22 @@ function buildCards(){
   const q = document.getElementById("f-search").value.trim().toLowerCase();
   wrap.innerHTML = "";
   let n = 0;
-  CARD_ORDER.forEach(id=>{
-    const b = B[id];
-    if(day && CARD_DAY[id].indexOf(day) === -1) return;
-    if(q){
-      const hay = (b.titel+" "+b.kern+" "+b.worum+" "+b.material.join(" ")+" "+b.hinweise.join(" ")).toLowerCase();
-      if(hay.indexOf(q) === -1) return;
-    }
-    n++;
-    const c = el("button","card" + (b.ton === "t-blau" ? " t-blau" : ""));
-    c.type = "button";
-    c.innerHTML = '<span class="c-day">'+esc(b.tag)+'</span><h3>'+esc(b.titel)+'</h3><p class="c-kern">'+esc(b.kern)+'</p>'
-                + '<span class="c-foot"><span class="pill is-min">'+b.min+' Min</span></span>';
-    c.addEventListener("click",()=>openDrawer(id));
-    wrap.appendChild(c);
+  const groups = day
+    ? CARD_GROUPS.filter(g=>g.key === day).map(g=>({key:g.key,label:g.label,hint:g.hint,ids:["ankommen"].concat(g.ids)}))
+    : CARD_GROUPS;
+
+  groups.forEach(group=>{
+    const ids = group.ids.filter(id=>cardMatches(id,q));
+    if(!ids.length) return;
+
+    const section = el("section","card-group");
+    const head = el("div","card-group-head");
+    head.innerHTML = '<h3>'+esc(group.label)+'</h3><span>'+esc(group.hint)+'</span>';
+    const grid = el("div","cards");
+    ids.forEach(id=>{ grid.appendChild(makeCard(id)); n++; });
+    section.appendChild(head);
+    section.appendChild(grid);
+    wrap.appendChild(section);
   });
   if(!n){
     const p = el("p"); p.style.color = "var(--hbg-text-muted)";
