@@ -22,6 +22,11 @@
 
     * { box-sizing: border-box; }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      overscroll-behavior: none;
+    }
+
     html, body {
       width: 100%;
       height: 100%;
@@ -30,11 +35,17 @@
       background: var(--paper);
       color: var(--ink);
       font-family: Inter, ui-rounded, "Avenir Next", "Segoe UI", Arial, sans-serif;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
-    button { font: inherit; }
+    button {
+      font: inherit;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    .deck { position: relative; width: 100%; height: 100%; }
+    .deck { position: relative; width: 100%; height: 100%; height: 100dvh; }
 
     .slide {
       position: absolute;
@@ -431,6 +442,126 @@
       .footer { display: none; }
     }
 
+    /* iPad im Querformat: kompakte Folien, große Touch-Ziele und sichere Ränder. */
+    @media (orientation: landscape) and (pointer: coarse),
+           (min-width: 900px) and (max-height: 900px) {
+      .slide {
+        gap: clamp(7px, 1.25vh, 13px);
+        padding:
+          max(17px, env(safe-area-inset-top))
+          max(34px, env(safe-area-inset-right))
+          max(72px, calc(env(safe-area-inset-bottom) + 58px))
+          max(38px, calc(env(safe-area-inset-left) + 26px));
+      }
+
+      .slide::before { width: 10px; }
+      .eyebrow { margin-bottom: 4px; font-size: clamp(14px, 1.5vw, 19px); }
+      h1 { font-size: clamp(54px, 7vw, 86px); }
+      h2 { font-size: clamp(34px, 4.2vw, 54px); }
+      .subtitle { margin-top: 12px; font-size: clamp(21px, 2.5vw, 31px); }
+      .date-line { margin-top: 20px; padding: 9px 16px; font-size: clamp(18px, 2vw, 25px); }
+
+      .goal {
+        max-width: 1080px;
+        padding: clamp(28px, 4.5vw, 52px);
+        font-size: clamp(34px, 4.8vw, 59px);
+      }
+
+      .schedule-wrap {
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .schedule {
+        border-spacing: 0 4px;
+        font-size: clamp(15px, 1.5vw, 20px);
+      }
+
+      .schedule th {
+        width: 155px;
+        padding: 8px 14px;
+        font-size: clamp(14px, 1.4vw, 18px);
+      }
+
+      .schedule td { padding: 7px 14px; }
+      .schedule .break th,
+      .schedule .break td { padding-top: 5px; padding-bottom: 5px; }
+
+      .arrival-note {
+        margin-bottom: 5px;
+        padding: 7px 13px;
+        font-size: clamp(15px, 1.5vw, 20px);
+      }
+
+      .schedule.compact { border-spacing: 0 3px; }
+      .schedule.compact th,
+      .schedule.compact td { padding-top: 5px; padding-bottom: 5px; }
+      .schedule.compact td { font-size: clamp(14px, 1.35vw, 18px); }
+
+      .game-row { gap: 7px; margin-top: 6px; }
+      .game-button {
+        min-height: 46px;
+        padding: 8px 15px;
+        font-size: clamp(15px, 1.45vw, 19px);
+      }
+
+      .task-grid {
+        grid-template-columns: 1.2fr .8fr;
+        gap: clamp(24px, 3.5vw, 44px);
+      }
+
+      .steps { gap: clamp(8px, 1.2vh, 14px); }
+      .steps li {
+        grid-template-columns: 48px 1fr;
+        gap: 14px;
+        font-size: clamp(20px, 2.15vw, 28px);
+      }
+
+      .steps li::before {
+        width: 46px;
+        height: 46px;
+        font-size: 22px;
+      }
+
+      .task-note {
+        padding: clamp(24px, 3vw, 38px);
+        font-size: clamp(20px, 2.25vw, 29px);
+      }
+
+      .question { font-size: clamp(40px, 5.4vw, 68px); }
+      .question-mark { width: clamp(145px, 18vw, 225px); font-size: clamp(90px, 13vw, 160px); }
+
+      .footer { min-height: 24px; font-size: 13px; }
+      .controls { gap: 11px; }
+      .control {
+        min-width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        font-size: 21px;
+      }
+
+      .control:disabled { opacity: .38; }
+      .progress { height: 6px; }
+
+      dialog {
+        width: min(960px, calc(100vw - 50px));
+        max-height: calc(100dvh - 36px);
+      }
+
+      .dialog-head { padding: 17px 22px; }
+      .dialog-head h3 { font-size: clamp(28px, 3.2vw, 39px); }
+      .dialog-close { width: 50px; height: 50px; }
+      .dialog-body {
+        max-height: calc(100dvh - 124px);
+        padding: clamp(22px, 3vw, 34px);
+        font-size: clamp(19px, 2vw, 25px);
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+      .dialog-body li + li { margin-top: 9px; }
+      .dialog-tip { margin-top: 18px; }
+    }
+
     @media print {
       html, body { height: auto; overflow: visible; }
       .deck { height: auto; }
@@ -457,7 +588,7 @@
         <p class="subtitle">Heute lernen wir erste Namen, wichtige Absprachen und unsere neue Schule kennen.</p>
         <p class="date-line">Freitag, 4. September 2026</p>
       </div>
-      <footer class="footer"><span>WILUK</span><span class="hint">Mit → weiter</span></footer>
+      <footer class="footer"><span>WILUK</span><span class="hint">Wischen oder → nutzen</span></footer>
     </section>
 
     <section class="slide" aria-labelledby="title-2">
@@ -693,8 +824,15 @@
     });
 
     document.getElementById('fullscreen').addEventListener('click', async () => {
-      if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.();
-      else await document.exitFullscreen?.();
+      try {
+        if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement && document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      } catch (_) {
+        /* Safari zeigt die Seite weiter im normalen Querformat an. */
+      }
     });
 
     document.addEventListener('keydown', event => {
@@ -706,11 +844,18 @@
     });
 
     let touchStartX = 0;
-    document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+    let touchStartY = 0;
+    document.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
     document.addEventListener('touchend', e => {
-      if (dialog.open) return;
-      const delta = e.changedTouches[0].screenX - touchStartX;
-      if (Math.abs(delta) > 70) showSlide(current + (delta < 0 ? 1 : -1));
+      if (dialog.open || e.target.closest('button, a, .schedule-wrap')) return;
+      const deltaX = e.changedTouches[0].screenX - touchStartX;
+      const deltaY = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY) * 1.35) {
+        showSlide(current + (deltaX < 0 ? 1 : -1));
+      }
     }, { passive: true });
 
     const hashMatch = location.hash.match(/folie-(\d+)/);
