@@ -176,6 +176,22 @@
       border-color: #c7e3d6;
     }
 
+    .arrival-note {
+      margin: 0 0 8px;
+      padding: 11px 18px;
+      border: 3px solid var(--orange);
+      border-radius: 14px;
+      background: var(--orange-light);
+      color: var(--ink);
+      font-size: clamp(17px, 1.65vw, 26px);
+      font-weight: 850;
+    }
+
+    .schedule.compact { border-spacing: 0 5px; }
+    .schedule.compact th,
+    .schedule.compact td { padding-top: 8px; padding-bottom: 8px; }
+    .schedule.compact td { font-size: clamp(15px, 1.42vw, 22px); }
+
     .game-row {
       display: flex;
       flex-wrap: wrap;
@@ -450,7 +466,7 @@
         <h2 id="title-2">Das möchte ich heute schaffen</h2>
       </header>
       <div class="goal">Ich lerne erste Namen und wichtige Orte kennen.</div>
-      <footer class="footer"><span>Klasse 5.3</span><span>2 / 5</span></footer>
+      <footer class="footer"><span>Klasse 5.3</span><span>2 / 7</span></footer>
     </section>
 
     <section class="slide" aria-labelledby="title-3">
@@ -494,7 +510,7 @@
           </tbody>
         </table>
       </div>
-      <footer class="footer"><span>Tippe auf einen Spielnamen, um die Anleitung zu öffnen.</span><span>3 / 5</span></footer>
+      <footer class="footer"><span>Tippe auf einen Spielnamen, um die Anleitung zu öffnen.</span><span>3 / 7</span></footer>
     </section>
 
     <section class="slide" aria-labelledby="title-4">
@@ -514,7 +530,7 @@
           Heute sammelst du deine ersten Ideen. Am Montag gestaltest du deinen Grundschulraum weiter.
         </aside>
       </div>
-      <footer class="footer"><span>Arbeitszeit heute: 15 Minuten</span><span>4 / 5</span></footer>
+      <footer class="footer"><span>Arbeitszeit heute: 15 Minuten</span><span>4 / 7</span></footer>
     </section>
 
     <section class="slide" aria-labelledby="title-5">
@@ -526,7 +542,54 @@
         <div class="question">Was ist dir heute schon vertrauter geworden?</div>
         <div class="question-mark" aria-hidden="true">?</div>
       </div>
-      <footer class="footer"><span>Du kannst kurz erzählen oder ein Beispiel nennen.</span><span>5 / 5</span></footer>
+      <footer class="footer"><span>Du kannst kurz erzählen oder ein Beispiel nennen.</span><span>5 / 7</span></footer>
+    </section>
+
+    <section class="slide" aria-labelledby="title-6">
+      <header>
+        <p class="eyebrow">Ausblick · Montag, 7. September</p>
+        <h2 id="title-6">So geht es am Montag weiter</h2>
+      </header>
+      <div class="schedule-wrap">
+        <p class="arrival-note">Ab 7:55 Uhr: Gehe ins Gebäude und direkt zu unserem Klassenraum.</p>
+        <table class="schedule compact">
+          <tbody>
+            <tr><th scope="row">8:00–8:45</th><td>Ankommen &amp; Tagesziel · Arbeitsplatz &amp; Formalia</td></tr>
+            <tr class="break"><th scope="row">8:45–8:50</th><td>5-Minuten-Pause</td></tr>
+            <tr><th scope="row">8:50–9:35</th><td>Regeln: für dich, für mich, für uns</td></tr>
+            <tr class="break"><th scope="row">9:35–9:55</th><td>Frühstückspause</td></tr>
+            <tr><th scope="row">9:55–10:40</th><td>Grundschulraum gestalten · anschließend aufräumen</td></tr>
+            <tr><th scope="row">10:40–11:25</th><td>Galerie &amp; Raumwünsche</td></tr>
+            <tr class="break"><th scope="row">11:25–11:40</th><td>Pause</td></tr>
+            <tr><th scope="row">11:40–13:10</th><td>Schulrallye</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="footer"><span>Unterrichtszeit: 8:00–13:10 Uhr</span><span>6 / 7</span></footer>
+    </section>
+
+    <section class="slide" aria-labelledby="title-7">
+      <header>
+        <p class="eyebrow">Ausblick · Dienstag, 8. September</p>
+        <h2 id="title-7">Das erwartet dich am Dienstag</h2>
+      </header>
+      <div class="schedule-wrap">
+        <p class="arrival-note">Ab 7:55 Uhr: Gehe ins Gebäude und direkt zu unserem Klassenraum.</p>
+        <table class="schedule compact">
+          <tbody>
+            <tr><th scope="row">8:00–8:45</th><td>Ankommen &amp; Tagesziel · Dienste kennenlernen</td></tr>
+            <tr class="break"><th scope="row">8:45–8:50</th><td>5-Minuten-Pause</td></tr>
+            <tr><th scope="row">8:50–9:35</th><td>Dienste, Vertretungsplan &amp; Revier</td></tr>
+            <tr class="break"><th scope="row">9:35–9:55</th><td>Frühstückspause</td></tr>
+            <tr><th scope="row">9:55–10:40</th><td>Klassenvertretung &amp; Wahl</td></tr>
+            <tr><th scope="row">10:40–11:25</th><td>Regeln und Folgen</td></tr>
+            <tr class="break"><th scope="row">11:25–11:40</th><td>Pause</td></tr>
+            <tr><th scope="row">11:40–12:25</th><td>Raumwünsche bündeln &amp; prüfen</td></tr>
+            <tr><th scope="row">12:25–13:10</th><td>Material &amp; gemeinsamer Abschluss</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="footer"><span>Unterrichtszeit: 8:00–13:10 Uhr</span><span>7 / 7</span></footer>
     </section>
   </main>
 
