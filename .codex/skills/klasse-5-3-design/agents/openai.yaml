@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Klasse 5.3"
+  short_description: "Gestaltet Materialien im Design der Otterklasse 5.3"
+  default_prompt: "Gestalte dieses Material nach dem Designsystem der Klasse 5.3."
