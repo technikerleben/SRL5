@@ -336,6 +336,29 @@ td .g-hint{display:block;color:var(--hbg-text-muted);font-size:.82rem;margin-top
 .checklist input:checked + span{color:var(--hbg-text-muted);text-decoration:line-through}
 
 .notes{background:var(--hbg-weiss);border:1px solid var(--hbg-border);padding:1rem 1.15rem;margin-top:1rem}
+.resource-links{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;
+  margin:0 0 1rem;
+}
+.resource-link{
+  display:flex;flex-direction:column;gap:.3rem;min-height:7.2rem;
+  padding:1rem 1.1rem;border:1px solid var(--hbg-border);
+  border-top:4px solid var(--hbg-blau);background:var(--hbg-weiss);
+  color:var(--hbg-text);text-decoration:none;
+}
+.resource-link:hover,.resource-link:focus-visible{
+  border-color:var(--hbg-blau);background:var(--hbg-blau-ghost);
+}
+.resource-link strong{
+  font-family:var(--font-title);font-size:1.08rem;line-height:1.15;
+  color:var(--hbg-blau-dunkel);
+}
+.resource-link span{font-size:.84rem;line-height:1.4;color:var(--hbg-text-muted)}
+.resource-link .filetype{
+  margin-top:auto;font-size:.68rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--hbg-rot-dunkel);
+}
+@media (max-width:760px){.resource-links{grid-template-columns:1fr}}
 .notes h3{color:var(--hbg-blau-dunkel);font-size:1.15rem;text-transform:uppercase}
 .notes label{display:block;margin-top:.9rem;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--hbg-text-muted)}
 .notes textarea{
@@ -413,7 +436,7 @@ footer .motto{font-family:var(--font-title);color:var(--hbg-rot);letter-spacing:
 
 /* ---------- Druck ---------- */
 @media print{
-  .nav,.daytabs,.toolrow,.filterbar,.overlay,.timer,.plan-editbar,.drag-ghost{display:none!important}
+  .nav,.daytabs,.toolrow,.filterbar,.overlay,.timer,.plan-editbar,.drag-ghost,.resource-links{display:none!important}
   body{background:#fff;font-size:11pt}
   .panel[hidden]{display:block!important}
   .panel{page-break-before:always}
@@ -541,6 +564,28 @@ footer .motto{font-family:var(--font-title);color:var(--hbg-rot);letter-spacing:
       <h2>Material &amp; Notizen</h2>
       <p>Die Häkchen und Notizen bleiben in diesem Browser gespeichert, solange die Datei von hier geöffnet wird.</p>
     </div>
+
+    <section aria-labelledby="material-downloads-title">
+      <h3 id="material-downloads-title">Materialien für Freitag</h3>
+      <div class="resource-links">
+        <a class="resource-link" href="wiluk-freitag.html" target="_blank" rel="noopener">
+          <strong>Präsentation für Freitag</strong>
+          <span>Tagesziel, Tagesplan, Arbeitsauftrag, Kennenlernspiele und Ausblick.</span>
+          <span class="filetype">HTML-Präsentation öffnen</span>
+        </a>
+        <a class="resource-link" href="WILUK_Freitag_Deutsch_Ukrainisch.pdf" target="_blank" rel="noopener">
+          <strong>Orientierung Deutsch-Ukrainisch</strong>
+          <span>Zweispaltige, tonersparende Hilfe mit allen Informationen der Präsentation.</span>
+          <span class="filetype">PDF öffnen</span>
+        </a>
+        <a class="resource-link" href="Menschen_Bingo_Deutsch_Ukrainisch.pdf" target="_blank" rel="noopener">
+          <strong>Menschen-Bingo Deutsch-Ukrainisch</strong>
+          <span>Tonersparende Bingokarte mit 16 zweisprachigen Feldern.</span>
+          <span class="filetype">PDF öffnen</span>
+        </a>
+      </div>
+    </section>
+
     <div id="checklists"></div>
 
     <div class="notes">
