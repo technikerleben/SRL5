@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>B201 SRL-Raumkonzept 3D – optimiert</title>
+<style>
+:root {
+  --col-slate-dark:  #2C3D4C;
+  --col-slate:       #3E5668;
+  --col-slate-mid:   #6A8599;
+  --col-slate-pale:  #D0DCE6;
+  --col-slate-ghost: #EEF3F7;
+  --col-rust-dark:   #9E4E22;
+  --col-rust:        #D97A4A;
+  --col-rust-pale:   #F5DDD1;
+  --col-sage-dark:   #4D8B3F;
+  --col-sage:        #7DBB6F;
+  --col-sage-pale:   #DDF0D8;
+  --col-warning:     #C17B00;
+  --col-bg:          #F5F4F1;
+  --col-white:       #FFFFFF;
+  --col-text:        #1E2A35;
+  --col-text-muted:  #5A6A78;
+  --col-border:      #D4D0C8;
+  --col-shadow:      rgba(62,86,104,0.10);
+  --text-xs:   0.694rem;
+  --text-sm:   0.833rem;
+  --text-base: 1rem;
+  --text-md:   1.2rem;
+  --text-lg:   1.44rem;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--col-bg);
+  color: var(--col-text);
+  display: flex;
+  flex-direction: column;
+}
+:focus-visible { outline: 3px solid var(--col-slate); outline-offset: 2px; border-radius: 6px; }
+
+header {
+  background: linear-gradient(105deg, var(--col-slate-dark) 0%, var(--col-slate) 55%, #47637A 100%);
+  color: white;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  z-index: 10;
+  position: relative;
+}
+header::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--col-rust) 0%, var(--col-rust) 34%, var(--col-sage) 34%, var(--col-sage) 67%, var(--col-slate-mid) 67%);
+  opacity: 0.9;
+}
+header h1 { font-size: var(--text-md); font-weight: 700; line-height: 1.2; }
+.header-meta { font-size: var(--text-xs); color: var(--col-slate-pale); text-transform: uppercase; letter-spacing: 0.06em; }
+.hbg-wordmark { display: inline-flex; align-items: flex-end; gap: 5px; }
+.hbg-wordmark__main { font-size: var(--text-md); font-weight: 800; color: white; }
+.hbg-wordmark__sub  { font-size: var(--text-xs); color: #EBA882; margin-bottom: 2px; }
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAFAF8 100%);
+  border-bottom: 1px solid var(--col-border);
+  box-shadow: 0 2px 10px rgba(62,86,104,0.06);
+  flex-wrap: wrap;
+  align-items: center;
+  z-index: 10;
+}
+.layout-btn {
+  background: white;
+  color: var(--col-slate);
+  border: 2px solid var(--col-slate);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  min-height: 44px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.layout-btn:hover { background: var(--col-slate-ghost); box-shadow: 0 2px 8px rgba(62,86,104,0.14); }
+.layout-btn:active { transform: translateY(1px); }
+.layout-btn.active {
+  background: linear-gradient(160deg, var(--col-rust) 0%, var(--col-rust-dark) 100%);
+  border-color: var(--col-rust-dark);
+  color: white;
+  box-shadow: 0 3px 10px rgba(158,78,34,0.32);
+}
+.tool-sep { width: 1px; align-self: stretch; background: var(--col-border); margin: 0 4px; }
+.view-btn {
+  background: white;
+  color: var(--col-text-muted);
+  border: 1px solid var(--col-border);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  min-height: 44px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.view-btn:hover { background: var(--col-slate-ghost); box-shadow: 0 2px 8px rgba(62,86,104,0.10); }
+.view-btn:active { transform: translateY(1px); }
+.view-btn.active {
+  background: linear-gradient(160deg, #47637A 0%, var(--col-slate) 100%);
+  border-color: var(--col-slate);
+  color: white;
+  box-shadow: 0 3px 10px rgba(62,86,104,0.28);
+}
+
+#stage { position: relative; flex: 1; min-height: 0; }
+#canvas-wrap { position: absolute; inset: 0; }
+canvas { display: block; touch-action: none; }
+
+#info-panel {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: 380px;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(44,61,76,0.16), 0 1px 3px rgba(44,61,76,0.08);
+  border-left: 4px solid var(--col-rust);
+  padding: 13px 17px;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  z-index: 5;
+}
+#info-panel h2 { font-size: var(--text-base); margin-bottom: 4px; color: var(--col-slate-dark); }
+
+#info-panel {
+  transition: width 0.22s ease, max-width 0.22s ease, padding 0.22s ease, box-shadow 0.22s ease;
+}
+#info-toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(62,86,104,0.18);
+  border-radius: 9px;
+  background: rgba(255,255,255,0.88);
+  color: var(--col-slate-dark);
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(44,61,76,0.10);
+}
+#info-toggle:hover { background: var(--col-slate-ghost); }
+#info-toggle:active { transform: translateY(1px); }
+#info-panel:not(.minimized) h2 { padding-right: 34px; }
+#info-panel.minimized {
+  width: auto;
+  max-width: min(320px, calc(100% - 24px));
+  padding: 10px 48px 10px 14px;
+  border-left-color: var(--col-slate-mid);
+}
+#info-panel.minimized h2 {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#info-panel.minimized #info-text,
+#info-panel.minimized #info-stats { display: none; }
+
+#info-panel .stats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.stat-chip {
+  background: var(--col-slate-pale);
+  color: var(--col-slate-dark);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.stat-chip.move { background: var(--col-rust-pale); color: var(--col-rust-dark); }
+.stat-chip.fix  { background: var(--col-sage-pale); color: #2D5C25; }
+
+#legend {
+  display:none;
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(255,255,255,0.94);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px var(--col-shadow);
+  padding: 10px 14px;
+  font-size: var(--text-xs);
+  line-height: 1.9;
+  z-index: 5;
+}
+.leg-row { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.leg-dot { width: 14px; height: 14px; border-radius: 4px; flex: 0 0 auto; border: 1px solid rgba(0,0,0,0.15); }
+
+
+.editor-btn.active {
+  background: var(--col-sage-dark);
+  border-color: var(--col-sage-dark);
+  color: white;
+}
+.editor-btn:disabled, .config-select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.config-select {
+  min-height: 44px;
+  max-width: 210px;
+  border: 1px solid var(--col-border);
+  border-radius: 8px;
+  background: white;
+  color: var(--col-text);
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+#editor-hint {
+  display: none;
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  max-width: min(720px, calc(100% - 24px));
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(44,61,76,0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: white;
+  box-shadow: 0 8px 24px rgba(44,61,76,0.30);
+  font-size: var(--text-sm);
+  text-align: center;
+  pointer-events: none;
+}
+#editor-hint.show { display: block; }
+#selection-label {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 7;
+  display: none;
+  padding: 8px 13px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-left: 4px solid var(--col-sage-dark);
+  box-shadow: 0 6px 20px rgba(44,61,76,0.16);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  pointer-events: none;
+}
+#selection-label.show { display: block; }
+body.editing canvas { cursor: grab; }
+body.editing canvas.dragging-furniture { cursor: grabbing; }
+
+
+/* First-Person-Modus: menschliche Augenhöhe, Desktop- und Touch-Steuerung */
+body.fp-mode #info-panel,
+body.fp-mode #legend,
+body.fp-mode #editor-hint,
+body.fp-mode #selection-label { opacity: 0; pointer-events: none; }
+body.fp-mode canvas { cursor: crosshair; touch-action: none; }
+#fp-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 18;
+  display: none;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+body.fp-mode #fp-controls { display: block; }
+#fp-help {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(92vw, 720px);
+  padding: 8px 13px;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 999px;
+  background: rgba(44,61,76,.82);
+  color: #fff;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,.16);
+  backdrop-filter: blur(8px);
+}
+.fp-pad {
+  position: absolute;
+  bottom: 20px;
+  width: 126px;
+  height: 126px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.72);
+  background: rgba(44,61,76,.32);
+  box-shadow: inset 0 0 0 1px rgba(44,61,76,.28), 0 8px 24px rgba(0,0,0,.14);
+  backdrop-filter: blur(5px);
+  pointer-events: auto;
+  touch-action: none;
+}
+#fp-joystick { left: max(16px, env(safe-area-inset-left)); }
+#fp-look { right: max(16px, env(safe-area-inset-right)); }
+.fp-pad-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(255,255,255,.9);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+#fp-stick {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 48px; height: 48px;
+  margin: -24px 0 0 -24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.88);
+  border: 2px solid rgba(44,61,76,.32);
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  pointer-events: none;
+  transform: translate(0,0);
+}
+#fp-look::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 32px; height: 32px;
+  transform: translate(-50%,-50%);
+  border: 2px solid rgba(255,255,255,.82);
+  border-radius: 50%;
+}
+#fp-look::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 2px; height: 54px;
+  transform: translate(-50%,-50%);
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,.78), transparent);
+  box-shadow: 26px 0 0 -1px rgba(255,255,255,.55), -26px 0 0 -1px rgba(255,255,255,.55);
+}
+#fp-exit {
+  position: absolute;
+  left: 50%;
+  bottom: max(22px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  min-height: 44px;
+  padding: 9px 15px;
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 999px;
+  background: rgba(44,61,76,.88);
+  color: #fff;
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  cursor: pointer;
+  pointer-events: auto;
+  backdrop-filter: blur(8px);
+}
+#fp-crosshair {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 16px; height: 16px;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+#fp-crosshair::before,
+#fp-crosshair::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  background: rgba(255,255,255,.9);
+  box-shadow: 0 0 3px rgba(0,0,0,.7);
+  transform: translate(-50%,-50%);
+}
+#fp-crosshair::before { width: 16px; height: 2px; }
+#fp-crosshair::after { width: 2px; height: 16px; }
+@media (hover:hover) and (pointer:fine) {
+  .fp-pad { opacity: .38; width: 104px; height: 104px; }
+  #fp-stick { width: 40px; height: 40px; margin: -20px 0 0 -20px; }
+}
+@media (max-width: 620px) {
+  .fp-pad { width: 112px; height: 112px; bottom: max(14px, env(safe-area-inset-bottom)); }
+  #fp-exit { bottom: max(146px, calc(env(safe-area-inset-bottom) + 132px)); }
+  #fp-help { top: 8px; border-radius: 12px; line-height: 1.3; }
+}
+
+@media (max-width: 820px) {
+  #legend { display: none; }
+  #info-panel { max-width: calc(100% - 24px); font-size: var(--text-xs); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Raum B201 · SRL-Raumkonzept</h1>
+    <div class="header-meta">SRL-Basisraum · 9 × 7 m · 26 Lernende, davon 1 Rollstuhlnutzer:in</div>
+  </div>
+  <div class="hbg-wordmark"><span class="hbg-wordmark__main">HBG</span><span class="hbg-wordmark__sub">SRL</span></div>
+</header>
+
+<div class="toolbar" role="toolbar" aria-label="Layout wählen">
+  <button class="layout-btn active" data-layout="lernbuero">🗂️ Lernbüro</button>
+  <button class="layout-btn" data-layout="gruppen">👥 Gruppeninseln</button>
+  <button class="layout-btn" data-layout="marktplatz">☕ Marktplatz / Lerncafé</button>
+  <button class="layout-btn" data-layout="kino">🎬 Input / Halbkreis</button>
+  <button class="layout-btn" data-layout="kreis">⭕ Kreis / Klassenrat</button>
+  <span class="tool-sep" aria-hidden="true"></span>
+  <button class="view-btn active" id="btn-3d">3D</button>
+  <button class="view-btn" id="btn-top">Draufsicht</button>
+  <button class="view-btn" id="btn-first-person" aria-pressed="false" title="Den Raum aus menschlicher Augenhöhe begehen">🚶 Begehen</button>
+  <span class="tool-sep" aria-hidden="true"></span>
+  <button class="view-btn editor-btn" id="btn-edit" aria-pressed="false">✋ Möbel verschieben</button>
+  <button class="view-btn editor-btn" id="btn-rotate-left" disabled title="Ausgewähltes Möbel um 90° drehen">↶ 90°</button>
+  <button class="view-btn editor-btn" id="btn-rotate-right" disabled title="Ausgewähltes Möbel um 90° drehen">↷ 90°</button>
+  <button class="view-btn editor-btn" id="btn-save-config">💾 Speichern</button>
+  <button class="view-btn editor-btn" id="btn-export-config" title="Aktuelle Möbelanordnung als JSON-Datei exportieren">⬇️ JSON</button>
+  <button class="view-btn editor-btn" id="btn-export-png" title="Aktuelle Ansicht als PNG-Bild speichern">🖼️ PNG</button>
+  <select id="config-select" class="config-select" aria-label="Gespeicherte Konfiguration auswählen">
+    <option value="">Gespeicherte Konfigurationen</option>
+  </select>
+  <button class="view-btn editor-btn" id="btn-load-config" disabled>Öffnen</button>
+  <button class="view-btn editor-btn" id="btn-delete-config" disabled>🗑 Löschen</button>
+</div>
+
+<div id="stage">
+  <div id="canvas-wrap"></div>
+  <div id="editor-hint">Möbel anklicken und ziehen · Drehen über ↶/↷ oder Q/E · Positionen rasten in 10-cm-Schritten ein</div>
+  <div id="selection-label"></div>
+  <div id="fp-controls" aria-hidden="true">
+    <div id="fp-help">WASD / Pfeiltasten zum Laufen · Maus zum Umschauen · Touch: links laufen, rechts blicken</div>
+    <div id="fp-crosshair" aria-hidden="true"></div>
+    <div id="fp-joystick" class="fp-pad" aria-label="Laufsteuerung">
+      <span class="fp-pad-label">Laufen</span>
+      <div id="fp-stick"></div>
+    </div>
+    <div id="fp-look" class="fp-pad" aria-label="Blicksteuerung"><span class="fp-pad-label">Blick</span></div>
+    <button id="fp-exit" type="button">Begehung verlassen</button>
+  </div>
+  <div id="info-panel" role="status" aria-live="polite">
+    <button id="info-toggle" type="button" aria-expanded="true" aria-controls="info-text info-stats" title="Informationen minimieren">−</button>
+    <h2 id="info-title">Lernbüro</h2>
+    <div id="info-text"></div>
+    <div class="stats" id="info-stats"></div>
+  </div>
+  <div id="legend">
+    <div class="leg-row"><span class="leg-dot" style="background:#B88A5A"></span> Doppeltische an den Wänden (fest)</div>
+    <div class="leg-row"><span class="leg-dot" style="background:#B88A5A"></span> Doppeltische in der Mitte (beweglich)</div>
+    <div class="leg-row"><span class="leg-dot" style="background:#B9CDBB"></span> Stühle (25 + Rollstuhlplatz)</div>
+    <div class="leg-row"><span class="leg-dot" style="background:#3E5668"></span> 2 Materialwagen / 1 Akustik-Stellwand</div>
+    <div class="leg-row"><span class="leg-dot" style="background:#C9A227"></span> 1 höhenverstellbarer Tisch (ohne Stuhl)</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+'use strict';
+/* =========================================================
+   B201 · 9m (x: -4.5..4.5, Fensterfront bei z=-3.5)
+          7m (z: -3.5..3.5, Tür + Nassbereich bei z=+3.5)
+   Westwand: Materialregale · Ostwand: bewegliche Haupt-Whiteboardtafel · Südwand: digitaler Bildschirm
+   ========================================================= */
+
+const COL = {
+  floor:      0xB7D88F,
+  grid:       0x88AA72,
+  wall:       0xC8D2DA,
+  window:     0xB9D9EC,
+  windowFrame:0x15346B,
+  tableFix:   0xB88A5A,   // Holzton
+  tableMove:  0xB88A5A,   // Holzton
+  chair:      0xB9CDBB,
+  hocker:     0x7DBB6F,
+  hockerDark: 0x4D8B3F,
+  slate:      0x3E5668,
+  slatePale:  0xD0DCE6,
+  bench:      0x6E8F79,
+  rug:        0xE4D7C3,
+  roll:       0xC9A227,
+  board:      0xFAFAF7,
+  wandtafel:  0xFAFAF7,
+  white:      0xFFFFFF
+};
+
+const ROOM = { W: 9, D: 7 };
+const scene = new THREE.Scene();
+
+/* Sanfter vertikaler Hintergrundverlauf – bleibt auch im PNG-Export erhalten */
+(function sceneBackground() {
+  const cv = document.createElement('canvas');
+  cv.width = 16; cv.height = 512;
+  const ctx = cv.getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 512);
+  grad.addColorStop(0.00, '#FBFAF8');
+  grad.addColorStop(0.45, '#F3F2EE');
+  grad.addColorStop(1.00, '#E2E7EB');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 16, 512);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.encoding = THREE.sRGBEncoding;
+  scene.background = tex;
+})();
+
+const wrap = document.getElementById('canvas-wrap');
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.12;
+renderer.physicallyCorrectLights = false;
+wrap.appendChild(renderer.domElement);
+
+/* Licht: Himmelslicht + warme Sonne von der Fensterfront + kühles Gegenlicht */
+const hemi = new THREE.HemisphereLight(0xDCE8F2, 0xC9C0B2, 0.75);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xFFEED8, 1.35);
+sun.position.set(2, 9, -7);            // Licht von der Fensterfront
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -7; sun.shadow.camera.right = 7;
+sun.shadow.camera.top = 7;   sun.shadow.camera.bottom = -7;
+sun.shadow.bias = -0.0004;
+sun.shadow.normalBias = 0.02;
+scene.add(sun);
+const fill = new THREE.DirectionalLight(0xDDE8F0, 0.35);
+fill.position.set(-5, 6, 5);
+scene.add(fill);
+
+/* Dezente Reflexionsumgebung für die Standard-Materialien */
+(function environment() {
+  const cv = document.createElement('canvas');
+  cv.width = 128; cv.height = 64;
+  const ctx = cv.getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 64);
+  grad.addColorStop(0.00, '#EAF2FA');   // Himmel
+  grad.addColorStop(0.55, '#DCE4E8');   // Horizont
+  grad.addColorStop(0.60, '#B9B2A6');   // Boden hell
+  grad.addColorStop(1.00, '#8E887E');   // Boden dunkel
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 128, 64);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.mapping = THREE.EquirectangularReflectionMapping;
+  tex.encoding = THREE.sRGBEncoding;
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromEquirectangular(tex).texture;
+  pmrem.dispose();
+})();
+
+/* ---------- Hilfsfunktionen ---------- */
+const mat = (c, opt = {}) => {
+  const params = Object.assign({ roughness: 0.86, metalness: 0.0, envMapIntensity: 0.35 }, opt);
+  params.color = new THREE.Color(c).convertSRGBToLinear();
+  return new THREE.MeshStandardMaterial(params);
+};
+function box(w, h, d, c, opt) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat(c, opt));
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+function cyl(r, h, c, seg = 20) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, seg), mat(c));
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+
+/* Möbel werden zusätzlich für einen geometrischen Kollisionscheck registriert.
+   Kontrolliert werden die Endpositionen der vier Raumkonfigurationen. */
+const collisionItems = [];
+function registerCollision(name, obj, opts = {}) {
+  collisionItems.push({ name, obj, layouts: opts.layouts || null, movable: !!opts.movable, radius: opts.radius || null });
+  return obj;
+}
+function itemActive(item, layoutKey) {
+  if (layoutKey === 'custom') return item.obj.visible !== false;
+  return !item.layouts || item.layouts.includes(layoutKey);
+}
+function overlapAmount(aMin, aMax, bMin, bMax) {
+  return Math.min(aMax, bMax) - Math.max(aMin, bMin);
+}
+function validateCollisions(layoutKey) {
+  scene.updateMatrixWorld(true);
+  const active = collisionItems.filter(item => itemActive(item, layoutKey) && item.obj.visible !== false);
+  const entries = active.map(item => {
+    const center = new THREE.Vector3();
+    item.obj.getWorldPosition(center);
+    return { item, center, box: new THREE.Box3().setFromObject(item.obj) };
+  });
+  const hits = [];
+  const tol = 0.012; // Berührungen und Rundungsfehler nicht als Kollision werten
+  function pairCollides(a, b) {
+    const oy = overlapAmount(a.box.min.y, a.box.max.y, b.box.min.y, b.box.max.y);
+    if (oy <= tol) return false;
+    const ar = a.item.radius, br = b.item.radius;
+    if (ar && br) {
+      return Math.hypot(a.center.x - b.center.x, a.center.z - b.center.z) < ar + br - tol;
+    }
+    if (ar || br) {
+      const c = ar ? a : b;
+      const r = ar || br;
+      const bx = ar ? b.box : a.box;
+      const px = Math.max(bx.min.x, Math.min(c.center.x, bx.max.x));
+      const pz = Math.max(bx.min.z, Math.min(c.center.z, bx.max.z));
+      return Math.hypot(c.center.x - px, c.center.z - pz) < r - tol;
+    }
+    const ox = overlapAmount(a.box.min.x, a.box.max.x, b.box.min.x, b.box.max.x);
+    const oz = overlapAmount(a.box.min.z, a.box.max.z, b.box.min.z, b.box.max.z);
+    return ox > tol && oz > tol;
+  }
+  for (let i = 0; i < entries.length; i++) {
+    for (let j = i + 1; j < entries.length; j++) {
+      const a = entries[i], b = entries[j];
+      if (pairCollides(a, b)) hits.push(`${a.item.name} ↔ ${b.item.name}`);
+    }
+  }
+  /* Bewegliche Möbel dürfen weder aus dem Raum ragen noch in den Türschwenkbereich hineinragen. */
+  entries.filter(e => e.item.movable).forEach(e => {
+    if (e.box.min.x < -4.45 || e.box.max.x > 4.45 || e.box.min.z < -3.45 || e.box.max.z > 3.45) {
+      hits.push(`${e.item.name} ↔ Raumgrenze`);
+    }
+    const doorX = overlapAmount(e.box.min.x, e.box.max.x, 2.68, 3.78);
+    const doorZ = overlapAmount(e.box.min.z, e.box.max.z, 2.48, 3.48);
+    if (doorX > tol && doorZ > tol) hits.push(`${e.item.name} ↔ Türschwenkbereich`);
+  });
+  return [...new Set(hits)];
+}
+
+function label(text, opts = {}) {
+  const size = opts.size || 34;
+  const pad = 14;
+  const cv = document.createElement('canvas');
+  const ctx = cv.getContext('2d');
+  ctx.font = `600 ${size}px -apple-system, Helvetica, Arial`;
+  const w = Math.ceil(ctx.measureText(text).width) + pad * 2;
+  cv.width = w; cv.height = size + pad * 2;
+  const c2 = cv.getContext('2d');
+  c2.font = `600 ${size}px -apple-system, Helvetica, Arial`;
+  if (opts.bg) {
+    c2.fillStyle = opts.bg;
+    const r = 14;
+    c2.beginPath();
+    c2.moveTo(r, 0); c2.arcTo(cv.width, 0, cv.width, cv.height, r);
+    c2.arcTo(cv.width, cv.height, 0, cv.height, r);
+    c2.arcTo(0, cv.height, 0, 0, r); c2.arcTo(0, 0, cv.width, 0, r);
+    c2.fill();
+  }
+  c2.fillStyle = opts.color || '#3E5668';
+  c2.textBaseline = 'middle';
+  c2.fillText(text, pad, cv.height / 2 + 2);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.minFilter = THREE.LinearFilter;
+  tex.encoding = THREE.sRGBEncoding;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true }));
+  const scale = opts.scale || 0.011;
+  sp.scale.set(cv.width * scale, cv.height * scale, 1);
+  sp.renderOrder = 20;
+  return sp;
+}
+
+/* ---------- Raumhülle ---------- */
+/* Prozedurale Linoleum-Textur: hellgrüner Boden wie im tatsächlichen Raum */
+function makeFloorTexture() {
+  const S = 512;
+  const cv = document.createElement('canvas');
+  cv.width = S; cv.height = S;
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#B7D88F';
+  ctx.fillRect(0, 0, S, S);
+  /* Großflächige, weiche Wolken */
+  for (let i = 0; i < 26; i++) {
+    const x = Math.random() * S, y = Math.random() * S, r = 60 + Math.random() * 110;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    const tone = Math.random() < 0.5 ? '171,207,132' : '198,226,166';
+    g.addColorStop(0, `rgba(${tone},0.5)`);
+    g.addColorStop(1, `rgba(${tone},0)`);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  }
+  /* Feine Sprenkel */
+  for (let i = 0; i < 5200; i++) {
+    const x = Math.random() * S, y = Math.random() * S;
+    const shade = Math.random();
+    ctx.fillStyle = shade < 0.55
+      ? `rgba(111,153,91,${0.08 + Math.random() * 0.14})`
+      : `rgba(236,248,218,${0.10 + Math.random() * 0.18})`;
+    const s = 0.7 + Math.random() * 1.5;
+    ctx.fillRect(x, y, s, s);
+  }
+  const tex = new THREE.CanvasTexture(cv);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(3.0, 2.33);
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  tex.encoding = THREE.sRGBEncoding;
+  return tex;
+}
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(ROOM.W, ROOM.D),
+  new THREE.MeshStandardMaterial({ map: makeFloorTexture(), roughness: 0.55, metalness: 0.0, envMapIntensity: 0.5 })
+);
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+scene.add(floor);
+
+(function roomGrid() {
+  const pts = [];
+  for (let x = -4.5; x <= 4.51; x += 0.5) {
+    pts.push(new THREE.Vector3(x, 0.002, -3.5), new THREE.Vector3(x, 0.002, 3.5));
+  }
+  for (let z = -3.5; z <= 3.51; z += 0.5) {
+    pts.push(new THREE.Vector3(-4.5, 0.002, z), new THREE.Vector3(4.5, 0.002, z));
+  }
+  const g = new THREE.BufferGeometry().setFromPoints(pts);
+  const l = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: COL.grid, transparent: true, opacity: 0.32 }));
+  scene.add(l);
+})();
+
+/* Wände in Raumhöhe · pro Seite eine Gruppe, damit die kamerazugewandten
+   Wände automatisch ausgeblendet werden (Puppenhaus-Prinzip) */
+const WALL_H = 2.55, WALL_T = 0.1;
+const walls = {
+  north: { g: new THREE.Group(), n: new THREE.Vector3(0, 0, -1), c: new THREE.Vector3(0, 1, -3.5) },
+  south: { g: new THREE.Group(), n: new THREE.Vector3(0, 0,  1), c: new THREE.Vector3(0, 1,  3.5) },
+  west:  { g: new THREE.Group(), n: new THREE.Vector3(-1, 0, 0), c: new THREE.Vector3(-4.5, 1, 0) },
+  east:  { g: new THREE.Group(), n: new THREE.Vector3( 1, 0, 0), c: new THREE.Vector3( 4.5, 1, 0) }
+};
+Object.values(walls).forEach(w => scene.add(w.g));
+
+function wallSeg(group, w, x, z, ry, color, h = WALL_H, y = null, opt = {}) {
+  const m = box(w, h, WALL_T, color, opt);
+  m.position.set(x, y === null ? h / 2 : y, z);
+  m.rotation.y = ry;
+  group.add(m);
+  return m;
+}
+/* Sockelleisten (rein dekorativ, wandern mit der jeweiligen Wandgruppe) */
+function skirting(group, len, x, z, ry) {
+  const s = box(len, 0.09, 0.025, 0xB9C3CB, { roughness: 0.6 });
+  s.position.set(x, 0.045, z);
+  s.rotation.y = ry;
+  s.castShadow = false;
+  group.add(s);
+}
+skirting(walls.north.g, ROOM.W, 0, -3.5 + 0.013, 0);
+skirting(walls.west.g,  ROOM.D, -4.5 + 0.013, 0, Math.PI / 2);
+skirting(walls.east.g,  ROOM.D,  4.5 - 0.013, 0, Math.PI / 2);
+skirting(walls.south.g, 5.9, 2.7 - 5.9 / 2, 3.5 - 0.013, 0);
+skirting(walls.south.g, 0.8, 3.7 + 0.4,     3.5 - 0.013, 0);
+
+/* Außenkulisse hinter der Fensterfront: Himmel + weiche Baumsilhouette */
+(function outdoorBackdrop() {
+  const cv = document.createElement('canvas');
+  cv.width = 1024; cv.height = 320;
+  const ctx = cv.getContext('2d');
+  const sky = ctx.createLinearGradient(0, 0, 0, 320);
+  sky.addColorStop(0.00, '#BFDCEF');
+  sky.addColorStop(0.55, '#DCEDF7');
+  sky.addColorStop(1.00, '#EDF5F4');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, 1024, 320);
+  /* weiche Baumkronen als unscharfe Kreise */
+  ctx.filter = 'blur(14px)';
+  const greens = ['#9AB98A', '#86AC77', '#A8C79A', '#7EA070'];
+  for (let i = 0; i < 26; i++) {
+    const x = Math.random() * 1024;
+    const y = 235 + Math.random() * 55;
+    const r = 34 + Math.random() * 46;
+    ctx.fillStyle = greens[i % greens.length];
+    ctx.globalAlpha = 0.75;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.filter = 'none';
+  ctx.globalAlpha = 1;
+  const tex = new THREE.CanvasTexture(cv);
+  tex.encoding = THREE.sRGBEncoding;
+  const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(16, 5),
+    new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })
+  );
+  plane.position.set(0, 1.9, -5.4);
+  scene.add(plane);
+})();
+
+/* Fensterfront (oben, 9 m): Brüstung 85 cm + Glas bis 2,45 m + Sturz */
+wallSeg(walls.north.g, ROOM.W, 0, -3.5 - WALL_T / 2, 0, COL.wall, 0.85);
+const glass = box(ROOM.W, 1.6, 0.05, COL.window, {
+  transparent: true, opacity: 0.18, roughness: 0.06, metalness: 0.0, envMapIntensity: 1.1
+});
+glass.position.set(0, 0.85 + 0.8, -3.5 - WALL_T / 2);
+glass.castShadow = false;
+walls.north.g.add(glass);
+/* Fensterbank */
+const sill = box(ROOM.W, 0.055, 0.16, COL.windowFrame, { roughness: 0.42 });
+sill.position.set(0, 0.87, -3.5 + 0.03);
+walls.north.g.add(sill);
+const windowTopRail = box(ROOM.W, 0.09, 0.10, COL.windowFrame, { roughness: 0.38 });
+windowTopRail.position.set(0, 2.43, -3.5 - WALL_T / 2);
+walls.north.g.add(windowTopRail);
+const windowMidRail = box(ROOM.W, 0.075, 0.10, COL.windowFrame, { roughness: 0.38 });
+windowMidRail.position.set(0, 1.20, -3.5 - WALL_T / 2);
+walls.north.g.add(windowMidRail);
+for (let i = -4.5; i <= 4.5; i += 1.5) {
+  const post = box(0.09, 1.6, 0.10, COL.windowFrame, { roughness: 0.38 });
+  post.position.set(Math.max(-4.46, Math.min(4.46, i)), 0.85 + 0.8, -3.5 - WALL_T / 2);
+  walls.north.g.add(post);
+}
+wallSeg(walls.north.g, ROOM.W, 0, -3.5 - WALL_T / 2, 0, COL.wall, WALL_H - 2.45, 2.45 + (WALL_H - 2.45) / 2);
+
+/* Seitenwände + Rückwand (mit Türöffnung x 2.7..3.7) */
+wallSeg(walls.west.g, ROOM.D + 0.2, -4.5 - WALL_T / 2, 0, Math.PI / 2, COL.wall);
+wallSeg(walls.east.g, ROOM.D + 0.2,  4.5 + WALL_T / 2, 0, Math.PI / 2, COL.wall);
+wallSeg(walls.south.g, 7.2, 2.7 - 7.2 / 2, 3.5 + WALL_T / 2, 0, COL.wall);          // links der Tür
+wallSeg(walls.south.g, 0.8, 3.7 + 0.4,     3.5 + WALL_T / 2, 0, COL.wall);          // rechts der Tür
+wallSeg(walls.south.g, 1.0, 3.2, 3.5 + WALL_T / 2, 0, COL.wall, WALL_H - 2.1, 2.1 + (WALL_H - 2.1) / 2); // Türsturz
+
+/* Türblatt + Schwenkbereich (gestrichelt) */
+const door = box(0.06, 2.05, 1.0, 0x8E3B40, { roughness: 0.55 });
+door.position.set(3.7, 1.025, 3.0);
+walls.south.g.add(door);
+const doorHandle = cyl(0.018, 0.14, 0xC8CDD2, 10);
+doorHandle.rotation.x = Math.PI / 2;
+doorHandle.position.set(3.66, 1.02, 2.62);
+walls.south.g.add(doorHandle);
+(function doorArc() {
+  const pts = [];
+  for (let a = Math.PI; a >= Math.PI / 2; a -= 0.06) {
+    pts.push(new THREE.Vector3(3.7 + Math.cos(a) * 1.0, 0.01, 3.5 + Math.sin(a) * -1.0));
+  }
+  const g = new THREE.BufferGeometry().setFromPoints(pts);
+  const l = new THREE.Line(g, new THREE.LineDashedMaterial({ color: 0x8E3B40, dashSize: 0.12, gapSize: 0.08 }));
+  l.computeLineDistances();
+  scene.add(l);
+})();
+
+/* Bewegliche, höhenverstellbare Haupt-Whiteboardtafel an der Ostwand.
+   Gegenüber liegen an der Westwand die Materialregale. */
+const mainWhiteboard = new THREE.Group();
+const mwBoard = box(0.08, 1.05, 2.0, COL.wandtafel, { roughness: 0.22, envMapIntensity: 0.8 });
+mwBoard.position.set(0, 1.45, 0); mainWhiteboard.add(mwBoard);
+const mwFrame = box(0.10, 1.13, 2.08, 0xAEB7BE, { roughness: 0.4 });
+mwFrame.position.set(0.025, 1.45, 0); mainWhiteboard.add(mwFrame);
+mwBoard.position.x = -0.035;
+[-0.76, 0.76].forEach(z => {
+  const post = box(0.06, 1.24, 0.07, 0x707A82, { roughness: 0.45, metalness: 0.12 });
+  post.position.set(0.08, 0.64, z); mainWhiteboard.add(post);
+  const foot = box(0.58, 0.06, 0.09, 0x707A82, { roughness: 0.45, metalness: 0.12 });
+  foot.position.set(-0.02, 0.08, z); mainWhiteboard.add(foot);
+  [-0.25, 0.25].forEach(x => {
+    const wheel = cyl(0.055, 0.045, 0x41484E, 16);
+    wheel.rotation.x = Math.PI / 2;
+    wheel.position.set(x, 0.045, z); mainWhiteboard.add(wheel);
+  });
+});
+mainWhiteboard.position.set(4.16, 0, 0);
+scene.add(mainWhiteboard);
+registerCollision('Bewegliche Haupt-Whiteboardtafel Ostwand', mainWhiteboard);
+
+/* Digitaler Bildschirm an der Südwand zwischen Waschbecken und Tür. */
+const digitalWhiteboard = new THREE.Group();
+const dt = box(0.08, 1.05, 2.0, COL.board, { roughness: 0.18, envMapIntensity: 1.0 });
+dt.position.set(0, 1.45, 0); digitalWhiteboard.add(dt);
+const dtFrame = box(0.10, 1.13, 2.08, 0x59636B, { roughness: 0.45, metalness: 0.08 });
+dtFrame.position.set(0.025, 1.45, 0); digitalWhiteboard.add(dtFrame);
+/* Die weiße Fläche liegt leicht vor dem dunklen Rahmen. */
+dt.position.x = -0.035;
+[-0.76, 0.76].forEach(z => {
+  const post = box(0.06, 1.24, 0.07, 0x707A82, { roughness: 0.45, metalness: 0.12 });
+  post.position.set(0.08, 0.64, z); digitalWhiteboard.add(post);
+  const foot = box(0.58, 0.06, 0.09, 0x707A82, { roughness: 0.45, metalness: 0.12 });
+  foot.position.set(-0.02, 0.08, z); digitalWhiteboard.add(foot);
+  [-0.25, 0.25].forEach(x => {
+    const wheel = cyl(0.055, 0.045, 0x41484E, 16);
+    wheel.rotation.x = Math.PI / 2;
+    wheel.position.set(x, 0.045, z); digitalWhiteboard.add(wheel);
+  });
+});
+/* Reale Position: Der digitale Bildschirm steht auf Rollfüßen direkt vor der
+   Südwand zwischen Waschbecken und Tür. */
+digitalWhiteboard.position.set(0.00, 0, 3.16);
+digitalWhiteboard.rotation.y = Math.PI / 2;
+scene.add(digitalWhiteboard);
+registerCollision('Digitaler Bildschirm Südwand', digitalWhiteboard);
+
+/* Nassbereich unten links */
+const nass = box(1.4, 0.9, 0.55, 0x9FB6C6);
+nass.position.set(-3.8, 0.45, 3.18); scene.add(nass);
+registerCollision('Nassbereich', nass);
+const sink = box(0.5, 0.06, 0.35, 0xEFF4F7);
+sink.position.set(-3.8, 0.91, 3.18); scene.add(sink);
+
+/* Keine festen Beschriftungen im Raum */
+
+/* ---------- Möbel-Baukasten ---------- */
+function makeTableNumber(number, y, opts = {}) {
+  const cv = document.createElement('canvas');
+  cv.width = 256;
+  cv.height = 160;
+  const ctx = cv.getContext('2d');
+
+  /* Helles Schild mit kräftiger dunkler Nummer – auch aus etwas Abstand lesbar. */
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.fillStyle = 'rgba(255,255,255,0.94)';
+  ctx.strokeStyle = '#245688';
+  ctx.lineWidth = 10;
+
+  const x = 12, yy = 12, w = cv.width - 24, h = cv.height - 24, r = 30;
+  ctx.beginPath();
+  ctx.moveTo(x + r, yy);
+  ctx.arcTo(x + w, yy, x + w, yy + h, r);
+  ctx.arcTo(x + w, yy + h, x, yy + h, r);
+  ctx.arcTo(x, yy + h, x, yy, r);
+  ctx.arcTo(x, yy, x + w, yy, r);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = '#245688';
+  ctx.font = '700 104px -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(String(number), cv.width / 2, cv.height / 2 + 5);
+
+  const tex = new THREE.CanvasTexture(cv);
+  tex.minFilter = THREE.LinearFilter;
+  tex.encoding = THREE.sRGBEncoding;
+
+  const material = new THREE.MeshBasicMaterial({
+    map: tex,
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthWrite: false
+  });
+  const plate = new THREE.Mesh(
+    new THREE.PlaneGeometry(opts.width || 0.34, opts.height || 0.21),
+    material
+  );
+  plate.rotation.x = -Math.PI / 2;
+  plate.position.set(opts.x || 0, y, opts.z || 0);
+  plate.renderOrder = 15;
+  plate.userData.tableNumber = number;
+  return plate;
+}
+
+function makeTable(color) {
+  const g = new THREE.Group();
+  const top = box(1.3, 0.05, 0.5, color, { roughness: 0.45, envMapIntensity: 0.6 });
+  top.position.y = 0.72;
+  g.add(top);
+  [[-0.58, -0.18], [0.58, -0.18], [-0.58, 0.18], [0.58, 0.18]].forEach(([x, z]) => {
+    const leg = box(0.05, 0.7, 0.05, 0x707A82);
+    leg.position.set(x, 0.35, z);
+    g.add(leg);
+  });
+  return g;
+}
+function makeChair() {
+  const g = new THREE.Group();
+  const seat = box(0.38, 0.05, 0.38, COL.chair);
+  seat.position.y = 0.45; g.add(seat);
+  const back = box(0.38, 0.35, 0.05, COL.chair);
+  back.position.set(0, 0.66, 0.19); g.add(back);
+  [[-0.15, -0.15], [0.15, -0.15], [-0.15, 0.15], [0.15, 0.15]].forEach(([x, z]) => {
+    const leg = box(0.035, 0.44, 0.035, 0x707A82);
+    leg.position.set(x, 0.22, z); g.add(leg);
+  });
+  return g;
+}
+/* Blickrichtung Stuhl (default): schaut nach −z, Lehne bei +z */
+
+function makeHocker() {
+  const g = new THREE.Group();
+  const seat = cyl(0.17, 0.05, COL.hocker);
+  seat.position.y = 0.45; g.add(seat);
+  const legs = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.17, 0.43, 12, 1, true), mat(COL.hockerDark, { side: THREE.DoubleSide }));
+  legs.position.y = 0.215; legs.castShadow = true;
+  g.add(legs);
+  return g;
+}
+function makeWagen() {
+  const g = new THREE.Group();
+  const body = box(0.38, 0.72, 0.55, COL.slate);
+  body.position.y = 0.40; g.add(body);
+  const white = box(0.40, 0.48, 0.03, 0xF4F7F9);
+  white.position.set(0, 0.46, 0.285); g.add(white);
+  [[-0.15, -0.20], [0.15, -0.20], [-0.15, 0.20], [0.15, 0.20]].forEach(([x, z]) => {
+    const w = cyl(0.035, 0.08, 0x555F66, 10);
+    w.position.set(x, 0.04, z); g.add(w);
+  });
+  return g;
+}
+function makeStellwand() {
+  const g = new THREE.Group();
+  const panel = box(1.5, 1.05, 0.06, 0xE9E2D5);
+  panel.position.y = 0.7; g.add(panel);
+  const frame = box(1.56, 0.05, 0.1, COL.slate);
+  frame.position.y = 1.25; g.add(frame);
+  [[-0.65], [0.65]].forEach(([x]) => {
+    const foot = box(0.08, 0.16, 0.5, COL.slate);
+    foot.position.set(x, 0.08, 0); g.add(foot);
+  });
+  return g;
+}
+function makeBank(len = 1.6) {
+  const g = new THREE.Group();
+  const seat = box(len, 0.08, 0.42, COL.bench);
+  seat.position.y = 0.42; g.add(seat);
+  const base = box(len - 0.15, 0.38, 0.36, 0x5B7A66);
+  base.position.y = 0.19; g.add(base);
+  return g;
+}
+function makeWuerfel() {
+  const g = new THREE.Group();
+  const c = box(0.42, 0.42, 0.42, 0xD9C9A8);
+  c.position.y = 0.21; g.add(c);
+  return g;
+}
+function makeFlexTisch() {
+  const g = new THREE.Group();
+  const top = box(0.95, 0.05, 0.65, COL.roll);
+  top.position.y = 0.76; g.add(top);
+  [[-0.42, 0], [0.42, 0]].forEach(([x]) => {
+    const leg = box(0.05, 0.74, 0.06, 0x707A82);
+    leg.position.set(x, 0.37, 0.24); g.add(leg);
+    const leg2 = box(0.05, 0.74, 0.06, 0x707A82);
+    leg2.position.set(x, 0.37, -0.24); g.add(leg2);
+  });
+  const sym = label('↕', { color: '#2C3D4C', size: 40, scale: 0.008 });
+  sym.position.y = 1.1;
+  g.add(sym);
+  return g;
+}
+
+function makeLowShelf(len = 1.0) {
+  const g = new THREE.Group();
+  /* Heller Holzton wie bei den vorhandenen Regalen im realen Raum. */
+  const body = box(0.42, 0.82, len, 0xC6A77A);
+  body.position.y = 0.41; g.add(body);
+  const top = box(0.45, 0.04, len + 0.02, 0xDEC79F);
+  top.position.y = 0.84; g.add(top);
+  return g;
+}
+
+function makeTallOpenShelf(width = 0.82) {
+  const g = new THREE.Group();
+  const wood = 0xC6A77A;
+  const woodLight = 0xDEC79F;
+  const depth = 0.38;
+  const height = 1.92;
+
+  const back = box(0.035, height, width, woodLight);
+  back.position.set(-0.16, height / 2, 0); g.add(back);
+
+  [-width / 2, width / 2].forEach(z => {
+    const side = box(depth, height, 0.045, wood);
+    side.position.set(0, height / 2, z); g.add(side);
+  });
+
+  [0.04, 0.48, 0.92, 1.36, 1.88].forEach(y => {
+    const shelf = box(depth, 0.045, width, wood);
+    shelf.position.set(0, y, 0); g.add(shelf);
+  });
+
+  /* Einige neutrale Materialboxen als Orientierung – keine Umzugskisten. */
+  [-0.24, 0.24].forEach(z => {
+    [0.27, 0.71, 1.15].forEach(y => {
+      const bin = box(0.25, 0.16, 0.28, 0xE9E4DA);
+      bin.position.set(0.02, y, z); g.add(bin);
+    });
+  });
+  return g;
+}
+function makeStandingTable() {
+  const g = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.05, 24), mat(0xE3D6BC));
+  top.scale.x = 1.55;
+  top.position.y = 0.98; g.add(top);
+  const stem = cyl(0.05, 0.96, 0x707A82, 12);
+  stem.position.y = 0.48; g.add(stem);
+  const foot = cyl(0.24, 0.04, 0x707A82, 20);
+  foot.position.y = 0.02; g.add(foot);
+  return g;
+}
+function makeTeacherDesk() {
+  const g = new THREE.Group();
+  const top = box(1.20, 0.055, 0.60, COL.tableMove, { roughness: 0.42, envMapIntensity: 0.55 });
+  top.position.y = 0.75; g.add(top);
+  [[-0.53, -0.24], [0.53, -0.24], [-0.53, 0.24], [0.53, 0.24]].forEach(([x, z]) => {
+    const leg = box(0.05, 0.72, 0.05, 0x707A82);
+    leg.position.set(x, 0.36, z); g.add(leg);
+  });
+  const modesty = box(0.04, 0.42, 0.92, 0xEEF1F2);
+  modesty.position.set(-0.29, 0.48, 0); g.add(modesty);
+  const drawer = box(0.28, 0.50, 0.42, 0xD9DEE2);
+  drawer.position.set(0.36, 0.27, 0.04); g.add(drawer);
+  return g;
+}
+
+function makeCoachTisch() {
+  const g = new THREE.Group();
+  const top = box(0.9, 0.05, 0.56, 0xE3D6BC);
+  top.position.y = 0.74; g.add(top);
+  /* Beine weit außen: von beiden Längsseiten gut unterfahrbar */
+  [[-0.39, -0.22], [0.39, -0.22], [-0.39, 0.22], [0.39, 0.22]].forEach(([x, z]) => {
+    const leg = box(0.045, 0.72, 0.045, 0x707A82);
+    leg.position.set(x, 0.36, z); g.add(leg);
+  });
+  return g;
+}
+
+/* ---------- SCHALE (Tische fest, je ein Stuhl ausleihbar) ---------- */
+const shellGroup = new THREE.Group();
+scene.add(shellGroup);
+const shellTables = [];
+const shellChairs = [];
+const borrowedChairs = [];
+let shellDeskIndex = 0;
+
+function shellTablePlusChairs(x, z, ry) {
+  const deskNo = ++shellDeskIndex;
+  const t = makeTable(COL.tableFix);
+  t.position.set(x, 0, z);
+  t.rotation.y = ry;
+  shellGroup.add(t);
+  shellTables.push({ obj: t, home: { x, z, ry } });
+  registerCollision(`Lernbürotisch ${deskNo}`, t);
+
+  [-0.33, 0.33].forEach((off, chairIndex) => {
+    const c = makeChair();
+    /* Stuhl auf der Raumseite, Blick zur Wand */
+    const local = new THREE.Vector3(off, 0, 0.28).applyAxisAngle(new THREE.Vector3(0, 1, 0), ry);
+    c.position.set(x + local.x, 0, z + local.z);
+    c.rotation.y = ry;
+    shellGroup.add(c);
+    const home = { x: c.position.x, z: c.position.z, ry: c.rotation.y };
+    shellChairs.push({ obj: c, home, deskNo, chairIndex });
+    registerCollision(`Lernbürostuhl ${deskNo}.${chairIndex + 1}`, c, { movable: chairIndex === 1 });
+    /* Von jedem der acht Lernbürotische kann genau ein Stuhl in die Mitte wechseln. */
+    if (chairIndex === 1) borrowedChairs.push({ obj: c, home, deskNo });
+  });
+}
+/* ry = Blickrichtung der Lernenden (zur Wand), Stuhl steht auf der Raumseite */
+/* Fensterfront: 4 Tische, Blick zum Fenster */
+[-3.5, -2.1, -0.7, 0.7].forEach(x => shellTablePlusChairs(x, -3.2, 0));
+/* Untere Wand: 2 Tische; rechts bleibt die barrierefreie Ankunftszone frei */
+[-2.1, -0.65].forEach(x => shellTablePlusChairs(x, 3.2, Math.PI));
+/* Westwand: historische Ausgangsposition; die Layouts halten die Materialregale frei */
+[[-1.65], [1.65]].forEach(([z]) => shellTablePlusChairs(-4.2, z, Math.PI / 2));
+
+/* Lese- und Kuschelecke: dauerhaft in der NORDWESTECKE
+   (Fensterfront + Materialwand). */
+const rug = new THREE.Mesh(new THREE.CircleGeometry(0.95, 32), mat(COL.rug));
+rug.rotation.x = -Math.PI / 2;
+rug.position.set(-3.45, 0.005, -2.35);
+rug.receiveShadow = true;
+scene.add(rug);
+const bank1 = makeBank(1.45);
+bank1.position.set(-3.45, 0, -3.15);
+scene.add(bank1);
+registerCollision('Leseecke Bank', bank1);
+const loungeCubes = [];
+[[-3.85, -2.50], [-3.20, -2.20]].forEach(([x, z], i) => {
+  const w = makeWuerfel();
+  w.position.set(x, 0, z);
+  w.rotation.y = i ? -0.18 : 0.18;
+  scene.add(w);
+  loungeCubes.push(w);
+  registerCollision(`Leseecke Sitzwürfel ${i + 1}`, w);
+});
+const loungeTable = makeCoachTisch();
+loungeTable.scale.set(0.72, 0.72, 0.72);
+loungeTable.position.set(-2.55, 0, -2.45);
+scene.add(loungeTable);
+registerCollision('Leseecke Tisch', loungeTable);
+const loungeSpot = new THREE.Mesh(new THREE.CircleGeometry(0.34, 24), mat(0xAFC8DE, { transparent: true, opacity: 0.75 }));
+loungeSpot.rotation.x = -Math.PI / 2;
+loungeSpot.position.set(-2.55, 0.008, -1.95);
+scene.add(loungeSpot);
+
+/* Foto-basierte feste Möblierung an der WESTWAND:
+   hohe und halbhohe Materialregale. Die Türposition bleibt bis zur
+   genauen Vermessung unverändert. */
+const tallShelfLeft = makeTallOpenShelf(0.82);
+tallShelfLeft.position.set(-4.23, 0, -1.62);
+scene.add(tallShelfLeft);
+registerCollision('Hohes Regal Whiteboard links', tallShelfLeft);
+
+const tallShelfRight = makeTallOpenShelf(0.82);
+tallShelfRight.position.set(-4.23, 0, 1.62);
+scene.add(tallShelfRight);
+registerCollision('Hohes Regal Whiteboard rechts', tallShelfRight);
+
+/* Zwei halbhohe Materialregale an der Westwand, zusammen 2 m. */
+const materialShelfA = makeLowShelf(1.0);
+materialShelfA.position.set(-4.00, 0, -0.50);
+scene.add(materialShelfA);
+registerCollision('Materialtheke A', materialShelfA);
+const materialShelfB = makeLowShelf(1.0);
+materialShelfB.position.set(-4.00, 0, 0.50);
+scene.add(materialShelfB);
+registerCollision('Materialtheke B', materialShelfB);
+
+/* Hoher Schrank in der Ecke neben der Tür an der Wand der digitalen Tafel. */
+const tallCabinet = box(0.55, 2.00, 1.00, 0x6A8599);
+tallCabinet.position.set(4.12, 1.00, 2.90);
+scene.add(tallCabinet);
+registerCollision('Hochschrank Ecke', tallCabinet);
+
+/* Zwei schmale Materialwagen parken in derselben Ecke entlang der rechten Wand. */
+const materialWagons = [];
+[[4.02, 1.95], [4.02, 1.30]].forEach(([x, z], i) => {
+  const w = makeWagen();
+  w.position.set(x, 0, z);
+  w.rotation.y = Math.PI / 2;
+  scene.add(w);
+  materialWagons.push(w);
+  registerCollision(`Materialwagen ${i + 1}`, w);
+});
+
+/* Mobiler ovaler Stehtisch für kurze Inputs oder Beratungen nahe dem mobilen Whiteboard. */
+const standingTable = makeStandingTable();
+standingTable.position.set(3.00, 0, 0.55);
+scene.add(standingTable);
+registerCollision('Mobiler Stehtisch', standingTable);
+
+/* ---------- BEWEGLICHE MITTE ---------- */
+
+const moveGroup = new THREE.Group();
+scene.add(moveGroup);
+
+/* Vier Mitteltische: je zwei feste Stühle. In der Gruppenstellung kommen
+   je zwei ausgeliehene Stühle aus der Schale hinzu. */
+const mTables = [];
+const midTableChairs = [];
+for (let i = 0; i < 4; i++) {
+  const g = new THREE.Group();
+  g.add(makeTable(COL.tableMove));
+  [-0.33, 0.33].forEach(off => {
+    const c = makeChair();
+    c.position.set(off, 0, 0.32);
+    g.add(c);
+    midTableChairs.push(c);
+  });
+  moveGroup.add(g);
+  mTables.push(g);
+  registerCollision(`Mitteltisch ${i + 1}`, g, { movable: true });
+}
+
+/* Zusätzlicher Doppeltisch: ergänzt zwei vollwertige Plätze. */
+const extraMidTable = new THREE.Group();
+extraMidTable.add(makeTable(COL.tableMove));
+[-0.33, 0.33].forEach(off => {
+  const c = makeChair();
+  c.position.set(off, 0, 0.32);
+  extraMidTable.add(c);
+  midTableChairs.push(c);
+});
+moveGroup.add(extraMidTable);
+registerCollision('Mitteltisch 5', extraMidTable, { movable: true });
+
+/* Zusätzlicher Doppeltisch Nr. 14 zwischen digitaler Tafel und Tür. */
+const wallTable14 = new THREE.Group();
+wallTable14.add(makeTable(COL.tableMove));
+[-0.33, 0.33].forEach(off => {
+  const c = makeChair();
+  c.position.set(off, 0, 0.32);
+  wallTable14.add(c);
+});
+wallTable14.position.set(1.90, 0, 3.17);
+wallTable14.rotation.y = Math.PI;
+scene.add(wallTable14);
+registerCollision('Doppeltisch 14', wallTable14, { movable: true });
+
+/* Büroecke dauerhaft in der NORDOSTECKE
+   (Fensterfront + Ostwand mit beweglicher Haupttafel). */
+const officeTable15 = makeTable(COL.tableMove);
+officeTable15.position.set(3.55, 0, -3.10);
+officeTable15.rotation.y = 0;
+scene.add(officeTable15);
+registerCollision('Bürotisch 15', officeTable15, { movable: true });
+
+const officeTable16 = makeTable(COL.tableMove);
+officeTable16.position.set(3.55, 0, -2.35);
+officeTable16.rotation.y = 0;
+scene.add(officeTable16);
+registerCollision('Bürotisch 16', officeTable16, { movable: true });
+
+const teacherDesk = makeTeacherDesk();
+teacherDesk.position.set(2.70, 0, -1.65);
+teacherDesk.rotation.y = 0;
+scene.add(teacherDesk);
+registerCollision('Lehrerpult', teacherDesk, { movable: true });
+
+/* Zwei identische flexible Einzeltische: einer kann direkt mit dem Rollstuhl,
+   der zweite mit einem regulären Stuhl genutzt werden. */
+const flexTischA = makeFlexTisch();
+moveGroup.add(flexTischA);
+registerCollision('Höhenverstellbarer Tisch', flexTischA, { movable: true });
+
+/* Ein mobiles Raumteilerelement. */
+const wand2 = makeStellwand();
+moveGroup.add(wand2);
+registerCollision('Akustik-Stellwand', wand2, { movable: true });
+const wand3 = new THREE.Group();
+wand3.visible = false;
+
+/* Zusätzliche lose Stühle für Input und Sitzkreis; Hocker entfallen vollständig. */
+const looseChairs = [];
+for (let i = 0; i < 25; i++) {
+  const c = makeChair();
+  c.visible = false;
+  moveGroup.add(c);
+  looseChairs.push(c);
+  registerCollision(`Loser Stuhl ${i + 1}`, c, { layouts: ['kino', 'kreis'], movable: true });
+}
+const hockers = [];
+/* Integrierter Rollstuhlplatz (Marker, wandert mit) */
+const rollSpot = new THREE.Mesh(new THREE.CircleGeometry(0.34, 24), mat(0xAFC8DE));
+rollSpot.rotation.x = -Math.PI / 2;
+rollSpot.position.y = 0.007;
+const rollGroup = new THREE.Group();
+rollGroup.add(rollSpot);
+moveGroup.add(rollGroup);
+
+/* ---------- Interaktiver Möbel-Editor ---------- */
+const editorItems = [];
+const editorById = new Map();
+let editorIdCounter = 0;
+function registerEditorItem(root, name) {
+  if (!root) return;
+  const id = `item-${++editorIdCounter}`;
+  const item = { id, name, root };
+  root.userData.editorId = id;
+  root.traverse(obj => { obj.userData.editorRoot = root; obj.userData.editorId = id; });
+  editorItems.push(item);
+  editorById.set(id, item);
+}
+
+shellTables.forEach((entry, i) => registerEditorItem(entry.obj, `Doppeltisch außen ${i + 1}`));
+shellChairs.forEach((entry, i) => registerEditorItem(entry.obj, `Stuhl außen ${i + 1}`));
+mTables.forEach((table, i) => registerEditorItem(table, `Doppeltisch Mitte ${i + 1}`));
+registerEditorItem(flexTischA, 'Höhenverstellbarer Tisch');
+registerEditorItem(wand2, 'Mobiler Raumteiler');
+registerEditorItem(standingTable, 'Ovaler Stehtisch');
+
+/* ---------- Sichtbare Tischnummern ----------
+   Nummeriert werden nur die regulären Arbeits-/Doppeltische:
+   1–8 Wandtische, 9–12 Mitteltische, 13 zusätzlicher Mitteltisch,
+   14 Tisch zwischen digitaler Tafel und Tür, 15–16 Büroecke.
+   Höhenverstellbarer Tisch, Stehtisch, Lehrerpult und Lounge-Tisch
+   bleiben bewusst ohne Nummer. */
+shellTables.forEach((entry, i) => {
+  entry.obj.add(makeTableNumber(i + 1, 0.755));
+});
+mTables.forEach((table, i) => {
+  table.add(makeTableNumber(i + 9, 0.755));
+});
+extraMidTable.add(makeTableNumber(13, 0.755));
+wallTable14.add(makeTableNumber(14, 0.755));
+officeTable15.add(makeTableNumber(15, 0.755));
+officeTable16.add(makeTableNumber(16, 0.755));
+materialWagons.forEach((wagen, i) => registerEditorItem(wagen, `Materialwagen ${i + 1}`));
+registerEditorItem(bank1, 'Lounge-Bank');
+loungeCubes.forEach((cube, i) => registerEditorItem(cube, `Polstersitz ${i + 1}`));
+registerEditorItem(loungeTable, 'Lounge-Tisch');
+registerEditorItem(rollGroup, 'Rollstuhlplatz');
+looseChairs.forEach((chair, i) => registerEditorItem(chair, `Stuhl Input/Kreis ${i + 1}`));
+registerEditorItem(extraMidTable, 'Doppeltisch Mitte 5');
+registerEditorItem(wallTable14, 'Doppeltisch 14');
+registerEditorItem(officeTable15, 'Bürotisch 15');
+registerEditorItem(officeTable16, 'Bürotisch 16');
+registerEditorItem(teacherDesk, 'Lehrerpult');
+
+/* Hauptwege (mind. 120 cm) und Wendekreise (150 cm), zuschaltbar.
+   Die Route verläuft vom Türbereich zunächst nach links und anschließend
+   durch die freie Mittelachse; Lounge und Materialecke bleiben ausgespart. */
+const radiusGroup = new THREE.Group();
+function accessStrip(w, d, x, z) {
+  const p = new THREE.Mesh(
+    new THREE.PlaneGeometry(w, d),
+    mat(0xAFC8DE, { transparent: true, opacity: 0.22, side: THREE.DoubleSide })
+  );
+  p.rotation.x = -Math.PI / 2;
+  p.position.set(x, 0.012, z);
+  radiusGroup.add(p);
+}
+accessStrip(1.20, 1.05, 3.20, 2.94); // Ankunft und Tür
+accessStrip(2.30, 1.20, 2.62, 2.38); // Querung in die freie Mittelachse
+accessStrip(1.20, 3.60, 2.05, 0.58); // Hauptachse
+accessStrip(2.40, 1.20, 3.25, 0.00); // mobiles Whiteboard
+accessStrip(1.20, 1.35, 1.72, -1.90); // Abzweig zur Lounge
+[[3.20, 2.72], [2.05, 0.0], [1.72, -2.05]].forEach(([x, z]) => {
+  const ring = new THREE.Mesh(
+    new THREE.RingGeometry(0.72, 0.75, 48),
+    mat(0x3E5668, { transparent: true, opacity: 0.62, side: THREE.DoubleSide })
+  );
+  ring.rotation.x = -Math.PI / 2;
+  ring.position.set(x, 0.018, z);
+  radiusGroup.add(ring);
+});
+radiusGroup.visible = false;
+scene.add(radiusGroup);
+
+/* ---------- Hocker-Positionsgeneratoren ---------- */
+function hockerTowers() {
+  const out = [];
+  const towerZ = [-2.75, -2.18, -1.60, 1.72, 2.30];
+  for (let i = 0; i < 25; i++) {
+    const tower = Math.floor(i / 5);
+    const idx = i % 5;
+    out.push({ x: 4.12, z: towerZ[tower], y: idx * 0.10, ry: idx * 0.28 });
+  }
+  return out;
+}
+/* Vier flache, leicht gebogene Reihen. Die vordere Reihe lässt in der Mitte
+   eine 110 cm breite Lücke für den Rollstuhlplatz. */
+function chairHalbkreis() {
+  const out = [];
+  const rows = [
+    /* Die Sitzreihen bleiben mit deutlichem Abstand zur Ostwand und
+       vollständig außerhalb der Büroecke. */
+    { x: 1.75, zs: [-2.15, -1.29, -0.43, 0.43, 1.29, 2.15] },
+    { x: 0.95, zs: [-2.25, -1.50, -0.75, 0, 0.75, 1.50, 2.25] },
+    { x: 0.15, zs: [-2.05, -1.23, -0.41, 0.41, 1.23, 2.05] },
+    { x: -0.65, zs: [-1.95, -1.17, -0.39, 0.39, 1.17, 1.95] }
+  ];
+  rows.forEach(row => row.zs.forEach(z => {
+    const curve = 0.08 * Math.pow(Math.abs(z) / 2.25, 2);
+    out.push({ x: row.x - curve, z, y: 0, ry: -Math.PI / 2 });
+  }));
+  return out;
+}
+function chairKreis() {
+  const out = [];
+  const cx = 0.10, cz = 0.0, r = 2.00, slots = 26;
+  for (let i = 0; i < slots; i++) {
+    if (i === 0) continue; // Lücke für den Rollstuhlplatz an der rechten Seite
+    const a = (i / slots) * Math.PI * 2;
+    out.push({ x: cx + Math.cos(a) * r, z: cz + Math.sin(a) * r, y: 0, ry: -a + Math.PI / 2 });
+  }
+  return out;
+}
+
+/* ---------- Layout-Definitionen ---------- */
+const P = Math.PI;
+const LAYOUTS = {
+  lernbuero: {
+    name: 'Lernbüro',
+    text: 'Die Idee: eine verlässliche Grundordnung für den täglichen selbstregulierten Unterricht. Die Lernenden finden schnell einen passenden Einzel- oder Partnerarbeitsplatz, Materialien und Laufwege bleiben übersichtlich und kurze Wechsel zwischen konzentriertem Arbeiten, Beratung und Austausch sind ohne großen Umbau möglich.',
+    seats: '24 Stuhlplätze + Lounge/Polsterplätze + 1 Rollstuhlplatz',
+    mt: [
+      { x: -0.95, z: -0.25, ry: P },
+      { x:  0.35, z: -0.25, ry: P },
+      { x: -0.95, z:  0.25, ry: 0 },
+      { x:  0.35, z:  0.25, ry: 0 }
+    ],
+    flexA: { x: -2.45, z: 0.00, ry: P / 2 },
+    wand2: { x: 1.65, z: -2.10, ry: P / 2 },
+    wand3: { x: 0.0, z: 0.0, ry: 0 },
+    rollSpot: { x: -2.45, z: 0.00 },
+    stand: { x: 3.00, z: 0.55, ry: 0 },
+    extraMt: { x: 1.10, z: 3.20, ry: P },
+    chairs: null
+  },
+  gruppen: {
+    name: 'Gruppeninseln',
+    text: 'Die Idee: Diese Variante bildet die aktuelle reale Grundstellung des Raums ab. Mehrere Gruppeninseln verteilen die Lernenden auf überschaubare Teams; entlang der Wände bleiben zusätzliche Arbeitsplätze verfügbar. Der digitale Bildschirm steht an der Südwand zwischen Waschbecken und Tür. Die Lese- und Kuschelecke liegt dauerhaft in der Nordwestecke. Die Büroecke mit Lehrerpult sowie den Tischen 15 und 16 liegt dauerhaft in der Nordostecke; die bewegliche Haupt-Whiteboardtafel steht an der Ostwand gegenüber den Materialregalen.',
+    seats: '5 Gruppeninseln + Rollstuhlplatz integriert',
+    shell: [
+      /* Zwei kleinere Inseln an der Fensterseite */
+      { x: -2.70, z: -2.30, ry: -P / 2 }, { x: -2.15, z: -2.30, ry:  P / 2 },
+      { x:  0.85, z: -2.15, ry: -P / 2 }, { x:  1.40, z: -2.15, ry:  P / 2 },
+      /* Zwei weitere Inseln auf der gegenüberliegenden Raumhälfte */
+      { x: -2.65, z:  2.05, ry: -P / 2 }, { x: -2.10, z:  2.05, ry:  P / 2 },
+      { x:  1.20, z:  2.05, ry: -P / 2 }, { x:  1.75, z:  2.05, ry:  P / 2 }
+    ],
+    mt: [
+      /* Vier Tische als größere zentrale Gruppeninsel */
+      { x: -0.70, z: -0.28, ry: P },
+      { x:  0.60, z: -0.28, ry: P },
+      { x: -0.70, z:  0.28, ry: 0 },
+      { x:  0.60, z:  0.28, ry: 0 }
+    ],
+    flexA: { x: -1.85, z: 0.00, ry: P / 2 },
+    wand2: { x: 1.20, z: -1.45, ry: P / 2 },
+    wand3: { x: 0.0, z: 0.0, ry: 0 },
+    rollSpot: { x: -1.85, z: 0.00 },
+    stand: { x: 3.10, z: 0.80, ry: 0 },
+    /* Der zusätzliche Tisch erweitert die südöstliche Insel. */
+    extraMt: { x: 2.05, z: 1.50, ry: P },
+    chairs: null
+  },
+  marktplatz: {
+    name: 'Marktplatz / Lerncafé',
+    text: 'Die Idee: eine offene Lernlandschaft mit möglichst viel Wahlfreiheit. Unterschiedliche Sitz-, Steh-, Einzel-, Partner- und Gruppenangebote unterstützen verschiedene Lernbedürfnisse; die Lernenden wählen ihren Arbeitsplatz passend zu Aufgabe, Energie und gewünschter Zusammenarbeit.',
+    seats: '25 Stuhlplätze + 1 Rollstuhlplatz; zusätzlich Stehbar und Lounge',
+    shell: [
+      /* Zwei ruhige Fensterplätze zwischen Lese- und Büroecke */
+      { x: -1.45, z: -3.15, ry: 0 },
+      { x:  0.05, z: -3.15, ry: 0 },
+      /* Caféinsel links oben */
+      { x: -2.30, z: -1.45, ry: -P / 2 },
+      { x: -1.80, z: -1.45, ry:  P / 2 },
+      /* Caféinsel Mitte */
+      { x: -0.25, z: -1.35, ry: -P / 2 },
+      { x:  0.25, z: -1.35, ry:  P / 2 },
+      /* Caféinsel rechts */
+      { x:  1.65, z: -0.65, ry: -P / 2 },
+      { x:  2.15, z: -0.65, ry:  P / 2 }
+    ],
+    mt: [
+      /* Drei Tische als lange Gemeinschaftstafel */
+      { x: -1.40, z: 1.65, ry: P },
+      { x: -0.10, z: 1.65, ry: 0 },
+      { x:  1.20, z: 1.65, ry: P },
+      /* Ruhige Café-Nische an der Materialtheke */
+      { x: -3.15, z: 0.35, ry: P / 2 }
+    ],
+    flexA: { x: -2.55, z: 1.65, ry: 0 },
+    wand2: { x: -2.35, z: 0.35, ry: P / 2 },
+    wand3: { x: 0.0, z: 0.0, ry: 0 },
+    rollSpot: { x: -2.55, z: 1.65 },
+    stand: { x: 3.20, z: 0.55, ry: 0 },
+    /* Kleiner Check-in- und Zweiertisch neben der Tür */
+    extraMt: { x: 0.60, z: 3.15, ry: P },
+    /* Die Nische bleibt bewusst ein Einzelarbeitsplatz. */
+    hiddenMidChairIndexes: [7],
+    chairs: null
+  },
+  kino: {
+    name: 'Input / Halbkreis',
+    text: 'Die Idee: für kurze gemeinsame Inputs entsteht eine klare Blickrichtung zum mobilen Whiteboard – mit genügend Abstand zwischen Tafel und erster Reihe. Der offene Halbkreis unterstützt Sichtkontakt, Beteiligung und Rückfragen. Die Mitteltische parken währenddessen weit hinten im Raum; der Raumteiler wird ausgeblendet, damit die Sitzreihen frei und übersichtlich bleiben.',
+    seats: '25 Stühle + 1 Rollstuhlplatz = 26',
+    mt: [
+      { x: -2.55, z: -0.95, ry: P },
+      { x: -1.25, z: -0.95, ry: P },
+      { x: -2.55, z:  0.95, ry: 0 },
+      { x: -1.25, z:  0.95, ry: 0 }
+    ],
+    flexA: { x: -3.05, z: 2.10, ry: P / 2 },
+    wand2: { x: -3.40, z: -2.20, ry: 0 },
+    wand3: { x: 0.0, z: 0.0, ry: 0 },
+    rollSpot: { x: 1.75, z: 0.00 },
+    stand: { x: 2.00, z: -2.90, ry: 0 },
+    extraMt: { x: 1.10, z: 3.20, ry: P },
+    chairs: chairHalbkreis
+  },
+  kreis: {
+    name: 'Kreis / Klassenrat',
+    text: 'Die Idee: ein gleichberechtigter Gesprächsraum für Klassenrat, Reflexion und gemeinsame Entscheidungen. Alle sehen einander, niemand sitzt in einer hinteren Reihe und der freie Mittelpunkt schafft Ruhe, Verbindlichkeit und ein deutliches Gefühl von Gemeinschaft.',
+    seats: '25 Stühle + 1 Rollstuhlplatz = 26',
+    mt: [
+      { x: -2.70, z: -1.95, ry: P / 2 },
+      { x: -2.70, z: -0.65, ry: P / 2 },
+      { x: -2.70, z:  0.65, ry: P / 2 },
+      { x: -2.70, z:  1.95, ry: P / 2 }
+    ],
+    flexA: { x: -1.85, z: 2.55, ry: 0 },
+    wand2: { x: 2.05, z: 2.00, ry: P / 2 },
+    wand3: { x: 0.0, z: 0.0, ry: 0 },
+    rollSpot: { x: 2.10, z: 0.00 },
+    stand: { x: 3.35, z: -1.35, ry: 0 },
+    extraMt: { x: -2.70, z: 2.60, ry: P / 2 },
+    chairs: chairKreis
+  }
+};
+
+/* Vom Nutzer exportierte Standardanordnungen */
+const IMPORTED_PRESETS = {"lernbuero":{"name":"Lernbüro","savedAt":"2026-07-18T18:40:35.462Z","items":{"item-1":{"x":-2.0,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-2":{"x":-0.65,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-3":{"x":0.7,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-4":{"x":2.05,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-5":{"x":-2.1,"y":0,"z":3.2,"ry":3.141592653589793,"visible":true},"item-6":{"x":-0.65,"y":0,"z":3.2,"ry":3.141592653589793,"visible":true},"item-7":{"x":-4.2,"y":0,"z":-1.65,"ry":1.5707963267948966,"visible":true},"item-8":{"x":-4.2,"y":0,"z":1.65,"ry":1.5707963267948966,"visible":true},"item-9":{"x":-2.33,"y":0,"z":-2.92,"ry":0.0,"visible":true},"item-10":{"x":-1.67,"y":0,"z":-2.92,"ry":0.0,"visible":true},"item-11":{"x":-0.98,"y":0,"z":-2.92,"ry":0.0,"visible":true},"item-12":{"x":-0.32,"y":0,"z":-2.92,"ry":0.0,"visible":true},"item-13":{"x":0.36999999999999994,"y":0,"z":-2.92,"ry":0.0,"visible":true},"item-14":{"x":1.03,"y":0,"z":-2.92,"ry":0.0,"visible":true},"item-15":{"x":1.7199999999999998,"y":0,"z":-2.92,"ry":0.0,"visible":true},"item-16":{"x":2.38,"y":0,"z":-2.92,"ry":0.0,"visible":true},"item-17":{"x":-1.77,"y":0,"z":2.92,"ry":3.141592653589793,"visible":true},"item-18":{"x":-2.43,"y":0,"z":2.92,"ry":3.141592653589793,"visible":true},"item-19":{"x":-0.32,"y":0,"z":2.92,"ry":3.141592653589793,"visible":true},"item-20":{"x":-0.98,"y":0,"z":2.92,"ry":3.141592653589793,"visible":true},"item-21":{"x":-3.9200000000000004,"y":0,"z":-1.3199999999999998,"ry":1.5707963267948966,"visible":true},"item-22":{"x":-3.92,"y":0,"z":-1.98,"ry":1.5707963267948966,"visible":true},"item-23":{"x":-3.9200000000000004,"y":0,"z":1.98,"ry":1.5707963267948966,"visible":true},"item-24":{"x":-3.92,"y":0,"z":1.3199999999999998,"ry":1.5707963267948966,"visible":true},"item-25":{"x":-1.5,"y":0,"z":-0.3,"ry":3.141592653589793,"visible":true},"item-26":{"x":-0.2,"y":0,"z":-0.3,"ry":3.141592653589793,"visible":true},"item-27":{"x":-1.5,"y":0,"z":0.2,"ry":0,"visible":true},"item-28":{"x":-0.2,"y":0,"z":0.2,"ry":0,"visible":true},"item-29":{"x":-2.45,"y":0,"z":0,"ry":1.5707963267948966,"visible":true},"item-30":{"x":1.65,"y":0,"z":-2.1,"ry":1.5707963267948966,"visible":true},"item-31":{"x":3,"y":0,"z":0.55,"ry":0,"visible":true},"item-32":{"x":4.02,"y":0,"z":1.95,"ry":1.5707963267948966,"visible":true},"item-33":{"x":4.02,"y":0,"z":1.3,"ry":1.5707963267948966,"visible":true},"item-34":{"x":-3.45,"y":0,"z":-3.15,"ry":0.0,"visible":true},"item-35":{"x":-3.85,"y":0,"z":-2.5,"ry":0.18,"visible":true},"item-36":{"x":-3.2,"y":0,"z":-2.2,"ry":-0.18,"visible":true},"item-37":{"x":-2.55,"y":0,"z":-2.45,"ry":0.0,"visible":true},"item-38":{"x":-2.45,"y":0,"z":0,"ry":0,"visible":true},"item-39":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-40":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-41":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-42":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-43":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-44":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-45":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-46":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-47":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-48":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-49":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-50":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-51":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-52":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-53":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-54":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-55":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-56":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-57":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-58":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-59":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-60":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-61":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-62":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-63":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-65":{"x":1.9,"y":0,"z":3.17,"ry":3.141592653589793,"visible":true},"item-66":{"x":3.55,"y":0,"z":-3.1,"ry":0.0,"visible":true},"item-67":{"x":3.55,"y":0,"z":-2.35,"ry":0.0,"visible":true},"item-68":{"x":2.7,"y":0,"z":-1.65,"ry":0.0,"visible":true}}},"kino":{"name":"Input / Halbkreis","savedAt":"2026-07-18T20:25:20.686Z","items":{"item-1":{"x":-2.0,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-2":{"x":-0.65,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-3":{"x":0.7,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-4":{"x":2.05,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-5":{"x":-2.1,"y":0,"z":3.2,"ry":3.141593,"visible":true},"item-6":{"x":-0.65,"y":0,"z":3.2,"ry":3.141593,"visible":true},"item-7":{"x":-4.2,"y":0,"z":-1.65,"ry":1.570796,"visible":true},"item-8":{"x":-4.2,"y":0,"z":1.65,"ry":1.570796,"visible":true},"item-9":{"x":-2.33,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-10":{"x":-1.67,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-11":{"x":-0.98,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-12":{"x":-0.32,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-13":{"x":0.36999999999999994,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-14":{"x":1.03,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-15":{"x":1.7199999999999998,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-16":{"x":2.38,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-17":{"x":-1.77,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-18":{"x":-2.43,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-19":{"x":-0.32,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-20":{"x":-0.98,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-21":{"x":-3.92,"y":0,"z":-1.32,"ry":1.570796,"visible":false},"item-22":{"x":-3.92,"y":0,"z":-1.98,"ry":1.570796,"visible":false},"item-23":{"x":-3.92,"y":0,"z":1.98,"ry":1.570796,"visible":false},"item-24":{"x":-3.92,"y":0,"z":1.32,"ry":1.570796,"visible":false},"item-25":{"x":-2.55,"y":0,"z":-0.95,"ry":3.141592653589793,"visible":true},"item-26":{"x":-1.25,"y":0,"z":-0.95,"ry":3.141592653589793,"visible":true},"item-27":{"x":-2.55,"y":0,"z":0.95,"ry":0.0,"visible":true},"item-28":{"x":-1.25,"y":0,"z":0.95,"ry":0.0,"visible":true},"item-29":{"x":-3.05,"y":0,"z":2.1,"ry":1.5707963267948966,"visible":true},"item-30":{"x":-3.4,"y":0,"z":-2.2,"ry":0.0,"visible":false},"item-31":{"x":2,"y":0,"z":-2.9,"ry":0,"visible":true},"item-32":{"x":4.02,"y":0,"z":1.95,"ry":1.570796,"visible":true},"item-33":{"x":4.02,"y":0,"z":1.3,"ry":1.570796,"visible":true},"item-34":{"x":-3.45,"y":0,"z":-3.15,"ry":0.0,"visible":true},"item-35":{"x":-3.85,"y":0,"z":-2.5,"ry":0.18,"visible":true},"item-36":{"x":-3.2,"y":0,"z":-2.2,"ry":-0.18,"visible":true},"item-37":{"x":-2.55,"y":0,"z":-2.45,"ry":0.0,"visible":true},"item-38":{"x":1.75,"y":0,"z":0.0,"ry":0.0,"visible":true},"item-39":{"x":1.676953,"y":0,"z":-2.15,"ry":-1.5707963267948966,"visible":true},"item-40":{"x":1.723703,"y":0,"z":-1.29,"ry":-1.5707963267948966,"visible":true},"item-41":{"x":1.747078,"y":0,"z":-0.43,"ry":-1.5707963267948966,"visible":true},"item-42":{"x":1.747078,"y":0,"z":0.43,"ry":-1.5707963267948966,"visible":true},"item-43":{"x":1.723703,"y":0,"z":1.29,"ry":-1.5707963267948966,"visible":true},"item-44":{"x":1.676953,"y":0,"z":2.15,"ry":-1.5707963267948966,"visible":true},"item-45":{"x":0.87,"y":0,"z":-2.25,"ry":-1.5707963267948966,"visible":true},"item-46":{"x":0.914444,"y":0,"z":-1.5,"ry":-1.5707963267948966,"visible":true},"item-47":{"x":0.941111,"y":0,"z":-0.75,"ry":-1.5707963267948966,"visible":true},"item-48":{"x":0.95,"y":0,"z":0,"ry":-1.5707963267948966,"visible":true},"item-49":{"x":0.941111,"y":0,"z":0.75,"ry":-1.5707963267948966,"visible":true},"item-50":{"x":0.914444,"y":0,"z":1.5,"ry":-1.5707963267948966,"visible":true},"item-51":{"x":0.87,"y":0,"z":2.25,"ry":-1.5707963267948966,"visible":true},"item-52":{"x":0.08359,"y":0,"z":-2.05,"ry":-1.5707963267948966,"visible":true},"item-53":{"x":0.126092,"y":0,"z":-1.23,"ry":-1.5707963267948966,"visible":true},"item-54":{"x":0.147344,"y":0,"z":-0.41,"ry":-1.5707963267948966,"visible":true},"item-55":{"x":0.147344,"y":0,"z":0.41,"ry":-1.5707963267948966,"visible":true},"item-56":{"x":0.126092,"y":0,"z":1.23,"ry":-1.5707963267948966,"visible":true},"item-57":{"x":0.08359,"y":0,"z":2.05,"ry":-1.5707963267948966,"visible":true},"item-58":{"x":-0.710089,"y":0,"z":-1.95,"ry":-1.5707963267948966,"visible":true},"item-59":{"x":-0.671632,"y":0,"z":-1.17,"ry":-1.5707963267948966,"visible":true},"item-60":{"x":-0.652404,"y":0,"z":-0.39,"ry":-1.5707963267948966,"visible":true},"item-61":{"x":-0.652404,"y":0,"z":0.39,"ry":-1.5707963267948966,"visible":true},"item-62":{"x":-0.671632,"y":0,"z":1.17,"ry":-1.5707963267948966,"visible":true},"item-63":{"x":-0.710089,"y":0,"z":1.95,"ry":-1.5707963267948966,"visible":true},"item-64":{"x":1.1,"y":0,"z":3.2,"ry":3.141593,"visible":true},"item-65":{"x":1.9,"y":0,"z":3.17,"ry":3.141592653589793,"visible":true},"item-66":{"x":3.55,"y":0,"z":-3.1,"ry":0.0,"visible":true},"item-67":{"x":3.55,"y":0,"z":-2.35,"ry":0.0,"visible":true},"item-68":{"x":2.7,"y":0,"z":-1.65,"ry":0.0,"visible":true}}},"gruppen":{"name":"Gruppeninseln","savedAt":"2026-07-18T20:24:08.246Z","items":{"item-1":{"x":-1.25,"y":0,"z":-2.6,"ry":-1.570796,"visible":true},"item-2":{"x":-0.75,"y":0,"z":-2.6,"ry":1.570796,"visible":true},"item-3":{"x":0.4,"y":0,"z":-2.6,"ry":-1.570796,"visible":true},"item-4":{"x":0.9,"y":0,"z":-2.6,"ry":1.570796,"visible":true},"item-5":{"x":-2.1,"y":0,"z":2.55,"ry":-1.570796,"visible":true},"item-6":{"x":-1.6,"y":0,"z":2.55,"ry":1.570796,"visible":true},"item-7":{"x":0.4,"y":0,"z":2.55,"ry":-1.570796,"visible":true},"item-8":{"x":0.9,"y":0,"z":2.55,"ry":1.570796,"visible":true},"item-9":{"x":-1.57,"y":0,"z":-2.82,"ry":-1.570796,"visible":true},"item-10":{"x":-1.57,"y":0,"z":-2.38,"ry":-1.570796,"visible":true},"item-11":{"x":-0.43,"y":0,"z":-2.38,"ry":1.570796,"visible":true},"item-12":{"x":-0.43,"y":0,"z":-2.82,"ry":1.570796,"visible":true},"item-13":{"x":0.08,"y":0,"z":-2.82,"ry":-1.570796,"visible":true},"item-14":{"x":0.08,"y":0,"z":-2.38,"ry":-1.570796,"visible":true},"item-15":{"x":1.22,"y":0,"z":-2.38,"ry":1.570796,"visible":true},"item-16":{"x":1.22,"y":0,"z":-2.82,"ry":1.570796,"visible":true},"item-17":{"x":-2.42,"y":0,"z":2.33,"ry":-1.570796,"visible":true},"item-18":{"x":-2.42,"y":0,"z":2.77,"ry":-1.570796,"visible":true},"item-19":{"x":-1.28,"y":0,"z":2.77,"ry":1.570796,"visible":true},"item-20":{"x":-1.28,"y":0,"z":2.33,"ry":1.570796,"visible":true},"item-21":{"x":0.08,"y":0,"z":2.33,"ry":-1.570796,"visible":true},"item-22":{"x":0.08,"y":0,"z":2.77,"ry":-1.570796,"visible":true},"item-23":{"x":1.22,"y":0,"z":2.77,"ry":1.570796,"visible":true},"item-24":{"x":1.22,"y":0,"z":2.33,"ry":1.570796,"visible":true},"item-25":{"x":-0.3,"y":0,"z":0.1,"ry":-1.570796,"visible":true},"item-26":{"x":0.2,"y":0,"z":0.1,"ry":1.570796,"visible":true},"item-27":{"x":-1.85,"y":0,"z":1.65,"ry":3.141593,"visible":true},"item-28":{"x":0.65,"y":0,"z":1.65,"ry":3.141593,"visible":true},"item-29":{"x":-1.8,"y":0,"z":-1.6,"ry":3.141593,"visible":true},"item-30":{"x":1.2,"y":0,"z":-1.45,"ry":1.5707963267948966,"visible":true},"item-31":{"x":3.1,"y":0,"z":0.1,"ry":0,"visible":true},"item-32":{"x":4.02,"y":0,"z":1.95,"ry":1.570796,"visible":true},"item-33":{"x":4.02,"y":0,"z":1.3,"ry":1.570796,"visible":true},"item-34":{"x":-3.45,"y":0,"z":-3.15,"ry":0.0,"visible":true},"item-35":{"x":-3.85,"y":0,"z":-2.5,"ry":0.18,"visible":true},"item-36":{"x":-3.2,"y":0,"z":-2.2,"ry":-0.18,"visible":true},"item-37":{"x":-2.55,"y":0,"z":-2.45,"ry":0.0,"visible":true},"item-38":{"x":1.28,"y":0,"z":-1.625,"ry":0,"visible":true},"item-39":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-40":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-41":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-42":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-43":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-44":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-45":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-46":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-47":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-48":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-49":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-50":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-51":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-52":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-53":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-54":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-55":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-56":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-57":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-58":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-59":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-60":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-61":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-62":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-63":{"x":0,"y":0,"z":0,"ry":0,"visible":false},"item-64":{"x":0.6,"y":0,"z":-1.7,"ry":6.283185307179586,"visible":true},"item-65":{"x":1.9,"y":0,"z":3.17,"ry":3.141592653589793,"visible":true},"item-66":{"x":3.55,"y":0,"z":-3.1,"ry":0.0,"visible":true},"item-67":{"x":3.55,"y":0,"z":-2.35,"ry":0.0,"visible":true},"item-68":{"x":2.7,"y":0,"z":-1.65,"ry":0.0,"visible":true}}},"kreis":{"name":"Kreis / Klassenrat","savedAt":"2026-07-18T20:27:42.075Z","items":{"item-1":{"x":-2.0,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-2":{"x":-0.65,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-3":{"x":0.7,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-4":{"x":2.05,"y":0,"z":-3.2,"ry":0.0,"visible":true},"item-5":{"x":-2.1,"y":0,"z":3.2,"ry":3.141593,"visible":true},"item-6":{"x":-0.65,"y":0,"z":3.2,"ry":3.141593,"visible":true},"item-7":{"x":-4.2,"y":0,"z":-1.65,"ry":1.570796,"visible":true},"item-8":{"x":-4.2,"y":0,"z":1.65,"ry":1.570796,"visible":true},"item-9":{"x":-2.33,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-10":{"x":-1.67,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-11":{"x":-0.98,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-12":{"x":-0.32,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-13":{"x":0.36999999999999994,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-14":{"x":1.03,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-15":{"x":1.7199999999999998,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-16":{"x":2.38,"y":0,"z":-2.92,"ry":0.0,"visible":false},"item-17":{"x":-1.77,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-18":{"x":-2.43,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-19":{"x":-0.32,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-20":{"x":-0.98,"y":0,"z":2.92,"ry":3.141593,"visible":false},"item-21":{"x":-3.92,"y":0,"z":-1.32,"ry":1.570796,"visible":false},"item-22":{"x":-3.92,"y":0,"z":-1.98,"ry":1.570796,"visible":false},"item-23":{"x":-3.92,"y":0,"z":1.98,"ry":1.570796,"visible":false},"item-24":{"x":-3.92,"y":0,"z":1.32,"ry":1.570796,"visible":false},"item-25":{"x":-3.3,"y":0,"z":-0.7,"ry":1.570796,"visible":true},"item-26":{"x":-2.7,"y":0,"z":-0.65,"ry":1.570796,"visible":true},"item-27":{"x":-2.7,"y":0,"z":0.65,"ry":1.570796,"visible":true},"item-28":{"x":-3.3,"y":0,"z":0.6,"ry":1.570796,"visible":true},"item-29":{"x":-3,"y":0,"z":1.7,"ry":0,"visible":true},"item-30":{"x":2.3,"y":0,"z":-2.640000012270526,"ry":1.570796,"visible":false},"item-31":{"x":3.35,"y":0,"z":-1.35,"ry":0,"visible":true},"item-32":{"x":4.02,"y":0,"z":1.95,"ry":1.570796,"visible":true},"item-33":{"x":4.02,"y":0,"z":1.3,"ry":1.570796,"visible":true},"item-34":{"x":-3.45,"y":0,"z":-3.15,"ry":0.0,"visible":true},"item-35":{"x":-3.85,"y":0,"z":-2.5,"ry":0.18,"visible":true},"item-36":{"x":-3.2,"y":0,"z":-2.2,"ry":-0.18,"visible":true},"item-37":{"x":-2.55,"y":0,"z":-2.45,"ry":0.0,"visible":true},"item-38":{"x":2.1,"y":0,"z":0,"ry":0,"visible":true},"item-39":{"x":2.041884,"y":0,"z":0.478631,"ry":1.329135,"visible":true},"item-40":{"x":1.870912,"y":0,"z":0.929446,"ry":1.087474,"visible":true},"item-41":{"x":1.597021,"y":0,"z":1.326245,"ry":0.845813,"visible":true},"item-42":{"x":1.236129,"y":0,"z":1.645968,"ry":0.604152,"visible":true},"item-43":{"x":0.80921,"y":0,"z":1.870032,"ry":0.362491,"visible":true},"item-44":{"x":0.341073,"y":0,"z":1.985418,"ry":0.12083,"visible":true},"item-45":{"x":-0.141073,"y":0,"z":1.985418,"ry":-0.12083,"visible":true},"item-46":{"x":-0.60921,"y":0,"z":1.870032,"ry":-0.362491,"visible":true},"item-47":{"x":-1.036129,"y":0,"z":1.645968,"ry":-0.604152,"visible":true},"item-48":{"x":-1.397021,"y":0,"z":1.326245,"ry":-0.845813,"visible":true},"item-49":{"x":-1.670912,"y":0,"z":0.929446,"ry":-1.087474,"visible":true},"item-50":{"x":-1.841884,"y":0,"z":0.478631,"ry":-1.329135,"visible":true},"item-51":{"x":-1.9,"y":0,"z":0,"ry":-1.570796,"visible":true},"item-52":{"x":-1.841884,"y":0,"z":-0.478631,"ry":-1.812457,"visible":true},"item-53":{"x":-1.670912,"y":0,"z":-0.929446,"ry":-2.054118,"visible":true},"item-54":{"x":-1.397021,"y":0,"z":-1.326245,"ry":-2.295779,"visible":true},"item-55":{"x":-1.036129,"y":0,"z":-1.645968,"ry":-2.53744,"visible":true},"item-56":{"x":-0.60921,"y":0,"z":-1.870032,"ry":-2.779101,"visible":true},"item-57":{"x":-0.141073,"y":0,"z":-1.985418,"ry":-3.020762,"visible":true},"item-58":{"x":0.341073,"y":0,"z":-1.985418,"ry":-3.262423,"visible":true},"item-59":{"x":0.80921,"y":0,"z":-1.870032,"ry":-3.504084,"visible":true},"item-60":{"x":1.236129,"y":0,"z":-1.645968,"ry":-3.745745,"visible":true},"item-61":{"x":1.597021,"y":0,"z":-1.326245,"ry":-3.987406,"visible":true},"item-62":{"x":1.870912,"y":0,"z":-0.929446,"ry":-4.229067,"visible":true},"item-63":{"x":2.041884,"y":0,"z":-0.478631,"ry":-4.470728,"visible":true},"item-64":{"x":0.7,"y":0,"z":3.17,"ry":3.141592653589793,"visible":true},"item-65":{"x":1.9,"y":0,"z":3.17,"ry":3.141592653589793,"visible":true},"item-66":{"x":3.55,"y":0,"z":-3.1,"ry":0.0,"visible":true},"item-67":{"x":3.55,"y":0,"z":-2.35,"ry":0.0,"visible":true},"item-68":{"x":2.7,"y":0,"z":-1.65,"ry":0.0,"visible":true}}}};
+
+/* ---------- Layout anwenden + Bewegungen zählen ---------- */
+let currentLayout = null;
+const EPS = 0.02;
+function moved(obj, target) {
+  return Math.abs(obj.position.x - target.x) > EPS ||
+         Math.abs(obj.position.z - target.z) > EPS ||
+         Math.abs(((obj.rotation.y - target.ry) % (2 * P))) > 0.05;
+}
+function applyLayout(key, animate = true) {
+  if (typeof deselectEditorItem === 'function') deselectEditorItem();
+  const L = LAYOUTS[key];
+  const imported = IMPORTED_PRESETS[key] || null;
+  let count = 0;
+  const dur = animate ? 1.1 : 0;
+  let useLooseChairs = false;
+
+  const tween = (obj, t, delay = 0) => {
+    if (moved(obj, t)) count++;
+    if (animate) {
+      gsap.to(obj.position, {
+        x: t.x,
+        y: Number.isFinite(t.y) ? t.y : obj.position.y,
+        z: t.z,
+        duration: dur,
+        delay,
+        ease: 'power2.inOut'
+      });
+      gsap.to(obj.rotation, { y: t.ry, duration: dur, delay, ease: 'power2.inOut' });
+      gsap.fromTo(obj.scale, { x: 1, y: 1, z: 1 }, {
+        x: 1.04, y: 1.04, z: 1.04,
+        duration: 0.3, delay, yoyo: true, repeat: 1
+      });
+    } else {
+      obj.position.set(t.x, Number.isFinite(t.y) ? t.y : obj.position.y, t.z);
+      obj.rotation.y = t.ry;
+    }
+  };
+
+  if (imported) {
+    /* Importierte Hauptlayouts laden exakt die gespeicherten Positionen. */
+    editorItems.forEach((item, i) => {
+      const state = imported.items[item.id];
+      if (!state) return;
+      item.root.visible = state.visible !== false;
+      tween(item.root, {
+        x: Number(state.x) || 0,
+        y: Number(state.y) || 0,
+        z: Number(state.z) || 0,
+        ry: Number(state.ry) || 0
+      }, i * 0.008);
+    });
+
+    /* Ältere Lernbüro-Exporte enthalten den später ergänzten fünften
+       Tisch noch nicht. In diesem Fall darf er nicht die
+       Position der zuvor geöffneten Konfiguration behalten. */
+    const extraTableId = extraMidTable.userData.editorId;
+    if (L.extraMt && !imported.items[extraTableId]) {
+      extraMidTable.visible = true;
+      tween(extraMidTable, L.extraMt, 0.10);
+    }
+
+    useLooseChairs = looseChairs.some(chair => chair.visible !== false);
+    midTableChairs.forEach(chair => { chair.visible = !useLooseChairs; });
+    hockers.forEach(h => { h.visible = false; h.position.set(20, -5, 20); });
+  } else {
+    L.mt.forEach((t, i) => tween(mTables[i], t, i * 0.06));
+    if (L.extraMt) tween(extraMidTable, L.extraMt, 0.08);
+    tween(flexTischA, L.flexA, 0.08);
+    tween(standingTable, L.stand || { x: 3.00, z: 0.55, ry: 0 }, 0.10);
+    tween(wand2, L.wand2, 0.16);
+    tween(wand3, L.wand3 || { x: 0, z: 0, ry: 0 }, 0.20);
+
+    shellTables.forEach((entry, i) => {
+      const target = L.shell ? L.shell[i] : entry.home;
+      tween(entry.obj, target, 0.03 + i * 0.02);
+    });
+    shellChairs.forEach((entry, i) => {
+      let target = entry.home;
+      if (L.shell) {
+        const t = L.shell[entry.deskNo - 1];
+        const off = entry.chairIndex === 0 ? -0.22 : 0.22;
+        const local = new THREE.Vector3(off, 0, 0.32)
+          .applyAxisAngle(new THREE.Vector3(0, 1, 0), t.ry);
+        target = { x: t.x + local.x, z: t.z + local.z, ry: t.ry };
+      }
+      tween(entry.obj, target, 0.04 + i * 0.015);
+    });
+
+    if (!L.shell) {
+      borrowedChairs.forEach((entry, i) => {
+        const target = L.borrowed ? L.borrowed[i] : entry.home;
+        tween(entry.obj, target, 0.08 + i * 0.025);
+      });
+    }
+
+    useLooseChairs = typeof L.chairs === 'function';
+    const chairPositions = useLooseChairs ? L.chairs() : [];
+    shellChairs.forEach(entry => { entry.obj.visible = !useLooseChairs; });
+    midTableChairs.forEach(ch => { ch.visible = !useLooseChairs; });
+    if (!useLooseChairs && Array.isArray(L.hiddenMidChairIndexes)) {
+      L.hiddenMidChairIndexes.forEach(index => {
+        if (midTableChairs[index]) midTableChairs[index].visible = false;
+      });
+    }
+    looseChairs.forEach(ch => { ch.visible = useLooseChairs; });
+    hockers.forEach(h => { h.visible = false; h.position.set(20, -5, 20); });
+
+    if (useLooseChairs) {
+      chairPositions.forEach((t, i) => {
+        const ch = looseChairs[i];
+        if (animate) {
+          gsap.to(ch.position, {
+            x: t.x, z: t.z, y: t.y,
+            duration: dur, delay: 0.15 + i * 0.012,
+            ease: 'power2.inOut'
+          });
+          gsap.to(ch.rotation, {
+            y: t.ry, duration: dur, delay: 0.15 + i * 0.012,
+            ease: 'power2.inOut'
+          });
+        } else {
+          ch.position.set(t.x, t.y, t.z);
+          ch.rotation.y = t.ry;
+        }
+      });
+    }
+
+    if (animate) {
+      gsap.to(rollGroup.position, {
+        x: L.rollSpot.x, z: L.rollSpot.z,
+        duration: dur, delay: 0.2, ease: 'power2.inOut'
+      });
+    } else {
+      rollGroup.position.set(L.rollSpot.x, 0, L.rollSpot.z);
+    }
+  }
+
+  /* Dauerhafte Raumzonen: unabhängig von der gewählten Konfiguration.
+     Nordwest = Lese-/Kuschelecke, Nordost = Büroecke. */
+  const permanentTargets = [
+    [bank1,         { x: -3.45, z: -3.15, ry:  0.00 }],
+    [loungeCubes[0],{ x: -3.85, z: -2.50, ry:  0.18 }],
+    [loungeCubes[1],{ x: -3.20, z: -2.20, ry: -0.18 }],
+    [loungeTable,   { x: -2.55, z: -2.45, ry:  0.00 }],
+    [officeTable15, { x:  3.55, z: -3.10, ry:  0.00 }],
+    [officeTable16, { x:  3.55, z: -2.35, ry:  0.00 }],
+    [teacherDesk,   { x:  2.70, z: -1.65, ry:  0.00 }]
+  ];
+  permanentTargets.forEach(([obj, target], i) => {
+    obj.visible = true;
+    tween(obj, target, 0.02 + i * 0.006);
+  });
+  rug.position.set(-3.45, 0.005, -2.35);
+  loungeSpot.position.set(-2.55, 0.008, -1.95);
+
+  /* Titel und Beschreibung entsprechen immer der gewählten Raumvariante. */
+  document.getElementById('info-title').textContent = L.name;
+  document.getElementById('info-text').textContent = L.text;
+  if (animate) {
+    gsap.fromTo('#info-panel', { y: 10, opacity: 0.4 }, { y: 0, opacity: 1, duration: 0.45, ease: 'power2.out' });
+  }
+  const stats = document.getElementById('info-stats');
+  stats.innerHTML = '';
+  const chip = (txt, cls) => {
+    const s = document.createElement('span');
+    s.className = 'stat-chip ' + (cls || '');
+    s.textContent = txt;
+    stats.appendChild(s);
+  };
+  chip('🪑 ' + L.seats);
+  if (imported) chip('📥 Übernommene Konfiguration', 'fix');
+  if (currentLayout !== null && currentLayout !== key) {
+    chip('🔄 ' + count + ' Möbel bewegt', 'move');
+    if (useLooseChairs) chip('🪑 Stühle für Input/Kreis', 'move');
+  }
+
+  currentLayout = key;
+  const auditDelay = animate ? (dur + 0.45) * 1000 : 0;
+  window.setTimeout(() => {
+    if (currentLayout !== key) return;
+    const old = document.getElementById('collision-chip');
+    if (old) old.remove();
+    const hits = validateCollisions(key);
+    const s = document.createElement('span');
+    s.id = 'collision-chip';
+    s.className = 'stat-chip ' + (hits.length ? 'move' : 'fix');
+    s.textContent = hits.length ? `⚠️ ${hits.length} Kollisionen` : '✅ Kollisionscheck: frei';
+    s.title = hits.join('\n');
+    stats.appendChild(s);
+    window.__collisionReport = window.__collisionReport || {};
+    window.__collisionReport[key] = hits;
+  }, auditDelay);
+  try { localStorage.setItem('b201-layout', key); } catch (e) {}
+}
+
+/* ---------- Kamera & Steuerung ---------- */
+const camState = { theta: 0.6, phi: 1.02, dist: 11.5, target: new THREE.Vector3(0, 0, 0.2), top: false };
+const fp = {
+  active: false,
+  eyeHeight: 1.55,
+  radius: 0.24,
+  speed: 1.65,
+  yaw: 0,
+  pitch: -0.03,
+  position: new THREE.Vector3(2.05, 1.55, 2.30),
+  moveX: 0,
+  moveY: 0,
+  keys: Object.create(null),
+  collisionBoxes: [],
+  lastCollisionRefresh: 0
+};
+const fpClock = new THREE.Clock();
+
+function updateCam() {
+  if (fp.active) {
+    camera.up.set(0, 1, 0);
+    camera.position.copy(fp.position);
+    camera.rotation.order = 'YXZ';
+    camera.rotation.y = fp.yaw;
+    camera.rotation.x = fp.pitch;
+    camera.rotation.z = 0;
+    return;
+  }
+  if (camState.top) {
+    camera.position.set(camState.target.x, 13.5, camState.target.z + 0.02);
+    camera.up.set(0, 0, -1);
+  } else {
+    camera.up.set(0, 1, 0);
+    const { theta, phi, dist, target } = camState;
+    camera.position.set(
+      target.x + dist * Math.sin(phi) * Math.sin(theta),
+      target.y + dist * Math.cos(phi),
+      target.z + dist * Math.sin(phi) * Math.cos(theta)
+    );
+  }
+  camera.lookAt(camState.target);
+}
+
+function refreshFirstPersonCollisions(force = false) {
+  const now = performance.now();
+  if (!force && now - fp.lastCollisionRefresh < 350) return;
+  fp.lastCollisionRefresh = now;
+  scene.updateMatrixWorld(true);
+  fp.collisionBoxes = collisionItems
+    .filter(item => item.obj.visible !== false)
+    .map(item => new THREE.Box3().setFromObject(item.obj))
+    .filter(box => box.max.y > 0.22 && box.max.x > box.min.x && box.max.z > box.min.z);
+}
+function firstPersonPositionFree(x, z) {
+  const r = fp.radius;
+  if (x < -4.5 + r || x > 4.5 - r || z < -3.5 + r || z > 3.5 - r) return false;
+  refreshFirstPersonCollisions();
+  return !fp.collisionBoxes.some(box =>
+    x > box.min.x - r && x < box.max.x + r &&
+    z > box.min.z - r && z < box.max.z + r
+  );
+}
+function placeFirstPersonAtEntrance() {
+  refreshFirstPersonCollisions(true);
+  const starts = [[2.05,2.30],[1.65,2.25],[2.35,1.95],[1.55,1.80],[0.9,2.35],[0,1.9]];
+  const point = starts.find(([x,z]) => firstPersonPositionFree(x,z)) || [0,0];
+  fp.position.set(point[0], fp.eyeHeight, point[1]);
+  fp.yaw = 0;
+  fp.pitch = -0.03;
+}
+function moveFirstPerson(dt) {
+  if (!fp.active) return;
+  const forwardInput = (fp.keys.KeyW || fp.keys.ArrowUp ? 1 : 0) - (fp.keys.KeyS || fp.keys.ArrowDown ? 1 : 0) - fp.moveY;
+  const sideInput = (fp.keys.KeyD || fp.keys.ArrowRight ? 1 : 0) - (fp.keys.KeyA || fp.keys.ArrowLeft ? 1 : 0) + fp.moveX;
+  const length = Math.hypot(forwardInput, sideInput);
+  if (length < 0.01) return;
+  const f = forwardInput / Math.max(1, length);
+  const s = sideInput / Math.max(1, length);
+  const forwardX = -Math.sin(fp.yaw), forwardZ = -Math.cos(fp.yaw);
+  const rightX = Math.cos(fp.yaw), rightZ = -Math.sin(fp.yaw);
+  const step = fp.speed * Math.min(dt, 0.05);
+  const dx = (forwardX * f + rightX * s) * step;
+  const dz = (forwardZ * f + rightZ * s) * step;
+  const nx = fp.position.x + dx;
+  const nz = fp.position.z + dz;
+  if (firstPersonPositionFree(nx, fp.position.z)) fp.position.x = nx;
+  if (firstPersonPositionFree(fp.position.x, nz)) fp.position.z = nz;
+  updateCam();
+}
+let dragging = false, lastX = 0, lastY = 0, pinchDist = 0;
+let editMode = false;
+let furnitureDragging = false;
+let selectedEditorItem = null;
+const dom = renderer.domElement;
+const raycaster = new THREE.Raycaster();
+const pointerNdc = new THREE.Vector2();
+const floorDragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+const dragPoint = new THREE.Vector3();
+const dragOffset = new THREE.Vector3();
+const selectionBox = new THREE.BoxHelper(new THREE.Object3D(), 0x4D8B3F);
+selectionBox.visible = false;
+selectionBox.material.transparent = true;
+selectionBox.material.opacity = 1;
+gsap.to(selectionBox.material, { opacity: 0.35, duration: 0.7, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+scene.add(selectionBox);
+
+function setPointerNdc(e) {
+  const rect = dom.getBoundingClientRect();
+  pointerNdc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  pointerNdc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+}
+function selectionName() {
+  return selectedEditorItem ? selectedEditorItem.name : '';
+}
+function updateSelectionUi() {
+  const labelEl = document.getElementById('selection-label');
+  const has = !!selectedEditorItem;
+  labelEl.textContent = has ? `Ausgewählt: ${selectionName()}` : '';
+  labelEl.classList.toggle('show', has && editMode);
+  document.getElementById('btn-rotate-left').disabled = !has;
+  document.getElementById('btn-rotate-right').disabled = !has;
+}
+function selectEditorItem(item) {
+  selectedEditorItem = item || null;
+  if (selectedEditorItem) {
+    selectionBox.setFromObject(selectedEditorItem.root);
+    selectionBox.visible = true;
+  } else {
+    selectionBox.visible = false;
+  }
+  updateSelectionUi();
+}
+function deselectEditorItem() { selectEditorItem(null); }
+function snap10cm(value) { return Math.round(value * 10) / 10; }
+function keepInsideRoom(root) {
+  scene.updateMatrixWorld(true);
+  const b = new THREE.Box3().setFromObject(root);
+  let dx = 0, dz = 0;
+  if (b.min.x < -4.42) dx += -4.42 - b.min.x;
+  if (b.max.x >  4.42) dx +=  4.42 - b.max.x;
+  if (b.min.z < -3.42) dz += -3.42 - b.min.z;
+  if (b.max.z >  3.42) dz +=  3.42 - b.max.z;
+  root.position.x += dx;
+  root.position.z += dz;
+}
+function markAsCustom() {
+  currentLayout = 'custom';
+  document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('info-title').textContent = 'Eigene Konfiguration';
+  document.getElementById('info-text').textContent = 'Die Möbelpositionen wurden manuell verändert. Speichere die Anordnung, damit du sie später wieder öffnen kannst.';
+  updateCustomCollisionChip();
+}
+function updateCustomCollisionChip() {
+  const stats = document.getElementById('info-stats');
+  if (!stats) return;
+  let chip = document.getElementById('collision-chip');
+  if (!chip) {
+    chip = document.createElement('span');
+    chip.id = 'collision-chip';
+    stats.appendChild(chip);
+  }
+  const hits = validateCollisions('custom');
+  chip.className = 'stat-chip ' + (hits.length ? 'move' : 'fix');
+  chip.textContent = hits.length ? `⚠️ ${hits.length} Kollisionen` : '✅ Kollisionscheck: frei';
+  chip.title = hits.join('\n');
+}
+
+function editorPointerDown(e) {
+  if (!editMode || e.button !== 0) return false;
+  setPointerNdc(e);
+  raycaster.setFromCamera(pointerNdc, camera);
+  const roots = editorItems.map(item => item.root).filter(root => root.visible !== false);
+  const hits = raycaster.intersectObjects(roots, true);
+  if (!hits.length) {
+    deselectEditorItem();
+    return true;
+  }
+  const root = hits[0].object.userData.editorRoot || hits[0].object;
+  const id = root.userData.editorId || hits[0].object.userData.editorId;
+  const item = editorById.get(id);
+  if (!item) return true;
+  selectEditorItem(item);
+  raycaster.ray.intersectPlane(floorDragPlane, dragPoint);
+  dragOffset.copy(dragPoint).sub(item.root.position);
+  furnitureDragging = true;
+  dom.classList.add('dragging-furniture');
+  dom.setPointerCapture(e.pointerId);
+  return true;
+}
+
+dom.addEventListener('pointerdown', e => {
+  if (fp.active) {
+    if (e.pointerType === 'mouse' && document.pointerLockElement !== dom && dom.requestPointerLock) {
+      dom.requestPointerLock();
+    }
+    return;
+  }
+  if (editorPointerDown(e)) return;
+  if (typeof camTween !== 'undefined' && camTween) { camTween.kill(); camTween = null; updateCam(); }
+  if (typeof introTween !== 'undefined' && introTween) { introTween.kill(); introTween = null; }
+  dragging = true;
+  lastX = e.clientX;
+  lastY = e.clientY;
+  dom.setPointerCapture(e.pointerId);
+});
+dom.addEventListener('pointerup', e => {
+  if (furnitureDragging) {
+    furnitureDragging = false;
+    dom.classList.remove('dragging-furniture');
+    if (selectedEditorItem) {
+      keepInsideRoom(selectedEditorItem.root);
+      selectionBox.setFromObject(selectedEditorItem.root);
+      markAsCustom();
+    }
+  }
+  dragging = false;
+});
+dom.addEventListener('pointercancel', () => {
+  furnitureDragging = false;
+  dragging = false;
+  dom.classList.remove('dragging-furniture');
+});
+dom.addEventListener('pointermove', e => {
+  if (furnitureDragging && selectedEditorItem) {
+    setPointerNdc(e);
+    raycaster.setFromCamera(pointerNdc, camera);
+    if (raycaster.ray.intersectPlane(floorDragPlane, dragPoint)) {
+      selectedEditorItem.root.position.x = snap10cm(dragPoint.x - dragOffset.x);
+      selectedEditorItem.root.position.z = snap10cm(dragPoint.z - dragOffset.z);
+      keepInsideRoom(selectedEditorItem.root);
+      selectionBox.setFromObject(selectedEditorItem.root);
+    }
+    return;
+  }
+  if (fp.active || !dragging || camState.top || editMode) return;
+  const dx = e.clientX - lastX, dy = e.clientY - lastY;
+  lastX = e.clientX; lastY = e.clientY;
+  camState.theta -= dx * 0.006;
+  camState.phi = Math.min(1.45, Math.max(0.25, camState.phi - dy * 0.005));
+  updateCam();
+});
+dom.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (fp.active) return;
+  camState.dist = Math.min(20, Math.max(5, camState.dist + e.deltaY * 0.01));
+  updateCam();
+}, { passive: false });
+dom.addEventListener('touchstart', e => {
+  if (fp.active) return;
+  if (e.touches.length === 2) {
+    pinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  }
+}, { passive: true });
+dom.addEventListener('touchmove', e => {
+  if (fp.active) return;
+  if (e.touches.length === 2) {
+    const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    camState.dist = Math.min(20, Math.max(5, camState.dist * (pinchDist / d)));
+    pinchDist = d;
+    updateCam();
+  }
+}, { passive: true });
+
+document.addEventListener('mousemove', e => {
+  if (!fp.active || document.pointerLockElement !== dom) return;
+  fp.yaw -= e.movementX * 0.0026;
+  fp.pitch = Math.max(-1.25, Math.min(1.25, fp.pitch - e.movementY * 0.0022));
+  updateCam();
+});
+
+function resize() {
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+window.addEventListener('resize', resize);
+
+/* ---------- UI ---------- */
+document.querySelectorAll('.layout-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyLayout(btn.dataset.layout, true);
+  });
+});
+const btn3d = document.getElementById('btn-3d');
+const btnTop = document.getElementById('btn-top');
+const btnFirstPerson = document.getElementById('btn-first-person');
+/* Weicher Übergang zwischen den Ansichten; die Endpositionen entsprechen
+   exakt den bisherigen festen Kamerapositionen. */
+let camTween = null;
+function animateCamTo(top) {
+  if (camTween) camTween.kill();
+  const fromPos = camera.position.clone();
+  const fromUp = camera.up.clone();
+  camState.top = top;
+  const destPos = new THREE.Vector3();
+  const destUp = new THREE.Vector3();
+  if (top) {
+    destPos.set(camState.target.x, 13.5, camState.target.z + 0.02);
+    destUp.set(0, 0, -1);
+  } else {
+    destUp.set(0, 1, 0);
+    const { theta, phi, dist, target } = camState;
+    destPos.set(
+      target.x + dist * Math.sin(phi) * Math.sin(theta),
+      target.y + dist * Math.cos(phi),
+      target.z + dist * Math.sin(phi) * Math.cos(theta)
+    );
+  }
+  const prog = { t: 0 };
+  camTween = gsap.to(prog, {
+    t: 1, duration: 0.9, ease: 'power2.inOut',
+    onUpdate() {
+      camera.position.lerpVectors(fromPos, destPos, prog.t);
+      camera.up.lerpVectors(fromUp, destUp, prog.t).normalize();
+      camera.lookAt(camState.target);
+    },
+    onComplete() { camTween = null; updateCam(); }
+  });
+}
+function leaveFirstPerson() {
+  if (!fp.active) return;
+  fp.active = false;
+  fp.moveX = fp.moveY = 0;
+  fp.keys = Object.create(null);
+  document.body.classList.remove('fp-mode');
+  document.getElementById('fp-controls').setAttribute('aria-hidden', 'true');
+  btnFirstPerson.classList.remove('active');
+  btnFirstPerson.setAttribute('aria-pressed', 'false');
+  btn3d.classList.add('active');
+  btnTop.classList.remove('active');
+  camera.fov = 45;
+  camera.near = 0.1;
+  camera.updateProjectionMatrix();
+  if (document.pointerLockElement === dom && document.exitPointerLock) document.exitPointerLock();
+  camState.top = false;
+  updateCam();
+}
+function enterFirstPerson() {
+  if (camTween) { camTween.kill(); camTween = null; }
+  if (typeof introTween !== 'undefined' && introTween) { introTween.kill(); introTween = null; }
+  if (editMode) document.getElementById('btn-edit').click();
+  camState.top = false;
+  fp.active = true;
+  placeFirstPersonAtEntrance();
+  document.body.classList.add('fp-mode');
+  document.getElementById('fp-controls').setAttribute('aria-hidden', 'false');
+  btn3d.classList.remove('active');
+  btnTop.classList.remove('active');
+  btnFirstPerson.classList.add('active');
+  btnFirstPerson.setAttribute('aria-pressed', 'true');
+  camera.fov = 65;
+  camera.near = 0.06;
+  camera.updateProjectionMatrix();
+  fpClock.getDelta();
+  updateCam();
+}
+btnFirstPerson.addEventListener('click', () => fp.active ? leaveFirstPerson() : enterFirstPerson());
+document.getElementById('fp-exit').addEventListener('click', leaveFirstPerson);
+
+/* Touch-Steuerung: linker virtueller Joystick, rechtes Blickfeld. */
+const fpJoystick = document.getElementById('fp-joystick');
+const fpStick = document.getElementById('fp-stick');
+let fpJoyPointer = null;
+function updateJoystick(e) {
+  const rect = fpJoystick.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+  let dx = e.clientX - cx, dy = e.clientY - cy;
+  const max = rect.width * 0.33;
+  const len = Math.hypot(dx, dy);
+  if (len > max) { dx *= max / len; dy *= max / len; }
+  fp.moveX = dx / max;
+  fp.moveY = dy / max;
+  fpStick.style.transform = `translate(${dx}px,${dy}px)`;
+}
+fpJoystick.addEventListener('pointerdown', e => {
+  if (!fp.active) return;
+  fpJoyPointer = e.pointerId;
+  fpJoystick.setPointerCapture(e.pointerId);
+  updateJoystick(e);
+  e.preventDefault();
+});
+fpJoystick.addEventListener('pointermove', e => {
+  if (e.pointerId !== fpJoyPointer) return;
+  updateJoystick(e);
+  e.preventDefault();
+});
+function resetJoystick(e) {
+  if (e && fpJoyPointer !== null && e.pointerId !== fpJoyPointer) return;
+  fpJoyPointer = null;
+  fp.moveX = fp.moveY = 0;
+  fpStick.style.transform = 'translate(0,0)';
+}
+fpJoystick.addEventListener('pointerup', resetJoystick);
+fpJoystick.addEventListener('pointercancel', resetJoystick);
+
+const fpLook = document.getElementById('fp-look');
+let fpLookPointer = null, fpLookX = 0, fpLookY = 0;
+fpLook.addEventListener('pointerdown', e => {
+  if (!fp.active) return;
+  fpLookPointer = e.pointerId;
+  fpLookX = e.clientX; fpLookY = e.clientY;
+  fpLook.setPointerCapture(e.pointerId);
+  e.preventDefault();
+});
+fpLook.addEventListener('pointermove', e => {
+  if (e.pointerId !== fpLookPointer) return;
+  const dx = e.clientX - fpLookX, dy = e.clientY - fpLookY;
+  fpLookX = e.clientX; fpLookY = e.clientY;
+  fp.yaw -= dx * 0.010;
+  fp.pitch = Math.max(-1.25, Math.min(1.25, fp.pitch - dy * 0.009));
+  updateCam();
+  e.preventDefault();
+});
+function resetLook(e) {
+  if (e && fpLookPointer !== null && e.pointerId !== fpLookPointer) return;
+  fpLookPointer = null;
+}
+fpLook.addEventListener('pointerup', resetLook);
+fpLook.addEventListener('pointercancel', resetLook);
+
+btn3d.addEventListener('click', () => {
+  if (fp.active) leaveFirstPerson();
+  btn3d.classList.add('active'); btnTop.classList.remove('active');
+  animateCamTo(false);
+});
+btnTop.addEventListener('click', () => {
+  if (fp.active) leaveFirstPerson();
+  btnTop.classList.add('active'); btn3d.classList.remove('active');
+  animateCamTo(true);
+});
+/* ---------- Infopanel minimieren ---------- */
+const INFO_PANEL_STORAGE_KEY = 'b201-info-minimized';
+const infoPanel = document.getElementById('info-panel');
+const infoToggle = document.getElementById('info-toggle');
+function setInfoPanelMinimized(minimized, persist = true) {
+  infoPanel.classList.toggle('minimized', minimized);
+  infoToggle.textContent = minimized ? '+' : '−';
+  infoToggle.setAttribute('aria-expanded', String(!minimized));
+  infoToggle.title = minimized ? 'Informationen anzeigen' : 'Informationen minimieren';
+  if (persist) {
+    try { localStorage.setItem(INFO_PANEL_STORAGE_KEY, minimized ? '1' : '0'); } catch (e) {}
+  }
+}
+infoToggle.addEventListener('click', () => {
+  setInfoPanelMinimized(!infoPanel.classList.contains('minimized'));
+});
+try {
+  setInfoPanelMinimized(localStorage.getItem(INFO_PANEL_STORAGE_KEY) === '1', false);
+} catch (e) {
+  setInfoPanelMinimized(false, false);
+}
+
+/* ---------- Editor-UI & gespeicherte Konfigurationen ---------- */
+const CONFIG_STORAGE_KEY = 'b201-custom-configs-v1';
+const btnEdit = document.getElementById('btn-edit');
+const btnRotateLeft = document.getElementById('btn-rotate-left');
+const btnRotateRight = document.getElementById('btn-rotate-right');
+const btnSaveConfig = document.getElementById('btn-save-config');
+const btnExportConfig = document.getElementById('btn-export-config');
+const btnExportPng = document.getElementById('btn-export-png');
+const btnLoadConfig = document.getElementById('btn-load-config');
+const btnDeleteConfig = document.getElementById('btn-delete-config');
+const configSelect = document.getElementById('config-select');
+const editorHint = document.getElementById('editor-hint');
+
+function setEditMode(on) {
+  editMode = !!on;
+  document.body.classList.toggle('editing', editMode);
+  btnEdit.classList.toggle('active', editMode);
+  btnEdit.setAttribute('aria-pressed', String(editMode));
+  btnEdit.textContent = editMode ? '✓ Bearbeiten aktiv' : '✋ Möbel verschieben';
+  editorHint.classList.toggle('show', editMode);
+  if (!editMode) {
+    furnitureDragging = false;
+    dom.classList.remove('dragging-furniture');
+    deselectEditorItem();
+  }
+}
+function rotateSelected(direction) {
+  if (!selectedEditorItem) return;
+  selectedEditorItem.root.rotation.y += direction * Math.PI / 2;
+  selectedEditorItem.root.rotation.y = Math.round(selectedEditorItem.root.rotation.y / (Math.PI / 2)) * (Math.PI / 2);
+  keepInsideRoom(selectedEditorItem.root);
+  selectionBox.setFromObject(selectedEditorItem.root);
+  markAsCustom();
+}
+function getSavedConfigs() {
+  try { return JSON.parse(localStorage.getItem(CONFIG_STORAGE_KEY) || '{}'); }
+  catch (e) { return {}; }
+}
+function setSavedConfigs(configs) {
+  localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(configs));
+}
+function refreshConfigSelect(selectName = '') {
+  const configs = getSavedConfigs();
+  const names = Object.keys(configs).sort((a,b) => a.localeCompare(b, 'de'));
+  configSelect.innerHTML = '<option value="">Gespeicherte Konfigurationen</option>';
+  names.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    configSelect.appendChild(opt);
+  });
+  if (selectName && configs[selectName]) configSelect.value = selectName;
+  const hasSelection = !!configSelect.value;
+  btnLoadConfig.disabled = !hasSelection;
+  btnDeleteConfig.disabled = !hasSelection;
+}
+function captureEditorState() {
+  const items = {};
+  editorItems.forEach(({id, root}) => {
+    items[id] = {
+      x: root.position.x,
+      y: root.position.y,
+      z: root.position.z,
+      ry: root.rotation.y,
+      visible: root.visible !== false
+    };
+  });
+  return { version: 1, savedAt: new Date().toISOString(), items };
+}
+function applyEditorState(state, name) {
+  if (!state || !state.items) return;
+  deselectEditorItem();
+  Object.entries(state.items).forEach(([id, value]) => {
+    const item = editorById.get(id);
+    if (!item) return;
+    item.root.position.set(Number(value.x) || 0, Number(value.y) || 0, Number(value.z) || 0);
+    item.root.rotation.y = Number(value.ry) || 0;
+    item.root.visible = value.visible !== false;
+  });
+  scene.updateMatrixWorld(true);
+  currentLayout = 'custom';
+  document.querySelectorAll('.layout-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('info-title').textContent = name || 'Eigene Konfiguration';
+  document.getElementById('info-text').textContent = 'Gespeicherte Möbelanordnung. Aktiviere „Möbel verschieben“, um sie weiter zu bearbeiten.';
+  const stats = document.getElementById('info-stats');
+  stats.innerHTML = '';
+  const chip = document.createElement('span');
+  chip.className = 'stat-chip fix';
+  chip.textContent = '💾 Gespeicherte Konfiguration';
+  stats.appendChild(chip);
+  updateCustomCollisionChip();
+}
+
+function safeFilename(value, fallback = 'b201-konfiguration') {
+  const clean = String(value || fallback)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
+  return clean || fallback;
+}
+function triggerDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+function exportCurrentConfig() {
+  const title = configSelect.value || document.getElementById('info-title').textContent || 'B201 Konfiguration';
+  const payload = {
+    format: 'B201-Raumkonzept',
+    version: 1,
+    name: title,
+    room: { widthMeters: ROOM.W, depthMeters: ROOM.D },
+    exportedAt: new Date().toISOString(),
+    camera: {
+      top: camState.top,
+      theta: camState.theta,
+      phi: camState.phi,
+      dist: camState.dist,
+      target: { x: camState.target.x, y: camState.target.y, z: camState.target.z }
+    },
+    configuration: captureEditorState()
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+  triggerDownload(blob, safeFilename(title) + '.json');
+}
+function exportPngScreenshot() {
+  const title = configSelect.value || document.getElementById('info-title').textContent || 'B201 Ansicht';
+  deselectEditorItem();
+  scene.updateMatrixWorld(true);
+  updateWalls();
+  renderer.render(scene, camera);
+
+  const canvas = renderer.domElement;
+  if (canvas.toBlob) {
+    canvas.toBlob(blob => {
+      if (!blob) return;
+      triggerDownload(blob, safeFilename(title) + '.png');
+    }, 'image/png');
+  } else {
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = safeFilename(title) + '.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+}
+
+btnEdit.addEventListener('click', () => setEditMode(!editMode));
+btnRotateLeft.addEventListener('click', () => rotateSelected(-1));
+btnRotateRight.addEventListener('click', () => rotateSelected(1));
+btnExportConfig.addEventListener('click', exportCurrentConfig);
+btnExportPng.addEventListener('click', exportPngScreenshot);
+btnSaveConfig.addEventListener('click', () => {
+  const suggestion = configSelect.value || document.getElementById('info-title').textContent || 'Meine Konfiguration';
+  const name = window.prompt('Name der Konfiguration:', suggestion);
+  if (!name || !name.trim()) return;
+  const cleanName = name.trim();
+  const configs = getSavedConfigs();
+  if (configs[cleanName] && !window.confirm(`„${cleanName}“ überschreiben?`)) return;
+  configs[cleanName] = captureEditorState();
+  setSavedConfigs(configs);
+  refreshConfigSelect(cleanName);
+  document.getElementById('info-title').textContent = cleanName;
+});
+configSelect.addEventListener('change', () => {
+  const has = !!configSelect.value;
+  btnLoadConfig.disabled = !has;
+  btnDeleteConfig.disabled = !has;
+});
+btnLoadConfig.addEventListener('click', () => {
+  const name = configSelect.value;
+  if (!name) return;
+  const configs = getSavedConfigs();
+  applyEditorState(configs[name], name);
+});
+btnDeleteConfig.addEventListener('click', () => {
+  const name = configSelect.value;
+  if (!name || !window.confirm(`Konfiguration „${name}“ löschen?`)) return;
+  const configs = getSavedConfigs();
+  delete configs[name];
+  setSavedConfigs(configs);
+  refreshConfigSelect();
+});
+window.addEventListener('keydown', e => {
+  if (fp.active) {
+    if (e.code === 'Escape') { leaveFirstPerson(); return; }
+    if (['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) {
+      fp.keys[e.code] = true;
+      e.preventDefault();
+    }
+    return;
+  }
+  if (!editMode || !selectedEditorItem) return;
+  if (e.key.toLowerCase() === 'q') { e.preventDefault(); rotateSelected(-1); }
+  if (e.key.toLowerCase() === 'e') { e.preventDefault(); rotateSelected(1); }
+});
+window.addEventListener('keyup', e => {
+  if (fp.active && e.code in fp.keys) {
+    fp.keys[e.code] = false;
+    e.preventDefault();
+  }
+});
+window.addEventListener('blur', () => {
+  fp.keys = Object.create(null);
+  resetJoystick();
+});
+refreshConfigSelect();
+
+/* Automatischer Prüfmodus für die technische Abnahme im Browser:
+   file.html?audit=1 schreibt die Resultate aller Layouts ins DOM. */
+function runCollisionAudit() {
+  const previous = currentLayout || 'lernbuero';
+  const report = {};
+  Object.keys(LAYOUTS).forEach(key => {
+    applyLayout(key, false);
+    scene.updateMatrixWorld(true);
+    report[key] = validateCollisions(key);
+  });
+  applyLayout(previous, false);
+  const pre = document.createElement('pre');
+  pre.id = 'collision-audit';
+  pre.style.display = 'none';
+  pre.textContent = JSON.stringify(report);
+  document.body.appendChild(pre);
+  window.__collisionAudit = report;
+}
+
+/* ---------- Start ---------- */
+resize();
+/* Sanfte Anflugfahrt auf die bekannte Standardansicht */
+let introTween = null;
+(function cameraIntro() {
+  const dest = { theta: camState.theta, phi: camState.phi, dist: camState.dist };
+  camState.theta = dest.theta + 0.5;
+  camState.phi = Math.max(0.45, dest.phi - 0.42);
+  camState.dist = dest.dist + 5.5;
+  updateCam();
+  introTween = gsap.to(camState, {
+    theta: dest.theta, phi: dest.phi, dist: dest.dist,
+    duration: 1.8, ease: 'power3.out',
+    onUpdate: updateCam,
+    onComplete() { introTween = null; }
+  });
+  gsap.fromTo('#canvas-wrap', { opacity: 0 }, { opacity: 1, duration: 0.7, ease: 'power1.out' });
+  gsap.fromTo('#info-panel', { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, delay: 0.35, ease: 'power2.out' });
+})();
+let startLayout = 'lernbuero';
+document.querySelectorAll('.layout-btn').forEach(b => b.classList.toggle('active', b.dataset.layout === startLayout));
+applyLayout(startLayout, false);
+currentLayout = startLayout;
+if (new URLSearchParams(window.location.search).get('audit') === '1') runCollisionAudit();
+
+/* Wände zwischen Kamera und Raum ausblenden (in der Draufsicht bleiben alle sichtbar) */
+const _v = new THREE.Vector3();
+function updateWalls() {
+  if (fp.active) {
+    Object.values(walls).forEach(w => { w.g.visible = true; });
+    return;
+  }
+  Object.values(walls).forEach(w => {
+    _v.copy(camera.position).sub(w.c).normalize();
+    w.g.visible = _v.dot(w.n) < 0.08;
+  });
+}
+
+(function loop() {
+  requestAnimationFrame(loop);
+  moveFirstPerson(fpClock.getDelta());
+  updateWalls();
+  if (selectionBox.visible && selectedEditorItem) selectionBox.setFromObject(selectedEditorItem.root);
+  renderer.render(scene, camera);
+})();
+</script>
+</body>
+</html>
