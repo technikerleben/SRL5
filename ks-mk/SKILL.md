@@ -37,11 +37,8 @@ Grundsatz: **Der Laptop ist Werkzeug innerhalb eines Lernschritts, nicht Vorauss
 4. Wahl- und Vertiefungsmodule
 5. wachsende Selbstständigkeit
 
-Hilfeweg:
-1. Lies den Auftrag noch einmal.
-2. Nutze den Tipp.
-3. Frage deinen Lernpartner oder deine Lernpartnerin.
-4. Frage die Lehrkraft.
+### Lösungsleiter
+Wenn ein Kind nicht weiterkommt, nutzt es die schulweit eingeführte **Lösungsleiter**. Der Begriff `Hilfeweg` wird in KS-MK nicht verwendet.
 
 ## 5. Materiallogik
 Jedes Modul wird möglichst vollständig produziert:
@@ -105,7 +102,13 @@ Arbeitsaufträge für Schülerinnen und Schüler:
 
 ## 9. Produktionsworkflow
 1. Design- und Symbolsystem — **festgelegt**
-2. SRL-Steuerungsmaterial — **nächster Schritt**
+2. SRL-Steuerungsmaterial — **in Arbeit**
+   - Lernpass — **erstellt**
+   - Lösungsleiter — schulweit vorhanden / wird genutzt
+   - Arbeitsroutine — offen
+   - Laptop-Routine — offen
+   - Partnerrollen — offen
+   - Tagesplanung und Rückblick — offen
 3. S0 vollständig
 4. M1 vollständig
 5. M2 vollständig
@@ -120,4 +123,4 @@ Arbeitsaufträge für Schülerinnen und Schüler:
 14. Gesamtprüfung
 
 ## 10. Repo-Regel
-Alle neuen KS-MK-Materialien und Planungsstände werden ab jetzt im Ordner `/ks-mk` dieses Repositories abgelegt. Das Lehrkraft-Cockpit ist `/ks-mk/index.html`.
+Alle neuen KS-MK-Materialien und Planungsstände werden im Ordner `/ks-mk` dieses Repositories abgelegt. Das Lehrkraft-Cockpit ist `/ks-mk/index.html`.
