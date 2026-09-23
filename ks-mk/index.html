@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>KS-MK · Jahrgang 5 · Lehrkraft-Cockpit</title>
+  <style>
+    :root{
+      --slate:#2C3D4C;--rust:#D97A4A;--sage:#4D8B3F;--gold:#C17B00;
+      --ink:#2B2B2B;--line:#E6E3DE;--paper:#F7F5F2;--white:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--paper);line-height:1.5}
+    header{background:var(--white);border-bottom:4px solid var(--slate);padding:28px 20px}
+    header .wrap,main{max-width:1180px;margin:auto}
+    .eyebrow{font-size:.82rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--rust)}
+    h1{margin:.25rem 0 .35rem;color:var(--slate);font-size:clamp(2rem,5vw,3.7rem);line-height:1}
+    .lead{max-width:780px;margin:0;color:#59636b}
+    main{padding:26px 20px 60px}
+    .status{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 24px}
+    .badge{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 11px;font-size:.85rem;font-weight:700}
+    .badge.ok{border-color:#c9dec5;color:var(--sage)}
+    .badge.work{border-color:#efd2c5;color:#a55331}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 3px 12px rgba(44,61,76,.06)}
+    .card h2,.card h3{color:var(--slate);margin:.1rem 0 .55rem}
+    .card p{margin:.4rem 0;color:#59636b}
+    .tag{display:inline-block;margin-top:8px;font-size:.75rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+    .tag.ready{color:var(--sage)} .tag.next{color:var(--rust)} .tag.plan{color:var(--gold)}
+    a.button{display:inline-block;margin-top:12px;padding:9px 12px;border:1px solid var(--slate);border-radius:10px;text-decoration:none;color:var(--slate);font-weight:700}
+    a.button:hover{background:var(--slate);color:white}
+    section{margin-top:28px}
+    section>h2{color:var(--slate);border-bottom:1px solid var(--line);padding-bottom:8px}
+    .roadmap{display:grid;gap:9px}
+    .row{display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+    .code{font-weight:900;color:var(--slate)}
+    .state{font-size:.8rem;font-weight:800;text-transform:uppercase}
+    .state.ready{color:var(--sage)} .state.next{color:var(--rust)} .state.plan{color:var(--gold)}
+    footer{max-width:1180px;margin:0 auto;padding:0 20px 40px;color:#707a81;font-size:.85rem}
+    @media(max-width:650px){.row{grid-template-columns:52px 1fr}.state{grid-column:2}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Lehrkraft-Cockpit</div>
+    <h1>KS-MK · Jahrgang 5</h1>
+    <p class="lead">Zentrale Arbeitsoberfläche für Planung, Material, Module und Weiterentwicklung der Klassenstunde Medienkompetenz im gesamten Jahrgang 5.</p>
+  </div>
+</header>
+<main>
+  <div class="status">
+    <span class="badge ok">✓ Projektgrundlage festgelegt</span>
+    <span class="badge ok">✓ Designsystem festgelegt</span>
+    <span class="badge work">→ Nächster Schritt: SRL-Steuerungsmaterial</span>
+    <span class="badge">14 Laptops · keine Schüler-iPads</span>
+  </div>
+
+  <div class="grid">
+    <article class="card">
+      <h2>Projektgrundlage</h2>
+      <p>Didaktische Leitlinien, Jahresstruktur, Gerätebedingungen, Module und Produktionsregeln.</p>
+      <a class="button" href="./SKILL.md">SKILL.md öffnen</a>
+      <div class="tag ready">verbindlich</div>
+    </article>
+    <article class="card">
+      <h2>Materialsystem</h2>
+      <p>Einheitliche Kennzeichnung: <strong>KS-MK · Jahrgang 5</strong>. Keine Klassenbezeichnung, keine klassenspezifische Identität.</p>
+      <p>START · TRAINING · PROFI sowie OHNE LAPTOP · LAPTOP KURZ · LAPTOP NÖTIG.</p>
+      <div class="tag ready">festgelegt</div>
+    </article>
+    <article class="card">
+      <h2>Aktuell in Arbeit</h2>
+      <p>Lernpass, Arbeitsroutine, Hilfeweg, Laptop-Routine, Partnerrollen, Tagesplanung und Rückblick.</p>
+      <div class="tag next">Schritt 2</div>
+    </article>
+    <article class="card">
+      <h2>Ablage</h2>
+      <p>Alle künftigen KS-MK-Dateien werden in diesem Ordner bzw. seinen Unterordnern gepflegt.</p>
+      <a class="button" href="./README.md">Struktur ansehen</a>
+      <div class="tag ready">zentral</div>
+    </article>
+  </div>
+
+  <section>
+    <h2>Jahresstruktur</h2>
+    <div class="roadmap">
+      <div class="row"><div class="code">S0</div><div><strong>Gemeinsamer Einstieg</strong><br>Medien, Schulsysteme, Laptop, WebUntis, Medienwerkstatt</div><div class="state plan">geplant</div></div>
+      <div class="row"><div class="code">M1</div><div><strong>Mein Laptop als Arbeitsgerät</strong></div><div class="state plan">geplant</div></div>
+      <div class="row"><div class="code">M2</div><div><strong>Sicher digital</strong></div><div class="state plan">geplant</div></div>
+      <div class="row"><div class="code">M3</div><div><strong>Digital kommunizieren</strong></div><div class="state plan">geplant</div></div>
+      <div class="row"><div class="code">M4</div><div><strong>Suchen und Informationen finden</strong></div><div class="state plan">geplant</div></div>
+      <div class="row"><div class="code">M5</div><div><strong>Fake oder echt?</strong></div><div class="state plan">geplant</div></div>
+      <div class="row"><div class="code">M6</div><div><strong>KI verstehen und prüfen</strong></div><div class="state plan">geplant</div></div>
+      <div class="row"><div class="code">M7</div><div><strong>Informationen gestalten und präsentieren</strong></div><div class="state plan">geplant</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Wahlmodule</h2>
+    <div class="grid">
+      <article class="card"><h3>W1 · Meine Medienwelt</h3><div class="tag plan">später</div></article>
+      <article class="card"><h3>W2 · Medien früher und heute</h3><div class="tag plan">später</div></article>
+      <article class="card"><h3>W3 · Warum wird mir das angezeigt?</h3><div class="tag plan">später</div></article>
+      <article class="card"><h3>W4 · Bilder, Werbung und Manipulation</h3><div class="tag plan">später</div></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Produktionsreihenfolge</h2>
+    <div class="roadmap">
+      <div class="row"><div class="code">1</div><div>Design- und Symbolsystem</div><div class="state ready">fertig</div></div>
+      <div class="row"><div class="code">2</div><div>SRL-Steuerungsmaterial</div><div class="state next">als Nächstes</div></div>
+      <div class="row"><div class="code">3</div><div>S0 vollständig produzieren</div><div class="state plan">offen</div></div>
+      <div class="row"><div class="code">4–10</div><div>M1 bis M7 jeweils vollständig produzieren</div><div class="state plan">offen</div></div>
+      <div class="row"><div class="code">11</div><div>W1 bis W4</div><div class="state plan">offen</div></div>
+      <div class="row"><div class="code">12</div><div>Lehrkraftmaterial & Gesamtübersicht</div><div class="state plan">offen</div></div>
+      <div class="row"><div class="code">13</div><div>Schüler-Lernnavigator</div><div class="state plan">offen</div></div>
+    </div>
+  </section>
+</main>
+<footer>KS-MK · Jahrgang 5 · SRL5 · Stand September 2026</footer>
+</body>
+</html>
