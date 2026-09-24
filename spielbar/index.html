@@ -58,6 +58,20 @@
       transition-delay: 0s;
     }
 
+    .slide.image-slide {
+      grid-template-rows: 1fr;
+      place-items: center;
+      padding: clamp(1.2rem, 2.5vw, 2.5rem) clamp(1.2rem, 3vw, 3rem) clamp(5.8rem, 10vh, 7rem);
+      background: var(--blue-light);
+    }
+    .image-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: clamp(.7rem, 1.5vw, 1.4rem);
+      box-shadow: var(--shadow);
+    }
+
     .slide::before {
       content: "";
       position: absolute;
@@ -85,7 +99,7 @@
       background: linear-gradient(135deg, var(--blue-deep), var(--blue) 60%, #356d9c);
     }
     .cover::before { background: linear-gradient(90deg, var(--mint), var(--orange)); }
-    .cover .content { max-width: 82rem; }
+    .cover .content { max-width: 82rem; padding-right: min(43vw, 40rem); }
     .cover .slide-title {
       color: var(--white);
       font-size: clamp(3.5rem, 9vw, 9rem);
@@ -93,6 +107,15 @@
       margin: 0 0 2rem;
     }
     .cover p { max-width: 30ch; color: var(--blue-light); font-size: clamp(1.5rem, 3vw, 3.2rem); }
+    .cover-otter {
+      position: absolute;
+      right: clamp(1.5rem, 5vw, 5rem);
+      bottom: clamp(6.5rem, 11vh, 8.5rem);
+      width: min(39vw, 36rem);
+      max-height: 68vh;
+      object-fit: contain;
+      filter: drop-shadow(0 1.5rem 2.5rem rgba(9, 26, 42, .28));
+    }
     .cover .class-mark {
       position: absolute;
       right: clamp(1.5rem, 6vw, 6rem);
@@ -242,7 +265,7 @@
     }
     .nav button:disabled { opacity: .35; cursor: default; }
     .progress { height: .8rem; overflow: hidden; border: .12rem solid var(--white); border-radius: 999px; }
-    .progress-fill { height: 100%; width: 11.11%; background: var(--mint); transition: width .28s ease; }
+    .progress-fill { height: 100%; width: 10%; background: var(--mint); transition: width .28s ease; }
     .counter { min-width: 4.4rem; text-align: center; font-variant-numeric: tabular-nums; font-weight: 800; }
 
     .help {
@@ -264,6 +287,8 @@
       .slide { overflow-y: auto; align-content: start; }
       .columns, .columns.three { grid-template-columns: 1fr; }
       .cover .class-mark { width: 6.5rem; top: 2rem; }
+      .cover .content { padding-right: 0; padding-top: 10rem; }
+      .cover-otter { width: min(52vw, 19rem); right: 1rem; bottom: 5.8rem; opacity: .28; }
       .card-meta { grid-template-columns: 1fr; }
       .panel p, .panel li { font-size: clamp(1rem, 2.5vw, 1.45rem); }
     }
@@ -281,7 +306,12 @@
         <h1 class="slide-title">Unsere Spiel-Bar</h1>
         <p>Heute prüfen wir Spiele und sammeln neue Ideen.</p>
       </div>
+      <img class="cover-otter" src="otter-mit-spiel.png" alt="Ein Otter sitzt mit einem Spiel am Tisch">
       <div class="class-mark">Klasse<br>5.3</div>
+    </section>
+
+    <section class="slide image-slide" aria-hidden="true">
+      <img src="spielbar.png" alt="Übersicht zur Spiel-Bar mit den Schritten Ausleihen, Spielen und vollständig Zurückgeben">
     </section>
 
     <section class="slide" aria-hidden="true">
@@ -407,7 +437,7 @@
   <nav class="nav" aria-label="Präsentationssteuerung">
     <button type="button" id="prev" aria-label="Vorherige Folie">‹</button>
     <div class="progress" aria-hidden="true"><div class="progress-fill" id="progress"></div></div>
-    <span class="counter" id="counter">1 / 9</span>
+    <span class="counter" id="counter">1 / 10</span>
     <button type="button" id="next" aria-label="Nächste Folie">›</button>
     <button type="button" id="helpButton" aria-label="Bedienung anzeigen">?</button>
     <button type="button" id="fullscreen" aria-label="Vollbild öffnen">⛶</button>
