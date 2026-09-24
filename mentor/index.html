@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#245688">
+  <title>Mentorengespräche · SRL Klasse 5</title>
+  <style>
+    :root{
+      --blue:#245688;--blue-dark:#1f4770;--blue-soft:#eff5fa;
+      --mint:#48dccb;--mint-dark:#19766f;--mint-soft:#effcfa;
+      --orange:#f0a66f;--orange-dark:#a94a1a;--orange-soft:#fff8f2;
+      --ink:#18324a;--muted:#5e7183;--line:#cfd9e1;--bg:#f4f7f9;--card:#fff;
+      --danger:#9f2f2f;--success:#287a54;--radius:18px;--shadow:0 10px 28px rgba(15,33,52,.08);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Aptos,"Segoe UI",Arial,sans-serif;line-height:1.45}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    :focus-visible{outline:4px solid var(--orange);outline-offset:3px}
+    .topbar{background:var(--blue-dark);color:#fff;border-bottom:5px solid var(--mint)}
+    .topbar-inner{max-width:1180px;margin:auto;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-mark{width:48px;height:48px;border-radius:14px;background:var(--mint);display:grid;place-items:center;font-size:26px;color:var(--ink)}
+    .brand small{display:block;opacity:.7;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+    .brand strong{font-size:1.12rem}
+    .privacy{font-size:.82rem;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 10px;color:#fff}
+    main{max-width:1180px;margin:0 auto;padding:26px 22px 64px}
+    .hero{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;align-items:stretch;margin-bottom:18px}
+    .hero-main,.hero-side,.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero-main{padding:26px}
+    .eyebrow{font-size:.78rem;font-weight:850;color:var(--orange-dark);text-transform:uppercase;letter-spacing:.08em}
+    h1{font-size:clamp(1.75rem,4vw,2.7rem);line-height:1.03;margin:.35rem 0 .75rem;color:var(--blue-dark)}
+    .hero-main p{margin:0;color:var(--muted);max-width:62ch}
+    .hero-side{padding:20px;background:linear-gradient(135deg,var(--blue-soft),var(--mint-soft))}
+    .hero-side strong{display:block;color:var(--blue-dark);margin-bottom:8px}
+    .hero-side p{font-size:.9rem;color:var(--muted);margin:.35rem 0}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+    .tab{border:2px solid var(--line);background:#fff;color:var(--blue-dark);border-radius:999px;padding:10px 14px;font-weight:800;min-height:44px}
+    .tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+    .view{display:none}.view.active{display:block}
+    .panel{padding:22px;margin-bottom:18px}
+    .panel h2{margin:0 0 6px;font-size:1.28rem;color:var(--blue-dark)}
+    .panel-lead{margin:0 0 18px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .grid-3{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:14px}
+    label{display:block;font-size:.84rem;font-weight:800;color:var(--blue-dark);margin-bottom:6px}
+    input[type="text"],input[type="date"],textarea,select{
+      width:100%;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);
+      padding:11px 12px;min-height:46px
+    }
+    textarea{min-height:100px;resize:vertical}
+    .hint{font-size:.78rem;color:var(--muted);margin-top:5px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+    .btn{border:2px solid transparent;border-radius:12px;min-height:44px;padding:9px 14px;font-weight:850}
+    .btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .btn-secondary{background:#fff;color:var(--blue-dark);border-color:var(--blue)}
+    .btn-soft{background:var(--blue-soft);color:var(--blue-dark);border-color:#bdd4e7}
+    .btn-mint{background:var(--mint);color:var(--ink);border-color:var(--mint-dark)}
+    .btn-danger{background:#fff;color:var(--danger);border-color:#d8a4a4}
+    .module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .module-pick{position:relative}
+    .module-pick input{position:absolute;opacity:0;pointer-events:none}
+    .module-card{display:block;height:100%;border:2px solid var(--line);border-radius:14px;background:#fff;padding:14px;cursor:pointer;transition:.15s}
+    .module-pick input:checked + .module-card{border-color:var(--blue);background:var(--blue-soft);box-shadow:inset 0 0 0 1px var(--blue)}
+    .module-card strong{display:block;color:var(--blue-dark);margin-bottom:4px}
+    .module-card small{display:block;color:var(--muted)}
+    .module-card .symbol{font-size:1.35rem;margin-bottom:6px}
+    .previous{border:2px solid var(--orange);background:var(--orange-soft);border-radius:14px;padding:14px;margin:14px 0}
+    .previous h3{margin:0 0 5px;color:var(--orange-dark);font-size:1rem}
+    .previous p{margin:.25rem 0;color:var(--ink)}
+    .status-row,.scale{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 11px;min-height:42px;font-weight:750;color:var(--ink)}
+    .chip.selected{border-color:var(--blue);background:var(--blue);color:#fff}
+    .workspace{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:16px}
+    .module-shell{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .module-head{padding:18px 20px;background:var(--blue-dark);color:#fff}
+    .module-head .counter{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;opacity:.7;font-weight:800}
+    .module-head h2{color:#fff;margin:4px 0 0;font-size:1.35rem}
+    .module-body{padding:20px}
+    .prompt{border-left:5px solid var(--mint);background:var(--mint-soft);padding:12px 14px;border-radius:0 12px 12px 0;margin-bottom:14px}
+    .prompt strong{display:block;color:var(--mint-dark);margin-bottom:2px}
+    .prompt p{margin:0;font-size:1.02rem}
+    .field{margin-top:15px}
+    .question-help{font-size:.8rem;color:var(--muted);margin:4px 0 0}
+    .module-nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:16px 20px;border-top:1px solid var(--line);background:#fafcfd}
+    .live{position:sticky;top:12px;align-self:start}
+    .live h3{margin:0 0 10px;color:var(--blue-dark)}
+    .live-box{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    .live-item{padding:10px 0;border-bottom:1px solid #e8edf1}
+    .live-item:last-child{border-bottom:0}
+    .live-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:850}
+    .live-value{white-space:pre-wrap;color:var(--ink);font-size:.9rem;margin-top:3px}
+    .empty{color:var(--muted);font-style:italic}
+    .summary{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+    .summary h2{margin-top:0}
+    .summary-section{padding:14px 0;border-bottom:1px solid #e8edf1}
+    .summary-section:last-child{border-bottom:0}
+    .summary-section h3{font-size:.95rem;margin:0 0 6px;color:var(--blue-dark)}
+    .summary-section p{margin:.25rem 0;white-space:pre-wrap}
+    .history-list{display:grid;gap:12px}
+    details.entry{background:#fff;border:1px solid var(--line);border-radius:14px;padding:0 14px}
+    details.entry summary{cursor:pointer;padding:14px 0;font-weight:850;color:var(--blue-dark)}
+    .entry-body{padding:0 0 14px}
+    .entry-meta{font-size:.8rem;color:var(--muted);margin-bottom:10px}
+    .entry-block{padding:10px 0;border-top:1px solid #e8edf1}
+    .student-filter{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px}
+    .student-filter > div{flex:1;min-width:220px}
+    .notice{border:1px solid #b9d7c8;background:#f0faf5;color:#285f45;border-radius:12px;padding:12px 14px;margin:12px 0}
+    .warning{border-color:#e3c395;background:#fff8ee;color:#7a4a11}
+    .hidden{display:none!important}
+    .small{font-size:.82rem;color:var(--muted)}
+    .spacer{height:4px}
+    footer{max-width:1180px;margin:0 auto;padding:0 22px 38px;color:var(--muted);font-size:.78rem}
+    @media (max-width:850px){
+      .hero,.workspace{grid-template-columns:1fr}
+      .live{position:static}
+      .grid,.grid-3,.module-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:540px){
+      main{padding:18px 14px 48px}.topbar-inner{padding:14px}.panel,.hero-main,.hero-side{padding:17px}
+      .module-body{padding:16px}.module-head,.module-nav{padding-left:16px;padding-right:16px}
+      .actions .btn{flex:1 1 100%}
+    }
+    @media print{
+      .topbar,.hero,.tabs,#setupView,#conversationView,#historyView,#dataView,.summary-actions,footer{display:none!important}
+      body{background:#fff}.view{display:none!important}#summaryView.active{display:block!important}
+      main{max-width:none;padding:0}.summary{border:0;box-shadow:none;padding:0}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">🦦</div>
+        <div><small>SRL · Klasse 5</small><strong>Mentorengespräche</strong></div>
+      </div>
+      <div class="privacy">🔒 Daten bleiben in diesem Browser</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-main">
+        <div class="eyebrow">Gesprächsbegleiter</div>
+        <h1>Ein roter Faden, kein starres Formular.</h1>
+        <p>Wähle nur die Module, die heute passen. Du kannst jederzeit überspringen, frei notieren und am Ende eine kurze Vereinbarung für das nächste Gespräch festhalten.</p>
+      </div>
+      <aside class="hero-side">
+        <strong>Grundidee</strong>
+        <p>Beziehung und aktueller Bedarf gehen vor Vollständigkeit.</p>
+        <p>Das letzte Ziel wird beim nächsten Gespräch automatisch wieder aufgegriffen.</p>
+        <p>Für Schülerdaten am besten nur Vorname oder Kürzel verwenden.</p>
+      </aside>
+    </section>
+
+    <nav class="tabs" aria-label="Bereiche">
+      <button class="tab active" type="button" data-view="setupView">Neues Gespräch</button>
+      <button class="tab" type="button" data-view="historyView">Verlauf</button>
+      <button class="tab" type="button" data-view="dataView">Daten & Backup</button>
+    </nav>
+
+    <section id="setupView" class="view active">
+      <div class="panel">
+        <h2>1. Gespräch anlegen</h2>
+        <p class="panel-lead">Ein Kürzel reicht. Bereits bekannte Namen erscheinen beim Tippen.</p>
+        <div class="grid-3">
+          <div>
+            <label for="studentName">Name oder Kürzel</label>
+            <input id="studentName" type="text" list="studentList" autocomplete="off" placeholder="z. B. Mia oder M.K.">
+            <datalist id="studentList"></datalist>
+          </div>
+          <div>
+            <label for="talkDate">Datum</label>
+            <input id="talkDate" type="date">
+          </div>
+          <div>
+            <label for="talkType">Gesprächsanlass</label>
+            <select id="talkType">
+              <option>Regelmäßiges Mentoring</option>
+              <option>Kurzer Check-in</option>
+              <option>Akuter Gesprächsbedarf</option>
+              <option>Ziel- und Planungsgespräch</option>
+              <option>Freies Gespräch</option>
+            </select>
+          </div>
+        </div>
+        <div id="previousGoalBox" class="previous hidden"></div>
+      </div>
+
+      <div class="panel">
+        <h2>2. Module auswählen</h2>
+        <p class="panel-lead">Die Reihenfolge ist ein Vorschlag. Im Gespräch kann jedes Modul übersprungen werden.</p>
+        <div class="module-grid" id="modulePicker"></div>
+        <div class="actions">
+          <button id="selectAll" class="btn btn-soft" type="button">Alle auswählen</button>
+          <button id="selectCore" class="btn btn-soft" type="button">Kernmodule</button>
+          <button id="clearModules" class="btn btn-secondary" type="button">Auswahl leeren</button>
+          <button id="startTalk" class="btn btn-primary" type="button">Gespräch starten →</button>
+        </div>
+        <div id="setupMessage" class="notice warning hidden" role="status"></div>
+      </div>
+    </section>
+
+    <section id="conversationView" class="view">
+      <div class="workspace">
+        <div class="module-shell">
+          <div class="module-head">
+            <div id="moduleCounter" class="counter"></div>
+            <h2 id="moduleTitle"></h2>
+          </div>
+          <div id="moduleBody" class="module-body"></div>
+          <div class="module-nav">
+            <button id="prevModule" class="btn btn-secondary" type="button">← Zurück</button>
+            <div class="actions" style="margin:0">
+              <button id="skipModule" class="btn btn-soft" type="button">Modul überspringen</button>
+              <button id="nextModule" class="btn btn-primary" type="button">Weiter →</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="live">
+          <div class="live-box">
+            <h3>Aktuelles Protokoll</h3>
+            <div id="liveSummary"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="summaryView" class="view">
+      <div class="summary">
+        <h2>Gespräch abschließen</h2>
+        <p class="panel-lead">Prüfe die Kurzfassung. Leere oder übersprungene Module werden nicht in den Verlauf übernommen.</p>
+        <div id="finalSummary"></div>
+        <div class="summary-actions actions">
+          <button id="backToTalk" class="btn btn-secondary" type="button">← Zurück ins Gespräch</button>
+          <button id="saveTalk" class="btn btn-mint" type="button">Gespräch speichern</button>
+          <button id="printTalk" class="btn btn-soft" type="button">Drucken / PDF</button>
+          <button id="downloadTxt" class="btn btn-soft" type="button">Kurzprotokoll .txt</button>
+        </div>
+        <div id="saveMessage" class="notice hidden" role="status"></div>
+      </div>
+    </section>
+
+    <section id="historyView" class="view">
+      <div class="panel">
+        <h2>Gesprächsverlauf</h2>
+        <p class="panel-lead">Wähle ein Kind aus. Ziele und Vereinbarungen lassen sich so über mehrere Gespräche verfolgen.</p>
+        <div class="student-filter">
+          <div>
+            <label for="historyStudent">Name oder Kürzel</label>
+            <select id="historyStudent"></select>
+          </div>
+          <button id="refreshHistory" class="btn btn-soft" type="button">Verlauf anzeigen</button>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </div>
+    </section>
+
+    <section id="dataView" class="view">
+      <div class="panel">
+        <h2>Daten & Backup</h2>
+        <p class="panel-lead">Die Gesprächsdaten werden ausschließlich im lokalen Browser-Speicher dieses Geräts abgelegt. Sie werden nicht an GitHub oder einen Server gesendet.</p>
+        <div class="grid">
+          <div>
+            <h3 style="color:var(--blue-dark)">Backup</h3>
+            <p class="small">Exportiere regelmäßig eine Sicherungsdatei. Sie enthält die gespeicherten Gesprächsprotokolle im JSON-Format.</p>
+            <div class="actions">
+              <button id="exportData" class="btn btn-primary" type="button">Backup herunterladen</button>
+              <label class="btn btn-secondary" for="importFile" style="display:inline-flex;align-items:center;margin:0">Backup importieren</label>
+              <input id="importFile" type="file" accept="application/json,.json" class="hidden">
+            </div>
+          </div>
+          <div>
+            <h3 style="color:var(--blue-dark)">Lokale Daten löschen</h3>
+            <p class="small">Nur verwenden, wenn vorher ein Backup erstellt wurde oder die Daten nicht mehr benötigt werden.</p>
+            <div class="actions">
+              <button id="deleteAll" class="btn btn-danger" type="button">Alle Gesprächsdaten löschen</button>
+            </div>
+          </div>
+        </div>
+        <div id="dataMessage" class="notice hidden" role="status"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Mentorengespräche · Pilotprojekt Selbstreguliertes Lernen · Klasse 5 · lokale Speicherung</footer>
+
+  <script>
+  (() => {
+    const STORAGE_KEY = "srl5_mentor_talks_v1";
+    const MODULES = [
+      {
+        id:"connection", symbol:"🤝", title:"Ankommen & Beziehung",
+        short:"Wie geht es dir – und was ist heute wichtig?",
+        prompts:["Wie geht es dir gerade?","Was beschäftigt dich im Moment?","Was läuft gerade gut – in der Schule oder außerhalb?"],
+        fields:[
+          ["mood","Was nehme ich vom Ankommen mit?","Kurze Notiz zum Befinden, Thema oder Beziehungsaspekt."],
+          ["important","Das ist dem Kind heute wichtig","Was sollte im Gespräch Raum bekommen?"]
+        ]
+      },
+      {
+        id:"energy", symbol:"🔋", title:"Energievorrat & Belastung",
+        short:"Wie voll ist der Akku – und was kostet Energie?",
+        prompts:["Wie voll ist dein Akku heute?","Was gibt dir gerade Energie?","Was zieht dir Energie?"],
+        scale:true,
+        fields:[
+          ["energySources","Energiegeber","Menschen, Situationen, Routinen oder Dinge, die stärken."],
+          ["energyDrains","Energieräuber / Belastungen","Nur so viel festhalten, wie für die Begleitung sinnvoll ist."]
+        ]
+      },
+      {
+        id:"focus", symbol:"🎯", title:"Ablenker & Fokus",
+        short:"Was hilft beim Dranbleiben – was lenkt ab?",
+        prompts:["Wann kannst du dich gut konzentrieren?","Was lenkt dich häufig ab?","Was könnte dir beim nächsten Mal helfen?"],
+        fields:[
+          ["distractors","Typische Ablenker","Beobachtungen oder Aussagen des Kindes."],
+          ["focusHelp","Hilfreiche Bedingungen / Strategie","Was soll konkret ausprobiert werden?"]
+        ]
+      },
+      {
+        id:"progress", symbol:"🧭", title:"Rückblick & Fortschritt",
+        short:"Was ist seit dem letzten Mal passiert?",
+        prompts:["Was hast du seit unserem letzten Gespräch geschafft?","Worauf bist du stolz?","Was war schwieriger als gedacht?"],
+        fields:[
+          ["progress","Fortschritte / Erfolge","Konkrete Beispiele statt allgemeiner Bewertungen."],
+          ["difficulty","Herausforderung","Was war schwer oder noch nicht geklärt?"]
+        ]
+      },
+      {
+        id:"strategies", symbol:"🧰", title:"Lernstrategien",
+        short:"Welche Werkzeuge helfen beim Lernen?",
+        prompts:["Was hat dir beim Lernen wirklich geholfen?","Welche Strategie hast du ausprobiert?","Was möchtest du anders machen?"],
+        fields:[
+          ["strategyWorked","Das hat geholfen","Strategie, Arbeitsweise oder Unterstützung."],
+          ["strategyTry","Das probiere ich aus","Eine kleine, konkrete Veränderung."]
+        ]
+      },
+      {
+        id:"goals", symbol:"🏁", title:"Ziele & Lernvorhaben",
+        short:"Wohin soll es bis zum nächsten Gespräch gehen?",
+        prompts:["Was möchtest du bis zum nächsten Gespräch schaffen?","Woran merkst du, dass du deinem Ziel näher kommst?","Was ist dein erster kleiner Schritt?"],
+        fields:[
+          ["goal","Nächstes Ziel","Möglichst konkret und für das Kind verständlich."],
+          ["successSign","Woran merken wir Fortschritt?","Beobachtbares Zeichen oder Ergebnis."],
+          ["firstStep","Erster Schritt","Was passiert als Nächstes?"]
+        ]
+      },
+      {
+        id:"support", symbol:"🛟", title:"Unterstützung & Vereinbarung",
+        short:"Wer macht was – und was wird bis zum nächsten Mal ausprobiert?",
+        prompts:["Was schaffst du selbst?","Wobei brauchst du Unterstützung?","Was vereinbaren wir bis zum nächsten Gespräch?"],
+        fields:[
+          ["supportNeed","Unterstützung","Person, Material, Erinnerung, Struktur oder andere Hilfe."],
+          ["agreement","Vereinbarung","Kurze gemeinsame Vereinbarung für den nächsten Zyklus."]
+        ]
+      },
+      {
+        id:"free", symbol:"💬", title:"Freier Raum",
+        short:"Für alles, was heute wichtiger ist als der Leitfaden.",
+        prompts:["Gibt es noch etwas, das du loswerden oder besprechen möchtest?"],
+        fields:[
+          ["freeNote","Freie Gesprächsnotiz","Nur Relevantes dokumentieren."]
+        ]
+      }
+    ];
+
+    const state = {
+      student:"", date:"", type:"", selected:[], current:0, answers:{}, skipped:{},
+      previous:null, previousStatus:"", started:false, saved:false
+    };
+
+    const el = id => document.getElementById(id);
+    const todayISO = () => {
+      const d = new Date();
+      return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    };
+    const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+    const fmtDate = iso => {
+      if(!iso) return "";
+      const p=iso.split("-");
+      return p.length===3 ? p[2]+"."+p[1]+"."+p[0] : iso;
+    };
+    const normalizeName = s => s.trim().replace(/\s+/g," ");
+    const load = () => {
+      try{
+        const raw=localStorage.getItem(STORAGE_KEY);
+        const data=raw?JSON.parse(raw):{};
+        return data && typeof data==="object" && !Array.isArray(data) ? data : {};
+      }catch(e){ return {}; }
+    };
+    const store = data => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    const allNames = () => Object.keys(load()).sort((a,b)=>a.localeCompare(b,"de"));
+
+    function showView(id){
+      document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));
+      document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===id));
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+    function updateNameLists(){
+      const names=allNames();
+      el("studentList").innerHTML=names.map(n=>'<option value="'+esc(n)+'"></option>').join("");
+      const current=el("historyStudent").value;
+      el("historyStudent").innerHTML='<option value="">Bitte auswählen …</option>'+names.map(n=>'<option>'+esc(n)+'</option>').join("");
+      if(names.includes(current)) el("historyStudent").value=current;
+    }
+
+    function renderPicker(){
+      el("modulePicker").innerHTML=MODULES.map((m,i)=>`
+        <div class="module-pick">
+          <input type="checkbox" id="pick-${m.id}" value="${m.id}" ${["connection","progress","goals","support"].includes(m.id)?"checked":""}>
+          <label class="module-card" for="pick-${m.id}">
+            <div class="symbol">${m.symbol}</div>
+            <strong>${i+1}. ${m.title}</strong>
+            <small>${m.short}</small>
+          </label>
+        </div>`).join("");
+    }
+
+    function getLatest(student){
+      const data=load();
+      const arr=data[student] || [];
+      return arr.length ? arr.slice().sort((a,b)=>(b.savedAt||"").localeCompare(a.savedAt||""))[0] : null;
+    }
+
+    function refreshPrevious(){
+      const name=normalizeName(el("studentName").value);
+      const box=el("previousGoalBox");
+      if(!name){box.classList.add("hidden");return;}
+      const last=getLatest(name);
+      state.previous=last;
+      const goal=last?.answers?.goals?.goal || "";
+      const agreement=last?.answers?.support?.agreement || "";
+      if(!goal && !agreement){box.classList.add("hidden");return;}
+      box.innerHTML=`
+        <h3>Vom letzten Gespräch · ${esc(fmtDate(last.date))}</h3>
+        ${goal?'<p><strong>Ziel:</strong> '+esc(goal)+'</p>':""}
+        ${agreement?'<p><strong>Vereinbarung:</strong> '+esc(agreement)+'</p>':""}
+        <div class="spacer"></div>
+        <label>Wie ist es damit weitergegangen?</label>
+        <div class="status-row" id="previousStatus">
+          ${["erreicht","teilweise erreicht","noch offen","nicht mehr passend"].map(s=>'<button type="button" class="chip" data-status="'+s+'">'+s+'</button>').join("")}
+        </div>`;
+      box.classList.remove("hidden");
+      box.querySelectorAll("[data-status]").forEach(btn=>btn.addEventListener("click",()=>{
+        box.querySelectorAll("[data-status]").forEach(b=>b.classList.remove("selected"));
+        btn.classList.add("selected");
+        state.previousStatus=btn.dataset.status;
+      }));
+    }
+
+    function selectedModules(){
+      return MODULES.filter(m=>el("pick-"+m.id).checked).map(m=>m.id);
+    }
+
+    function resetConversation(){
+      state.answers={}; state.skipped={}; state.current=0; state.started=false; state.saved=false;
+    }
+
+    function startTalk(){
+      const name=normalizeName(el("studentName").value);
+      if(!name){
+        showSetupMessage("Bitte zuerst einen Namen oder ein Kürzel eingeben.");
+        el("studentName").focus(); return;
+      }
+      const selected=selectedModules();
+      if(!selected.length){
+        showSetupMessage("Bitte mindestens ein Gesprächsmodul auswählen."); return;
+      }
+      resetConversation();
+      state.student=name;
+      state.date=el("talkDate").value || todayISO();
+      state.type=el("talkType").value;
+      state.selected=selected;
+      state.started=true;
+      hide(el("setupMessage"));
+      showView("conversationView");
+      renderModule();
+    }
+
+    function currentModule(){ return MODULES.find(m=>m.id===state.selected[state.current]); }
+
+    function renderModule(){
+      const m=currentModule();
+      if(!m){ finishTalk(); return; }
+      el("moduleCounter").textContent="Modul "+(state.current+1)+" von "+state.selected.length;
+      el("moduleTitle").textContent=m.symbol+" "+m.title;
+      const a=state.answers[m.id] || {};
+      let html='<div class="prompt"><strong>Mögliche Fragen</strong><p>'+m.prompts.map(esc).join("<br>")+'</p></div>';
+      if(m.id==="progress" && state.previous){
+        const pg=state.previous.answers?.goals?.goal || "";
+        const pa=state.previous.answers?.support?.agreement || "";
+        if(pg||pa){
+          html+='<div class="previous"><h3>Rückbezug auf das letzte Gespräch</h3>'+
+            (pg?'<p><strong>Letztes Ziel:</strong> '+esc(pg)+'</p>':"")+
+            (pa?'<p><strong>Letzte Vereinbarung:</strong> '+esc(pa)+'</p>':"")+
+            (state.previousStatus?'<p><strong>Status:</strong> '+esc(state.previousStatus)+'</p>':"")+
+          '</div>';
+        }
+      }
+      if(m.scale){
+        html+=`<div class="field"><label>Energievorrat heute</label><div class="scale" id="energyScale">${[1,2,3,4,5].map(n=>'<button type="button" class="chip '+(String(a.energyLevel||"")===String(n)?"selected":"")+'" data-energy="'+n+'">'+n+' / 5</button>').join("")}</div><div class="question-help">1 = fast leer · 5 = ziemlich voll</div></div>`;
+      }
+      html+=m.fields.map(f=>`
+        <div class="field">
+          <label for="field-${f[0]}">${f[1]}</label>
+          <textarea id="field-${f[0]}" data-field="${f[0]}" placeholder="${esc(f[2])}">${esc(a[f[0]]||"")}</textarea>
+          <div class="question-help">${esc(f[2])}</div>
+        </div>`).join("");
+      el("moduleBody").innerHTML=html;
+      el("prevModule").disabled=state.current===0;
+      el("nextModule").textContent=state.current===state.selected.length-1 ? "Zum Abschluss →" : "Weiter →";
+      el("skipModule").textContent=state.skipped[m.id] ? "Übersprungen ✓" : "Modul überspringen";
+
+      el("moduleBody").querySelectorAll("[data-field]").forEach(t=>{
+        t.addEventListener("input",()=>{
+          state.answers[m.id]=state.answers[m.id]||{};
+          state.answers[m.id][t.dataset.field]=t.value;
+          state.skipped[m.id]=false;
+          renderLive();
+        });
+      });
+      el("moduleBody").querySelectorAll("[data-energy]").forEach(b=>b.addEventListener("click",()=>{
+        state.answers[m.id]=state.answers[m.id]||{};
+        state.answers[m.id].energyLevel=b.dataset.energy;
+        state.skipped[m.id]=false;
+        el("moduleBody").querySelectorAll("[data-energy]").forEach(x=>x.classList.toggle("selected",x===b));
+        renderLive();
+      }));
+      renderLive();
+    }
+
+    function renderLive(){
+      let parts=[
+        ["Kind",state.student],
+        ["Datum",fmtDate(state.date)],
+        ["Anlass",state.type]
+      ];
+      state.selected.forEach(id=>{
+        if(state.skipped[id]) return;
+        const m=MODULES.find(x=>x.id===id), a=state.answers[id]||{};
+        const vals=[];
+        if(a.energyLevel) vals.push("Energie: "+a.energyLevel+"/5");
+        m.fields.forEach(f=>{ if((a[f[0]]||"").trim()) vals.push(f[1]+": "+a[f[0]].trim()); });
+        if(vals.length) parts.push([m.title,vals.join("\n")]);
+      });
+      el("liveSummary").innerHTML=parts.map(p=>`<div class="live-item"><div class="live-label">${esc(p[0])}</div><div class="live-value">${p[1]?esc(p[1]):'<span class="empty">—</span>'}</div></div>`).join("");
+    }
+
+    function goNext(){
+      saveVisibleFields();
+      if(state.current>=state.selected.length-1) finishTalk();
+      else{state.current++;renderModule();window.scrollTo({top:0,behavior:"smooth"});}
+    }
+    function goPrev(){
+      saveVisibleFields();
+      if(state.current>0){state.current--;renderModule();window.scrollTo({top:0,behavior:"smooth"});}
+    }
+    function skipCurrent(){
+      const m=currentModule();
+      state.skipped[m.id]=true;
+      state.answers[m.id]={};
+      if(state.current>=state.selected.length-1) finishTalk();
+      else{state.current++;renderModule();window.scrollTo({top:0,behavior:"smooth"});}
+    }
+    function saveVisibleFields(){
+      const m=currentModule(); if(!m) return;
+      state.answers[m.id]=state.answers[m.id]||{};
+      el("moduleBody").querySelectorAll("[data-field]").forEach(t=>state.answers[m.id][t.dataset.field]=t.value);
+    }
+
+    function includedModules(){
+      return state.selected.filter(id=>{
+        if(state.skipped[id]) return false;
+        const a=state.answers[id]||{};
+        return Object.values(a).some(v=>String(v||"").trim()!=="");
+      });
+    }
+
+    function finishTalk(){
+      saveVisibleFields();
+      const ids=includedModules();
+      let html=`
+        <div class="summary-section"><h3>Rahmen</h3>
+          <p><strong>${esc(state.student)}</strong> · ${esc(fmtDate(state.date))} · ${esc(state.type)}</p>
+          ${state.previousStatus?'<p><strong>Rückblick auf letztes Ziel:</strong> '+esc(state.previousStatus)+'</p>':""}
+        </div>`;
+      ids.forEach(id=>{
+        const m=MODULES.find(x=>x.id===id), a=state.answers[id]||{};
+        let rows="";
+        if(a.energyLevel) rows+='<p><strong>Energievorrat:</strong> '+esc(a.energyLevel)+'/5</p>';
+        m.fields.forEach(f=>{if((a[f[0]]||"").trim()) rows+='<p><strong>'+esc(f[1])+':</strong> '+esc(a[f[0]].trim())+'</p>';});
+        html+='<div class="summary-section"><h3>'+m.symbol+' '+esc(m.title)+'</h3>'+rows+'</div>';
+      });
+      if(!ids.length) html+='<div class="summary-section"><p class="empty">Es wurden keine inhaltlichen Notizen eingetragen. Du kannst trotzdem zurückgehen und ergänzen.</p></div>';
+      el("finalSummary").innerHTML=html;
+      hide(el("saveMessage"));
+      showView("summaryView");
+    }
+
+    function buildRecord(){
+      const filtered={};
+      includedModules().forEach(id=>filtered[id]=state.answers[id]);
+      return {
+        id:"talk_"+Date.now()+"_"+Math.random().toString(36).slice(2,8),
+        student:state.student,date:state.date,type:state.type,
+        selected:state.selected.slice(),skipped:Object.keys(state.skipped).filter(k=>state.skipped[k]),
+        answers:filtered,previousStatus:state.previousStatus||"",
+        savedAt:new Date().toISOString()
+      };
+    }
+
+    function saveTalk(){
+      if(state.saved){showSaveMessage("Dieses Gespräch wurde bereits gespeichert.");return;}
+      const data=load();
+      data[state.student]=data[state.student]||[];
+      data[state.student].push(buildRecord());
+      store(data);
+      state.saved=true;
+      updateNameLists();
+      showSaveMessage("Gespräch gespeichert. Beim nächsten Gespräch werden Ziel und Vereinbarung automatisch wieder aufgegriffen.");
+    }
+
+    function summaryText(){
+      const lines=[
+        "MENTORENGESPRÄCH · SRL KLASSE 5",
+        state.student+" · "+fmtDate(state.date)+" · "+state.type,
+        ""
+      ];
+      if(state.previousStatus) lines.push("Rückblick auf letztes Ziel: "+state.previousStatus,"");
+      includedModules().forEach(id=>{
+        const m=MODULES.find(x=>x.id===id), a=state.answers[id]||{};
+        lines.push(m.title.toUpperCase());
+        if(a.energyLevel) lines.push("Energievorrat: "+a.energyLevel+"/5");
+        m.fields.forEach(f=>{if((a[f[0]]||"").trim()) lines.push(f[1]+": "+a[f[0]].trim());});
+        lines.push("");
+      });
+      return lines.join("\n");
+    }
+
+    function download(name,content,type){
+      const blob=new Blob([content],{type:type||"text/plain;charset=utf-8"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),500);
+    }
+
+    function renderHistory(){
+      const student=el("historyStudent").value;
+      const list=el("historyList");
+      if(!student){list.innerHTML='<div class="notice warning">Bitte zuerst ein Kind auswählen.</div>';return;}
+      const entries=(load()[student]||[]).slice().sort((a,b)=>(b.savedAt||"").localeCompare(a.savedAt||""));
+      if(!entries.length){list.innerHTML='<div class="notice warning">Für dieses Kind sind noch keine Gespräche gespeichert.</div>';return;}
+      list.innerHTML=entries.map((r,idx)=>{
+        const blocks=[];
+        Object.keys(r.answers||{}).forEach(id=>{
+          const m=MODULES.find(x=>x.id===id); if(!m) return;
+          const a=r.answers[id]||{};
+          const vals=[];
+          if(a.energyLevel) vals.push("<strong>Energievorrat:</strong> "+esc(a.energyLevel)+"/5");
+          m.fields.forEach(f=>{if((a[f[0]]||"").trim()) vals.push("<strong>"+esc(f[1])+":</strong> "+esc(a[f[0]].trim()));});
+          if(vals.length) blocks.push('<div class="entry-block"><strong>'+m.symbol+" "+esc(m.title)+'</strong><p>'+vals.join("<br>")+'</p></div>');
+        });
+        return `<details class="entry" ${idx===0?"open":""}>
+          <summary>${esc(fmtDate(r.date))} · ${esc(r.type||"Gespräch")}</summary>
+          <div class="entry-body">
+            <div class="entry-meta">${r.previousStatus?'Rückblick vorheriges Ziel: '+esc(r.previousStatus)+' · ':""}gespeichert ${esc(new Date(r.savedAt).toLocaleString("de-DE"))}</div>
+            ${blocks.join("") || '<div class="entry-block empty">Keine inhaltlichen Notizen.</div>'}
+            <div class="actions"><button class="btn btn-danger delete-entry" type="button" data-id="${esc(r.id)}">Diesen Eintrag löschen</button></div>
+          </div>
+        </details>`;
+      }).join("");
+      list.querySelectorAll(".delete-entry").forEach(btn=>btn.addEventListener("click",()=>{
+        if(!confirm("Diesen Gesprächseintrag wirklich löschen?")) return;
+        const data=load();
+        data[student]=(data[student]||[]).filter(x=>x.id!==btn.dataset.id);
+        if(!data[student].length) delete data[student];
+        store(data); updateNameLists(); renderHistory();
+      }));
+    }
+
+    function showSetupMessage(msg){el("setupMessage").textContent=msg;show(el("setupMessage"));}
+    function showSaveMessage(msg){el("saveMessage").textContent=msg;show(el("saveMessage"));}
+    function show(node){node.classList.remove("hidden")}
+    function hide(node){node.classList.add("hidden")}
+
+    document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{showView(t.dataset.view);if(t.dataset.view==="historyView")updateNameLists();}));
+    el("talkDate").value=todayISO();
+    renderPicker(); updateNameLists();
+
+    el("studentName").addEventListener("input",refreshPrevious);
+    el("studentName").addEventListener("change",refreshPrevious);
+    el("selectAll").addEventListener("click",()=>MODULES.forEach(m=>el("pick-"+m.id).checked=true));
+    el("selectCore").addEventListener("click",()=>MODULES.forEach(m=>el("pick-"+m.id).checked=["connection","progress","goals","support"].includes(m.id)));
+    el("clearModules").addEventListener("click",()=>MODULES.forEach(m=>el("pick-"+m.id).checked=false));
+    el("startTalk").addEventListener("click",startTalk);
+    el("prevModule").addEventListener("click",goPrev);
+    el("nextModule").addEventListener("click",goNext);
+    el("skipModule").addEventListener("click",skipCurrent);
+    el("backToTalk").addEventListener("click",()=>{showView("conversationView");renderModule();});
+    el("saveTalk").addEventListener("click",saveTalk);
+    el("printTalk").addEventListener("click",()=>window.print());
+    el("downloadTxt").addEventListener("click",()=>{
+      const safe=state.student.replace(/[^a-z0-9äöüß_-]+/gi,"_");
+      download("Mentorengespraech_"+safe+"_"+state.date+".txt",summaryText());
+    });
+    el("refreshHistory").addEventListener("click",renderHistory);
+    el("historyStudent").addEventListener("change",renderHistory);
+
+    el("exportData").addEventListener("click",()=>{
+      const data=load();
+      const stamp=todayISO();
+      download("SRL5_Mentorengespraeche_Backup_"+stamp+".json",JSON.stringify({version:1,exportedAt:new Date().toISOString(),data},null,2),"application/json;charset=utf-8");
+      el("dataMessage").textContent="Backup wurde erstellt."; show(el("dataMessage"));
+    });
+    el("importFile").addEventListener("change",async e=>{
+      const file=e.target.files?.[0]; if(!file) return;
+      try{
+        const parsed=JSON.parse(await file.text());
+        const incoming=parsed.data && typeof parsed.data==="object" ? parsed.data : parsed;
+        if(!incoming || typeof incoming!=="object" || Array.isArray(incoming)) throw new Error("Ungültiges Format");
+        if(!confirm("Vorhandene lokale Daten werden mit dem Backup zusammengeführt. Fortfahren?")){e.target.value="";return;}
+        const current=load();
+        Object.entries(incoming).forEach(([name,arr])=>{
+          if(!Array.isArray(arr)) return;
+          const existing=current[name]||[];
+          const ids=new Set(existing.map(x=>x.id));
+          arr.forEach(r=>{if(r && r.id && !ids.has(r.id)){existing.push(r);ids.add(r.id);}});
+          current[name]=existing;
+        });
+        store(current); updateNameLists();
+        el("dataMessage").textContent="Backup importiert und mit vorhandenen Daten zusammengeführt."; show(el("dataMessage"));
+      }catch(err){
+        el("dataMessage").textContent="Import nicht möglich: Die Datei ist kein gültiges Backup."; show(el("dataMessage"));
+      }
+      e.target.value="";
+    });
+    el("deleteAll").addEventListener("click",()=>{
+      if(!confirm("Wirklich ALLE lokal gespeicherten Gesprächsdaten löschen?")) return;
+      if(!confirm("Letzte Bestätigung: Ohne Backup können die Daten nicht wiederhergestellt werden.")) return;
+      localStorage.removeItem(STORAGE_KEY); updateNameLists();
+      el("historyList").innerHTML="";
+      el("dataMessage").textContent="Alle lokalen Gesprächsdaten wurden gelöscht."; show(el("dataMessage"));
+    });
+  })();
+  </script>
+</body>
+</html>
