@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#245688">
+  <title>Unsere Spiel-Bar · Klassen-AG 5.3</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --blue: #245688;
+      --blue-dark: #18324a;
+      --blue-deep: #1c3d5e;
+      --blue-light: #eff5fa;
+      --mint: #48dccb;
+      --mint-light: #d6f8f3;
+      --orange: #f0a66f;
+      --orange-light: #feeedd;
+      --white: #fff;
+      --gray: #f2f4f6;
+      --line: #c5d0d9;
+      --shadow: 0 1.2rem 3rem rgba(15, 33, 52, .15);
+      --font: Inter, Aptos, "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: var(--blue-deep);
+      color: var(--blue-dark);
+      font-family: var(--font);
+    }
+
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    :focus-visible { outline: 4px solid #e8833b; outline-offset: 4px; }
+
+    .deck { height: 100%; position: relative; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      padding: clamp(1.1rem, 3.5vw, 3.5rem) clamp(1.25rem, 5vw, 5.5rem) clamp(5.8rem, 10vh, 7rem);
+      background: var(--white);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(4%);
+      transition: opacity .28s ease, transform .28s ease, visibility 0s .28s;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      transition-delay: 0s;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: clamp(.65rem, 1.4vh, 1rem);
+      background: linear-gradient(90deg, var(--blue) 0 70%, var(--mint) 70% 87%, var(--orange) 87%);
+    }
+
+    .slide-title {
+      margin: clamp(.8rem, 2vh, 1.5rem) 0 clamp(1rem, 3vh, 2.3rem);
+      color: var(--blue);
+      font-size: clamp(2rem, 4.6vw, 4.8rem);
+      line-height: 1;
+      letter-spacing: -.035em;
+    }
+
+    .content {
+      min-height: 0;
+      align-self: center;
+      width: 100%;
+    }
+
+    .cover {
+      color: var(--white);
+      background: linear-gradient(135deg, var(--blue-deep), var(--blue) 60%, #356d9c);
+    }
+    .cover::before { background: linear-gradient(90deg, var(--mint), var(--orange)); }
+    .cover .content { max-width: 82rem; }
+    .cover .slide-title {
+      color: var(--white);
+      font-size: clamp(3.5rem, 9vw, 9rem);
+      max-width: 9ch;
+      margin: 0 0 2rem;
+    }
+    .cover p { max-width: 30ch; color: var(--blue-light); font-size: clamp(1.5rem, 3vw, 3.2rem); }
+    .cover .class-mark {
+      position: absolute;
+      right: clamp(1.5rem, 6vw, 6rem);
+      top: clamp(2rem, 10vh, 7rem);
+      display: grid;
+      place-items: center;
+      width: clamp(7rem, 14vw, 13rem);
+      aspect-ratio: 1;
+      border: .35rem solid var(--white);
+      border-radius: 2.2rem;
+      background: var(--mint);
+      color: var(--blue-dark);
+      font-size: clamp(1.7rem, 3vw, 3.1rem);
+      font-weight: 900;
+      transform: rotate(3deg);
+    }
+
+    .lead {
+      margin: 0 0 1.7rem;
+      max-width: 48ch;
+      font-size: clamp(1.4rem, 2.7vw, 2.7rem);
+      line-height: 1.25;
+    }
+
+    .big-list {
+      display: grid;
+      gap: clamp(.8rem, 2vh, 1.5rem);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: clamp(1.5rem, 3vw, 3rem);
+    }
+    .big-list li { display: grid; grid-template-columns: 1.4em 1fr; gap: .5em; align-items: start; }
+    .big-list li::before { content: "✓"; color: #19766f; font-weight: 950; }
+
+    .columns { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(1rem, 4vw, 4rem); align-items: stretch; }
+    .columns.three { grid-template-columns: repeat(3, 1fr); gap: clamp(.8rem, 2vw, 2rem); }
+
+    .panel {
+      border: .2rem solid var(--blue);
+      border-radius: clamp(1rem, 2vw, 2rem);
+      padding: clamp(1rem, 2.5vw, 2.5rem);
+      background: var(--white);
+    }
+    .panel.orange { border-color: #cf6320; background: var(--orange-light); }
+    .panel.mint { border-color: #1b958a; background: #effcfa; }
+    .panel h2 { margin: 0 0 .7em; color: var(--blue); font-size: clamp(1.7rem, 3vw, 3.2rem); line-height: 1.05; }
+    .panel p, .panel li { font-size: clamp(1.15rem, 2.05vw, 2.15rem); line-height: 1.28; }
+    .panel ul, .panel ol { margin: 0; padding-left: 1.25em; }
+    .panel li + li { margin-top: .45em; }
+
+    .step-number {
+      display: inline-grid;
+      place-items: center;
+      width: 1.55em;
+      height: 1.55em;
+      margin-right: .2em;
+      border: .12em solid currentColor;
+      border-radius: .45em;
+    }
+
+    .sort-box {
+      min-height: 12rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+    .sort-box strong { color: var(--blue); font-size: clamp(1.7rem, 3.2vw, 3.2rem); }
+    .sort-box span { margin-top: .7rem; font-size: clamp(1rem, 1.8vw, 1.8rem); line-height: 1.25; }
+    .sort-box:nth-child(1) { border-top: .8rem solid var(--mint); }
+    .sort-box:nth-child(2) { border-top: .8rem solid var(--orange); }
+    .sort-box:nth-child(3) { border-top: .8rem solid var(--blue); }
+
+    .card-example {
+      max-width: 56rem;
+      margin-inline: auto;
+      border: .35rem solid var(--blue);
+      border-radius: 2rem;
+      padding: clamp(1.3rem, 3vw, 3rem);
+      box-shadow: var(--shadow);
+      background: var(--white);
+    }
+    .card-example h2 { margin: 0 0 .6em; color: var(--blue); font-size: clamp(2rem, 4vw, 4rem); }
+    .card-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: .7rem; margin-bottom: 1.2rem; }
+    .card-meta span { border: .12rem solid var(--line); border-radius: .8rem; padding: .7rem; font-size: clamp(.9rem, 1.6vw, 1.5rem); }
+    .card-example p { margin: .6em 0; font-size: clamp(1.1rem, 2vw, 2rem); }
+
+    .idea-prompt {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 12rem;
+      border: .28rem dashed var(--blue);
+      border-radius: 2rem;
+      color: var(--blue);
+      font-size: clamp(1.7rem, 3.6vw, 3.8rem);
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .timer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: clamp(1rem, 4vh, 3rem);
+    }
+    .timer-display { min-width: 5ch; color: var(--blue); font-variant-numeric: tabular-nums; font-size: clamp(2rem, 5vw, 5rem); font-weight: 900; text-align: center; }
+    .timer button {
+      min-width: 3.3rem;
+      min-height: 3.3rem;
+      border: .18rem solid var(--blue);
+      border-radius: .9rem;
+      background: var(--white);
+      color: var(--blue);
+      font-weight: 850;
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 20;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      min-height: 4.6rem;
+      display: grid;
+      grid-template-columns: auto minmax(8rem, 1fr) auto auto auto auto auto;
+      gap: .8rem;
+      align-items: center;
+      padding: .7rem max(1rem, env(safe-area-inset-right)) calc(.7rem + env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+      background: rgba(24, 50, 74, .96);
+      color: var(--white);
+    }
+    .nav button, .nav a {
+      min-width: 3.4rem;
+      min-height: 3.4rem;
+      display: inline-grid;
+      place-items: center;
+      border: .15rem solid var(--white);
+      border-radius: .85rem;
+      background: transparent;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+    .nav button:disabled { opacity: .35; cursor: default; }
+    .progress { height: .8rem; overflow: hidden; border: .12rem solid var(--white); border-radius: 999px; }
+    .progress-fill { height: 100%; width: 11.11%; background: var(--mint); transition: width .28s ease; }
+    .counter { min-width: 4.4rem; text-align: center; font-variant-numeric: tabular-nums; font-weight: 800; }
+
+    .help {
+      position: fixed;
+      z-index: 30;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 2rem;
+      background: rgba(15, 33, 52, .84);
+    }
+    .help.open { display: grid; }
+    .help-box { max-width: 42rem; border-radius: 1.5rem; padding: 2rem; background: var(--white); box-shadow: var(--shadow); }
+    .help-box h2 { color: var(--blue); font-size: 2rem; }
+    .help-box li { margin: .55rem 0; font-size: 1.2rem; }
+    .help-box button { min-height: 3rem; border: 0; border-radius: .75rem; padding: .6rem 1rem; background: var(--blue); color: var(--white); font-weight: 800; }
+
+    @media (max-width: 760px), (max-height: 650px) {
+      .slide { overflow-y: auto; align-content: start; }
+      .columns, .columns.three { grid-template-columns: 1fr; }
+      .cover .class-mark { width: 6.5rem; top: 2rem; }
+      .card-meta { grid-template-columns: 1fr; }
+      .panel p, .panel li { font-size: clamp(1rem, 2.5vw, 1.45rem); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" id="deck" aria-live="polite">
+    <section class="slide cover active" aria-hidden="false">
+      <div></div>
+      <div class="content">
+        <h1 class="slide-title">Unsere Spiel-Bar</h1>
+        <p>Heute prüfen wir Spiele und sammeln neue Ideen.</p>
+      </div>
+      <div class="class-mark">Klasse<br>5.3</div>
+    </section>
+
+    <section class="slide" aria-hidden="true">
+      <h1 class="slide-title">Das Ziel für heute</h1>
+      <div class="content">
+        <p class="lead">Am Ende wissen wir, welche Spiele in unsere Spiel-Bar dürfen.</p>
+        <ul class="big-list">
+          <li>Vorhandene Spiele sind geprüft.</li>
+          <li>Fehlende Teile oder Anleitungen sind notiert.</li>
+          <li>Neue Spielideen sind gesammelt.</li>
+          <li>Wir wissen, was auf unsere Anleitungskarten gehört.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide" aria-hidden="true">
+      <h1 class="slide-title">Ein Spiel für die Spiel-Bar</h1>
+      <div class="content columns">
+        <div class="panel">
+          <h2>Passt gut</h2>
+          <ul>
+            <li>wenige, verständliche Regeln</li>
+            <li>höchstens etwa 20 Minuten</li>
+            <li>schneller Auf- und Abbau</li>
+          </ul>
+        </div>
+        <div class="panel mint">
+          <h2>Bleibt gut nutzbar</h2>
+          <ul>
+            <li>Material ist leicht zu kontrollieren</li>
+            <li>selbstständiges Spielen ist möglich</li>
+            <li>das Spiel passt in den Klassenraum</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-hidden="true">
+      <h1 class="slide-title">Auftrag 1: Spiele prüfen</h1>
+      <div class="content columns three">
+        <div class="panel">
+          <h2><span class="step-number">1</span>Anleitung</h2>
+          <p>Findet die Anleitung. Lest nach, welches Material dazugehört.</p>
+        </div>
+        <div class="panel orange">
+          <h2><span class="step-number">2</span>Material</h2>
+          <p>Zählt und sortiert die Teile. Notiert genau, was fehlt.</p>
+        </div>
+        <div class="panel mint">
+          <h2><span class="step-number">3</span>Urteil</h2>
+          <p>Entscheidet gemeinsam, ob das Spiel zur Spiel-Bar passt.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-hidden="true">
+      <h1 class="slide-title">Der Spiele-Check läuft</h1>
+      <div class="content">
+        <p class="lead">Arbeitet im Team. Behandelt alle Spielteile sorgfältig.</p>
+        <div class="idea-prompt">Tragt jedes geprüfte Spiel in euer Handout ein.</div>
+        <div class="timer" data-seconds="900">
+          <button type="button" data-timer-action="minus" aria-label="Eine Minute abziehen">−1</button>
+          <div class="timer-display" aria-live="polite">15:00</div>
+          <button type="button" data-timer-action="toggle">Start</button>
+          <button type="button" data-timer-action="reset">Neu</button>
+          <button type="button" data-timer-action="plus" aria-label="Eine Minute hinzufügen">+1</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-hidden="true">
+      <h1 class="slide-title">Drei Plätze für die Spiele</h1>
+      <div class="content columns three">
+        <div class="panel sort-box"><strong>✓ Bereit</strong><span>vollständig, mit Anleitung und gut geeignet</span></div>
+        <div class="panel sort-box"><strong>! Prüfen</strong><span>eine Anleitung oder einzelne Teile fehlen</span></div>
+        <div class="panel sort-box"><strong>○ Nicht passend</strong><span>zu lang, zu schwierig oder für den Raum ungeeignet</span></div>
+      </div>
+    </section>
+
+    <section class="slide" aria-hidden="true">
+      <h1 class="slide-title">Auftrag 2: Neue Ideen</h1>
+      <div class="content columns">
+        <div class="panel orange">
+          <h2>Mit Schulmaterial</h2>
+          <p>Papier, Stifte, kariertes Papier, Würfel oder andere einfache Dinge</p>
+        </div>
+        <div class="panel mint">
+          <h2>Ganz ohne Material</h2>
+          <p>Wortspiele, Ratespiele, Denkspiele oder Spiele im Sitzkreis</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-hidden="true">
+      <h1 class="slide-title">Unsere Anleitungskarten</h1>
+      <div class="content">
+        <div class="card-example">
+          <h2>Name des Spiels</h2>
+          <div class="card-meta">
+            <span><strong>Personen</strong><br>2 bis 4</span>
+            <span><strong>Dauer</strong><br>etwa 10 Minuten</span>
+            <span><strong>Material</strong><br>kurze Liste</span>
+          </div>
+          <p><strong>Ziel:</strong> Was möchtest du im Spiel erreichen?</p>
+          <p><strong>So geht es:</strong> Wenige nummerierte Schritte erklären den Ablauf.</p>
+          <p><strong>Ende:</strong> Wann ist Schluss und wer gewinnt?</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-hidden="true">
+      <h1 class="slide-title">Unser Ergebnis</h1>
+      <div class="content">
+        <ul class="big-list">
+          <li>Welche Spiele können sofort in die Spiel-Bar?</li>
+          <li>Was müssen wir reparieren oder ergänzen?</li>
+          <li>Für welche neuen Spiele schreiben wir zuerst eine Anleitung?</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Präsentationssteuerung">
+    <button type="button" id="prev" aria-label="Vorherige Folie">‹</button>
+    <div class="progress" aria-hidden="true"><div class="progress-fill" id="progress"></div></div>
+    <span class="counter" id="counter">1 / 9</span>
+    <button type="button" id="next" aria-label="Nächste Folie">›</button>
+    <button type="button" id="helpButton" aria-label="Bedienung anzeigen">?</button>
+    <button type="button" id="fullscreen" aria-label="Vollbild öffnen">⛶</button>
+    <a href="output/pdf/Handout_Spiel-Bar_Klassen-AG.pdf" aria-label="Handout als PDF öffnen">PDF</a>
+  </nav>
+
+  <aside class="help" id="help" aria-hidden="true">
+    <div class="help-box">
+      <h2>Bedienung</h2>
+      <ul>
+        <li>Tippe auf die Pfeile oder nutze die Pfeiltasten.</li>
+        <li>Mit der Leertaste geht es eine Folie weiter.</li>
+        <li>Drücke F für das Vollbild.</li>
+        <li>Der Timer bleibt erhalten, wenn du die Folie wechselst.</li>
+      </ul>
+      <button type="button" id="closeHelp">Schließen</button>
+    </div>
+  </aside>
+
+  <script>
+    (() => {
+      const slides = [...document.querySelectorAll('.slide')];
+      const previous = document.getElementById('prev');
+      const next = document.getElementById('next');
+      const counter = document.getElementById('counter');
+      const progress = document.getElementById('progress');
+      const fullscreen = document.getElementById('fullscreen');
+      const help = document.getElementById('help');
+      let index = Math.max(0, Math.min(slides.length - 1, Number(location.hash.slice(1)) - 1 || 0));
+
+      function show(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => {
+          const active = i === index;
+          slide.classList.toggle('active', active);
+          slide.setAttribute('aria-hidden', String(!active));
+        });
+        previous.disabled = index === 0;
+        next.disabled = index === slides.length - 1;
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        history.replaceState(null, '', `#${index + 1}`);
+        slides[index].scrollTop = 0;
+      }
+
+      previous.addEventListener('click', () => show(index - 1));
+      next.addEventListener('click', () => show(index + 1));
+
+      async function toggleFullscreen() {
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.();
+        else await document.exitFullscreen?.();
+      }
+      fullscreen.addEventListener('click', toggleFullscreen);
+
+      document.getElementById('helpButton').addEventListener('click', () => {
+        help.classList.add('open');
+        help.setAttribute('aria-hidden', 'false');
+      });
+      document.getElementById('closeHelp').addEventListener('click', () => {
+        help.classList.remove('open');
+        help.setAttribute('aria-hidden', 'true');
+      });
+
+      document.addEventListener('keydown', event => {
+        if (help.classList.contains('open') && event.key === 'Escape') {
+          document.getElementById('closeHelp').click();
+          return;
+        }
+        if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); show(index + 1); }
+        if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); show(index - 1); }
+        if (event.key.toLowerCase() === 'f') toggleFullscreen();
+        if (event.key === 'Home') show(0);
+        if (event.key === 'End') show(slides.length - 1);
+      });
+
+      document.querySelectorAll('.timer').forEach(timer => {
+        const initial = Number(timer.dataset.seconds);
+        const display = timer.querySelector('.timer-display');
+        const toggle = timer.querySelector('[data-timer-action="toggle"]');
+        let remaining = initial;
+        let interval = null;
+
+        const render = () => {
+          const minutes = Math.floor(remaining / 60);
+          const seconds = remaining % 60;
+          display.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        };
+        const stop = () => {
+          clearInterval(interval);
+          interval = null;
+          toggle.textContent = remaining === 0 ? 'Fertig' : 'Start';
+        };
+        const start = () => {
+          if (remaining <= 0) remaining = initial;
+          interval = setInterval(() => {
+            remaining = Math.max(0, remaining - 1);
+            render();
+            if (remaining === 0) stop();
+          }, 1000);
+          toggle.textContent = 'Pause';
+        };
+
+        timer.addEventListener('click', event => {
+          const action = event.target.dataset.timerAction;
+          if (!action) return;
+          if (action === 'toggle') interval ? stop() : start();
+          if (action === 'reset') { stop(); remaining = initial; render(); }
+          if (action === 'plus') { remaining += 60; render(); }
+          if (action === 'minus') { remaining = Math.max(0, remaining - 60); render(); }
+        });
+        render();
+      });
+
+      show(index);
+    })();
+  </script>
+</body>
+</html>
