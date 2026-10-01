@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#163A5C" />
+  <meta name="description" content="Interaktive Vortragslandkarte: Was selbstreguliertes Lernen ist – und was nicht." />
+  <title>SRL ist keine Methode · Vortragslandkarte</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#18324A',
+            navy: '#163A5C',
+            blue: '#245688',
+            mint: '#48DCCB',
+            orange: '#F0A66F',
+            red: '#791D22',
+            paper: '#F7F5F2',
+            sand: '#C9A876'
+          },
+          fontFamily: {
+            display: ['Anton', 'sans-serif'],
+            body: ['Jost', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root{
+      --navy:#163A5C;
+      --blue:#245688;
+      --mint:#48DCCB;
+      --orange:#F0A66F;
+      --red:#791D22;
+      --paper:#F7F5F2;
+      --ink:#18324A;
+      --sand:#C9A876;
+      --white:#ffffff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--paper);font-family:Jost,system-ui,sans-serif;color:var(--ink)}
+    body{overflow:hidden}
+    button,a{font:inherit}
+    button:focus-visible,a:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+    #three-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.42}
+    .app{position:relative;z-index:1;height:100dvh;display:grid;grid-template-rows:auto 1fr}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      padding:.8rem 1rem;border-bottom:1px solid rgba(22,58,92,.15);
+      background:rgba(247,245,242,.88);backdrop-filter:blur(18px);z-index:20
+    }
+    .brand{display:flex;align-items:center;gap:.85rem;min-width:0}
+    .mark{
+      width:2.65rem;height:2.65rem;border-radius:1rem;display:grid;place-items:center;
+      color:white;background:linear-gradient(135deg,var(--navy),var(--blue));
+      font-family:Anton,sans-serif;letter-spacing:.06em;box-shadow:0 10px 24px rgba(22,58,92,.2)
+    }
+    .brand h1{font:400 clamp(1rem,2.1vw,1.45rem)/1 Anton,sans-serif;letter-spacing:.02em;margin:0;color:var(--navy)}
+    .brand p{font-size:.72rem;margin:.2rem 0 0;color:#667789;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .controls{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:flex-end}
+    .control{
+      border:1px solid rgba(22,58,92,.16);background:rgba(255,255,255,.85);color:var(--ink);
+      padding:.56rem .8rem;border-radius:999px;cursor:pointer;transition:.2s;box-shadow:0 6px 18px rgba(22,58,92,.06)
+    }
+    .control:hover,.control.active{background:var(--navy);border-color:var(--navy);color:white;transform:translateY(-1px)}
+    .stage{position:relative;min-height:0;overflow:hidden}
+    .view{position:absolute;inset:0;display:none}
+    .view.active{display:block}
+
+    .intro{
+      display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
+      gap:clamp(1.5rem,4vw,4rem);align-items:center;height:100%;max-width:1440px;margin:0 auto;
+      padding:clamp(1.4rem,4vw,4rem)
+    }
+    .eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;text-transform:uppercase;letter-spacing:.13em;font-size:.72rem;color:var(--red)}
+    .hero-title{font:400 clamp(3.6rem,8.2vw,8.4rem)/.88 Anton,sans-serif;color:var(--navy);letter-spacing:-.02em;margin:.28em 0 .18em}
+    .hero-title span{color:var(--red)}
+    .hero-copy{font-size:clamp(1.05rem,2vw,1.45rem);line-height:1.55;max-width:47rem;color:#324d63}
+    .quote-card{
+      margin-top:1.4rem;padding:1rem 1.15rem;border-left:6px solid var(--orange);border-radius:0 1.1rem 1.1rem 0;
+      background:rgba(255,255,255,.84);box-shadow:0 16px 38px rgba(22,58,92,.08);max-width:46rem
+    }
+    .person-card{
+      position:relative;overflow:hidden;background:rgba(255,255,255,.9);border:1px solid rgba(22,58,92,.14);
+      border-radius:2rem;padding:clamp(1.3rem,3vw,2.2rem);box-shadow:0 24px 70px rgba(22,58,92,.14)
+    }
+    .person-card:before{
+      content:"";position:absolute;inset:0 auto 0 0;width:9px;background:linear-gradient(var(--red),var(--blue),var(--mint))
+    }
+    .person-card h2{font:400 clamp(2rem,4vw,3.5rem)/1 Anton,sans-serif;color:var(--navy);margin:0 0 .6rem}
+    .chips{display:flex;flex-wrap:wrap;gap:.48rem;margin:1.2rem 0}
+    .chip{padding:.46rem .72rem;border-radius:999px;background:#EFF4F9;border:1px solid #CBDBE9;font-size:.83rem}
+    .person-list{display:grid;gap:.72rem;margin-top:1.15rem}
+    .person-list div{display:grid;grid-template-columns:28px 1fr;gap:.7rem;align-items:start}
+    .person-list b{color:var(--blue)}
+    .start-btn{
+      margin-top:1.5rem;width:100%;border:0;border-radius:1rem;padding:1rem 1.2rem;cursor:pointer;
+      background:linear-gradient(135deg,var(--navy),var(--blue));color:white;font-weight:700;font-size:1.02rem;
+      box-shadow:0 14px 32px rgba(22,58,92,.22)
+    }
+
+    .map-shell{height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,420px)}
+    .map-wrap{position:relative;min-width:0;min-height:0}
+    #mapSvg{width:100%;height:100%;display:block;touch-action:none}
+    .map-label{
+      position:absolute;left:1rem;top:1rem;z-index:3;padding:.58rem .8rem;border-radius:999px;
+      background:rgba(255,255,255,.86);border:1px solid rgba(22,58,92,.14);backdrop-filter:blur(14px);
+      font-size:.75rem;color:#5d7182
+    }
+    .map-hint{
+      position:absolute;left:1rem;bottom:1rem;z-index:3;max-width:32rem;padding:.75rem .9rem;border-radius:1rem;
+      background:rgba(22,58,92,.9);color:white;font-size:.8rem;box-shadow:0 10px 24px rgba(22,58,92,.25)
+    }
+    .sidepanel{
+      min-width:0;overflow:auto;border-left:1px solid rgba(22,58,92,.14);
+      background:rgba(247,245,242,.92);backdrop-filter:blur(18px);padding:1.1rem
+    }
+    .detail{
+      min-height:100%;background:rgba(255,255,255,.91);border:1px solid rgba(22,58,92,.14);border-radius:1.5rem;
+      padding:1.15rem;box-shadow:0 20px 50px rgba(22,58,92,.1)
+    }
+    .detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.8rem}
+    .detail-kicker{text-transform:uppercase;letter-spacing:.12em;font-size:.69rem;font-weight:700;color:var(--red)}
+    .detail h2{font:400 2.15rem/1 Anton,sans-serif;color:var(--navy);margin:.25rem 0 .7rem}
+    .detail p{line-height:1.55}
+    .close-detail{border:0;background:#EFF4F9;border-radius:.8rem;padding:.55rem .7rem;cursor:pointer;color:var(--navy)}
+    .big-claim{
+      margin:1rem 0;padding:1rem;border-radius:1rem;background:linear-gradient(135deg,#EFF4F9,#fff);
+      border:1px solid #CBDBE9;font-weight:700;color:var(--navy);font-size:1.05rem
+    }
+    .detail ul{padding-left:1.15rem;display:grid;gap:.5rem}
+    .practice{
+      margin-top:1rem;padding:.9rem 1rem;border-radius:1rem;background:#F0FFFC;border:1px solid rgba(72,220,203,.5)
+    }
+    .practice b{color:#196d66}
+    .speaker-note{
+      margin-top:1rem;padding:.9rem 1rem;border-radius:1rem;background:#FFF6EF;border:1px solid rgba(240,166,111,.65);font-size:.9rem
+    }
+    .speaker-note b{color:#a14d1b}
+    .empty-detail{display:grid;place-items:center;text-align:center;min-height:60vh;color:#6b7f90;padding:1.2rem}
+    .empty-detail strong{display:block;font:400 2rem/1 Anton,sans-serif;color:var(--navy);margin-bottom:.5rem}
+
+    .cycle-view{height:100%;overflow:auto}
+    .cycle-inner{min-height:100%;display:grid;place-items:center;padding:2rem}
+    .cycle-board{width:min(1100px,96vw);background:rgba(255,255,255,.92);border:1px solid rgba(22,58,92,.14);border-radius:2rem;padding:clamp(1.2rem,4vw,3rem);box-shadow:0 24px 70px rgba(22,58,92,.14)}
+    .cycle-board h2{font:400 clamp(2.5rem,6vw,5rem)/.95 Anton,sans-serif;color:var(--navy);margin:0}
+    .cycle-grid{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:1rem;margin-top:2rem}
+    .cycle-card{padding:1.2rem;border-radius:1.3rem;min-height:220px;background:#fff;border:2px solid #dfe7ef}
+    .cycle-card h3{font:400 1.8rem/1 Anton,sans-serif;margin:0 0 .7rem;color:var(--navy)}
+    .cycle-card.plan{border-color:var(--blue);background:#EFF4F9}
+    .cycle-card.act{border-color:var(--orange);background:#FFF6EF}
+    .cycle-card.reflect{border-color:var(--mint);background:#F0FFFC}
+    .arrow{display:grid;place-items:center;font-size:2.2rem;color:var(--red);font-weight:700}
+    .formula{margin-top:1.6rem;padding:1rem;border-radius:1rem;background:var(--navy);color:white;text-align:center;font-weight:700}
+    .formula span{color:var(--mint)}
+
+    .legend{
+      position:absolute;right:1rem;top:1rem;z-index:4;display:flex;flex-wrap:wrap;gap:.35rem;max-width:min(60vw,620px);justify-content:flex-end
+    }
+    .legend span{font-size:.68rem;padding:.38rem .58rem;border-radius:999px;background:rgba(255,255,255,.85);border:1px solid rgba(22,58,92,.12)}
+
+    .node text{pointer-events:none;font-family:Jost,sans-serif;font-weight:700;fill:#18324A}
+    .node .subtitle{font-weight:500;fill:#607486}
+    .node circle{cursor:pointer;stroke:white;stroke-width:4px;filter:drop-shadow(0 8px 10px rgba(22,58,92,.13));transition:.2s}
+    .node:hover circle{stroke:var(--orange);stroke-width:6px}
+    .node.root circle{stroke:var(--red);stroke-width:7px}
+    .link{stroke:#9fb1bf;stroke-opacity:.48;stroke-width:2}
+    .link.major{stroke:var(--blue);stroke-opacity:.6;stroke-width:3}
+
+    .fade-in{animation:fade .36s ease both}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+    @media (max-width: 980px){
+      .intro{grid-template-columns:1fr;overflow:auto;align-content:start}
+      .hero-title{font-size:clamp(3.3rem,12vw,6.5rem)}
+      .person-card{margin-bottom:2rem}
+      .map-shell{grid-template-columns:1fr}
+      .sidepanel{
+        position:absolute;left:.6rem;right:.6rem;bottom:.6rem;height:min(52dvh,560px);z-index:12;
+        border:1px solid rgba(22,58,92,.14);border-radius:1.5rem;transform:translateY(calc(100% + 1rem));transition:.28s;box-shadow:0 24px 80px rgba(22,58,92,.25)
+      }
+      .sidepanel.open{transform:none}
+      .legend{display:none}
+      .map-hint{max-width:calc(100% - 2rem)}
+      .cycle-grid{grid-template-columns:1fr}
+      .arrow{transform:rotate(90deg)}
+    }
+    @media (max-width: 640px){
+      .topbar{padding:.65rem .7rem}
+      .brand p{display:none}
+      .controls .label{display:none}
+      .control{padding:.52rem .68rem}
+      .intro{padding:1.1rem}
+      .hero-title{font-size:clamp(3rem,18vw,5.4rem)}
+      .person-card{border-radius:1.4rem}
+      .map-label{top:.65rem;left:.65rem}
+      .map-hint{left:.65rem;right:.65rem;bottom:.65rem}
+      .detail h2{font-size:1.75rem}
+    }
+    @media print{
+      body{overflow:visible;background:white}
+      #three-bg,.topbar,.map-hint,.legend{display:none!important}
+      .app{display:block;height:auto}
+      .view{position:relative;display:block!important;min-height:auto}
+      #introView{page-break-after:always}
+      .intro{display:block;height:auto;padding:1.2cm}
+      .person-card{box-shadow:none;margin-top:1cm}
+      .map-shell{display:block;height:auto}
+      .map-wrap{height:20cm}
+      .sidepanel{position:relative!important;transform:none!important;height:auto;border:0}
+      .cycle-inner{display:block;padding:1cm}
+      .cycle-board{box-shadow:none;width:100%}
+    }
+  </style>
+</head>
+<body>
+<canvas id="three-bg" aria-hidden="true"></canvas>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark">SRL</div>
+      <div>
+        <h1>Was SRL ist – und was nicht</h1>
+        <p>Eine Landkarte zwischen Forschung, Unterricht und Schulentwicklung</p>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="control active" data-view="introView" title="Start"><span class="label">Start</span> ⌂</button>
+      <button class="control" data-view="mapView" title="Landkarte"><span class="label">Landkarte</span> ◉</button>
+      <button class="control" data-view="cycleView" title="SRL-Kreislauf"><span class="label">Kreislauf</span> ↻</button>
+      <button class="control" id="resetMap" title="Landkarte zentrieren">◎</button>
+      <button class="control" onclick="window.print()" title="Drucken">⎙</button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section id="introView" class="view active">
+      <div class="intro">
+        <div>
+          <div class="eyebrow">Vortragslandkarte · kein fertiges Rezept</div>
+          <h2 class="hero-title">SRL ist <span>keine Methode.</span></h2>
+          <p class="hero-copy">
+            Selbstreguliertes Lernen ist ein Bildungsziel: Lernende sollen zunehmend in die Lage versetzt werden,
+            ihr Lernen zu planen, zu steuern, zu überprüfen und weiterzuentwickeln.
+          </p>
+          <div class="quote-card">
+            <strong>Die Präsentation ist bewusst nicht linear.</strong><br>
+            Sie zeigt einen Schulentwicklungsprozess als Landkarte mit vielen Baustellen, Rückkopplungen,
+            Umwegen und offenen Fragen.
+          </div>
+        </div>
+
+        <aside class="person-card">
+          <div class="detail-kicker">Perspektive</div>
+          <h2>Christoph Wegemann</h2>
+          <p>Lehrer für Deutsch & Technik an einer Gesamtschule in Nordrhein-Westfalen.</p>
+          <div class="chips">
+            <span class="chip">ca. 1.200 Lernende</span>
+            <span class="chip">sechszügige Sek I</span>
+            <span class="chip">Digitalisierungsbeauftragter</span>
+          </div>
+          <div class="person-list">
+            <div><span>↗</span><p><b>Unterrichtsentwicklung:</b> SRL-Erprobungen in Deutsch und Technik.</p></div>
+            <div><span>↗</span><p><b>Netzwerk:</b> seit vier Jahren im Netzwerk Zukunftsschulen – Lernkultur.</p></div>
+            <div><span>↗</span><p><b>Pilot:</b> aktuell systematischer SRL-Aufbau im Jahrgang 5.</p></div>
+            <div><span>↗</span><p><b>Digitalisierung & KI:</b> als Hebel, um Materialien, Differenzierung und Lernbegleitung in der Breite realistisch entwickelbar zu machen.</p></div>
+          </div>
+          <button class="start-btn" id="enterMap">Landkarte öffnen →</button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="mapView" class="view">
+      <div class="map-shell">
+        <div class="map-wrap">
+          <div class="map-label">Ziehen · Zoomen · Knoten anklicken · Reihenfolge frei wählen</div>
+          <div class="legend">
+            <span>● Begriffe</span>
+            <span>● Forschung</span>
+            <span>● Werkzeuge</span>
+            <span>● Praxis</span>
+            <span>● Reibung</span>
+            <span>● Schulentwicklung</span>
+          </div>
+          <svg id="mapSvg" role="img" aria-label="Interaktive Landkarte zu selbstreguliertem Lernen"></svg>
+          <div class="map-hint">
+            <strong>Leitidee:</strong> Nicht jedem Ast folgen. Dort hineinzoomen, wo die Gruppe Fragen hat oder wo der eigene Entwicklungsprozess gerade spannend wird.
+          </div>
+        </div>
+        <aside class="sidepanel" id="sidepanel" aria-live="polite">
+          <div id="detailContent" class="detail">
+            <div class="empty-detail">
+              <div>
+                <strong>Die Landkarte ist der Vortrag.</strong>
+                Wähle einen Knoten. Jede Baustelle kann Ausgangspunkt für Theorie, Praxis oder Diskussion werden.
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="cycleView" class="view cycle-view">
+      <div class="cycle-inner">
+        <div class="cycle-board">
+          <div class="eyebrow">wissenschaftlicher Kern · didaktische Übersetzung</div>
+          <h2>Der Kreislauf bleibt – die Werkzeuge wechseln.</h2>
+          <p class="hero-copy" style="max-width:65rem;margin-top:1rem">
+            SRL lässt sich als wiederkehrender Prozess denken. Die konkrete Unterrichtsmethode kann dabei sehr unterschiedlich aussehen.
+          </p>
+          <div class="cycle-grid">
+            <article class="cycle-card plan">
+              <h3>1 · Planen</h3>
+              <p>Ziele klären, Anforderungen verstehen, Strategie und nächsten Schritt wählen, Ressourcen einschätzen.</p>
+              <p><b>Praxis:</b> Lernbuddy, Lernweg, Zielsetzung, Kompetenzraster.</p>
+            </article>
+            <div class="arrow">→</div>
+            <article class="cycle-card act">
+              <h3>2 · Durchführen & steuern</h3>
+              <p>Strategien einsetzen, Fortschritt beobachten, Hilfe nutzen, Ablenker regulieren, Entscheidungen anpassen.</p>
+              <p><b>Praxis:</b> Lösungsleiter, Strategiekarten, Lernnavigator, Feedback.</p>
+            </article>
+            <div class="arrow">→</div>
+            <article class="cycle-card reflect">
+              <h3>3 · Reflektieren</h3>
+              <p>Ergebnis und Vorgehen prüfen, Erfolge und Schwierigkeiten einordnen, Schlussfolgerungen für den nächsten Zyklus ziehen.</p>
+              <p><b>Praxis:</b> Lernjournal, Mentorengespräch, Gelingensnachweis, kurze Reflexion.</p>
+            </article>
+          </div>
+          <div class="formula">SRL ist das <span>Ziel</span> · Strategien sind die <span>Kompetenz</span> · Werkzeuge geben <span>Struktur</span> · Unterricht schafft <span>Übung</span>.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const CONTENT = {
+  root: {
+    title: 'Selbstreguliertes Lernen',
+    kicker: 'Zentrum der Landkarte',
+    claim: 'SRL ist keine einzelne Methode, sondern ein Bildungsziel und eine Grundhaltung gegenüber Lernen.',
+    bullets: [
+      'Lernende übernehmen schrittweise mehr Regulation ihres eigenen Lernens.',
+      'Planung, Durchführung/Steuerung und Reflexion bilden einen wiederkehrenden Kreislauf.',
+      'Offene Lernformen können SRL fördern – tun es aber nicht automatisch.'
+    ],
+    practice: 'Unsere Frage ist deshalb nicht: „Welche SRL-Methode nutzen wir?“ Sondern: „Welche Bedingungen und Routinen helfen Lernenden, ihr Lernen zunehmend selbst zu regulieren?“',
+    note: 'Guter erster Einstieg nach der persönlichen Vorstellung. Von hier aus kann der Vortrag in jede Richtung verzweigen.'
+  },
+
+  begriffe: {
+    title: 'Begriffe klären',
+    kicker: 'Was ähnlich klingt, ist nicht dasselbe',
+    claim: 'Selbstständigkeit, Organisation, Verantwortung und Regulation überschneiden sich – setzen aber unterschiedliche Schwerpunkte.',
+    bullets: [
+      'selbstständig: ohne unmittelbare Hilfe arbeiten',
+      'selbstorganisiert: Zeit, Material und Ablauf ordnen',
+      'selbstverantwortlich: Verantwortung für Entscheidungen und Ergebnisse übernehmen',
+      'selbstgesteuert: Einfluss auf Ziele, Wege, Tempo oder Strategien nehmen',
+      'selbstreguliert: Lernen planen, beobachten, anpassen und reflektieren'
+    ],
+    practice: 'Ein Kind kann sehr selbstständig zwanzig Arbeitsblätter abarbeiten – und trotzdem kaum selbstreguliert lernen.',
+    note: 'Nicht als starre Lexikondefinition verkaufen. Die Begriffe werden in Literatur und Praxis nicht immer einheitlich verwendet.'
+  },
+
+  keineMethode: {
+    title: 'Was SRL nicht automatisch ist',
+    kicker: 'Typische Kurzschlüsse',
+    claim: 'Wochenplan, freie Wahl oder Einzelarbeit sind noch kein selbstreguliertes Lernen.',
+    bullets: [
+      'Allein arbeiten ≠ selbstreguliert lernen',
+      'Wochenplan bearbeiten ≠ selbstreguliert lernen',
+      'Freie Reihenfolge wählen ≠ selbstreguliert lernen',
+      'Digital arbeiten ≠ selbstreguliert lernen',
+      'Viele Materialien ≠ lernwirksame Selbststeuerung'
+    ],
+    practice: 'Entscheidend ist, ob Lernende Ziele verstehen, Strategien auswählen, ihren Prozess beobachten und aus Rückmeldungen Konsequenzen ziehen.',
+    note: 'Hier eignet sich eine kurze Publikumsfrage: „Woran würden Sie in einer Unterrichtsstunde erkennen, dass wirklich Regulation stattfindet?“'
+  },
+
+  forschung: {
+    title: 'Wissenschaftliche Anker',
+    kicker: 'Orientierung statt Rezept',
+    claim: 'Forschung hilft, die Baustellen zu sortieren – sie liefert aber kein fertiges Schulmodell.',
+    bullets: [
+      'Ferdinand Stebner: Strategien, Diagnostik, Förderung und Implementierung von SRL.',
+      'Yves Karlen: Metakognition, Motivation, Strategiewissen und Lernsteuerung.',
+      'Joachim Wirth: Selbstregulation unterstützen und trainieren; Bochumer Impulse für rahmengebende Werkzeuge.'
+    ],
+    practice: 'Die wissenschaftlichen Modelle dienen uns als Prüfraster: Welchen Teil von Regulation unterstützen unsere Unterrichtsstrukturen tatsächlich?',
+    note: 'Später konkrete Literatur und Projektquellen ergänzen; hier bewusst nur die drei Orientierungsachsen zeigen.'
+  },
+
+  stebner: {
+    title: 'Ferdinand Stebner',
+    kicker: 'Strategien & Implementierung',
+    claim: 'SRL braucht gezielte Förderung und wird nicht automatisch dadurch gelernt, dass Lehrkräfte Kontrolle abgeben.',
+    bullets: [
+      'Strategien müssen explizit aufgebaut, modelliert und wiederholt angewendet werden.',
+      'Diagnostik und passgenaue Unterstützung gehören zur Lernbegleitung.',
+      'Die schulische Umsetzung ist selbst ein Entwicklungs- und Implementierungsprozess.'
+    ],
+    practice: 'Strategiekarten, Lösungsleiter und wiederkehrende Routinen sind für uns Versuche, Strategieeinsatz konkret trainierbar zu machen.',
+    note: 'An dieser Stelle auch die Gefahr „Freiheit ohne Strategiewissen“ thematisieren.'
+  },
+
+  karlen: {
+    title: 'Yves Karlen',
+    kicker: 'Metakognition & Lernsteuerung',
+    claim: 'Selbstregulation umfasst mehr als Organisation: Kognition, Metakognition, Motivation und Emotion greifen ineinander.',
+    bullets: [
+      'Ziele setzen und Anforderungen verstehen',
+      'geeignete Strategien auswählen und anwenden',
+      'den eigenen Lernprozess beobachten',
+      'Motivation und Ressourcen regulieren',
+      'Ergebnisse und Vorgehen reflektieren'
+    ],
+    practice: 'Unsere Werkzeuge sollen deshalb nicht nur Aufgaben verteilen, sondern Denkprozesse über das eigene Lernen sichtbar machen.',
+    note: 'Gute Brücke zum SRL-Kreislauf.'
+  },
+
+  wirth: {
+    title: 'Joachim Wirth',
+    kicker: 'Rahmen geben, Regulation unterstützen',
+    claim: 'Selbstregulation kann durch geeignete Lernumgebungen, Trainings und rahmengebende Hilfen gezielt unterstützt werden.',
+    bullets: [
+      'äußere Struktur als Stütze für innere Regulation',
+      'Lernprozesse sichtbar und besprechbar machen',
+      'Unterstützung schrittweise reduzieren statt sofort maximale Freiheit zu geben'
+    ],
+    practice: 'Aus dem Bochumer Kontext erproben wir u. a. den Lernbuddy als wiederkehrenden Rahmen um wechselnde Fachaufgaben.',
+    note: 'Kernsatz: Der Lernbuddy ist nicht SRL. Er macht den SRL-Prozess sichtbar und übbar.'
+  },
+
+  werkzeuge: {
+    title: 'Werkzeuge',
+    kicker: 'Nicht das Ziel – sondern Gerüste',
+    claim: 'Werkzeuge strukturieren Lernhandlungen. Ob sie SRL fördern, hängt davon ab, wie sie eingesetzt werden.',
+    bullets: [
+      'Lernbuddy',
+      'Lernwege & Lernnavigatoren',
+      'Kompetenzraster',
+      'Strategiekarten & Lösungsleiter',
+      'Lernjournal',
+      'Mentorengespräche',
+      'Gelingensnachweise'
+    ],
+    practice: 'Prüffrage für jedes Werkzeug: Welchen Teil des SRL-Kreislaufs unterstützt es – und woran merken wir, dass es wirkt?',
+    note: 'Diese Folie eignet sich als Sprungbrett in konkrete Materialien.'
+  },
+
+  lernbuddy: {
+    title: 'Lernbuddy',
+    kicker: 'Rahmengebendes Werkzeug',
+    claim: 'Ein wiederkehrender äußerer Rahmen für Planung, Durchführung und Reflexion.',
+    bullets: [
+      'vor der Aufgabe: Ziel, Energie, mögliche Ablenker',
+      'während der Aufgabe: Schritte, Strategie, Hilfe, Zwischenprüfung',
+      'nach der Aufgabe: kurzer Rückblick und nächster Schritt'
+    ],
+    practice: 'Im Jahrgang 5 wird der Lernbuddy bewusst schrittweise eingeführt. Nicht alle Bereiche gleichzeitig, sondern als wachsende Routine.',
+    note: 'Zeigen: A4/A3-Rahmen um wechselnde Fachaufgaben. Entscheidend ist die Routine, nicht das Blatt.'
+  },
+
+  navigator: {
+    title: 'Lernwege & Navigatoren',
+    kicker: 'Orientierung statt bloßer Aufgabenliste',
+    claim: 'Ein Lernweg kann Entscheidungen sichtbar machen – aber er kann auch nur ein hübscher Arbeitsplan sein.',
+    bullets: [
+      'Wo bin ich?',
+      'Was ist mein nächster sinnvoller Schritt?',
+      'Was ist Pflicht, was Vertiefung?',
+      'Woran erkenne ich, dass ich bereit für die nächste Etappe bin?'
+    ],
+    practice: 'In Deutsch und Technik erproben wir Lernnavigatoren, bei denen Materialien, Apps, Arbeitsblätter und Etappen klar voneinander unterschieden werden.',
+    note: 'Hier auf die Erfahrung eingehen, dass digitale Oberflächen selbst neue Orientierungsprobleme erzeugen können.'
+  },
+
+  gelingen: {
+    title: 'Gelingensnachweise',
+    kicker: 'Feedback als Übergang',
+    claim: 'Kurze Nachweise können helfen, Lernstände sichtbar zu machen und die nächste Etappe bewusst freizugeben.',
+    bullets: [
+      'nicht primär als zusätzliche Klassenarbeit gedacht',
+      'Rückmeldung zur aktuellen Kompetenz',
+      'Anlass für Nachsteuerung und gezielte Übung',
+      'klare Verbindung zwischen Kompetenzraster und nächster Etappe'
+    ],
+    practice: 'In aktuellen Reihen erproben wir Etappen aus Input, Pflichtübungen, freiwilliger Vertiefung und anschließendem Gelingensnachweis.',
+    note: 'Wichtig: rechtliche und schulinterne Leistungsbewertung sauber vom formativen Lernprozess trennen.'
+  },
+
+  ki: {
+    title: 'KI & digitale Medien',
+    kicker: 'Skalierung als Schulentwicklungsfrage',
+    claim: 'Digitale Werkzeuge und KI können den Aufwand für Differenzierung, Materialentwicklung und Lernbegleitung deutlich senken.',
+    bullets: [
+      'Materialvarianten schneller erstellen',
+      'Lernwege und Navigatoren aktuell halten',
+      'sprachliche Zugänge und Unterstützungen differenzieren',
+      'Feedback- und Übungsformate vorbereiten',
+      'Lehrkräftezeit stärker auf Lernbegleitung verlagern'
+    ],
+    practice: 'Unsere Arbeitshypothese: SRL wird in der Breite realistischer, wenn die Material- und Organisationslast nicht vollständig manuell bei einzelnen Lehrkräften liegt.',
+    note: 'Nicht behaupten: „KI macht SRL“. Der Punkt ist Infrastruktur und Skalierbarkeit.'
+  },
+
+  praxis: {
+    title: 'Erprobung',
+    kicker: 'Unterricht als Entwicklungsraum',
+    claim: 'Wir testen nicht ein fertiges Modell, sondern Bausteine in unterschiedlichen Fächern und Jahrgängen.',
+    bullets: [
+      'Deutsch: Lernwege, Kompetenzraster, Gelingensnachweise',
+      'Technik: Lernnavigator, Projektarbeit, Strategie- und Reflexionsphasen',
+      'Jahrgang 5: Lernbuddy, Lernjournal, Lösungsleiter, Mentorengespräche'
+    ],
+    practice: 'Spannend sind gerade die Unterschiede: Was funktioniert in einem sprachlichen Fach anders als in einem praktischen Fach?',
+    note: 'Hier konkrete Screenshots, Arbeitsblätter oder Live-Apps öffnen.'
+  },
+
+  jahrgang5: {
+    title: 'Pilot Jahrgang 5',
+    kicker: 'SRL nicht voraussetzen – aufbauen',
+    claim: 'Fünftklässler sollen nicht plötzlich selbstreguliert lernen. Die Routinen werden schrittweise eingeführt.',
+    bullets: [
+      'ankommen und verlässliche Grundroutinen',
+      'offener Anfang',
+      'Lösungsleiter',
+      'Lernbuddy: erst Planung, dann Durchführung, dann Reflexion',
+      'Strategien auswählen und bewerten',
+      'Mentorengespräche als individuelle Lernbegleitung'
+    ],
+    practice: 'Ziel ist eine gemeinsame Sprache über Lernen, die möglichst über Fächer hinweg wiedererkannt wird.',
+    note: 'Wichtige Aussage: Mehr Selbstregulation kann anfangs mehr äußere Struktur bedeuten.'
+  },
+
+  reibung: {
+    title: 'Reibung & Fehlversuche',
+    kicker: 'Wo Entwicklung sichtbar wird',
+    claim: 'Die interessanten Stellen sind oft die, an denen ein Werkzeug nicht so wirkt wie gedacht.',
+    bullets: [
+      'Planungen bleiben unrealistisch oder werden nur ausgefüllt.',
+      'Reflexion wird zur Pflichtformel statt zu echtem Nachdenken.',
+      'Zu viele Wahlmöglichkeiten können überfordern.',
+      'Digitale Lernwege können Orientierung verlieren lassen.',
+      'Materialfülle kann Selbstständigkeit simulieren statt Regulation fördern.',
+      'Im Kollegium entstehen unterschiedliche Bilder davon, was SRL eigentlich meint.'
+    ],
+    practice: 'Diese Reibungen sind keine Randnotizen, sondern zentrale Daten für den nächsten Entwicklungsschritt.',
+    note: 'Hier bewusst konkrete eigene Beispiele erzählen – auch solche, die nicht gut liefen.'
+  },
+
+  feedback: {
+    title: 'Stimmen aus der Praxis',
+    kicker: 'Realitätscheck',
+    claim: 'Schüler- und Kollegiumsfeedback ist nicht Dekoration, sondern Rückmeldung darüber, wie die Strukturen tatsächlich erlebt werden.',
+    bullets: [
+      'Was hilft Schülerinnen und Schülern wirklich beim Starten und Dranbleiben?',
+      'Wo erleben sie Freiheit – und wo Unsicherheit?',
+      'Welche Routinen entlasten Lehrkräfte?',
+      'Wo entsteht zunächst zusätzliche Arbeit?',
+      'Welche Begriffe und Strukturen werden im Kollegium gemeinsam getragen?'
+    ],
+    practice: 'Hier später echte Zitate, Kurzbefragungen oder kleine Abstimmungen ergänzen.',
+    note: 'Bewusst als Platzhalter offenlassen, bis genügend Stimmen gesammelt sind.'
+  },
+
+  schulentwicklung: {
+    title: 'Schulentwicklung',
+    kicker: 'Vom Werkzeug zur gemeinsamen Lernkultur',
+    claim: 'SRL wird erst dann mehr als ein Einzelprojekt, wenn gemeinsame Routinen, Sprache, Zeit und Verantwortlichkeiten entstehen.',
+    bullets: [
+      'gemeinsames Verständnis von SRL',
+      'wenige wiederkehrende Routinen statt Tool-Sammlung',
+      'fachliche Freiheit innerhalb gemeinsamer Grundprinzipien',
+      'Zeit für Erprobung, Austausch und Nachsteuerung',
+      'verlässliche Lernbegleitung',
+      'schrittweiser Aufbau über mehrere Jahrgänge'
+    ],
+    practice: 'Unsere Landkarte ist deshalb zugleich Unterrichts- und Schulentwicklungslandkarte.',
+    note: 'Guter Punkt für den Transfer auf die gastgebende Schule: „Welche Baustelle wäre bei Ihnen der sinnvollste erste Schritt?“'
+  },
+
+  kollegium: {
+    title: 'Kollegium',
+    kicker: 'Gemeinsame Sprache vor gemeinsamer Methode',
+    claim: 'Nicht alle müssen dasselbe Unterrichtsformat nutzen – aber zentrale Begriffe und Routinen sollten anschlussfähig sein.',
+    bullets: [
+      'Was verstehen wir unter Planung, Durchführung und Reflexion?',
+      'Welche Hilfen kennen alle Lernenden?',
+      'Wann geben wir Verantwortung ab – und wann stützen wir?',
+      'Wie vermeiden wir parallele Systeme in jedem Fach?'
+    ],
+    practice: 'Ein kleines gemeinsames Vokabular kann wirksamer sein als ein großes verbindliches Methodenpaket.',
+    note: 'Hier Rückmeldungen aus dem Kollegium ergänzen.'
+  },
+
+  schueler: {
+    title: 'Lernende',
+    kicker: 'Nicht alle brauchen gleich viel Freiheit',
+    claim: 'Selbstregulation bedeutet nicht, allen Lernenden zur gleichen Zeit dieselbe Autonomie zu geben.',
+    bullets: [
+      'Regulation ist eine Kompetenz, die unterschiedlich weit entwickelt ist.',
+      'Unterstützung darf variieren.',
+      'Scaffolds sollen helfen – und später wieder zurückgenommen werden.',
+      'Selbstbestimmung braucht Orientierung, Strategien und Rückmeldung.'
+    ],
+    practice: 'Der gleiche Lernweg kann für ein Kind Freiraum und für ein anderes Überforderung bedeuten.',
+    note: 'Sehr gute Brücke zu Differenzierung und inklusivem Unterricht.'
+  }
+};
+
+const nodes = [
+  {id:'root', label:'SRL', sub:'Bildungsziel', group:'root', r:66},
+  {id:'begriffe', label:'Begriffe', sub:'Abgrenzen', group:'concept', r:46},
+  {id:'keineMethode', label:'Nicht automatisch SRL', sub:'Kurzschlüsse', group:'concept', r:37},
+  {id:'forschung', label:'Forschung', sub:'Anker', group:'science', r:46},
+  {id:'stebner', label:'Stebner', sub:'Strategien', group:'science', r:34},
+  {id:'karlen', label:'Karlen', sub:'Metakognition', group:'science', r:34},
+  {id:'wirth', label:'Wirth', sub:'Scaffolding', group:'science', r:34},
+  {id:'werkzeuge', label:'Werkzeuge', sub:'Gerüste', group:'tools', r:46},
+  {id:'lernbuddy', label:'Lernbuddy', sub:'Rahmen', group:'tools', r:35},
+  {id:'navigator', label:'Lernwege', sub:'Orientierung', group:'tools', r:35},
+  {id:'gelingen', label:'Gelingensnachweise', sub:'Feedback', group:'tools', r:35},
+  {id:'ki', label:'KI & Digital', sub:'Skalierung', group:'digital', r:41},
+  {id:'praxis', label:'Erprobung', sub:'Deutsch · Technik', group:'practice', r:46},
+  {id:'jahrgang5', label:'Pilot Jg. 5', sub:'Routinen', group:'practice', r:38},
+  {id:'reibung', label:'Reibung', sub:'Fehlversuche', group:'friction', r:46},
+  {id:'feedback', label:'Feedback', sub:'Realitätscheck', group:'friction', r:38},
+  {id:'schulentwicklung', label:'Schulentwicklung', sub:'Lernkultur', group:'school', r:49},
+  {id:'kollegium', label:'Kollegium', sub:'gemeinsame Sprache', group:'school', r:36},
+  {id:'schueler', label:'Lernende', sub:'unterschiedliche Stützen', group:'school', r:36}
+];
+
+const links = [
+  ['root','begriffe'],['root','forschung'],['root','werkzeuge'],['root','praxis'],['root','reibung'],['root','schulentwicklung'],['root','ki'],
+  ['begriffe','keineMethode'],
+  ['forschung','stebner'],['forschung','karlen'],['forschung','wirth'],
+  ['werkzeuge','lernbuddy'],['werkzeuge','navigator'],['werkzeuge','gelingen'],
+  ['praxis','jahrgang5'],['praxis','ki'],
+  ['reibung','feedback'],['reibung','schueler'],
+  ['schulentwicklung','kollegium'],['schulentwicklung','schueler'],['schulentwicklung','feedback'],
+  ['wirth','lernbuddy'],['karlen','lernbuddy'],['stebner','jahrgang5'],
+  ['navigator','ki'],['gelingen','feedback']
+].map(([source,target])=>({source,target,major:source==='root'}));
+
+const colors = {
+  root:'#791D22',
+  concept:'#C9A876',
+  science:'#245688',
+  tools:'#48DCCB',
+  digital:'#6C93B8',
+  practice:'#3F6B4D',
+  friction:'#F0A66F',
+  school:'#163A5C'
+};
+
+const viewButtons = [...document.querySelectorAll('[data-view]')];
+const views = [...document.querySelectorAll('.view')];
+
+function showView(id){
+  views.forEach(v=>v.classList.toggle('active',v.id===id));
+  viewButtons.forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+  if(id==='mapView') setTimeout(()=>{ resizeMap(); centerMap(); },40);
+}
+
+viewButtons.forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+document.getElementById('enterMap').addEventListener('click',()=>showView('mapView'));
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeDetail(); }
+  if(e.key.toLowerCase()==='m') showView('mapView');
+  if(e.key.toLowerCase()==='h') showView('introView');
+  if(e.key.toLowerCase()==='k') showView('cycleView');
+});
+
+const svg = d3.select('#mapSvg');
+const rootG = svg.append('g');
+const linkG = rootG.append('g');
+const nodeG = rootG.append('g');
+
+const zoom = d3.zoom().scaleExtent([.45,2.7]).on('zoom',e=>rootG.attr('transform',e.transform));
+svg.call(zoom);
+
+const simulation = d3.forceSimulation(nodes)
+  .force('link', d3.forceLink(links).id(d=>d.id).distance(d=>d.major?180:130).strength(d=>d.major?.52:.25))
+  .force('charge', d3.forceManyBody().strength(d=>d.id==='root'?-1100:-520))
+  .force('center', d3.forceCenter(0,0))
+  .force('collide', d3.forceCollide().radius(d=>d.r+22).iterations(2))
+  .alphaDecay(.025);
+
+const link = linkG.selectAll('line')
+  .data(links)
+  .join('line')
+  .attr('class',d=>'link '+(d.major?'major':''));
+
+const node = nodeG.selectAll('g')
+  .data(nodes)
+  .join('g')
+  .attr('class',d=>'node '+(d.id==='root'?'root':''))
+  .call(d3.drag()
+    .on('start',(event,d)=>{if(!event.active)simulation.alphaTarget(.25).restart();d.fx=d.x;d.fy=d.y})
+    .on('drag',(event,d)=>{d.fx=event.x;d.fy=event.y})
+    .on('end',(event,d)=>{if(!event.active)simulation.alphaTarget(0);if(d.id!=='root'){d.fx=null;d.fy=null}})
+  );
+
+node.append('circle')
+  .attr('r',d=>d.r)
+  .attr('fill',d=>colors[d.group]||'#245688')
+  .on('click',(event,d)=>{event.stopPropagation();openDetail(d.id)});
+
+node.append('text')
+  .attr('text-anchor','middle')
+  .attr('dy',d=>d.sub?'-0.1em':'.3em')
+  .attr('font-size',d=>d.id==='root'?24:(d.r>42?15:12.5))
+  .attr('fill',d=>(['tools'].includes(d.group)?'#163A5C':'#fff'))
+  .style('fill',d=>(d.group==='tools'?'#163A5C':'#fff'))
+  .text(d=>d.label);
+
+node.filter(d=>d.sub).append('text')
+  .attr('class','subtitle')
+  .attr('text-anchor','middle')
+  .attr('dy','1.35em')
+  .attr('font-size',d=>d.id==='root'?12:10)
+  .style('fill',d=>(d.group==='tools'?'#245688':'rgba(255,255,255,.82)'))
+  .text(d=>d.sub);
+
+simulation.on('tick',()=>{
+  link
+    .attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
+    .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+  node.attr('transform',d=>`translate(${d.x},${d.y})`);
+});
+
+svg.on('click',()=>{ if(window.innerWidth<980) closeDetail(); });
+
+function resizeMap(){
+  const el=document.querySelector('.map-wrap');
+  const w=el.clientWidth||900,h=el.clientHeight||700;
+  svg.attr('viewBox',[-w/2,-h/2,w,h]);
+  simulation.force('center',d3.forceCenter(0,0)).alpha(.3).restart();
+}
+
+function centerMap(){
+  const el=document.querySelector('.map-wrap');
+  const w=el.clientWidth||900,h=el.clientHeight||700;
+  svg.transition().duration(500).call(zoom.transform,d3.zoomIdentity.translate(w/2,h/2).scale(1));
+}
+
+document.getElementById('resetMap').addEventListener('click',()=>{
+  if(!document.getElementById('mapView').classList.contains('active')) showView('mapView');
+  setTimeout(centerMap,40);
+});
+
+window.addEventListener('resize',resizeMap);
+resizeMap();
+setTimeout(centerMap,120);
+
+function openDetail(id){
+  const c=CONTENT[id];
+  if(!c)return;
+  const detail=document.getElementById('detailContent');
+  detail.innerHTML=`
+    <div class="fade-in">
+      <div class="detail-head">
+        <div>
+          <div class="detail-kicker">${c.kicker}</div>
+          <h2>${c.title}</h2>
+        </div>
+        <button class="close-detail" onclick="closeDetail()" aria-label="Detail schließen">✕</button>
+      </div>
+      <div class="big-claim">${c.claim}</div>
+      <ul>${c.bullets.map(x=>`<li>${x}</li>`).join('')}</ul>
+      <div class="practice"><b>Praxisbezug</b><br>${c.practice}</div>
+      <div class="speaker-note"><b>Sprechimpuls</b><br>${c.note}</div>
+    </div>`;
+  document.getElementById('sidepanel').classList.add('open');
+}
+
+function closeDetail(){
+  document.getElementById('sidepanel').classList.remove('open');
+  if(window.innerWidth>=980){
+    document.getElementById('detailContent').innerHTML=`
+      <div class="empty-detail">
+        <div>
+          <strong>Zurück auf der Landkarte.</strong>
+          Wähle die nächste Baustelle nach Interesse, Frage oder Gesprächsverlauf.
+        </div>
+      </div>`;
+  }
+}
+
+// Three.js: ruhige Konstellation im Hintergrund
+(function initThree(){
+  const canvas=document.getElementById('three-bg');
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.7));
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,.1,100);
+  camera.position.z=10;
+
+  const count=110;
+  const geometry=new THREE.BufferGeometry();
+  const positions=new Float32Array(count*3);
+  for(let i=0;i<count;i++){
+    positions[i*3]=(Math.random()-.5)*20;
+    positions[i*3+1]=(Math.random()-.5)*13;
+    positions[i*3+2]=(Math.random()-.5)*7;
+  }
+  geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+  const material=new THREE.PointsMaterial({color:0x245688,size:.055,transparent:true,opacity:.55});
+  const points=new THREE.Points(geometry,material);
+  scene.add(points);
+
+  const ringGeo=new THREE.TorusGeometry(3.8,.012,8,140);
+  const ringMat=new THREE.MeshBasicMaterial({color:0x791D22,transparent:true,opacity:.13});
+  const ring=new THREE.Mesh(ringGeo,ringMat);
+  ring.rotation.x=1.1;
+  ring.rotation.z=.35;
+  scene.add(ring);
+
+  function resize(){
+    renderer.setSize(window.innerWidth,window.innerHeight,false);
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize',resize); resize();
+
+  let t=0;
+  function animate(){
+    t+=.0015;
+    points.rotation.y=t;
+    points.rotation.x=Math.sin(t*.7)*.08;
+    ring.rotation.z+=.00055;
+    renderer.render(scene,camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>
