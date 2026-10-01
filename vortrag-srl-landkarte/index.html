@@ -152,6 +152,61 @@
     .empty-detail{display:grid;place-items:center;text-align:center;min-height:60vh;color:#6b7f90;padding:1.2rem}
     .empty-detail strong{display:block;font:400 2rem/1 Anton,sans-serif;color:var(--navy);margin-bottom:.5rem}
 
+
+    .node-slide{
+      position:fixed;inset:0;z-index:60;display:none;overflow:auto;
+      background:
+        radial-gradient(circle at 86% 18%, color-mix(in srgb, var(--slide-accent, #245688) 18%, transparent), transparent 28rem),
+        radial-gradient(circle at 12% 88%, rgba(72,220,203,.10), transparent 30rem),
+        var(--paper);
+    }
+    .node-slide.active{display:block;animation:slideIn .32s ease both}
+    @keyframes slideIn{from{opacity:0;transform:scale(.992)}to{opacity:1;transform:none}}
+    .node-slide-inner{
+      min-height:100dvh;max-width:1600px;margin:0 auto;padding:clamp(1.2rem,4vw,4.2rem);
+      display:grid;grid-template-rows:auto 1fr auto;gap:clamp(1.2rem,3vw,2.4rem)
+    }
+    .slide-top{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+    .slide-back{
+      display:inline-flex;align-items:center;gap:.65rem;border:1px solid rgba(22,58,92,.16);
+      background:rgba(255,255,255,.82);backdrop-filter:blur(14px);color:var(--navy);
+      padding:.72rem 1rem;border-radius:999px;cursor:pointer;font-weight:700;
+      box-shadow:0 8px 24px rgba(22,58,92,.08)
+    }
+    .slide-index{font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:#6b7f90}
+    .slide-body{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);gap:clamp(2rem,5vw,5rem);align-items:center}
+    .slide-kicker{display:flex;align-items:center;gap:.75rem;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem;font-weight:700;color:var(--slide-accent,var(--red))}
+    .slide-kicker:before{content:"";width:2.8rem;height:.3rem;border-radius:99px;background:var(--slide-accent,var(--red))}
+    .slide-title{
+      font:400 clamp(4rem,9vw,9rem)/.88 Anton,sans-serif;letter-spacing:-.025em;
+      margin:.16em 0 .22em;color:var(--navy);max-width:12ch
+    }
+    .slide-claim{font-size:clamp(1.28rem,2.5vw,2.15rem);line-height:1.38;color:#334f65;max-width:38ch}
+    .slide-points{
+      margin:0;padding:clamp(1.25rem,3vw,2rem);list-style:none;display:grid;gap:1rem;
+      background:rgba(255,255,255,.86);border:1px solid rgba(22,58,92,.13);border-radius:2rem;
+      box-shadow:0 24px 70px rgba(22,58,92,.11);backdrop-filter:blur(16px)
+    }
+    .slide-points li{display:grid;grid-template-columns:1.7rem 1fr;gap:.8rem;font-size:clamp(1rem,1.45vw,1.25rem);line-height:1.45}
+    .slide-points li:before{
+      content:"";width:.72rem;height:.72rem;margin-top:.43rem;border-radius:50%;
+      background:var(--slide-accent,var(--blue));box-shadow:0 0 0 6px color-mix(in srgb, var(--slide-accent,#245688) 14%, transparent)
+    }
+    .slide-bottom{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1.2rem;align-items:end}
+    .slide-practice{
+      max-width:66rem;padding:1rem 1.2rem;border-radius:1.2rem;
+      background:color-mix(in srgb, var(--slide-accent,#245688) 8%, white);
+      border-left:7px solid var(--slide-accent,var(--blue));font-size:clamp(.95rem,1.4vw,1.13rem);line-height:1.5
+    }
+    .slide-practice b{color:var(--slide-accent,var(--blue))}
+    .slide-children{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.45rem;max-width:32rem}
+    .slide-child{
+      border:1px solid rgba(22,58,92,.15);background:rgba(255,255,255,.78);color:#52697b;
+      border-radius:999px;padding:.43rem .68rem;font-size:.75rem
+    }
+    .node.main circle{stroke-width:6px}
+    .node.main:hover circle{stroke-width:8px}
+
     .cycle-view{height:100%;overflow:auto}
     .cycle-inner{min-height:100%;display:grid;place-items:center;padding:2rem}
     .cycle-board{width:min(1100px,96vw);background:rgba(255,255,255,.92);border:1px solid rgba(22,58,92,.14);border-radius:2rem;padding:clamp(1.2rem,4vw,3rem);box-shadow:0 24px 70px rgba(22,58,92,.14)}
@@ -196,6 +251,10 @@
       .map-hint{max-width:calc(100% - 2rem)}
       .cycle-grid{grid-template-columns:1fr}
       .arrow{transform:rotate(90deg)}
+      .slide-body{grid-template-columns:1fr;align-content:center}
+      .slide-title{max-width:none}
+      .slide-bottom{grid-template-columns:1fr}
+      .slide-children{justify-content:flex-start;max-width:none}
     }
     @media (max-width: 640px){
       .topbar{padding:.65rem .7rem}
@@ -345,6 +404,27 @@
       </div>
     </section>
   </main>
+
+  <section id="nodeSlide" class="node-slide" aria-live="polite" aria-modal="true" role="dialog">
+    <div class="node-slide-inner">
+      <div class="slide-top">
+        <button class="slide-back" id="slideBack">← Zurück zur Landkarte</button>
+        <div class="slide-index" id="slideIndex">Hauptknoten</div>
+      </div>
+      <div class="slide-body">
+        <div>
+          <div class="slide-kicker" id="slideKicker"></div>
+          <h2 class="slide-title" id="slideTitle"></h2>
+          <div class="slide-claim" id="slideClaim"></div>
+        </div>
+        <ul class="slide-points" id="slidePoints"></ul>
+      </div>
+      <div class="slide-bottom">
+        <div class="slide-practice" id="slidePractice"></div>
+        <div class="slide-children" id="slideChildren"></div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <script>
@@ -669,6 +749,10 @@ const colors = {
   school:'#163A5C'
 };
 
+const MAIN_NODES = new Set(['root','begriffe','forschung','werkzeuge','ki','praxis','reibung','schulentwicklung']);
+const MAIN_ORDER = ['root','begriffe','forschung','werkzeuge','ki','praxis','reibung','schulentwicklung'];
+
+
 const viewButtons = [...document.querySelectorAll('[data-view]')];
 const views = [...document.querySelectorAll('.view')];
 
@@ -682,10 +766,13 @@ viewButtons.forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)))
 document.getElementById('enterMap').addEventListener('click',()=>showView('mapView'));
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ closeDetail(); }
-  if(e.key.toLowerCase()==='m') showView('mapView');
-  if(e.key.toLowerCase()==='h') showView('introView');
-  if(e.key.toLowerCase()==='k') showView('cycleView');
+  if(e.key==='Escape'){
+    if(document.getElementById('nodeSlide').classList.contains('active')) closeMainSlide();
+    else closeDetail();
+  }
+  if(e.key.toLowerCase()==='m'){ closeMainSlide(); showView('mapView'); }
+  if(e.key.toLowerCase()==='h'){ closeMainSlide(); showView('introView'); }
+  if(e.key.toLowerCase()==='k'){ closeMainSlide(); showView('cycleView'); }
 });
 
 const svg = d3.select('#mapSvg');
@@ -711,7 +798,7 @@ const link = linkG.selectAll('line')
 const node = nodeG.selectAll('g')
   .data(nodes)
   .join('g')
-  .attr('class',d=>'node '+(d.id==='root'?'root':''))
+  .attr('class',d=>'node '+(d.id==='root'?'root ':'')+(MAIN_NODES.has(d.id)?'main':''))
   .call(d3.drag()
     .on('start',(event,d)=>{if(!event.active)simulation.alphaTarget(.25).restart();d.fx=d.x;d.fy=d.y})
     .on('drag',(event,d)=>{d.fx=event.x;d.fy=event.y})
@@ -721,7 +808,7 @@ const node = nodeG.selectAll('g')
 node.append('circle')
   .attr('r',d=>d.r)
   .attr('fill',d=>colors[d.group]||'#245688')
-  .on('click',(event,d)=>{event.stopPropagation();openDetail(d.id)});
+  .on('click',(event,d)=>{event.stopPropagation();handleNodeClick(d)});
 
 node.append('text')
   .attr('text-anchor','middle')
@@ -769,6 +856,54 @@ document.getElementById('resetMap').addEventListener('click',()=>{
 window.addEventListener('resize',resizeMap);
 resizeMap();
 setTimeout(centerMap,120);
+
+
+function handleNodeClick(d){
+  if(MAIN_NODES.has(d.id)) openMainSlide(d.id);
+  else openDetail(d.id);
+}
+
+function openMainSlide(id){
+  const c=CONTENT[id];
+  const n=nodes.find(x=>x.id===id);
+  if(!c || !n)return;
+
+  closeDetail();
+  const slide=document.getElementById('nodeSlide');
+  slide.style.setProperty('--slide-accent', colors[n.group] || '#245688');
+
+  document.getElementById('slideKicker').textContent=c.kicker;
+  document.getElementById('slideTitle').textContent=c.title;
+  document.getElementById('slideClaim').textContent=c.claim;
+  document.getElementById('slidePoints').innerHTML=c.bullets.map(x=>`<li><span>${x}</span></li>`).join('');
+  document.getElementById('slidePractice').innerHTML=`<b>Praxisbezug</b><br>${c.practice}`;
+
+  const idx=MAIN_ORDER.indexOf(id);
+  document.getElementById('slideIndex').textContent=id==='root'
+    ? 'Zentrum der Landkarte'
+    : `Hauptknoten ${idx} · frei anwählbar`;
+
+  const childIds=links
+    .filter(l=>{
+      const source=typeof l.source==='object'?l.source.id:l.source;
+      return source===id;
+    })
+    .map(l=>typeof l.target==='object'?l.target.id:l.target)
+    .filter(child=>child!==id && !MAIN_NODES.has(child));
+
+  document.getElementById('slideChildren').innerHTML=childIds
+    .map(child=>`<span class="slide-child">${nodes.find(n=>n.id===child)?.label || child}</span>`)
+    .join('');
+
+  slide.classList.add('active');
+  slide.scrollTop=0;
+}
+
+function closeMainSlide(){
+  document.getElementById('nodeSlide').classList.remove('active');
+}
+
+document.getElementById('slideBack').addEventListener('click',closeMainSlide);
 
 function openDetail(id){
   const c=CONTENT[id];
