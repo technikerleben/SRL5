@@ -758,7 +758,7 @@ function resizeMap(){
 function centerMap(){
   const el=document.querySelector('.map-wrap');
   const w=el.clientWidth||900,h=el.clientHeight||700;
-  svg.transition().duration(500).call(zoom.transform,d3.zoomIdentity.translate(w/2,h/2).scale(1));
+  svg.transition().duration(500).call(zoom.transform,d3.zoomIdentity);
 }
 
 document.getElementById('resetMap').addEventListener('click',()=>{
