@@ -111,6 +111,64 @@
       box-shadow:0 14px 32px rgba(22,58,92,.22)
     }
 
+
+    .myth-view{height:100%;overflow:hidden}
+    .myth-stage{height:100%;display:grid;place-items:center;padding:clamp(1rem,3vw,2.5rem)}
+    .myth-frame{
+      width:min(1500px,96vw);height:min(820px,calc(100dvh - 9rem));min-height:560px;
+      position:relative;overflow:hidden;border-radius:2rem;
+      background:rgba(255,255,255,.93);border:1px solid rgba(22,58,92,.14);
+      box-shadow:0 28px 80px rgba(22,58,92,.14);backdrop-filter:blur(18px)
+    }
+    .myth-slide{position:absolute;inset:0;display:none;padding:clamp(1.6rem,4vw,4.4rem)}
+    .myth-slide.active{display:grid;animation:mythIn .32s ease both}
+    @keyframes mythIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+    .myth-slide.myth{grid-template-columns:minmax(180px,.42fr) minmax(0,1.58fr);gap:clamp(2rem,6vw,6rem);align-items:center}
+    .myth-number{
+      font:400 clamp(8rem,22vw,20rem)/.7 Anton,sans-serif;color:rgba(121,29,34,.10);
+      letter-spacing:-.05em;user-select:none
+    }
+    .myth-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:var(--red);margin-bottom:.7rem}
+    .myth-title{font:400 clamp(3rem,7vw,7rem)/.92 Anton,sans-serif;color:var(--navy);margin:0;max-width:13ch}
+    .myth-title em{font-style:normal;color:var(--red)}
+    .reality-box{
+      margin-top:clamp(1.4rem,3vw,2.5rem);max-width:55rem;padding:1.2rem 1.35rem;border-radius:1.35rem;
+      background:linear-gradient(135deg,#EFF4F9,#fff);border-left:8px solid var(--mint);
+      font-size:clamp(1.12rem,2vw,1.55rem);line-height:1.48;color:#29485f
+    }
+    .reality-box b{color:#176f67}
+    .summary-slide{grid-template-rows:auto 1fr auto;gap:1.4rem}
+    .summary-title{font:400 clamp(3.6rem,8vw,7.5rem)/.9 Anton,sans-serif;color:var(--navy);margin:0}
+    .summary-title span{color:var(--red)}
+    .summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem 1.3rem;align-content:center}
+    .summary-item{
+      display:grid;grid-template-columns:2.2rem 1fr;gap:.8rem;align-items:start;
+      padding:.9rem 1rem;border-radius:1rem;background:#fff;border:1px solid rgba(22,58,92,.12);
+      font-size:clamp(.98rem,1.45vw,1.2rem);line-height:1.4
+    }
+    .summary-item strong{color:var(--blue)}
+    .summary-dot{width:1.8rem;height:1.8rem;border-radius:.65rem;display:grid;place-items:center;background:var(--navy);color:white;font-weight:700}
+    .summary-quote{
+      padding:1rem 1.2rem;border-radius:1.2rem;background:var(--navy);color:white;
+      font-size:clamp(1rem,1.7vw,1.35rem);text-align:center;font-weight:600
+    }
+    .myth-nav{
+      position:absolute;left:1.2rem;right:1.2rem;bottom:1rem;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+      pointer-events:none
+    }
+    .myth-nav > *{pointer-events:auto}
+    .myth-progress{display:flex;gap:.42rem;align-items:center}
+    .myth-progress button{width:.66rem;height:.66rem;padding:0;border:0;border-radius:50%;background:#c8d2da;cursor:pointer}
+    .myth-progress button.active{background:var(--red);transform:scale(1.25)}
+    .myth-arrows{display:flex;gap:.55rem}
+    .myth-btn{
+      border:1px solid rgba(22,58,92,.15);border-radius:999px;padding:.68rem .95rem;
+      background:rgba(255,255,255,.92);color:var(--navy);cursor:pointer;font-weight:700;
+      box-shadow:0 8px 22px rgba(22,58,92,.08)
+    }
+    .myth-btn.primary{background:var(--navy);color:white;border-color:var(--navy)}
+    .myth-counter{font-size:.75rem;color:#6b7f90;font-weight:600;min-width:4.5rem;text-align:center}
+
     .map-shell{height:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,420px)}
     .map-wrap{position:relative;min-width:0;min-height:0}
     #mapSvg{width:100%;height:100%;display:block;touch-action:none}
@@ -255,6 +313,10 @@
       .slide-title{max-width:none}
       .slide-bottom{grid-template-columns:1fr}
       .slide-children{justify-content:flex-start;max-width:none}
+      .myth-slide.myth{grid-template-columns:1fr;align-content:center}
+      .myth-number{position:absolute;right:1.2rem;top:1.2rem;font-size:8rem}
+      .summary-grid{grid-template-columns:1fr}
+      .myth-frame{height:calc(100dvh - 7.5rem);min-height:0}
     }
     @media (max-width: 640px){
       .topbar{padding:.65rem .7rem}
@@ -298,6 +360,7 @@
     </div>
     <div class="controls">
       <button class="control active" data-view="introView" title="Start"><span class="label">Start</span> ⌂</button>
+      <button class="control" data-view="mythView" title="Einstieg: Mythen und Einordnung"><span class="label">Einstieg</span> ◇</button>
       <button class="control" data-view="mapView" title="Landkarte"><span class="label">Landkarte</span> ◉</button>
       <button class="control" data-view="cycleView" title="SRL-Kreislauf"><span class="label">Kreislauf</span> ↻</button>
       <button class="control" id="resetMap" title="Landkarte zentrieren">◎</button>
@@ -337,8 +400,85 @@
             <div><span>↗</span><p><b>Pilot:</b> aktuell systematischer SRL-Aufbau im Jahrgang 5.</p></div>
             <div><span>↗</span><p><b>Digitalisierung & KI:</b> als Hebel, um Materialien, Differenzierung und Lernbegleitung in der Breite realistisch entwickelbar zu machen.</p></div>
           </div>
-          <button class="start-btn" id="enterMap">Landkarte öffnen →</button>
+          <button class="start-btn" id="startMyths">Einstieg starten →</button>
         </aside>
+      </div>
+    </section>
+
+    <section id="mythView" class="view myth-view">
+      <div class="myth-stage">
+        <div class="myth-frame" id="mythFrame">
+          <article class="myth-slide myth active" data-myth-index="0">
+            <div class="myth-number">1</div>
+            <div>
+              <div class="myth-label">Mythos 1</div>
+              <h2 class="myth-title">„SRL ist <em>Freiarbeit</em>.“</h2>
+              <div class="reality-box"><b>Realität:</b> Freiarbeit ohne Strategie ist nur Selbstbeschäftigung. SRL braucht explizite Planung, Monitoring und Reflexion.</div>
+            </div>
+          </article>
+
+          <article class="myth-slide myth" data-myth-index="1">
+            <div class="myth-number">2</div>
+            <div>
+              <div class="myth-label">Mythos 2</div>
+              <h2 class="myth-title">„Die Lehrkraft <em>zieht sich zurück</em>.“</h2>
+              <div class="reality-box"><b>Realität:</b> SRL erfordert eine andere Lehrerrolle: Scaffolding, Feedback und die Begleitung metakognitiver Prozesse.</div>
+            </div>
+          </article>
+
+          <article class="myth-slide myth" data-myth-index="2">
+            <div class="myth-number">3</div>
+            <div>
+              <div class="myth-label">Mythos 3</div>
+              <h2 class="myth-title">„Das können nur <em>starke Lernende</em>.“</h2>
+              <div class="reality-box"><b>Realität:</b> Gerade schwächere Lernende können profitieren – wenn SRL explizit gelehrt und Strategien systematisch eingeübt werden.</div>
+            </div>
+          </article>
+
+          <article class="myth-slide myth" data-myth-index="3">
+            <div class="myth-number">4</div>
+            <div>
+              <div class="myth-label">Mythos 4</div>
+              <h2 class="myth-title">„Immer <em>Projektarbeit</em> und offene Methoden.“</h2>
+              <div class="reality-box"><b>Realität:</b> Jede Unterrichtsform kann SRL-förderlich sein – auch direkte Instruktion. Gerade bei jüngeren Lernenden ist zu viel Freiheit nicht automatisch hilfreich.</div>
+            </div>
+          </article>
+
+          <article class="myth-slide myth" data-myth-index="4">
+            <div class="myth-number">5</div>
+            <div>
+              <div class="myth-label">Mythos 5</div>
+              <h2 class="myth-title">„SRL ist ein <em>Persönlichkeitsmerkmal</em>.“</h2>
+              <div class="reality-box"><b>Realität:</b> SRL ist erlernbar – kein Talent, das man entweder hat oder nicht hat.</div>
+            </div>
+          </article>
+
+          <article class="myth-slide summary-slide" data-myth-index="5">
+            <div>
+              <div class="eyebrow">Nach fünf Mythen bleibt der Kern</div>
+              <h2 class="summary-title">SRL <span>ist …</span></h2>
+            </div>
+            <div class="summary-grid">
+              <div class="summary-item"><span class="summary-dot">1</span><div><strong>ein Lernprozess</strong> – kein Persönlichkeitsmerkmal, keine einzelne Methode</div></div>
+              <div class="summary-item"><span class="summary-dot">2</span><div><strong>erlernbar</strong> – durch explizite Vermittlung und Übung</div></div>
+              <div class="summary-item"><span class="summary-dot">3</span><div><strong>zyklisch</strong> – Planen → Durchführen → Reflektieren, immer wieder</div></div>
+              <div class="summary-item"><span class="summary-dot">4</span><div><strong>metakognitiv</strong> – Lernende denken über ihr eigenes Lernen nach</div></div>
+              <div class="summary-item"><span class="summary-dot">5</span><div><strong>strategisch</strong> – bewusster Einsatz von Lern- und Arbeitsstrategien</div></div>
+              <div class="summary-item"><span class="summary-dot">6</span><div><strong>begleitet</strong> – Lehrkräfte scaffolden, geben Feedback und bauen Autonomie schrittweise auf</div></div>
+              <div class="summary-item"><span class="summary-dot">7</span><div><strong>für alle</strong> – unabhängig von Leistungsniveau oder Alter</div></div>
+            </div>
+            <div class="summary-quote">„Ich weiß, warum ich lerne, wie ich lerne – und was ich beim nächsten Mal anders machen will.“</div>
+          </article>
+
+          <div class="myth-nav">
+            <div class="myth-progress" id="mythProgress" aria-label="Einstiegsfolien"></div>
+            <div class="myth-counter" id="mythCounter">1 / 6</div>
+            <div class="myth-arrows">
+              <button class="myth-btn" id="mythPrev">← Zurück</button>
+              <button class="myth-btn primary" id="mythNext">Weiter →</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -763,12 +903,49 @@ function showView(id){
 }
 
 viewButtons.forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
-document.getElementById('enterMap').addEventListener('click',()=>showView('mapView'));
+document.getElementById('startMyths').addEventListener('click',()=>{ showView('mythView'); setMythSlide(0); });
+
+
+const mythSlides=[...document.querySelectorAll('.myth-slide')];
+const mythProgress=document.getElementById('mythProgress');
+let mythIndex=0;
+
+mythSlides.forEach((_,i)=>{
+  const b=document.createElement('button');
+  b.setAttribute('aria-label','Einstiegsfolie '+(i+1));
+  b.addEventListener('click',()=>setMythSlide(i));
+  mythProgress.appendChild(b);
+});
+
+function setMythSlide(i){
+  mythIndex=Math.max(0,Math.min(mythSlides.length-1,i));
+  mythSlides.forEach((el,idx)=>el.classList.toggle('active',idx===mythIndex));
+  [...mythProgress.children].forEach((el,idx)=>el.classList.toggle('active',idx===mythIndex));
+  document.getElementById('mythCounter').textContent=(mythIndex+1)+' / '+mythSlides.length;
+  document.getElementById('mythPrev').style.visibility=mythIndex===0?'hidden':'visible';
+  document.getElementById('mythNext').textContent=mythIndex===mythSlides.length-1?'Zur Landkarte →':'Weiter →';
+}
+
+document.getElementById('mythPrev').addEventListener('click',()=>setMythSlide(mythIndex-1));
+document.getElementById('mythNext').addEventListener('click',()=>{
+  if(mythIndex===mythSlides.length-1) showView('mapView');
+  else setMythSlide(mythIndex+1);
+});
+setMythSlide(0);
 
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(document.getElementById('nodeSlide').classList.contains('active')) closeMainSlide();
     else closeDetail();
+  }
+  if(document.getElementById('mythView').classList.contains('active')){
+    if(e.key==='ArrowRight' || e.key==='PageDown'){
+      e.preventDefault();
+      if(mythIndex===mythSlides.length-1) showView('mapView'); else setMythSlide(mythIndex+1);
+    }
+    if(e.key==='ArrowLeft' || e.key==='PageUp'){
+      e.preventDefault(); setMythSlide(mythIndex-1);
+    }
   }
   if(e.key.toLowerCase()==='m'){ closeMainSlide(); showView('mapView'); }
   if(e.key.toLowerCase()==='h'){ closeMainSlide(); showView('introView'); }
