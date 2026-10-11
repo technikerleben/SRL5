@@ -106,6 +106,11 @@ b,strong{font-weight:700}
 .myth-layout{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:2.4rem;align-items:center}
 .source-art{background:white;border:2px solid var(--line);border-radius:1.2rem;padding:.6rem;min-width:0}
 .source-art img{display:block;width:100%;height:auto;max-height:58dvh;object-fit:contain;border-radius:.8rem}
+/* Mythen: rechte Bildhälfte bleibt verdeckt, bis die Realität aufgedeckt wird */
+.myth-art{position:relative;width:fit-content;max-width:100%;margin:auto}
+.myth-art img{width:auto;max-width:100%}
+.myth-cover{position:absolute;top:0;right:0;bottom:0;background:white;border-radius:0 .8rem .8rem 0;transition:opacity .45s ease}
+.slide.steps-done .myth-cover{opacity:0}
 .myth-head{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.5rem}
 .myth-number{font:400 2.4rem/1 Anton,sans-serif;color:var(--red)}
 .myth-title{font:400 3rem/1.05 Anton,sans-serif;color:var(--navy);margin:0}
@@ -283,6 +288,7 @@ b,strong{font-weight:700}
 }
 @media print{
   html{font-size:16px}
+  .myth-cover{display:none}
   .step.hidden{opacity:1;transform:none}
   html,body{overflow:visible;height:auto}
   .topbar,.navbar,#mini-progress{display:none!important}
@@ -362,7 +368,7 @@ b,strong{font-weight:700}
 <!-- 2 -->
 <section class="slide" data-title="Mythos 1">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth1.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 1"></div>
+    <div class="source-art"><div class="myth-art"><img src="assets/myth1.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 1"><div class="myth-cover" style="left:49.5%" aria-hidden="true"></div></div></div>
     <div>
       <div class="myth-head"><span class="myth-number">01</span><span class="kicker">Mythos 1</span></div>
       <div class="myth-title">„SRL ist <span class="em-red">Freiarbeit</span>.“</div>
@@ -374,7 +380,7 @@ b,strong{font-weight:700}
 <!-- 3 -->
 <section class="slide" data-title="Mythos 2">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth2.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 2"></div>
+    <div class="source-art"><div class="myth-art"><img src="assets/myth2.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 2"><div class="myth-cover" style="left:50.5%" aria-hidden="true"></div></div></div>
     <div>
       <div class="myth-head"><span class="myth-number">02</span><span class="kicker">Mythos 2</span></div>
       <div class="myth-title">„Die Lehrkraft <span class="em-red">zieht sich zurück</span>.“</div>
@@ -386,7 +392,7 @@ b,strong{font-weight:700}
 <!-- 4 -->
 <section class="slide" data-title="Mythos 3">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth3.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 3"></div>
+    <div class="source-art"><div class="myth-art"><img src="assets/myth3.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 3"><div class="myth-cover" style="left:40.5%" aria-hidden="true"></div></div></div>
     <div>
       <div class="myth-head"><span class="myth-number">03</span><span class="kicker">Mythos 3</span></div>
       <div class="myth-title">„Das können nur <span class="em-red">starke Lernende</span>.“</div>
@@ -398,7 +404,7 @@ b,strong{font-weight:700}
 <!-- 5 -->
 <section class="slide" data-title="Mythos 4">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth4.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 4"></div>
+    <div class="source-art"><div class="myth-art"><img src="assets/myth4.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 4"><div class="myth-cover" style="left:48.7%" aria-hidden="true"></div></div></div>
     <div>
       <div class="myth-head"><span class="myth-number">04</span><span class="kicker">Mythos 4</span></div>
       <div class="myth-title">„Immer <span class="em-red">Projektarbeit</span> und offene Methoden.“</div>
@@ -410,7 +416,7 @@ b,strong{font-weight:700}
 <!-- 6 -->
 <section class="slide" data-title="Mythos 5">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth5.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 5"></div>
+    <div class="source-art"><div class="myth-art"><img src="assets/myth5.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 5"><div class="myth-cover" style="left:50.5%" aria-hidden="true"></div></div></div>
     <div>
       <div class="myth-head"><span class="myth-number">05</span><span class="kicker">Mythos 5</span></div>
       <div class="myth-title">„SRL ist ein <span class="em-red">Persönlichkeitsmerkmal</span>.“</div>
@@ -684,6 +690,7 @@ const next=document.getElementById('next');
 function showSlide(i){
   index=Math.max(0,Math.min(slides.length-1,i));
   slides.forEach((s,n)=>s.classList.toggle('active',n===index));
+  markDone(slides[index]);
   const pct=((index+1)/slides.length*100)+'%';
   progress.style.width=pct; miniProgress.style.width=pct;
   counter.textContent=(index+1)+' / '+slides.length;
@@ -694,10 +701,11 @@ function showSlide(i){
 }
 /* Aufdecken: Hat die aktuelle Folie noch verdeckte .step-Elemente, deckt „Weiter“ zuerst diese auf.
    Vorwärts auf eine Folie: Schritte verdeckt. Rückwärts: alles sichtbar. */
-function setSteps(slide,hidden){ slide.querySelectorAll('.step').forEach(el=>el.classList.toggle('hidden',hidden)); }
+function markDone(slide){ slide.classList.toggle('steps-done',!slide.querySelector('.step.hidden')); }
+function setSteps(slide,hidden){ slide.querySelectorAll('.step').forEach(el=>el.classList.toggle('hidden',hidden)); markDone(slide); }
 function forward(){
   const nextStep=slides[index].querySelector('.step.hidden');
-  if(nextStep){ nextStep.classList.remove('hidden'); return; }
+  if(nextStep){ nextStep.classList.remove('hidden'); markDone(slides[index]); return; }
   if(index<slides.length-1){ setSteps(slides[index+1],true); showSlide(index+1); }
 }
 function backward(){ if(index>0){ setSteps(slides[index-1],false); showSlide(index-1); } }
