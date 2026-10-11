@@ -4,5 +4,12 @@
       "source": "/",
       "destination": "/index.html"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/vortrag-srl-landkarte",
+      "destination": "/vortrag-srl-landkarte/",
+      "permanent": false
+    }
   ]
 }
