@@ -236,7 +236,7 @@ b,strong{font-weight:700}
 
 
 /* Einstieg: nur das Bild, möglichst groß */
-.slide.story{padding:1.2rem}
+.slide.story{padding:1.2rem;background:white}
 .story-art{position:relative;width:100%;height:100%;margin:auto}
 .story-art img{width:100%;height:100%;object-fit:contain;display:block}
 .story-art .placeholder{position:absolute;inset:8%;display:none;place-items:center;text-align:center;padding:1.5rem;
@@ -318,8 +318,8 @@ b,strong{font-weight:700}
 <!-- 0 · Einstieg: nur das Bild, die Geschichte wird erzählt -->
 <section class="slide story active" data-title="Einstieg">
   <div class="story-art" id="storyArt">
-    <img src="assets/einstieg.png" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt"
-         onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='assets/einstieg.webp'}else{this.parentElement.classList.add('missing')}">
+    <img src="assets/einstieg.webp" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt"
+         onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='assets/einstieg.png'}else{this.parentElement.classList.add('missing')}">
     <div class="placeholder"><div>Bild folgt<br>Datei als <b>assets/einstieg.png</b> ablegen<br>(ca. 1600 × 1000 px oder quadratisch)</div></div>
   </div>
 </section>
