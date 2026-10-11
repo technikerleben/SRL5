@@ -6,226 +6,246 @@
 <meta name="theme-color" content="#163A5C">
 <title>Was SRL ist – und was nicht · Christoph Wegemann</title>
 <meta name="description" content="Linearer Vortrag zu selbstreguliertem Lernen mit abschließender interaktiver Landkarte.">
-<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Alles lokal eingebunden: läuft auch ohne Internet (Schriften: SIL OFL, d3: ISC) -->
+<script src="assets/vendor/d3.min.js"></script>
 <style>
+@font-face{font-family:Anton;src:url(assets/fonts/anton.woff2) format("woff2");font-display:block}
+@font-face{font-family:Jost;src:url(assets/fonts/jost.woff2) format("woff2");font-weight:100 900;font-display:block}
+
 :root{
-  --navy:#163A5C;--blue:#245688;--blue2:#6C93B8;--mint:#48DCCB;
+  --navy:#163A5C;--blue:#245688;--blue2:#6C93B8;--mint:#48DCCB;--mint-dark:#13706A;
   --orange:#F0A66F;--red:#791D22;--green:#3F6B4D;--sand:#C9A876;
-  --paper:#F7F5F2;--ink:#18324A;--muted:#65798A;--white:#fff;
+  --paper:#F7F5F2;--ink:#18324A;--muted:#4A5D6E;--line:rgba(22,58,92,.24);
 }
+/*
+  Beamer-Skalierung: Die Grundschrift wächst mit Breite UND Höhe des Fensters.
+  Dadurch wirkt jede Folie bei 1024×768, 1280×800 und 1920×1080 gleich –
+  wie eine echte Folie. Alle Größen darunter sind in rem/em angegeben.
+*/
+html{font-size:clamp(15px,min(1.62vw,2.75vh),34px)}
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;font-family:Jost,system-ui,sans-serif;color:var(--ink);background:var(--paper);overflow:hidden}
+html,body{margin:0;width:100%;height:100%;font-family:Jost,system-ui,sans-serif;color:var(--ink);background:var(--paper);overflow:hidden;line-height:1.4}
 button{font:inherit}
 button:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
-#three-bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.32}
-.app{position:relative;z-index:1;width:100%;height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+p{margin:.35em 0}
+
+.app{position:relative;width:100%;height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+
+/* Kopf- und Fußleiste: feste Pixelgrößen, im Präsentationsmodus ausgeblendet */
 .topbar{
-  min-height:58px;display:flex;align-items:center;gap:1rem;padding:.55rem 1rem;
-  border-bottom:1px solid rgba(22,58,92,.13);background:rgba(247,245,242,.9);
-  backdrop-filter:blur(16px)
+  height:56px;display:flex;align-items:center;gap:16px;padding:8px 16px;font-size:16px;
+  border-bottom:1px solid var(--line);background:var(--paper)
 }
-.brand{display:flex;align-items:center;gap:.75rem;min-width:0}
-.logo{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:var(--navy);color:white;font:400 1rem Anton,sans-serif;letter-spacing:.04em}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--navy);color:white;font:400 15px Anton,sans-serif;letter-spacing:.04em}
 .brand-copy{min-width:0}
-.brand-copy b{display:block;color:var(--navy);font-family:Anton,sans-serif;font-weight:400;letter-spacing:.025em;font-size:1rem}
-.brand-copy span{display:block;color:var(--muted);font-size:.68rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-copy b{display:block;color:var(--navy);font-family:Anton,sans-serif;font-weight:400;letter-spacing:.025em;font-size:16px}
+.brand-copy span{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .progress-wrap{flex:1;height:6px;max-width:480px;margin-left:auto;background:#dbe4eb;border-radius:99px;overflow:hidden}
 .progress{height:100%;background:linear-gradient(90deg,var(--red),var(--blue));width:0;transition:width .25s}
-.counter{font-size:.76rem;color:var(--muted);font-weight:700;min-width:58px;text-align:right}
-.stage{min-height:0;position:relative}
-.slide{
-  position:absolute;inset:0;display:none;overflow:auto;
-  padding:clamp(1.3rem,3.2vw,3.4rem) clamp(1.2rem,4.2vw,4.8rem);
-}
-.slide.active{display:flex;animation:slideIn .3s ease both}
-@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
-.slide-inner{width:min(1500px,100%);margin:auto}
-.kicker{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700;color:var(--red)}
-h1,h2,h3{font-family:Anton,sans-serif;font-weight:400}
-h1{font-size:clamp(3.6rem,8vw,8rem);line-height:.9;color:var(--navy);margin:.16em 0 .18em;letter-spacing:-.025em}
-h2{font-size:clamp(3rem,6.4vw,6rem);line-height:.94;color:var(--navy);margin:.14em 0 .25em;letter-spacing:-.02em}
-h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.1em 0 .5em}
-.lead{font-size:clamp(1.12rem,2vw,1.55rem);line-height:1.48;color:#36536a;max-width:52rem}
-.em-red{color:var(--red)} .em-blue{color:var(--blue)} .em-mint{color:#16847a}
-.card{
-  background:rgba(255,255,255,.9);border:1px solid rgba(22,58,92,.13);
-  border-radius:1.5rem;padding:clamp(1rem,2vw,1.5rem);box-shadow:0 16px 40px rgba(22,58,92,.08)
-}
-.pill{display:inline-flex;padding:.4rem .68rem;border-radius:99px;background:#EFF4F9;border:1px solid #CBDBE9;font-size:.8rem;font-weight:600}
-.pills{display:flex;gap:.45rem;flex-wrap:wrap}
+.counter{font-size:13px;color:var(--muted);font-weight:700;min-width:58px;text-align:right}
 .navbar{
-  min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.65rem 1rem;
-  border-top:1px solid rgba(22,58,92,.13);background:rgba(247,245,242,.92);backdrop-filter:blur(16px)
+  height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;font-size:15px;
+  border-top:1px solid var(--line);background:var(--paper)
 }
-.nav-buttons{display:flex;gap:.55rem}
+.nav-buttons{display:flex;gap:9px}
 .navbtn{
-  border:1px solid rgba(22,58,92,.15);background:white;color:var(--navy);font-weight:700;
-  border-radius:999px;padding:.66rem .92rem;cursor:pointer;box-shadow:0 6px 16px rgba(22,58,92,.06)
+  border:1.5px solid var(--line);background:white;color:var(--navy);font-weight:700;
+  border-radius:999px;padding:9px 15px;cursor:pointer
 }
 .navbtn.primary{background:var(--navy);border-color:var(--navy);color:white}
+.navbtn.present-btn{background:var(--red);border-color:var(--red);color:white}
 .navbtn:disabled{opacity:.35;cursor:default}
-.hint{font-size:.72rem;color:var(--muted)}
-.two-col{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:clamp(1.5rem,4vw,4rem);align-items:center}
-.intro-card{border-left:9px solid var(--red)}
-.intro-card h3{font-size:clamp(2rem,3.6vw,3.4rem)}
-.identity-list{display:grid;gap:.85rem;margin-top:1.1rem}
-.identity-row{display:grid;grid-template-columns:1.7rem 1fr;gap:.7rem;align-items:start}
+.hint{font-size:12px;color:var(--muted)}
+
+/* Präsentationsmodus */
+#mini-progress{position:fixed;left:0;bottom:0;height:5px;width:0;background:linear-gradient(90deg,var(--red),var(--blue));z-index:20;display:none;transition:width .25s}
+body.present .topbar,body.present .navbar{display:none}
+body.present .app{grid-template-rows:1fr}
+body.present #mini-progress{display:block}
+body.present.idle,body.present.idle *{cursor:none!important}
+
+.stage{min-height:0;position:relative}
+.slide{position:absolute;inset:0;display:none;overflow:auto;padding:1.6rem 2.4rem}
+.slide.active{display:flex;animation:slideIn .3s ease both}
+@keyframes slideIn{from{opacity:0}to{opacity:1}}
+.slide-inner{width:min(76rem,100%);margin:auto}
+
+/* Typografie */
+h1,h2,.myth-title,.ai-claim,.buddy-claim,.summary-quote,.term-punch{text-wrap:balance}
+.kicker{font-size:.8rem;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--red);line-height:1.3}
+h1,h2,h3{font-family:Anton,sans-serif;font-weight:400}
+h1{font-size:4.1rem;line-height:1;color:var(--navy);margin:.12em 0 .25em;letter-spacing:-.01em}
+h2{font-size:2.8rem;line-height:1.02;color:var(--navy);margin:.12em 0 .45em;letter-spacing:-.005em}
+h3{font-size:1.4rem;line-height:1.1;color:var(--navy);margin:.1em 0 .4em}
+.lead{font-size:1.12rem;line-height:1.45;color:#2E4A61;max-width:40rem}
+.em-red{color:var(--red)} .em-blue{color:var(--blue)}
+b,strong{font-weight:700}
+
+.card{background:white;border:2px solid var(--line);border-radius:1.2rem;padding:1.1rem 1.25rem}
+.pill{display:inline-flex;padding:.3rem .65rem;border-radius:99px;background:#EFF4F9;border:1.5px solid #B9CCDD;font-size:.8rem;font-weight:600}
+.pills{display:flex;gap:.4rem;flex-wrap:wrap}
+.statement{margin-top:1rem;border-left:.4rem solid var(--orange);padding:.75rem 1rem;border-radius:0 .8rem .8rem 0;background:white;font-size:1rem}
+
+/* gemeinsame Kartenbasis */
+.summary-item,.term-card,.level,.focus,.research-card,.formula-card,.tool-cloud span,.cycle-box,
+.practice-card,.ai-step,.friction-item,.feedback-box,.school-item{border:2px solid var(--line);background:white}
+
+/* 1 Start */
+.two-col{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:2.4rem;align-items:center}
+.intro-card{border-left:.5rem solid var(--red)}
+.intro-card h3{font-size:2.1rem}
+.identity-list{display:grid;gap:.6rem;margin-top:.9rem;font-size:.95rem;line-height:1.35}
+.identity-row{display:grid;grid-template-columns:1.2rem 1fr;gap:.5rem;align-items:start}
 .identity-row b{color:var(--blue)}
-.statement{margin-top:1.2rem;border-left:7px solid var(--orange);padding:1rem 1.15rem;border-radius:0 1rem 1rem 0;background:rgba(255,255,255,.88);font-size:1.02rem}
 
-/* Myth slides */
-.myth-layout{display:grid;grid-template-columns:minmax(420px,.95fr) minmax(0,1.05fr);gap:clamp(1.6rem,4vw,4rem);align-items:center}
-.source-art{
-  background:white;border:1px solid rgba(22,58,92,.12);border-radius:1.6rem;padding:.8rem;
-  box-shadow:0 20px 55px rgba(22,58,92,.11);min-width:0
-}
-.source-art img{display:block;width:100%;height:auto;max-height:57dvh;object-fit:contain;border-radius:1rem}
-.myth-number{font:400 clamp(4.5rem,10vw,9rem)/.75 Anton,sans-serif;color:rgba(121,29,34,.12);margin-bottom:.15rem}
-.myth-title{font:400 clamp(2.7rem,5.7vw,5.8rem)/.92 Anton,sans-serif;color:var(--navy);margin:0;max-width:13ch}
-.reality{margin-top:1.35rem;padding:1rem 1.15rem;border-radius:1.15rem;border-left:7px solid var(--mint);background:white;font-size:clamp(1.05rem,1.6vw,1.3rem);line-height:1.48}
-.reality b{color:#15756d}
+/* Mythen */
+.myth-layout{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:2.4rem;align-items:center}
+.source-art{background:white;border:2px solid var(--line);border-radius:1.2rem;padding:.6rem;min-width:0}
+.source-art img{display:block;width:100%;height:auto;max-height:58dvh;object-fit:contain;border-radius:.8rem}
+.myth-head{display:flex;align-items:baseline;gap:.7rem;margin-bottom:.5rem}
+.myth-number{font:400 2.4rem/1 Anton,sans-serif;color:var(--red)}
+.myth-title{font:400 3rem/1.05 Anton,sans-serif;color:var(--navy);margin:0}
+.reality{margin-top:1.2rem;padding:.9rem 1.1rem;border-radius:.9rem;border-left:.45rem solid var(--mint-dark);border-top:2px solid var(--line);border-right:2px solid var(--line);border-bottom:2px solid var(--line);background:white;font-size:1.12rem;line-height:1.45}
+.reality b{color:var(--mint-dark)}
 
-/* summary */
-.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem 1rem;margin-top:1.1rem}
-.summary-item{display:grid;grid-template-columns:2rem 1fr;gap:.7rem;align-items:start;background:white;border:1px solid rgba(22,58,92,.12);border-radius:1rem;padding:.8rem .9rem;font-size:clamp(.95rem,1.3vw,1.1rem);line-height:1.4}
-.dot{width:1.75rem;height:1.75rem;border-radius:.6rem;background:var(--navy);color:white;display:grid;place-items:center;font-weight:700}
-.summary-quote{margin-top:1rem;padding:1rem 1.15rem;background:var(--navy);color:white;border-radius:1rem;text-align:center;font-size:clamp(1rem,1.7vw,1.3rem);font-weight:600}
+/* SRL ist … */
+.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem .8rem;margin-top:.4rem}
+.summary-item{display:grid;grid-template-columns:1.6rem 1fr;gap:.6rem;align-items:start;border-radius:.8rem;padding:.55rem .75rem;font-size:.98rem;line-height:1.35}
+.dot{width:1.5rem;height:1.5rem;border-radius:.45rem;background:var(--navy);color:white;display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.summary-quote{margin-top:.8rem;padding:.75rem 1rem;background:var(--navy);color:white;border-radius:.8rem;text-align:center;font-size:1.12rem;font-weight:600}
 
-/* concepts */
-.term-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;margin-top:1.3rem}
-.term-card{position:relative;min-height:250px;background:white;border:1px solid rgba(22,58,92,.12);border-top:8px solid var(--sand);border-radius:1.3rem;padding:1rem}
+/* Begriffe */
+.term-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-top:.4rem}
+.term-card{display:flex;flex-direction:column;border-top:.45rem solid var(--sand);border-radius:1rem;padding:.85rem .9rem}
 .term-card:nth-child(2){border-top-color:var(--orange)}
 .term-card:nth-child(3){border-top-color:var(--green)}
 .term-card:nth-child(4){border-top-color:var(--blue)}
-.term-card strong{font-size:1.15rem;color:var(--navy)}
-.term-card p{line-height:1.5}
-.term-card .question{position:absolute;left:1rem;right:1rem;bottom:1rem;color:var(--muted);font-size:.85rem;font-weight:600}
-.term-punch{margin-top:1rem;padding:.9rem 1rem;border-radius:1rem;background:#EFF4F9;border:1px solid #CBDBE9;font-weight:700;color:var(--navy)}
+.term-card strong{font-size:1.1rem;color:var(--navy)}
+.term-card p{line-height:1.38;font-size:.95rem;flex:1}
+.term-card .question{color:var(--muted);font-size:.85rem;font-weight:600;margin-top:.5rem}
+.term-punch{margin-top:.8rem;padding:.75rem 1rem;border-radius:.8rem;background:#EFF4F9;border:2px solid #B9CCDD;font-weight:700;color:var(--navy);font-size:1.02rem}
 
-/* turbine */
-.turbine-layout{display:grid;grid-template-columns:minmax(440px,.9fr) minmax(0,1.1fr);gap:clamp(1.5rem,4vw,4rem);align-items:center}
-.turbine-img img{max-height:66dvh}
-.stack{display:grid;gap:.7rem;margin-top:1rem}
-.level{display:grid;grid-template-columns:2.1rem 1fr;gap:.75rem;background:white;border:1px solid rgba(22,58,92,.12);border-radius:1rem;padding:.82rem .9rem}
-.level-num{width:1.9rem;height:1.9rem;border-radius:.6rem;background:var(--navy);color:white;display:grid;place-items:center;font-weight:700}
+/* Turbine */
+.turbine-layout{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:2.2rem;align-items:center}
+.turbine-frame{position:relative;width:min(100%,66dvh);aspect-ratio:1;margin:auto}
+.turbine-frame img{position:absolute;inset:0;width:100%;height:100%;border-radius:.8rem}
+.turbine-frame svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.turbine-veil{fill:rgba(255,255,255,.82)}
+.turbine-ring{fill:none;stroke:var(--red);stroke-width:2.2}
+.stack{display:grid;gap:.55rem;margin-top:.6rem}
+.level{display:grid;grid-template-columns:1.7rem 1fr;gap:.7rem;border-radius:.8rem;padding:.6rem .8rem;font-size:.98rem;line-height:1.35}
+.level-num{width:1.6rem;height:1.6rem;border-radius:.45rem;background:var(--navy);color:white;display:grid;place-items:center;font-weight:700;font-size:.85rem}
 .level b{color:var(--blue)}
-.focus-list{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:1.2rem}
-.focus{padding:.9rem;border-radius:1rem;background:white;border:1px solid rgba(22,58,92,.12)}
-.focus b{color:var(--blue);display:block;margin-bottom:.25rem}
+.focus-list{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-top:.6rem}
+.focus{padding:.7rem .75rem;border-radius:.8rem;font-size:.92rem;line-height:1.35}
+.focus b{color:var(--blue);display:block;margin-bottom:.2rem;font-size:1rem}
 
-/* research */
-.research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.35rem}
-.research-card{background:white;border:1px solid rgba(22,58,92,.12);border-radius:1.4rem;padding:1.15rem;min-height:280px;box-shadow:0 14px 34px rgba(22,58,92,.07)}
-.research-card .name{font:400 clamp(1.8rem,3vw,2.7rem)/1 Anton,sans-serif;color:var(--navy)}
-.research-card .uni{font-size:.78rem;color:var(--muted);margin:.4rem 0 1rem}
-.research-card ul{padding-left:1.15rem;line-height:1.55}
-.research-card.stebner{border-top:8px solid var(--blue)}
-.research-card.karlen{border-top:8px solid var(--mint)}
-.research-card.wirth{border-top:8px solid var(--orange)}
+/* Forschung */
+.research-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:.4rem}
+.research-card{border-radius:1rem;padding:.9rem 1rem}
+.research-card .name{font:400 1.7rem/1.05 Anton,sans-serif;color:var(--navy)}
+.research-card .uni{font-size:.85rem;color:var(--muted);margin:.25rem 0 .5rem;font-weight:600}
+.research-card ul{padding-left:1.1rem;line-height:1.38;margin:0;font-size:.95rem}
+.research-card li{margin:.2rem 0}
+.research-card.stebner{border-top:.45rem solid var(--blue)}
+.research-card.karlen{border-top:.45rem solid var(--mint-dark)}
+.research-card.wirth{border-top:.45rem solid var(--orange)}
 
-/* model -> practice */
-.formula-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-top:1.3rem}
-.formula-card{background:white;border:1px solid rgba(22,58,92,.12);border-radius:1.2rem;padding:1rem;min-height:170px}
-.formula-card strong{font-family:Anton,sans-serif;font-weight:400;font-size:1.65rem;color:var(--navy)}
-.formula-card:nth-child(1){border-top:8px solid var(--red)}
-.formula-card:nth-child(2){border-top:8px solid var(--blue)}
-.formula-card:nth-child(3){border-top:8px solid var(--mint)}
-.formula-card:nth-child(4){border-top:8px solid var(--orange)}
-.tool-cloud{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
-.tool-cloud span{padding:.5rem .75rem;border-radius:999px;background:white;border:1px solid rgba(22,58,92,.14);font-weight:600}
+/* Modell → Praxis */
+.formula-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-top:.4rem}
+.formula-card{border-radius:1rem;padding:.85rem .95rem;font-size:1rem;line-height:1.38}
+.formula-card strong{font-family:Anton,sans-serif;font-weight:400;font-size:1.5rem;color:var(--navy)}
+.formula-card:nth-child(1){border-top:.45rem solid var(--red)}
+.formula-card:nth-child(2){border-top:.45rem solid var(--blue)}
+.formula-card:nth-child(3){border-top:.45rem solid var(--mint-dark)}
+.formula-card:nth-child(4){border-top:.45rem solid var(--orange)}
+.tool-cloud{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1rem}
+.tool-cloud span{padding:.35rem .75rem;border-radius:999px;font-weight:600;font-size:.95rem}
 
-/* buddy */
-.cycle3{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.65rem;align-items:stretch;margin-top:1.1rem}
-.cycle-box{padding:1rem;border-radius:1rem;background:white;border:2px solid #dce5ec;min-height:160px}
+/* Lernbuddy */
+.cycle3{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.5rem;align-items:stretch;margin-top:.4rem}
+.cycle-box{padding:.85rem .95rem;border-radius:.9rem;border-width:3px;font-size:1rem;line-height:1.38}
 .cycle-box.plan{border-color:var(--blue);background:#EFF4F9}
-.cycle-box.do{border-color:var(--orange);background:#FFF5EC}
-.cycle-box.ref{border-color:var(--mint);background:#F0FFFC}
-.arrow{display:grid;place-items:center;font-size:2rem;color:var(--red);font-weight:700}
-.buddy-claim{margin-top:1rem;font-size:1.2rem;font-weight:700;color:var(--navy);text-align:center}
+.cycle-box.do{border-color:#D9803F;background:#FFF5EC}
+.cycle-box.ref{border-color:var(--mint-dark);background:#EEFBF8}
+.arrow{display:grid;place-items:center;font-size:1.7rem;color:var(--red);font-weight:700}
+.buddy-claim{margin-top:.9rem;font-size:1.1rem;font-weight:700;color:var(--navy);text-align:center}
 
-/* practice */
-.practice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.2rem}
-.practice-card{background:white;border:1px solid rgba(22,58,92,.12);border-radius:1.3rem;padding:1.05rem;min-height:260px}
-.practice-card .big{font:400 2.25rem/1 Anton,sans-serif;color:var(--navy);margin-bottom:.6rem}
-.practice-card ul{padding-left:1.1rem;line-height:1.55}
-.practice-card:nth-child(1){border-top:8px solid var(--red)}
-.practice-card:nth-child(2){border-top:8px solid var(--orange)}
-.practice-card:nth-child(3){border-top:8px solid var(--mint)}
+/* Erprobung */
+.practice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:.4rem}
+.practice-card{border-radius:1rem;padding:.85rem 1rem}
+.practice-card .big{font:400 1.8rem/1 Anton,sans-serif;color:var(--navy);margin-bottom:.4rem}
+.practice-card ul{padding-left:1.1rem;line-height:1.38;margin:0;font-size:1rem}
+.practice-card li{margin:.18rem 0}
+.practice-card:nth-child(1){border-top:.45rem solid var(--red)}
+.practice-card:nth-child(2){border-top:.45rem solid var(--orange)}
+.practice-card:nth-child(3){border-top:.45rem solid var(--mint-dark)}
 
-/* AI */
-.ai-layout{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:2rem;align-items:center}
-.ai-claim{font:400 clamp(3rem,6vw,6rem)/.92 Anton,sans-serif;color:var(--navy)}
+/* KI */
+.ai-layout{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:2rem;align-items:center}
+.ai-claim{font:400 2.7rem/1.06 Anton,sans-serif;color:var(--navy);margin-top:.4rem}
 .ai-claim span{color:var(--red)}
-.ai-flow{display:grid;gap:.75rem}
-.ai-step{display:grid;grid-template-columns:2.2rem 1fr;gap:.7rem;background:white;border:1px solid rgba(22,58,92,.12);border-radius:1rem;padding:.85rem}
-.ai-step i{font-style:normal;width:2rem;height:2rem;border-radius:.65rem;background:var(--blue);color:white;display:grid;place-items:center;font-weight:700}
+.ai-flow{display:grid;gap:.5rem}
+.ai-step{display:grid;grid-template-columns:1.7rem 1fr;gap:.6rem;border-radius:.8rem;padding:.55rem .75rem;font-size:.95rem;line-height:1.35}
+.ai-step i{font-style:normal;width:1.6rem;height:1.6rem;border-radius:.45rem;background:var(--blue);color:white;display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.ai-flow .statement{margin-top:.2rem;font-size:.95rem}
 
-/* friction */
-.friction-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-top:1.1rem}
-.friction-item{padding:.85rem 1rem;border-radius:1rem;background:white;border-left:7px solid var(--orange);box-shadow:0 8px 20px rgba(22,58,92,.05)}
-.feedback-strip{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
-.feedback-box{padding:1rem;border-radius:1rem;background:#EFF4F9;border:1px solid #CBDBE9}
-.feedback-box:nth-child(2){background:#F0FFFC;border-color:rgba(72,220,203,.45)}
+/* Reibung */
+.friction-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem .7rem;margin-top:.3rem}
+.friction-item{padding:.55rem .85rem;border-radius:.8rem;border-left:.4rem solid var(--orange);font-size:.95rem;line-height:1.35}
+.feedback-strip{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.7rem}
+.feedback-box{padding:.7rem .9rem;border-radius:.8rem;background:#EFF4F9;border-color:#B9CCDD;font-size:.95rem;line-height:1.35}
+.feedback-box:nth-child(2){background:#EEFBF8;border-color:#8FD3CB}
 
-/* school development */
-.school-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1.2rem}
-.school-item{background:white;border:1px solid rgba(22,58,92,.12);border-radius:1rem;padding:.95rem;min-height:130px}
-.school-item b{color:var(--blue)}
+/* Schulentwicklung */
+.school-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-top:.4rem}
+.school-item{border-radius:.9rem;padding:.75rem .9rem;font-size:.98rem;line-height:1.38}
+.school-item b{color:var(--blue);font-size:1.03rem}
 
-/* final network */
-.network-slide{padding:.8rem 1rem 1rem}
-.network-shell{width:100%;height:100%;display:grid;grid-template-rows:auto 1fr;min-height:0}
-.network-head{display:flex;align-items:end;justify-content:space-between;gap:1rem;padding:.4rem .5rem .7rem}
-.network-head h2{font-size:clamp(2.4rem,4.7vw,4.6rem);margin:0}
-.network-head p{max-width:42rem;color:#466176;line-height:1.45;margin:.3rem 0 0}
-.network-wrap{position:relative;min-height:0;background:rgba(255,255,255,.72);border:1px solid rgba(22,58,92,.12);border-radius:1.5rem;overflow:hidden;box-shadow:0 18px 50px rgba(22,58,92,.08)}
+/* Landkarte */
+.network-slide{padding:1rem 1.4rem}
+.network-shell{width:100%;height:100%;display:grid;grid-template-rows:auto 1fr auto;gap:.6rem;min-height:0}
+.network-head{display:flex;align-items:end;justify-content:space-between;gap:1rem}
+.network-head h2{font-size:2.5rem;margin:.1em 0 .15em}
+.network-head p{max-width:46rem;color:var(--muted);line-height:1.38;margin:0;font-size:.92rem}
+.network-wrap{position:relative;min-height:0;background:white;border:2px solid var(--line);border-radius:1.1rem;overflow:hidden}
 #network{width:100%;height:100%;display:block;touch-action:none}
-.net-link{stroke:#8aa0b1;stroke-opacity:.42;stroke-width:1.8}
-.net-link.major{stroke:var(--blue);stroke-width:3;stroke-opacity:.6}
-.net-node circle{stroke:white;stroke-width:3;filter:drop-shadow(0 5px 6px rgba(22,58,92,.14));cursor:pointer}
-.net-node text{font-family:Jost,sans-serif;font-weight:700;text-anchor:middle;pointer-events:none;fill:white}
-.net-node.tools text{fill:var(--navy)}
+.net-link{stroke:#7F95A8;stroke-opacity:.55;stroke-width:2.4}
+.net-link.major{stroke:var(--blue);stroke-width:4;stroke-opacity:.7}
+.net-node circle{stroke:white;stroke-width:3;cursor:pointer}
+.net-node text{font-family:Jost,sans-serif;text-anchor:middle;pointer-events:none;fill:var(--navy);
+  paint-order:stroke;stroke:white;stroke-width:6px;stroke-linejoin:round}
+.net-node.root text{fill:white;stroke:none}
 .net-detail{
-  position:absolute;right:1rem;bottom:1rem;width:min(370px,calc(100% - 2rem));max-height:70%;overflow:auto;
-  padding:1rem;border-radius:1.1rem;background:rgba(255,255,255,.95);border:1px solid rgba(22,58,92,.14);
-  box-shadow:0 18px 48px rgba(22,58,92,.18);display:none
+  position:absolute;right:.8rem;top:.8rem;width:min(22rem,calc(100% - 1.6rem));max-height:calc(100% - 1.6rem);overflow:auto;
+  padding:.9rem 1rem;border-radius:.9rem;background:white;border:2px solid var(--navy);display:none;font-size:.95rem
 }
 .net-detail.open{display:block}
-.net-detail h3{font-size:1.8rem}
-.net-detail p{line-height:1.48}
-.net-close{position:absolute;right:.65rem;top:.65rem;border:0;background:#EFF4F9;border-radius:.6rem;cursor:pointer;padding:.4rem .55rem}
-.net-caption{position:absolute;left:1rem;bottom:1rem;max-width:36rem;padding:.72rem .9rem;border-radius:1rem;background:rgba(22,58,92,.92);color:white;font-size:.84rem}
+.net-detail h3{font-size:1.5rem;margin-right:2rem}
+.net-detail p{line-height:1.4}
+.net-close{position:absolute;right:.55rem;top:.55rem;border:0;background:#EFF4F9;border-radius:.5rem;cursor:pointer;padding:.25rem .5rem;font-size:.95rem}
+.net-pointe{padding:.65rem 1rem;border-radius:.8rem;background:var(--navy);color:white;font-size:1.05rem;line-height:1.35}
+.net-pointe b{color:#FFD7B8}
+#resetNetwork{font-size:.8rem;padding:.4rem .8rem;white-space:nowrap}
 
-/* mobile */
-@media(max-width:980px){
+/* kleine Bildschirme (Handy/Tablet hochkant) */
+@media(max-width:820px){
+  html{font-size:15px}
   .two-col,.myth-layout,.turbine-layout,.ai-layout{grid-template-columns:1fr}
   .source-art img{max-height:34dvh}
-  .term-grid,.research-grid,.formula-row,.practice-grid,.school-grid{grid-template-columns:repeat(2,1fr)}
-  .slide{padding:1rem 1.1rem}
-  h1{font-size:clamp(3rem,12vw,6rem)}
-  h2{font-size:clamp(2.6rem,9vw,5rem)}
+  .turbine-frame{width:min(100%,40dvh)}
+  .term-grid,.research-grid,.formula-row,.practice-grid,.school-grid,.summary-grid,.friction-grid,.feedback-strip,.focus-list{grid-template-columns:1fr}
   .cycle3{grid-template-columns:1fr}
   .arrow{transform:rotate(90deg)}
-  .focus-list{grid-template-columns:1fr}
-}
-@media(max-width:620px){
-  .brand-copy span,.hint{display:none}
-  .progress-wrap{display:none}
-  .term-grid,.research-grid,.formula-row,.practice-grid,.school-grid,.summary-grid,.friction-grid,.feedback-strip{grid-template-columns:1fr}
-  .myth-number{display:none}
-  .myth-title{font-size:2.65rem}
-  .source-art img{max-height:28dvh}
-  .navbar{min-height:58px}
-  .slide{padding:.8rem}
-  .card{border-radius:1rem}
+  .slide{padding:1rem}
+  .brand-copy span,.hint,.progress-wrap{display:none}
+  .network-head{flex-direction:column;align-items:start}
 }
 @media print{
+  html{font-size:16px}
   html,body{overflow:visible;height:auto}
-  #three-bg,.topbar,.navbar{display:none!important}
+  .topbar,.navbar,#mini-progress{display:none!important}
   .app{height:auto;display:block}
   .stage{display:block}
   .slide{position:relative;display:flex!important;min-height:100vh;page-break-after:always;overflow:visible}
@@ -234,7 +254,6 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
 </style>
 </head>
 <body>
-<canvas id="three-bg" aria-hidden="true"></canvas>
 <div class="app">
 <header class="topbar">
   <div class="brand">
@@ -255,7 +274,7 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
   <div class="slide-inner two-col">
     <div>
       <div class="kicker">Einordnung · Perspektive eines Praktikers</div>
-      <h1>Was SRL ist –<br><span class="em-red">und was es nicht ist.</span></h1>
+      <h1>Was SRL ist –<br><span class="em-red">und was es<br>nicht ist.</span></h1>
       <p class="lead">Kein fertiges Schulmodell. Ein Versuch, Forschung, Unterrichtserfahrung und laufende Schulentwicklung miteinander zu verbinden.</p>
       <div class="statement"><b>Leitfrage:</b> Wie können wir Lernende zunehmend dazu befähigen, ihr eigenes Lernen zu planen, zu steuern und zu reflektieren?</div>
     </div>
@@ -280,10 +299,9 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
   <div class="slide-inner myth-layout">
     <div class="source-art"><img src="assets/myth1.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 1"></div>
     <div>
-      <div class="myth-number">01</div>
-      <div class="kicker">Mythos 1</div>
+      <div class="myth-head"><span class="myth-number">01</span><span class="kicker">Mythos 1</span></div>
       <div class="myth-title">„SRL ist <span class="em-red">Freiarbeit</span>.“</div>
-      <div class="reality"><b>Realität:</b> Freiarbeit ohne Strategie ist nur Selbstbeschäftigung. SRL braucht explizite Planung, Monitoring und Reflexion.</div>
+      <div class="reality"><b>Realität:</b> Freiarbeit ohne Strategie ist nur Selbstbeschäftigung. SRL braucht explizite Planung, bewusste Durchführung und Reflexion.</div>
     </div>
   </div>
 </section>
@@ -293,8 +311,7 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
   <div class="slide-inner myth-layout">
     <div class="source-art"><img src="assets/myth2.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 2"></div>
     <div>
-      <div class="myth-number">02</div>
-      <div class="kicker">Mythos 2</div>
+      <div class="myth-head"><span class="myth-number">02</span><span class="kicker">Mythos 2</span></div>
       <div class="myth-title">„Die Lehrkraft <span class="em-red">zieht sich zurück</span>.“</div>
       <div class="reality"><b>Realität:</b> SRL braucht eine andere Lehrerrolle: Scaffolding, Feedback und Begleitung metakognitiver Prozesse.</div>
     </div>
@@ -306,8 +323,7 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
   <div class="slide-inner myth-layout">
     <div class="source-art"><img src="assets/myth3.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 3"></div>
     <div>
-      <div class="myth-number">03</div>
-      <div class="kicker">Mythos 3</div>
+      <div class="myth-head"><span class="myth-number">03</span><span class="kicker">Mythos 3</span></div>
       <div class="myth-title">„Das können nur <span class="em-red">starke Lernende</span>.“</div>
       <div class="reality"><b>Realität:</b> Gerade schwächere Lernende können profitieren – wenn SRL explizit gelehrt und Strategien eingeübt werden.</div>
     </div>
@@ -319,8 +335,7 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
   <div class="slide-inner myth-layout">
     <div class="source-art"><img src="assets/myth4.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 4"></div>
     <div>
-      <div class="myth-number">04</div>
-      <div class="kicker">Mythos 4</div>
+      <div class="myth-head"><span class="myth-number">04</span><span class="kicker">Mythos 4</span></div>
       <div class="myth-title">„Immer <span class="em-red">Projektarbeit</span> und offene Methoden.“</div>
       <div class="reality"><b>Realität:</b> Jede Unterrichtsform kann SRL-förderlich sein – auch direkte Instruktion. Gerade bei jüngeren Lernenden ist zu viel Freiheit nicht automatisch hilfreich.</div>
     </div>
@@ -332,8 +347,7 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
   <div class="slide-inner myth-layout">
     <div class="source-art"><img src="assets/myth5.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 5"></div>
     <div>
-      <div class="myth-number">05</div>
-      <div class="kicker">Mythos 5</div>
+      <div class="myth-head"><span class="myth-number">05</span><span class="kicker">Mythos 5</span></div>
       <div class="myth-title">„SRL ist ein <span class="em-red">Persönlichkeitsmerkmal</span>.“</div>
       <div class="reality"><b>Realität:</b> SRL ist erlernbar – kein Talent, das man entweder hat oder nicht hat.</div>
     </div>
@@ -348,7 +362,7 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
     <div class="summary-grid">
       <div class="summary-item"><span class="dot">1</span><div><b>ein Lernprozess</b> – kein Persönlichkeitsmerkmal, keine einzelne Methode</div></div>
       <div class="summary-item"><span class="dot">2</span><div><b>erlernbar</b> – durch explizite Vermittlung und Übung</div></div>
-      <div class="summary-item"><span class="dot">3</span><div><b>zyklisch</b> – Planen → Durchführen → Reflektieren, immer wieder</div></div>
+      <div class="summary-item"><span class="dot">3</span><div><b>zyklisch</b> – Planung → Durchführung → Reflexion, immer wieder</div></div>
       <div class="summary-item"><span class="dot">4</span><div><b>metakognitiv</b> – Lernende denken über ihr eigenes Lernen nach</div></div>
       <div class="summary-item"><span class="dot">5</span><div><b>strategisch</b> – bewusster Einsatz von Lern- und Arbeitsstrategien</div></div>
       <div class="summary-item"><span class="dot">6</span><div><b>begleitet</b> – Lehrkräfte scaffolden, geben Feedback und bauen Autonomie schrittweise auf</div></div>
@@ -376,14 +390,14 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
 <!-- 9 -->
 <section class="slide" data-title="SRL-Turbine">
   <div class="slide-inner turbine-layout">
-    <div class="source-art turbine-img"><img src="assets/turbine.svg" alt="Originalgrafik der SRL-Turbine aus dem früheren Vortrag"></div>
+    <div class="source-art"><div class="turbine-frame" data-focus="none"><img src="assets/turbine.svg" alt="Originalgrafik der SRL-Turbine aus dem früheren Vortrag"></div></div>
     <div>
       <div class="kicker">Karlen et al. · Universität Zürich · 2025</div>
       <h2>Die SRL-<span class="em-red">Turbine</span></h2>
       <p class="lead">Die Turbine hilft, SRL nicht auf „Organisation“ zu verkürzen. Mehrere Ebenen greifen gleichzeitig ineinander und halten den Lernprozess in Bewegung.</p>
       <div class="stack">
         <div class="level"><span class="level-num">1</span><div><b>Grundbedürfnisse</b><br>Kompetenz, Autonomie und soziale Eingebundenheit.</div></div>
-        <div class="level"><span class="level-num">2</span><div><b>Lernprozess</b><br>Planen → durchführen und steuern → reflektieren.</div></div>
+        <div class="level"><span class="level-num">2</span><div><b>Lernprozess</b><br>Planung → Durchführung → Reflexion.</div></div>
         <div class="level"><span class="level-num">3</span><div><b>Kompetenzbereiche</b><br>Metakognition, Kognition, Mindset, Ressourcen, Emotionen und Motivation.</div></div>
       </div>
     </div>
@@ -393,7 +407,7 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
 <!-- 10 -->
 <section class="slide" data-title="Turbine · WHY">
   <div class="slide-inner turbine-layout">
-    <div class="source-art turbine-img"><img src="assets/turbine.svg" alt="SRL-Turbine – Fokus Grundbedürfnisse"></div>
+    <div class="source-art"><div class="turbine-frame" data-focus="needs"><img src="assets/turbine.svg" alt="SRL-Turbine – Fokus Grundbedürfnisse"></div></div>
     <div>
       <div class="kicker">Ebene 1 · Unser WHY?</div>
       <h2>Warum sollte ich mein Lernen <span class="em-red">regulieren wollen?</span></h2>
@@ -410,10 +424,10 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
 <!-- 11 -->
 <section class="slide" data-title="Turbine · Lernprozess">
   <div class="slide-inner turbine-layout">
-    <div class="source-art turbine-img"><img src="assets/turbine.svg" alt="SRL-Turbine – Fokus Lernprozess"></div>
+    <div class="source-art"><div class="turbine-frame" data-focus="process"><img src="assets/turbine.svg" alt="SRL-Turbine – Fokus Lernprozess"></div></div>
     <div>
       <div class="kicker">Ebene 2 · Der wiederkehrende Zyklus</div>
-      <h2>Planen → Steuern → <span class="em-red">Reflektieren</span></h2>
+      <h2>Planung → Durchführung → <span class="em-red">Reflexion</span></h2>
       <div class="stack">
         <div class="level"><span class="level-num">P</span><div><b>Vor der Lernphase</b><br>Ausgangslage analysieren, Ziele setzen, Strategien wählen, Ressourcen planen.</div></div>
         <div class="level"><span class="level-num">D</span><div><b>Während der Lernphase</b><br>Vorgehen beobachten, Strategien anpassen, Motivation und Emotionen regulieren, Hilfe nutzen.</div></div>
@@ -426,7 +440,7 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
 <!-- 12 -->
 <section class="slide" data-title="Turbine · Kompetenzen">
   <div class="slide-inner turbine-layout">
-    <div class="source-art turbine-img"><img src="assets/turbine.svg" alt="SRL-Turbine – Fokus Kompetenzbereiche"></div>
+    <div class="source-art"><div class="turbine-frame" data-focus="areas"><img src="assets/turbine.svg" alt="SRL-Turbine – Fokus Kompetenzbereiche"></div></div>
     <div>
       <div class="kicker">Ebene 3 · Was Lernende dafür brauchen</div>
       <h2>SRL ist <span class="em-red">mehrdimensional.</span></h2>
@@ -569,28 +583,31 @@ h3{font-size:clamp(1.35rem,2vw,2rem);line-height:1.05;color:var(--navy);margin:.
       <button class="navbtn" id="resetNetwork">Netzwerk zentrieren</button>
     </div>
     <div class="network-wrap">
-      <svg id="network" viewBox="0 0 1400 760" aria-label="Netzwerk der Themen und Baustellen rund um selbstreguliertes Lernen"></svg>
-      <div class="net-caption"><b>Die Pointe:</b> Wir müssen nicht alles gleichzeitig lösen. Aber wir sollten sehen, wie die Baustellen miteinander verbunden sind.</div>
-      <aside class="net-detail" id="netDetail"><button class="net-close" id="netClose">✕</button><div id="netDetailContent"></div></aside>
+      <svg id="network" aria-label="Netzwerk der Themen und Baustellen rund um selbstreguliertes Lernen"></svg>
+      <aside class="net-detail" id="netDetail"><button class="net-close" id="netClose" aria-label="Schließen">✕</button><div id="netDetailContent"></div></aside>
     </div>
+    <div class="net-pointe"><b>Die Pointe:</b> Wir müssen nicht alles gleichzeitig lösen. Aber wir sollten sehen, wie die Baustellen miteinander verbunden sind.</div>
   </div>
 </section>
 
 </main>
 
 <footer class="navbar">
-  <div class="hint">← / → oder Bild↑ / Bild↓ · Leertaste = weiter · Esc = zurück</div>
+  <div class="hint">← / → oder Bild↑ / Bild↓ · Leertaste = weiter · P = Präsentationsmodus · F = Vollbild</div>
   <div class="nav-buttons">
+    <button class="navbtn present-btn" id="presentBtn" title="Vollbild ohne Leisten (Taste F)">⛶ Präsentieren</button>
     <button class="navbtn" id="prev">← Zurück</button>
     <button class="navbtn primary" id="next">Weiter →</button>
   </div>
 </footer>
 </div>
+<div id="mini-progress"></div>
 
 <script>
 const slides=[...document.querySelectorAll('.slide')];
 let index=0;
 const progress=document.getElementById('progress');
+const miniProgress=document.getElementById('mini-progress');
 const counter=document.getElementById('counter');
 const prev=document.getElementById('prev');
 const next=document.getElementById('next');
@@ -598,7 +615,8 @@ const next=document.getElementById('next');
 function showSlide(i){
   index=Math.max(0,Math.min(slides.length-1,i));
   slides.forEach((s,n)=>s.classList.toggle('active',n===index));
-  progress.style.width=((index+1)/slides.length*100)+'%';
+  const pct=((index+1)/slides.length*100)+'%';
+  progress.style.width=pct; miniProgress.style.width=pct;
   counter.textContent=(index+1)+' / '+slides.length;
   prev.disabled=index===0;
   next.disabled=index===slides.length-1;
@@ -607,16 +625,51 @@ function showSlide(i){
 }
 prev.addEventListener('click',()=>showSlide(index-1));
 next.addEventListener('click',()=>showSlide(index+1));
+
+/* Präsentationsmodus: Vollbild + Leisten aus. Esc beendet das Vollbild. */
+function setPresent(on){ document.body.classList.toggle('present',on); dispatchEvent(new Event('resize')); }
+function togglePresent(){ setPresent(!document.body.classList.contains('present')); }
+function enterFullscreen(){
+  setPresent(true);
+  const el=document.documentElement;
+  if(el.requestFullscreen&&!document.fullscreenElement) el.requestFullscreen().catch(()=>{});
+}
+document.getElementById('presentBtn').addEventListener('click',enterFullscreen);
+document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement) setPresent(false); });
+
+/* Mauszeiger im Präsentationsmodus nach 2 s Ruhe ausblenden (stört sonst im Stream) */
+let idleTimer;
+document.addEventListener('mousemove',()=>{
+  document.body.classList.remove('idle');
+  clearTimeout(idleTimer);
+  idleTimer=setTimeout(()=>document.body.classList.add('idle'),2000);
+});
+
 document.addEventListener('keydown',e=>{
   if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
   if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();showSlide(index+1);}
-  if(e.key==='ArrowLeft'||e.key==='PageUp'||e.key==='Escape'){e.preventDefault();showSlide(index-1);}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();showSlide(index-1);}
   if(e.key==='Home'){e.preventDefault();showSlide(0);}
   if(e.key==='End'){e.preventDefault();showSlide(slides.length-1);}
+  if(e.key==='p'||e.key==='P'){togglePresent();}
+  if(e.key==='f'||e.key==='F'){ document.fullscreenElement ? document.exitFullscreen() : enterFullscreen(); }
 });
 showSlide(0);
 
-/* Final network */
+/* Turbine: besprochene Ebene hervorheben, Rest abblenden.
+   Maße in Pixeln der eingebetteten 300×300-Grafik (Mittelpunkt ≈ 148/149). */
+const TURBINE={cx:148,cy:149,needs:[0,67],process:[64,96],areas:[94,146]};
+document.querySelectorAll('.turbine-frame').forEach(frame=>{
+  const f=frame.dataset.focus; if(!TURBINE[f]) return;
+  const [r0,r1]=TURBINE[f],{cx,cy}=TURBINE;
+  const circ=r=>`M${cx-r},${cy}a${r},${r} 0 1,0 ${2*r},0a${r},${r} 0 1,0 ${-2*r},0Z`;
+  const hole=circ(r1)+(r0>0?circ(r0):'');
+  const ring=`<circle class="turbine-ring" cx="${cx}" cy="${cy}" r="${r1}"/>`+(r0>0?`<circle class="turbine-ring" cx="${cx}" cy="${cy}" r="${r0}"/>`:'');
+  frame.insertAdjacentHTML('beforeend',
+    `<svg viewBox="0 0 300 300" aria-hidden="true"><path class="turbine-veil" fill-rule="evenodd" d="M0,0H300V300H0Z${hole}"/>${ring}</svg>`);
+});
+
+/* Schlussbild: Landkarte */
 const NET_INFO={
   srl:['Selbstreguliertes Lernen','Bildungsziel: Lernen zunehmend planen, steuern, beobachten und reflektieren.'],
   begriffe:['Begriffe','Selbstständig, selbstorganisiert, selbstverantwortlich und selbstreguliert setzen unterschiedliche Schwerpunkte.'],
@@ -644,18 +697,19 @@ const NET_INFO={
   kollegium:['Kollegiumsfeedback','Was entlastet, was belastet und welche gemeinsame Sprache trägt?'],
   ki:['Materialproduktion mit KI','Varianten, Zugänge und Feedbackformate schneller vorbereiten.']
 };
+/* lvl: 0 = Zentrum, 1 = Hauptthema, 2 = Unterpunkt */
 const netNodes=[
-  {id:'srl',label:'SRL',g:'root',r:58},
-  {id:'begriffe',label:'Begriffe',g:'concept',r:38},{id:'forschung',label:'Forschung',g:'science',r:42},
-  {id:'werkzeuge',label:'Werkzeuge',g:'tools',r:43},{id:'praxis',label:'Praxis',g:'practice',r:40},
-  {id:'reibung',label:'Reibung',g:'friction',r:39},{id:'schule',label:'Schulentwicklung',g:'school',r:46},
-  {id:'digital',label:'Digital & KI',g:'digital',r:39},
-  {id:'stebner',label:'Stebner',g:'science',r:28},{id:'karlen',label:'Karlen',g:'science',r:28},{id:'wirth',label:'Wirth',g:'science',r:28},
-  {id:'buddy',label:'Lernbuddy',g:'tools',r:28},{id:'lernwege',label:'Lernwege',g:'tools',r:28},{id:'raster',label:'Raster',g:'tools',r:26},
-  {id:'nachweis',label:'Nachweise',g:'tools',r:27},{id:'journal',label:'Lernjournal',g:'tools',r:27},{id:'mentor',label:'Mentoring',g:'tools',r:27},
-  {id:'strategie',label:'Strategien',g:'concept',r:27},{id:'loesung',label:'Lösungsleiter',g:'concept',r:27},
-  {id:'deutsch',label:'Deutsch',g:'practice',r:27},{id:'technik',label:'Technik',g:'practice',r:27},{id:'jg5',label:'Pilot Jg. 5',g:'practice',r:30},
-  {id:'sus',label:'Schüler:innen',g:'friction',r:28},{id:'kollegium',label:'Kollegium',g:'school',r:29},{id:'ki',label:'KI-Material',g:'digital',r:27}
+  {id:'srl',label:'SRL',g:'root',lvl:0},
+  {id:'begriffe',label:'Begriffe',g:'concept',lvl:1},{id:'forschung',label:'Forschung',g:'science',lvl:1},
+  {id:'werkzeuge',label:'Werkzeuge',g:'tools',lvl:1},{id:'praxis',label:'Praxis',g:'practice',lvl:1},
+  {id:'reibung',label:'Reibung',g:'friction',lvl:1},{id:'schule',label:'Schulentwicklung',g:'school',lvl:1},
+  {id:'digital',label:'Digital & KI',g:'digital',lvl:1},
+  {id:'stebner',label:'Stebner',g:'science',lvl:2},{id:'karlen',label:'Karlen',g:'science',lvl:2},{id:'wirth',label:'Wirth',g:'science',lvl:2},
+  {id:'buddy',label:'Lernbuddy',g:'tools',lvl:2},{id:'lernwege',label:'Lernwege',g:'tools',lvl:2},{id:'raster',label:'Raster',g:'tools',lvl:2},
+  {id:'nachweis',label:'Nachweise',g:'tools',lvl:2},{id:'journal',label:'Lernjournal',g:'tools',lvl:2},{id:'mentor',label:'Mentoring',g:'tools',lvl:2},
+  {id:'strategie',label:'Strategien',g:'concept',lvl:2},{id:'loesung',label:'Lösungsleiter',g:'concept',lvl:2},
+  {id:'deutsch',label:'Deutsch',g:'practice',lvl:2},{id:'technik',label:'Technik',g:'practice',lvl:2},{id:'jg5',label:'Pilot Jg. 5',g:'practice',lvl:2},
+  {id:'sus',label:'Schüler:innen',g:'friction',lvl:2},{id:'kollegium',label:'Kollegium',g:'school',lvl:2},{id:'ki',label:'KI-Material',g:'digital',lvl:2}
 ];
 const netEdges=[
   ['srl','begriffe'],['srl','forschung'],['srl','werkzeuge'],['srl','praxis'],['srl','reibung'],['srl','schule'],['srl','digital'],
@@ -666,38 +720,95 @@ const netEdges=[
   ['reibung','sus'],['reibung','kollegium'],['schule','kollegium'],['schule','mentor'],['schule','jg5'],['digital','ki'],
   ['ki','lernwege'],['ki','deutsch'],['ki','technik'],['nachweis','raster'],['sus','buddy'],['sus','lernwege']
 ].map(e=>({source:e[0],target:e[1],major:e[0]==='srl'}));
-const netColors={root:'#791D22',concept:'#C9A876',science:'#245688',tools:'#48DCCB',practice:'#3F6B4D',friction:'#F0A66F',school:'#163A5C',digital:'#6C93B8'};
+const netColors={root:'#791D22',concept:'#A8844F',science:'#245688',tools:'#13706A',practice:'#3F6B4D',friction:'#C9773A',school:'#163A5C',digital:'#5B7FA3'};
 let netReady=false,netSvg,netRoot,netZoom,netSimulation;
 
+/* Das Netz wird in echten Bildschirmpixeln der Fläche aufgebaut und an deren
+   Seitenverhältnis angepasst. Schrift- und Kreisgrößen folgen der Grundschrift. */
 function initNetwork(){
   if(netReady)return;
+  const svgEl=document.getElementById('network');
+  const box=svgEl.getBoundingClientRect();
+  if(box.width<50||box.height<50)return;
   netReady=true;
-  netSvg=d3.select('#network');
+  const W=box.width,H=box.height;
+  const base=parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const STYLE=[{r:2.5*base,fs:1.5*base,w:400},{r:1.15*base,fs:1.12*base,w:700},{r:.62*base,fs:.92*base,w:600}];
+  netNodes.forEach(n=>{Object.assign(n,STYLE[n.lvl]);n.tw=n.label.length*n.fs*.53;delete n.x;delete n.y;delete n.vx;delete n.vy;delete n.fx;delete n.fy;});
+  const nodeById=Object.fromEntries(netNodes.map(n=>[n.id,n]));
+  const edges=netEdges.map(e=>({source:nodeById[e.source],target:nodeById[e.target],major:e.major}));
+
+  netSvg=d3.select(svgEl);
+  netSvg.selectAll('*').remove();
+  netSvg.attr('viewBox',`0 0 ${W} ${H}`);
   netRoot=netSvg.append('g');
   const linkG=netRoot.append('g');
   const nodeG=netRoot.append('g');
-  netZoom=d3.zoom().scaleExtent([.55,2.4]).on('zoom',ev=>netRoot.attr('transform',ev.transform));
-  netSvg.call(netZoom);
-  netSimulation=d3.forceSimulation(netNodes)
-    .force('link',d3.forceLink(netEdges).id(d=>d.id).distance(d=>d.major?165:105).strength(d=>d.major ? .55 : .3))
-    .force('charge',d3.forceManyBody().strength(d=>d.id==='srl'?-1100:-360))
-    .force('center',d3.forceCenter(700,380))
-    .force('collide',d3.forceCollide().radius(d=>d.r+13).iterations(2));
+  netZoom=d3.zoom().scaleExtent([.6,2.4]).on('zoom',ev=>netRoot.attr('transform',ev.transform));
+  netSvg.call(netZoom).call(netZoom.transform,d3.zoomIdentity);
 
-  const links=linkG.selectAll('line').data(netEdges).join('line').attr('class',d=>'net-link '+(d.major?'major':''));
-  const nodes=nodeG.selectAll('g').data(netNodes).join('g').attr('class',d=>'net-node '+d.g)
+  const pad=base*.5;
+  const keepInside=()=>{netNodes.forEach(d=>{
+    const mx=Math.max(d.r,d.tw/2)+pad;
+    d.x=Math.max(mx,Math.min(W-mx,d.x));
+    d.y=Math.max(d.r+pad,Math.min(H-(d.lvl===0?d.r:d.r+d.fs*1.25)-pad,d.y));
+  });};
+
+  /* Radiales Layout: Hauptthemen im inneren Ring, Unterpunkte außen neben ihrem Thema.
+     Die Reihenfolge der Themen ist so gewählt, dass sich Querverbindungen kaum kreuzen. */
+  const ORDER=['begriffe','forschung','werkzeuge','digital','praxis','schule','reibung'];
+  const PARENT={strategie:'begriffe',loesung:'begriffe',stebner:'forschung',karlen:'forschung',wirth:'forschung',
+    buddy:'werkzeuge',journal:'werkzeuge',raster:'werkzeuge',nachweis:'werkzeuge',lernwege:'werkzeuge',mentor:'werkzeuge',
+    ki:'digital',technik:'praxis',deutsch:'praxis',jg5:'praxis',kollegium:'schule',sus:'reibung'};
+  const byId=Object.fromEntries(netNodes.map(n=>[n.id,n]));
+  const kids=ORDER.flatMap(m=>Object.keys(PARENT).filter(k=>PARENT[k]===m));
+  const cx=W/2,cy=H/2,start=-Math.PI/2-Math.PI/kids.length*1.5;
+  const outer={rx:W/2-base*4.2,ry:H/2-base*1.9}, inner={rx:outer.rx*.52,ry:outer.ry*.55};
+  kids.forEach((id,i)=>{const t=start+i/kids.length*2*Math.PI,n=byId[id];n.ang=t;n.tx=cx+outer.rx*Math.cos(t);n.ty=cy+outer.ry*Math.sin(t);});
+  ORDER.forEach(m=>{
+    const ks=kids.filter(k=>PARENT[k]===m).map(k=>byId[k]);
+    const t=Math.atan2(d3.mean(ks,k=>Math.sin(k.ang)),d3.mean(ks,k=>Math.cos(k.ang)));
+    const n=byId[m];n.tx=cx+inner.rx*Math.cos(t);n.ty=cy+inner.ry*Math.sin(t);
+  });
+  byId.srl.tx=cx;byId.srl.ty=cy;
+  netNodes.forEach(n=>{n.x=n.tx;n.y=n.ty;});
+
+  netSimulation=d3.forceSimulation(netNodes)
+    .force('x',d3.forceX(d=>d.tx).strength(.35))
+    .force('y',d3.forceY(d=>d.ty).strength(.35))
+    .force('collide',d3.forceCollide().radius(d=>d.lvl===0?d.r+base*.6:Math.max(d.r,d.tw/2)+base*.35).iterations(3))
+    .stop();
+  /* Layout vorab berechnen: kein Zappeln beim Aufrufen der Folie */
+  for(let i=0;i<300;i++){netSimulation.tick();keepInside();}
+
+  const links=linkG.selectAll('line').data(edges).join('line').attr('class',d=>'net-link '+(d.major?'major':''));
+  const nodes=nodeG.selectAll('g').data(netNodes).join('g').attr('class',d=>'net-node '+d.g+(d.lvl===0?' root':''))
     .call(d3.drag()
-      .on('start',(ev,d)=>{if(!ev.active)netSimulation.alphaTarget(.2).restart();d.fx=d.x;d.fy=d.y;})
+      .on('start',(ev,d)=>{if(!ev.active)netSimulation.alphaTarget(.15).restart();d.fx=d.x;d.fy=d.y;})
       .on('drag',(ev,d)=>{d.fx=ev.x;d.fy=ev.y;})
-      .on('end',(ev,d)=>{if(!ev.active)netSimulation.alphaTarget(0);if(d.id!=='srl'){d.fx=null;d.fy=null;}})
+      .on('end',(ev,d)=>{if(!ev.active)netSimulation.alphaTarget(0);d.tx=d.x;d.ty=d.y;d.fx=null;d.fy=null;})
     );
   nodes.append('circle').attr('r',d=>d.r).attr('fill',d=>netColors[d.g]).on('click',(ev,d)=>{ev.stopPropagation();openNetDetail(d.id);});
-  nodes.append('text').attr('dy','.32em').attr('font-size',d=>d.id==='srl'?22:(d.r>35?13:10.5)).text(d=>d.label);
-  netSimulation.on('tick',()=>{
+  nodes.append('text')
+    .attr('dy',d=>d.lvl===0?'.35em':(d.r+d.fs*.95))
+    .attr('font-size',d=>d.fs).attr('font-weight',d=>d.w)
+    .attr('font-family',d=>d.lvl===0?'Anton,sans-serif':null)
+    .attr('letter-spacing',d=>d.lvl===0?'.04em':null)
+    .style('stroke-width',base*.3)
+    .text(d=>d.label);
+  const draw=()=>{
     links.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
     nodes.attr('transform',d=>'translate('+d.x+','+d.y+')');
-  });
+  };
+  netSimulation.on('tick',()=>{keepInside();draw();});
+  draw();
 }
+/* Bei Größenänderung (z. B. Vollbild an/aus) neu aufbauen */
+let netResizeTimer;
+addEventListener('resize',()=>{
+  clearTimeout(netResizeTimer);
+  netResizeTimer=setTimeout(()=>{ if(netReady){ netSimulation.stop(); netReady=false; if(index===slides.length-1) initNetwork(); } },200);
+});
 function openNetDetail(id){
   const info=NET_INFO[id]||[id,''];
   document.getElementById('netDetailContent').innerHTML='<div class="kicker">Baustelle</div><h3>'+info[0]+'</h3><p>'+info[1]+'</p>';
@@ -707,24 +818,6 @@ document.getElementById('netClose').addEventListener('click',()=>document.getEle
 document.getElementById('resetNetwork').addEventListener('click',()=>{
   if(netSvg&&netZoom) netSvg.transition().duration(450).call(netZoom.transform,d3.zoomIdentity);
 });
-
-/* subtle Three.js background */
-(function(){
-  const canvas=document.getElementById('three-bg');
-  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
-  const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,100);
-  camera.position.z=10;
-  const count=90,positions=new Float32Array(count*3);
-  for(let i=0;i<count;i++){positions[i*3]=(Math.random()-.5)*20;positions[i*3+1]=(Math.random()-.5)*13;positions[i*3+2]=(Math.random()-.5)*6;}
-  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
-  const points=new THREE.Points(geo,new THREE.PointsMaterial({color:0x245688,size:.05,transparent:true,opacity:.5}));
-  scene.add(points);
-  function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
-  addEventListener('resize',resize);resize();
-  let t=0;function animate(){t+=.0012;points.rotation.y=t;points.rotation.x=Math.sin(t)*.05;renderer.render(scene,camera);requestAnimationFrame(animate);}animate();
-})();
 </script>
 </body>
 </html>
