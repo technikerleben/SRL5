@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#163A5C">
-<title>Was SRL ist – und was nicht · Christoph Wegemann</title>
+<title>SRL ist keine Methode! · Christoph Wegemann</title>
 <meta name="description" content="Linearer Vortrag zu selbstreguliertem Lernen mit abschließender interaktiver Landkarte.">
 <!-- Ordner-URL ohne "/" am Ende: sonst lädt der Browser keine Bilder, Schriften und d3 -->
 <script>if(location.protocol!=='file:'&&!/\/$|\.html?$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash);</script>
@@ -80,6 +80,7 @@ h1,h2,h3{font-family:Anton,sans-serif;font-weight:400}
 h1{font-size:4.1rem;line-height:1;color:var(--navy);margin:.12em 0 .25em;letter-spacing:-.01em}
 h2{font-size:2.8rem;line-height:1.02;color:var(--navy);margin:.12em 0 .45em;letter-spacing:-.005em}
 h3{font-size:1.4rem;line-height:1.1;color:var(--navy);margin:.1em 0 .4em}
+.subtitle{font-size:1.5rem;font-weight:600;color:var(--navy);margin:-.1em 0 .6em;line-height:1.25}
 .lead{font-size:1.12rem;line-height:1.45;color:#2E4A61;max-width:40rem}
 .em-red{color:var(--red)} .em-blue{color:var(--blue)}
 b,strong{font-weight:700}
@@ -229,21 +230,14 @@ b,strong{font-weight:700}
 #resetNetwork{font-size:.8rem;padding:.4rem .8rem;white-space:nowrap}
 
 
-/* Einstieg (Erzählfolie) */
-.slide.story{background:var(--navy);color:white}
-.story-layout{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:2.6rem;align-items:center}
-.story-art{position:relative;aspect-ratio:1;width:min(100%,68dvh);margin:auto;border-radius:1.2rem;overflow:hidden;background:#F7F5F2}
+/* Einstieg: nur das Bild, möglichst groß */
+.slide.story{padding:1.2rem}
+.story-art{position:relative;width:100%;height:100%;margin:auto}
 .story-art img{width:100%;height:100%;object-fit:contain;display:block}
-.story-art .placeholder{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:1.5rem;
-  border:3px dashed #9FB6CC;border-radius:1.2rem;color:#4A5D6E;font-size:.9rem;background:#F7F5F2}
+.story-art .placeholder{position:absolute;inset:8%;display:none;place-items:center;text-align:center;padding:1.5rem;
+  border:3px dashed #9FB6CC;border-radius:1.2rem;color:#4A5D6E;font-size:1rem;background:white}
 .story-art.missing img{display:none}
 .story-art.missing .placeholder{display:grid}
-.story .kicker{color:#FFD7B8}
-.story h1{color:white;font-size:3.6rem}
-.story h1 span{color:#FFB98A}
-.story-text{font-size:1.25rem;line-height:1.5;color:#E3ECF4;max-width:34rem}
-.story-text b{color:white}
-.story-turn{margin-top:1.1rem;padding:.9rem 1.1rem;border-left:.45rem solid #FFB98A;background:rgba(255,255,255,.08);border-radius:0 .8rem .8rem 0;font-size:1.35rem;font-weight:600;color:white}
 
 /* Schrittweises Aufdecken: Elemente mit .step erscheinen mit „Weiter“ */
 .step{transition:opacity .35s ease, transform .35s ease}
@@ -276,7 +270,7 @@ b,strong{font-weight:700}
 /* kleine Bildschirme (Handy/Tablet hochkant) */
 @media(max-width:820px){
   html{font-size:15px}
-  .two-col,.myth-layout,.turbine-layout,.ai-layout,.story-layout,.buddy-layout{grid-template-columns:1fr}
+  .two-col,.myth-layout,.turbine-layout,.ai-layout,.buddy-layout{grid-template-columns:1fr}
   .buddy-sheet img{height:auto;width:100%}
   .source-art img{max-height:34dvh}
   .turbine-frame{width:min(100%,40dvh)}
@@ -305,7 +299,7 @@ b,strong{font-weight:700}
   <div class="brand">
     <div class="logo">SRL</div>
     <div class="brand-copy">
-      <b>Was SRL ist – und was nicht</b>
+      <b>SRL ist keine Methode!</b>
       <span>Christoph Wegemann · Forschung, Unterrichtspraxis und Schulentwicklung</span>
     </div>
   </div>
@@ -315,21 +309,12 @@ b,strong{font-weight:700}
 
 <main class="stage" id="stage">
 
-<!-- 0 · Einstieg -->
-<section class="slide story active" data-title="Ein Glücksmoment">
-  <div class="slide-inner story-layout">
-    <div class="story-art" id="storyArt">
-      <img src="assets/einstieg.png" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt"
-           onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='assets/einstieg.webp'}else{this.parentElement.classList.add('missing')}">
-      <div class="placeholder"><div>Bild folgt<br>Datei als <b>assets/einstieg.png</b> ablegen<br>(quadratisch, ca. 1400 × 1400 px)</div></div>
-    </div>
-    <div>
-      <div class="kicker">Bevor es losgeht · aus meinem Deutsch-E-Kurs</div>
-      <h1>Ein <span>Glücksmoment.</span></h1>
-      <p class="story-text">Eine Schülerin aus meiner alten Klasse. Nie eine der Leistungsstarken – und immer <b>Wackelkandidatin</b> für den Wechsel in den G-Kurs.</p>
-      <p class="story-text step">Eines Tages kommt sie zu mir und erzählt: In <b>Mathematik</b> hat sie ganz viele Aufgaben geschafft.</p>
-      <div class="story-turn step">Mit Strategien, die sie aus dem Deutschunterricht kannte.</div>
-    </div>
+<!-- 0 · Einstieg: nur das Bild, die Geschichte wird erzählt -->
+<section class="slide story active" data-title="Einstieg">
+  <div class="story-art" id="storyArt">
+    <img src="assets/einstieg.png" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt"
+         onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='assets/einstieg.webp'}else{this.parentElement.classList.add('missing')}">
+    <div class="placeholder"><div>Bild folgt<br>Datei als <b>assets/einstieg.png</b> ablegen<br>(ca. 1600 × 1000 px oder quadratisch)</div></div>
   </div>
 </section>
 
@@ -338,11 +323,12 @@ b,strong{font-weight:700}
   <div class="slide-inner two-col">
     <div>
       <div class="kicker">Einordnung · Perspektive eines Praktikers</div>
-      <h1>Was SRL ist –<br><span class="em-red">und was es<br>nicht ist.</span></h1>
+      <h1>SRL ist<br><span class="em-red">keine Methode!</span></h1>
+      <p class="subtitle">Was selbstreguliertes Lernen (nicht) ist.</p>
       <p class="lead">Kein fertiges Schulmodell. Ein Versuch, Forschung, Unterrichtserfahrung und laufende Schulentwicklung miteinander zu verbinden.</p>
-      <div class="statement"><b>Leitfrage:</b> Wie können wir Lernende zunehmend dazu befähigen, ihr eigenes Lernen zu planen, zu steuern und zu reflektieren?</div>
+      <div class="statement step"><b>Leitfrage:</b> Wie können wir Lernende zunehmend dazu befähigen, ihr eigenes Lernen zu planen, zu steuern und zu reflektieren?</div>
     </div>
-    <aside class="card intro-card">
+    <aside class="card intro-card step">
       <div class="kicker">Kurz zu mir</div>
       <h3>Christoph Wegemann</h3>
       <div class="pills">
@@ -380,7 +366,7 @@ b,strong{font-weight:700}
     <div>
       <div class="myth-head"><span class="myth-number">01</span><span class="kicker">Mythos 1</span></div>
       <div class="myth-title">„SRL ist <span class="em-red">Freiarbeit</span>.“</div>
-      <div class="reality"><b>Realität:</b> Freiarbeit ohne Strategie ist nur Selbstbeschäftigung. SRL braucht explizite Planung, bewusste Durchführung und Reflexion.</div>
+      <div class="reality step"><b>Realität:</b> Freiarbeit ohne Strategie ist nur Selbstbeschäftigung. SRL braucht explizite Planung, bewusste Durchführung und Reflexion.</div>
     </div>
   </div>
 </section>
@@ -392,7 +378,7 @@ b,strong{font-weight:700}
     <div>
       <div class="myth-head"><span class="myth-number">02</span><span class="kicker">Mythos 2</span></div>
       <div class="myth-title">„Die Lehrkraft <span class="em-red">zieht sich zurück</span>.“</div>
-      <div class="reality"><b>Realität:</b> SRL braucht eine andere Lehrerrolle: Scaffolding, Feedback und Begleitung metakognitiver Prozesse.</div>
+      <div class="reality step"><b>Realität:</b> SRL braucht eine andere Lehrerrolle: Scaffolding, Feedback und Begleitung metakognitiver Prozesse.</div>
     </div>
   </div>
 </section>
@@ -404,7 +390,7 @@ b,strong{font-weight:700}
     <div>
       <div class="myth-head"><span class="myth-number">03</span><span class="kicker">Mythos 3</span></div>
       <div class="myth-title">„Das können nur <span class="em-red">starke Lernende</span>.“</div>
-      <div class="reality"><b>Realität:</b> Gerade schwächere Lernende können profitieren – wenn SRL explizit gelehrt und Strategien eingeübt werden.</div>
+      <div class="reality step"><b>Realität:</b> Gerade schwächere Lernende können profitieren – wenn SRL explizit gelehrt und Strategien eingeübt werden.</div>
     </div>
   </div>
 </section>
@@ -416,7 +402,7 @@ b,strong{font-weight:700}
     <div>
       <div class="myth-head"><span class="myth-number">04</span><span class="kicker">Mythos 4</span></div>
       <div class="myth-title">„Immer <span class="em-red">Projektarbeit</span> und offene Methoden.“</div>
-      <div class="reality"><b>Realität:</b> Jede Unterrichtsform kann SRL-förderlich sein – auch direkte Instruktion. Gerade bei jüngeren Lernenden ist zu viel Freiheit nicht automatisch hilfreich.</div>
+      <div class="reality step"><b>Realität:</b> Jede Unterrichtsform kann SRL-förderlich sein – auch direkte Instruktion. Gerade bei jüngeren Lernenden ist zu viel Freiheit nicht automatisch hilfreich.</div>
     </div>
   </div>
 </section>
@@ -428,7 +414,7 @@ b,strong{font-weight:700}
     <div>
       <div class="myth-head"><span class="myth-number">05</span><span class="kicker">Mythos 5</span></div>
       <div class="myth-title">„SRL ist ein <span class="em-red">Persönlichkeitsmerkmal</span>.“</div>
-      <div class="reality"><b>Realität:</b> SRL ist erlernbar – kein Talent, das man entweder hat oder nicht hat.</div>
+      <div class="reality step"><b>Realität:</b> SRL ist erlernbar – kein Talent, das man entweder hat oder nicht hat.</div>
     </div>
   </div>
 </section>
@@ -439,15 +425,15 @@ b,strong{font-weight:700}
     <div class="kicker">Nach fünf Mythen bleibt der Kern</div>
     <h2>SRL <span class="em-red">ist …</span></h2>
     <div class="summary-grid">
-      <div class="summary-item"><span class="dot">1</span><div><b>ein Lernprozess</b> – kein Persönlichkeitsmerkmal, keine einzelne Methode</div></div>
-      <div class="summary-item"><span class="dot">2</span><div><b>erlernbar</b> – durch explizite Vermittlung und Übung</div></div>
-      <div class="summary-item"><span class="dot">3</span><div><b>zyklisch</b> – Planung → Durchführung → Reflexion, immer wieder</div></div>
-      <div class="summary-item"><span class="dot">4</span><div><b>metakognitiv</b> – Lernende denken über ihr eigenes Lernen nach</div></div>
-      <div class="summary-item"><span class="dot">5</span><div><b>strategisch</b> – bewusster Einsatz von Lern- und Arbeitsstrategien</div></div>
-      <div class="summary-item"><span class="dot">6</span><div><b>begleitet</b> – Lehrkräfte scaffolden, geben Feedback und bauen Autonomie schrittweise auf</div></div>
-      <div class="summary-item"><span class="dot">7</span><div><b>für alle</b> – unabhängig von Leistungsniveau oder Alter</div></div>
+      <div class="summary-item step"><span class="dot">1</span><div><b>ein Lernprozess</b> – kein Persönlichkeitsmerkmal, keine einzelne Methode</div></div>
+      <div class="summary-item step"><span class="dot">2</span><div><b>erlernbar</b> – durch explizite Vermittlung und Übung</div></div>
+      <div class="summary-item step"><span class="dot">3</span><div><b>zyklisch</b> – Planung → Durchführung → Reflexion, immer wieder</div></div>
+      <div class="summary-item step"><span class="dot">4</span><div><b>metakognitiv</b> – Lernende denken über ihr eigenes Lernen nach</div></div>
+      <div class="summary-item step"><span class="dot">5</span><div><b>strategisch</b> – bewusster Einsatz von Lern- und Arbeitsstrategien</div></div>
+      <div class="summary-item step"><span class="dot">6</span><div><b>begleitet</b> – Lehrkräfte scaffolden, geben Feedback und bauen Autonomie schrittweise auf</div></div>
+      <div class="summary-item step"><span class="dot">7</span><div><b>für alle</b> – unabhängig von Leistungsniveau oder Alter</div></div>
     </div>
-    <div class="summary-quote">„Ich weiß, warum ich lerne, wie ich lerne – und was ich beim nächsten Mal anders machen will.“</div>
+    <div class="summary-quote step">„Ich weiß, warum ich lerne, wie ich lerne – und was ich beim nächsten Mal anders machen will.“</div>
   </div>
 </section>
 
@@ -457,12 +443,12 @@ b,strong{font-weight:700}
     <div class="kicker">Ähnliche Begriffe · unterschiedliche Blickrichtungen</div>
     <h2>Wo positioniert sich <span class="em-red">SRL?</span></h2>
     <div class="term-grid">
-      <div class="term-card"><strong>selbstständig</strong><p>Ich kann eine Aufgabe zunehmend ohne unmittelbare Hilfe bearbeiten.</p><div class="question">Fokus: Brauche ich jemanden neben mir?</div></div>
-      <div class="term-card"><strong>selbstorganisiert</strong><p>Ich organisiere Zeit, Material, Reihenfolge und Arbeitsablauf.</p><div class="question">Fokus: Wie ordne ich meine Arbeit?</div></div>
-      <div class="term-card"><strong>selbstverantwortlich</strong><p>Ich übernehme Verantwortung für Entscheidungen und Ergebnisse.</p><div class="question">Fokus: Wofür stehe ich ein?</div></div>
-      <div class="term-card"><strong>selbstreguliert</strong><p>Ich plane, beobachte, passe an und reflektiere meinen eigenen Lernprozess.</p><div class="question">Fokus: Wie steuere ich mein Lernen?</div></div>
+      <div class="term-card step"><strong>selbstständig</strong><p>Ich kann eine Aufgabe zunehmend ohne unmittelbare Hilfe bearbeiten.</p><div class="question">Fokus: Brauche ich jemanden neben mir?</div></div>
+      <div class="term-card step"><strong>selbstorganisiert</strong><p>Ich organisiere Zeit, Material, Reihenfolge und Arbeitsablauf.</p><div class="question">Fokus: Wie ordne ich meine Arbeit?</div></div>
+      <div class="term-card step"><strong>selbstverantwortlich</strong><p>Ich übernehme Verantwortung für Entscheidungen und Ergebnisse.</p><div class="question">Fokus: Wofür stehe ich ein?</div></div>
+      <div class="term-card step"><strong>selbstreguliert</strong><p>Ich plane, beobachte, passe an und reflektiere meinen eigenen Lernprozess.</p><div class="question">Fokus: Wie steuere ich mein Lernen?</div></div>
     </div>
-    <div class="term-punch">Ein Schüler kann völlig selbstständig einen Wochenplan abarbeiten – und dabei kaum selbstreguliert lernen.</div>
+    <div class="term-punch step">Ein Schüler kann völlig selbstständig einen Wochenplan abarbeiten – und dabei kaum selbstreguliert lernen.</div>
   </div>
 </section>
 
@@ -475,9 +461,9 @@ b,strong{font-weight:700}
       <h2>Die SRL-<span class="em-red">Turbine</span></h2>
       <p class="lead">Die Turbine hilft, SRL nicht auf „Organisation“ zu verkürzen. Mehrere Ebenen greifen gleichzeitig ineinander und halten den Lernprozess in Bewegung.</p>
       <div class="stack">
-        <div class="level"><span class="level-num">1</span><div><b>Grundbedürfnisse</b><br>Kompetenz, Autonomie und soziale Eingebundenheit.</div></div>
-        <div class="level"><span class="level-num">2</span><div><b>Lernprozess</b><br>Planung → Durchführung → Reflexion.</div></div>
-        <div class="level"><span class="level-num">3</span><div><b>Kompetenzbereiche</b><br>Metakognition, Kognition, Mindset, Ressourcen, Emotionen und Motivation.</div></div>
+        <div class="level step"><span class="level-num">1</span><div><b>Grundbedürfnisse</b><br>Kompetenz, Autonomie und soziale Eingebundenheit.</div></div>
+        <div class="level step"><span class="level-num">2</span><div><b>Lernprozess</b><br>Planung → Durchführung → Reflexion.</div></div>
+        <div class="level step"><span class="level-num">3</span><div><b>Kompetenzbereiche</b><br>Metakognition, Kognition, Mindset, Ressourcen, Emotionen und Motivation.</div></div>
       </div>
     </div>
   </div>
@@ -491,11 +477,11 @@ b,strong{font-weight:700}
       <div class="kicker">Ebene 1 · Unser WHY?</div>
       <h2>Warum sollte ich mein Lernen <span class="em-red">regulieren wollen?</span></h2>
       <div class="focus-list">
-        <div class="focus"><b>Kompetenz</b>Lernende möchten sich als fähig erleben und Herausforderungen bewältigen können.</div>
-        <div class="focus"><b>Autonomie</b>Lernende möchten mitgestalten und eigenverantwortlich handeln – in unterschiedlichem Maß.</div>
-        <div class="focus"><b>Soziale Eingebundenheit</b>Tragfähige Beziehungen und Unterstützung geben Sicherheit und Motivation.</div>
+        <div class="focus step"><b>Kompetenz</b>Lernende möchten sich als fähig erleben und Herausforderungen bewältigen können.</div>
+        <div class="focus step"><b>Autonomie</b>Lernende möchten mitgestalten und eigenverantwortlich handeln – in unterschiedlichem Maß.</div>
+        <div class="focus step"><b>Soziale Eingebundenheit</b>Tragfähige Beziehungen und Unterstützung geben Sicherheit und Motivation.</div>
       </div>
-      <div class="statement">Selbstregulation ist nicht dasselbe wie „allein gelassen werden“. Beziehung und Unterstützung gehören zum Modell dazu.</div>
+      <div class="statement step">Selbstregulation ist nicht dasselbe wie „allein gelassen werden“. Beziehung und Unterstützung gehören zum Modell dazu.</div>
     </div>
   </div>
 </section>
@@ -508,9 +494,9 @@ b,strong{font-weight:700}
       <div class="kicker">Ebene 2 · Der wiederkehrende Zyklus</div>
       <h2>Planung → Durchführung → <span class="em-red">Reflexion</span></h2>
       <div class="stack">
-        <div class="level"><span class="level-num">P</span><div><b>Vor der Lernphase</b><br>Ausgangslage analysieren, Ziele setzen, Strategien wählen, Ressourcen planen.</div></div>
-        <div class="level"><span class="level-num">D</span><div><b>Während der Lernphase</b><br>Vorgehen beobachten, Strategien anpassen, Motivation und Emotionen regulieren, Hilfe nutzen.</div></div>
-        <div class="level"><span class="level-num">R</span><div><b>Nach der Lernphase</b><br>Ergebnis und Vorgehen bewerten, Ursachen analysieren und Konsequenzen für den nächsten Zyklus ziehen.</div></div>
+        <div class="level step"><span class="level-num">P</span><div><b>Vor der Lernphase</b><br>Ausgangslage analysieren, Ziele setzen, Strategien wählen, Ressourcen planen.</div></div>
+        <div class="level step"><span class="level-num">D</span><div><b>Während der Lernphase</b><br>Vorgehen beobachten, Strategien anpassen, Motivation und Emotionen regulieren, Hilfe nutzen.</div></div>
+        <div class="level step"><span class="level-num">R</span><div><b>Nach der Lernphase</b><br>Ergebnis und Vorgehen bewerten, Ursachen analysieren und Konsequenzen für den nächsten Zyklus ziehen.</div></div>
       </div>
     </div>
   </div>
@@ -524,12 +510,12 @@ b,strong{font-weight:700}
       <div class="kicker">Ebene 3 · Was Lernende dafür brauchen</div>
       <h2>SRL ist <span class="em-red">mehrdimensional.</span></h2>
       <div class="focus-list">
-        <div class="focus"><b>Metakognition</b>Planen, überwachen, evaluieren.</div>
-        <div class="focus"><b>Kognition</b>Informationen aufnehmen, verarbeiten, strukturieren.</div>
-        <div class="focus"><b>Mindset</b>Fehler als Lerngelegenheiten und Entwicklung als möglich erleben.</div>
-        <div class="focus"><b>Ressourcen</b>Konzentration, Lernumgebung, Material und Hilfe gezielt nutzen.</div>
-        <div class="focus"><b>Emotionen</b>Gefühle wahrnehmen und regulieren.</div>
-        <div class="focus"><b>Motivation</b>Energie, Selbstwirksamkeit und Nutzen einer Aufgabe regulieren.</div>
+        <div class="focus step"><b>Metakognition</b>Planen, überwachen, evaluieren.</div>
+        <div class="focus step"><b>Kognition</b>Informationen aufnehmen, verarbeiten, strukturieren.</div>
+        <div class="focus step"><b>Mindset</b>Fehler als Lerngelegenheiten und Entwicklung als möglich erleben.</div>
+        <div class="focus step"><b>Ressourcen</b>Konzentration, Lernumgebung, Material und Hilfe gezielt nutzen.</div>
+        <div class="focus step"><b>Emotionen</b>Gefühle wahrnehmen und regulieren.</div>
+        <div class="focus step"><b>Motivation</b>Energie, Selbstwirksamkeit und Nutzen einer Aufgabe regulieren.</div>
       </div>
     </div>
   </div>
@@ -541,11 +527,11 @@ b,strong{font-weight:700}
     <div class="kicker">Unsere wissenschaftlichen Orientierungspunkte</div>
     <h2>Drei Linien, die unseren Prozess <span class="em-red">prägen.</span></h2>
     <div class="research-grid">
-      <article class="research-card stebner"><div class="name">Ferdinand Stebner</div><div class="uni">Universität Osnabrück</div><ul><li>Lern- und Selbstregulationsstrategien</li><li>Diagnostik und gezielte Förderung</li><li>Implementierung in Unterricht und Schule</li></ul></article>
-      <article class="research-card karlen"><div class="name">Yves Karlen</div><div class="uni">Universität Zürich</div><ul><li>Metakognition und Strategiewissen</li><li>Motivation, Emotion und Mindset</li><li>SRL als komplexer, zyklischer Prozess</li></ul></article>
-      <article class="research-card wirth"><div class="name">Joachim Wirth</div><div class="uni">Ruhr-Universität Bochum</div><ul><li>Selbstregulation unterstützen und trainieren</li><li>äußere Struktur als Lernhilfe</li><li>Lernbuddy als rahmengebendes Werkzeug in unserem Erprobungsprozess</li></ul></article>
+      <article class="research-card step stebner"><div class="name">Ferdinand Stebner</div><div class="uni">Universität Osnabrück</div><ul><li>Lern- und Selbstregulationsstrategien</li><li>Diagnostik und gezielte Förderung</li><li>Implementierung in Unterricht und Schule</li></ul></article>
+      <article class="research-card step karlen"><div class="name">Yves Karlen</div><div class="uni">Universität Zürich</div><ul><li>Metakognition und Strategiewissen</li><li>Motivation, Emotion und Mindset</li><li>SRL als komplexer, zyklischer Prozess</li></ul></article>
+      <article class="research-card step wirth"><div class="name">Joachim Wirth</div><div class="uni">Ruhr-Universität Bochum</div><ul><li>Selbstregulation unterstützen und trainieren</li><li>äußere Struktur als Lernhilfe</li><li>Lernbuddy als rahmengebendes Werkzeug in unserem Erprobungsprozess</li></ul></article>
     </div>
-    <div class="statement">Die Forschung liefert uns keinen fertigen Stundenplan. Sie liefert ein Prüfraster für unsere Entscheidungen.</div>
+    <div class="statement step">Die Forschung liefert uns keinen fertigen Stundenplan. Sie liefert ein Prüfraster für unsere Entscheidungen.</div>
   </div>
 </section>
 
@@ -555,12 +541,12 @@ b,strong{font-weight:700}
     <div class="kicker">Didaktische Übersetzung</div>
     <h2>Werkzeuge sind <span class="em-red">nicht SRL.</span></h2>
     <div class="formula-row">
-      <div class="formula-card"><strong>SRL</strong><p>ist das Bildungsziel.</p></div>
-      <div class="formula-card"><strong>Strategien</strong><p>sind Kompetenzen, die gelernt und geübt werden.</p></div>
-      <div class="formula-card"><strong>Werkzeuge</strong><p>geben äußere Struktur und machen Prozesse sichtbar.</p></div>
-      <div class="formula-card"><strong>Unterricht</strong><p>schafft Gelegenheiten, diese Regulation immer wieder zu üben.</p></div>
+      <div class="formula-card step"><strong>SRL</strong><p>ist das Bildungsziel.</p></div>
+      <div class="formula-card step"><strong>Strategien</strong><p>sind Kompetenzen, die gelernt und geübt werden.</p></div>
+      <div class="formula-card step"><strong>Werkzeuge</strong><p>geben äußere Struktur und machen Prozesse sichtbar.</p></div>
+      <div class="formula-card step"><strong>Unterricht</strong><p>schafft Gelegenheiten, diese Regulation immer wieder zu üben.</p></div>
     </div>
-    <div class="tool-cloud">
+    <div class="tool-cloud step">
       <span>Lernbuddy</span><span>Lernwege</span><span>Lernnavigator</span><span>Kompetenzraster</span><span>Strategiekarten</span><span>Lösungsleiter</span><span>Lernjournal</span><span>Mentorengespräche</span><span>Gelingensnachweise</span>
     </div>
   </div>
@@ -577,12 +563,12 @@ b,strong{font-weight:700}
       <div class="kicker">Beispiel eines rahmengebenden Werkzeugs</div>
       <h2>Der Lernbuddy macht den Prozess <span class="em-red">sichtbar.</span></h2>
       <div class="cycle-v">
-        <div class="cycle-box plan"><h3>Planung</h3><p>Ziel klären · Energie einschätzen · Ablenker erkennen · ersten Schritt bestimmen.</p></div>
-        <div class="cycle-box do"><h3>Durchführung</h3><p>Strategie wählen · Arbeit beobachten · Lösungsleiter nutzen · bei Bedarf nachsteuern.</p></div>
-        <div class="cycle-box ref"><h3>Reflexion</h3><p>Ergebnis und Vorgehen prüfen · Erfolg benennen · nächsten Schritt ableiten.</p></div>
+        <div class="cycle-box step plan"><h3>Planung</h3><p>Ziel klären · Energie einschätzen · Ablenker erkennen · ersten Schritt bestimmen.</p></div>
+        <div class="cycle-box step do"><h3>Durchführung</h3><p>Strategie wählen · Arbeit beobachten · Lösungsleiter nutzen · bei Bedarf nachsteuern.</p></div>
+        <div class="cycle-box step ref"><h3>Reflexion</h3><p>Ergebnis und Vorgehen prüfen · Erfolg benennen · nächsten Schritt ableiten.</p></div>
       </div>
-      <div class="buddy-claim">Der Lernbuddy ist nicht SRL. Er ist zunächst ein äußeres Gerüst, das langfristig innere Routinen unterstützen soll.</div>
-      <div class="statement"><b>Jahrgang 5:</b> Die Bereiche werden bewusst nacheinander eingeführt. Mehr Selbstregulation kann am Anfang mehr äußere Struktur bedeuten.</div>
+      <div class="buddy-claim step">Der Lernbuddy ist nicht SRL. Er ist zunächst ein äußeres Gerüst, das langfristig innere Routinen unterstützen soll.</div>
+      <div class="statement step"><b>Jahrgang 5:</b> Die Bereiche werden bewusst nacheinander eingeführt. Mehr Selbstregulation kann am Anfang mehr äußere Struktur bedeuten.</div>
     </div>
   </div>
 </section>
@@ -593,9 +579,9 @@ b,strong{font-weight:700}
     <div class="kicker">Unterricht als Entwicklungsraum</div>
     <h2>Wir testen Bausteine – <span class="em-red">kein fertiges Modell.</span></h2>
     <div class="practice-grid">
-      <article class="practice-card"><div class="big">Deutsch</div><ul><li>Lernwege in Etappen</li><li>Kompetenzraster</li><li>Gelingensnachweise</li><li>gezielte Übungs- und Rückmeldephasen</li></ul></article>
-      <article class="practice-card"><div class="big">Technik</div><ul><li>digitale Lernnavigatoren</li><li>Projekt- und Werkstattarbeit</li><li>Strategie- und Reflexionsphasen</li><li>Verknüpfung analoger Materialien mit digitalen Hilfen</li></ul></article>
-      <article class="practice-card"><div class="big">Jahrgang 5</div><ul><li>Lernbuddy und Lösungsleiter</li><li>Strategiekarten</li><li>Lernjournal</li><li>Mentorengespräche</li><li>gemeinsame Sprache über Lernen</li></ul></article>
+      <article class="practice-card step"><div class="big">Deutsch</div><ul><li>Lernwege in Etappen</li><li>Kompetenzraster</li><li>Gelingensnachweise</li><li>gezielte Übungs- und Rückmeldephasen</li></ul></article>
+      <article class="practice-card step"><div class="big">Technik</div><ul><li>digitale Lernnavigatoren</li><li>Projekt- und Werkstattarbeit</li><li>Strategie- und Reflexionsphasen</li><li>Verknüpfung analoger Materialien mit digitalen Hilfen</li></ul></article>
+      <article class="practice-card step"><div class="big">Jahrgang 5</div><ul><li>Lernbuddy und Lösungsleiter</li><li>Strategiekarten</li><li>Lernjournal</li><li>Mentorengespräche</li><li>gemeinsame Sprache über Lernen</li></ul></article>
     </div>
   </div>
 </section>
@@ -605,14 +591,14 @@ b,strong{font-weight:700}
   <div class="slide-inner ai-layout">
     <div>
       <div class="kicker">Meine zusätzliche Perspektive als Digitalisierungsbeauftragter</div>
-      <div class="ai-claim">KI macht kein SRL.<br><span>Aber sie verändert, was skalierbar wird.</span></div>
+      <div class="ai-claim">KI macht kein SRL.<br><span class="step">Aber sie verändert, was skalierbar wird.</span></div>
     </div>
     <div class="ai-flow">
-      <div class="ai-step"><i>1</i><div><b>Materialvarianten</b><br>Differenzierung, sprachliche Zugänge und Übungsangebote schneller erstellen.</div></div>
-      <div class="ai-step"><i>2</i><div><b>Lernwege</b><br>Navigatoren und Materialien flexibler aktuell halten und miteinander verbinden.</div></div>
-      <div class="ai-step"><i>3</i><div><b>Feedback</b><br>Vorbereitung von Rückmeldungen und Übungsformaten unterstützen.</div></div>
-      <div class="ai-step"><i>4</i><div><b>Lehrkräftezeit</b><br>Weniger reine Produktionsarbeit – mehr Zeit für Lernbegleitung als Zielperspektive.</div></div>
-      <div class="statement"><b>Arbeitshypothese:</b> SRL wird in der Breite realistischer, wenn die Material- und Organisationslast nicht vollständig manuell bei einzelnen Lehrkräften liegt.</div>
+      <div class="ai-step step"><i>1</i><div><b>Materialvarianten</b><br>Differenzierung, sprachliche Zugänge und Übungsangebote schneller erstellen.</div></div>
+      <div class="ai-step step"><i>2</i><div><b>Lernwege</b><br>Navigatoren und Materialien flexibler aktuell halten und miteinander verbinden.</div></div>
+      <div class="ai-step step"><i>3</i><div><b>Feedback</b><br>Vorbereitung von Rückmeldungen und Übungsformaten unterstützen.</div></div>
+      <div class="ai-step step"><i>4</i><div><b>Lehrkräftezeit</b><br>Weniger reine Produktionsarbeit – mehr Zeit für Lernbegleitung als Zielperspektive.</div></div>
+      <div class="statement step"><b>Arbeitshypothese:</b> SRL wird in der Breite realistischer, wenn die Material- und Organisationslast nicht vollständig manuell bei einzelnen Lehrkräften liegt.</div>
     </div>
   </div>
 </section>
@@ -623,14 +609,14 @@ b,strong{font-weight:700}
     <div class="kicker">Was wir lernen, wenn es nicht glatt läuft</div>
     <h2>Die interessanten Stellen sind die <span class="em-red">Reibungen.</span></h2>
     <div class="friction-grid">
-      <div class="friction-item">Planungen werden ausgefüllt, aber bleiben unrealistisch.</div>
-      <div class="friction-item">Reflexion wird zur Pflichtformel statt zu echtem Nachdenken.</div>
-      <div class="friction-item">Zu viele Wahlmöglichkeiten können überfordern.</div>
-      <div class="friction-item">Digitale Lernwege können selbst neue Orientierungsprobleme erzeugen.</div>
-      <div class="friction-item">Materialfülle kann Selbstständigkeit simulieren statt Regulation fördern.</div>
-      <div class="friction-item">Im Kollegium existieren unterschiedliche Vorstellungen davon, was SRL eigentlich meint.</div>
+      <div class="friction-item step">Planungen werden ausgefüllt, aber bleiben unrealistisch.</div>
+      <div class="friction-item step">Reflexion wird zur Pflichtformel statt zu echtem Nachdenken.</div>
+      <div class="friction-item step">Zu viele Wahlmöglichkeiten können überfordern.</div>
+      <div class="friction-item step">Digitale Lernwege können selbst neue Orientierungsprobleme erzeugen.</div>
+      <div class="friction-item step">Materialfülle kann Selbstständigkeit simulieren statt Regulation fördern.</div>
+      <div class="friction-item step">Im Kollegium existieren unterschiedliche Vorstellungen davon, was SRL eigentlich meint.</div>
     </div>
-    <div class="feedback-strip">
+    <div class="feedback-strip step">
       <div class="feedback-box"><b>Schülerperspektive</b><br>Was hilft wirklich beim Starten, Dranbleiben, Entscheiden und Reflektieren? Wo entsteht Freiheit – und wo Unsicherheit?</div>
       <div class="feedback-box"><b>Kollegiumsperspektive</b><br>Welche Routinen entlasten? Wo entsteht zunächst Mehrarbeit? Welche gemeinsame Sprache trägt tatsächlich?</div>
     </div>
@@ -643,14 +629,14 @@ b,strong{font-weight:700}
     <div class="kicker">Vom einzelnen Werkzeug zur Lernkultur</div>
     <h2>SRL ist auch eine Frage der <span class="em-red">Schulentwicklung.</span></h2>
     <div class="school-grid">
-      <div class="school-item"><b>Gemeinsames Verständnis</b><br>Was meinen wir, wenn wir SRL sagen?</div>
-      <div class="school-item"><b>Gemeinsame Sprache</b><br>Planung, Durchführung und Reflexion wiedererkennbar machen.</div>
-      <div class="school-item"><b>Wenige Routinen</b><br>Nicht jedes Fach braucht ein eigenes System.</div>
-      <div class="school-item"><b>Fachliche Freiheit</b><br>Gemeinsame Prinzipien ohne Einheitsunterricht.</div>
-      <div class="school-item"><b>Zeit & Begleitung</b><br>Erproben, austauschen, nachsteuern und Lernende individuell begleiten.</div>
-      <div class="school-item"><b>Progression</b><br>Selbstregulation über Jahrgänge hinweg schrittweise aufbauen.</div>
+      <div class="school-item step"><b>Gemeinsames Verständnis</b><br>Was meinen wir, wenn wir SRL sagen?</div>
+      <div class="school-item step"><b>Gemeinsame Sprache</b><br>Planung, Durchführung und Reflexion wiedererkennbar machen.</div>
+      <div class="school-item step"><b>Wenige Routinen</b><br>Nicht jedes Fach braucht ein eigenes System.</div>
+      <div class="school-item step"><b>Fachliche Freiheit</b><br>Gemeinsame Prinzipien ohne Einheitsunterricht.</div>
+      <div class="school-item step"><b>Zeit & Begleitung</b><br>Erproben, austauschen, nachsteuern und Lernende individuell begleiten.</div>
+      <div class="school-item step"><b>Progression</b><br>Selbstregulation über Jahrgänge hinweg schrittweise aufbauen.</div>
     </div>
-    <div class="statement">Und genau hier wird aus einer scheinbar einfachen Idee ein ziemlich komplexes Geflecht.</div>
+    <div class="statement step">Und genau hier wird aus einer scheinbar einfachen Idee ein ziemlich komplexes Geflecht.</div>
   </div>
 </section>
 
@@ -669,7 +655,7 @@ b,strong{font-weight:700}
       <svg id="network" aria-label="Netzwerk der Themen und Baustellen rund um selbstreguliertes Lernen"></svg>
       <aside class="net-detail" id="netDetail"><button class="net-close" id="netClose" aria-label="Schließen">✕</button><div id="netDetailContent"></div></aside>
     </div>
-    <div class="net-pointe"><b>Die Pointe:</b> Wir müssen nicht alles gleichzeitig lösen. Aber wir sollten sehen, wie die Baustellen miteinander verbunden sind.</div>
+    <div class="net-pointe step"><b>Die Pointe:</b> Wir müssen nicht alles gleichzeitig lösen. Aber wir sollten sehen, wie die Baustellen miteinander verbunden sind.</div>
   </div>
 </section>
 
