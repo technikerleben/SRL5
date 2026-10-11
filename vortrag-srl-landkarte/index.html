@@ -131,10 +131,7 @@ b,strong{font-weight:700}
 /* Turbine */
 .turbine-layout{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:2.2rem;align-items:center}
 .turbine-frame{position:relative;width:min(100%,66dvh);aspect-ratio:1;margin:auto}
-.turbine-frame img{position:absolute;inset:0;width:100%;height:100%;border-radius:.8rem}
-.turbine-frame svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.turbine-veil{fill:rgba(255,255,255,.82)}
-.turbine-ring{fill:none;stroke:var(--red);stroke-width:2.2}
+.turbine-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .stack{display:grid;gap:.55rem;margin-top:.6rem}
 .level{display:grid;grid-template-columns:1.7rem 1fr;gap:.7rem;border-radius:.8rem;padding:.6rem .8rem;font-size:.98rem;line-height:1.35}
 .level-num{width:1.6rem;height:1.6rem;border-radius:.45rem;background:var(--navy);color:white;display:grid;place-items:center;font-weight:700;font-size:.85rem}
@@ -299,7 +296,7 @@ b,strong{font-weight:700}
 <!-- 2 -->
 <section class="slide" data-title="Mythos 1">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth1.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 1"></div>
+    <div class="source-art"><img src="assets/myth1.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 1"></div>
     <div>
       <div class="myth-head"><span class="myth-number">01</span><span class="kicker">Mythos 1</span></div>
       <div class="myth-title">„SRL ist <span class="em-red">Freiarbeit</span>.“</div>
@@ -311,7 +308,7 @@ b,strong{font-weight:700}
 <!-- 3 -->
 <section class="slide" data-title="Mythos 2">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth2.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 2"></div>
+    <div class="source-art"><img src="assets/myth2.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 2"></div>
     <div>
       <div class="myth-head"><span class="myth-number">02</span><span class="kicker">Mythos 2</span></div>
       <div class="myth-title">„Die Lehrkraft <span class="em-red">zieht sich zurück</span>.“</div>
@@ -323,7 +320,7 @@ b,strong{font-weight:700}
 <!-- 4 -->
 <section class="slide" data-title="Mythos 3">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth3.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 3"></div>
+    <div class="source-art"><img src="assets/myth3.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 3"></div>
     <div>
       <div class="myth-head"><span class="myth-number">03</span><span class="kicker">Mythos 3</span></div>
       <div class="myth-title">„Das können nur <span class="em-red">starke Lernende</span>.“</div>
@@ -335,7 +332,7 @@ b,strong{font-weight:700}
 <!-- 5 -->
 <section class="slide" data-title="Mythos 4">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth4.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 4"></div>
+    <div class="source-art"><img src="assets/myth4.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 4"></div>
     <div>
       <div class="myth-head"><span class="myth-number">04</span><span class="kicker">Mythos 4</span></div>
       <div class="myth-title">„Immer <span class="em-red">Projektarbeit</span> und offene Methoden.“</div>
@@ -347,7 +344,7 @@ b,strong{font-weight:700}
 <!-- 6 -->
 <section class="slide" data-title="Mythos 5">
   <div class="slide-inner myth-layout">
-    <div class="source-art"><img src="assets/myth5.svg" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 5"></div>
+    <div class="source-art"><img src="assets/myth5.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 5"></div>
     <div>
       <div class="myth-head"><span class="myth-number">05</span><span class="kicker">Mythos 5</span></div>
       <div class="myth-title">„SRL ist ein <span class="em-red">Persönlichkeitsmerkmal</span>.“</div>
@@ -392,7 +389,7 @@ b,strong{font-weight:700}
 <!-- 9 -->
 <section class="slide" data-title="SRL-Turbine">
   <div class="slide-inner turbine-layout">
-    <div class="source-art"><div class="turbine-frame" data-focus="none"><img src="assets/turbine.svg" alt="Originalgrafik der SRL-Turbine aus dem früheren Vortrag"></div></div>
+    <div class="source-art"><div class="turbine-frame"><img src="assets/turbine.png" alt="Originalgrafik der SRL-Turbine aus dem früheren Vortrag"></div></div>
     <div>
       <div class="kicker">Karlen et al. · Universität Zürich · 2025</div>
       <h2>Die SRL-<span class="em-red">Turbine</span></h2>
@@ -409,7 +406,7 @@ b,strong{font-weight:700}
 <!-- 10 -->
 <section class="slide" data-title="Turbine · WHY">
   <div class="slide-inner turbine-layout">
-    <div class="source-art"><div class="turbine-frame" data-focus="needs"><img src="assets/turbine.svg" alt="SRL-Turbine – Fokus Grundbedürfnisse"></div></div>
+    <div class="source-art"><div class="turbine-frame"><img src="assets/turbine-needs.png" alt="SRL-Turbine – Fokus Grundbedürfnisse"></div></div>
     <div>
       <div class="kicker">Ebene 1 · Unser WHY?</div>
       <h2>Warum sollte ich mein Lernen <span class="em-red">regulieren wollen?</span></h2>
@@ -426,7 +423,7 @@ b,strong{font-weight:700}
 <!-- 11 -->
 <section class="slide" data-title="Turbine · Lernprozess">
   <div class="slide-inner turbine-layout">
-    <div class="source-art"><div class="turbine-frame" data-focus="process"><img src="assets/turbine.svg" alt="SRL-Turbine – Fokus Lernprozess"></div></div>
+    <div class="source-art"><div class="turbine-frame"><img src="assets/turbine-process.png" alt="SRL-Turbine – Fokus Lernprozess"></div></div>
     <div>
       <div class="kicker">Ebene 2 · Der wiederkehrende Zyklus</div>
       <h2>Planung → Durchführung → <span class="em-red">Reflexion</span></h2>
@@ -442,7 +439,7 @@ b,strong{font-weight:700}
 <!-- 12 -->
 <section class="slide" data-title="Turbine · Kompetenzen">
   <div class="slide-inner turbine-layout">
-    <div class="source-art"><div class="turbine-frame" data-focus="areas"><img src="assets/turbine.svg" alt="SRL-Turbine – Fokus Kompetenzbereiche"></div></div>
+    <div class="source-art"><div class="turbine-frame"><img src="assets/turbine-areas.png" alt="SRL-Turbine – Fokus Kompetenzbereiche"></div></div>
     <div>
       <div class="kicker">Ebene 3 · Was Lernende dafür brauchen</div>
       <h2>SRL ist <span class="em-red">mehrdimensional.</span></h2>
@@ -658,19 +655,7 @@ document.addEventListener('keydown',e=>{
 });
 showSlide(0);
 
-/* Turbine: besprochene Ebene hervorheben, Rest abblenden.
-   Maße in Pixeln der eingebetteten 300×300-Grafik (Mittelpunkt ≈ 148/149). */
-const TURBINE={cx:148,cy:149,needs:[0,67],process:[64,96],areas:[94,146]};
-document.querySelectorAll('.turbine-frame').forEach(frame=>{
-  const f=frame.dataset.focus; if(!TURBINE[f]) return;
-  const [r0,r1]=TURBINE[f],{cx,cy}=TURBINE;
-  const circ=r=>`M${cx-r},${cy}a${r},${r} 0 1,0 ${2*r},0a${r},${r} 0 1,0 ${-2*r},0Z`;
-  const hole=circ(r1)+(r0>0?circ(r0):'');
-  const ring=`<circle class="turbine-ring" cx="${cx}" cy="${cy}" r="${r1}"/>`+(r0>0?`<circle class="turbine-ring" cx="${cx}" cy="${cy}" r="${r0}"/>`:'');
-  frame.insertAdjacentHTML('beforeend',
-    `<svg viewBox="0 0 300 300" aria-hidden="true"><path class="turbine-veil" fill-rule="evenodd" d="M0,0H300V300H0Z${hole}"/>${ring}</svg>`);
-});
-
+/* Turbine: Folien 10–12 nutzen vorberechnete Fokus-Bilder (assets/turbine-*.png) */
 /* Schlussbild: Landkarte */
 const NET_INFO={
   srl:['Selbstreguliertes Lernen','Bildungsziel: Lernen zunehmend planen, steuern, beobachten und reflektieren.'],
