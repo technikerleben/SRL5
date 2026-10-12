@@ -235,6 +235,34 @@ b,strong{font-weight:700}
 #resetNetwork{font-size:.8rem;padding:.4rem .8rem;white-space:nowrap}
 
 
+/* Titelseite */
+.slide.cover{background:radial-gradient(circle at 78% 22%,#24527A 0,var(--navy) 55%,#0F2A44 100%);color:white}
+.cover-inner{margin:auto;width:min(64rem,100%);padding:0 1rem}
+.cover-mark{display:inline-grid;place-items:center;width:3.4rem;height:3.4rem;border-radius:1rem;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);font:400 1.15rem Anton,sans-serif;letter-spacing:.05em;margin-bottom:1.2rem}
+.cover-title{font:400 5.6rem/1 Anton,sans-serif;margin:0;color:white;letter-spacing:-.005em}
+.cover-title span{color:#FFB98A}
+.cover-sub{font-size:1.75rem;font-weight:500;margin:.8rem 0 0;color:#DCE7F1}
+.cover-line{width:6rem;height:.35rem;border-radius:1rem;background:linear-gradient(90deg,var(--red),#FFB98A);margin:2.2rem 0 1.2rem}
+.cover-author{font-size:1.3rem;font-weight:700;margin:0}
+.cover-meta{font-size:1rem;color:#AFC3D6;margin:.2rem 0 0}
+
+/* Folienübersicht zum direkten Anspringen */
+.jump{position:fixed;inset:0;z-index:50;display:none;background:rgba(15,42,68,.72);backdrop-filter:blur(4px);padding:3vh 3vw;font-size:16px}
+.jump.open{display:grid;place-items:center}
+.jump-panel{background:var(--paper);border-radius:18px;width:min(1100px,100%);max-height:94vh;display:grid;grid-template-rows:auto 1fr;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.jump-head{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.jump-head b{font:400 22px Anton,sans-serif;color:var(--navy);letter-spacing:.02em}
+.jump-head span{color:var(--muted);font-size:14px}
+.jump-head button{margin-left:auto}
+.jump-num{width:80px;padding:8px 10px;border:2px solid var(--line);border-radius:10px;font:600 16px Jost,sans-serif;color:var(--navy)}
+.jump-grid{list-style:none;margin:0;padding:14px 18px 18px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.jump-grid button{width:100%;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;text-align:left;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:white;color:var(--ink);cursor:pointer;font-weight:600;font-size:15px}
+.jump-grid button:hover,.jump-grid button:focus-visible{border-color:var(--blue);background:#EFF4F9}
+.jump-grid button.current{border-color:var(--red);background:#FBEFEF}
+.jump-grid .n{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--navy);color:white;font-weight:700;font-size:13px}
+.jump-grid .sec{grid-column:1/-1;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--red);margin:10px 2px 0}
+.counter{cursor:pointer}
+
 /* Einstieg: nur das Bild, möglichst groß */
 .slide.story{padding:1.2rem;background:white}
 .story-art{position:relative;width:100%;height:100%;margin:auto}
@@ -284,10 +312,12 @@ b,strong{font-weight:700}
   .arrow{transform:rotate(90deg)}
   .slide{padding:1rem}
   .brand-copy span,.hint,.progress-wrap{display:none}
+  .cover-title{font-size:3.4rem}
   .network-head{flex-direction:column;align-items:start}
 }
 @media print{
   html{font-size:16px}
+  .jump{display:none!important}
   .myth-cover{display:none}
   .step.hidden{opacity:1;transform:none}
   html,body{overflow:visible;height:auto}
@@ -315,8 +345,20 @@ b,strong{font-weight:700}
 
 <main class="stage" id="stage">
 
+<!-- 00 · Titelseite -->
+<section class="slide cover active" data-title="Titel" data-section="Einstieg">
+  <div class="cover-inner">
+    <div class="cover-mark">SRL</div>
+    <h1 class="cover-title">SRL ist<br><span>keine Methode!</span></h1>
+    <p class="cover-sub">Was selbstreguliertes Lernen (nicht) ist.</p>
+    <div class="cover-line"></div>
+    <p class="cover-author">Christoph Wegemann</p>
+    <p class="cover-meta">Deutsch &amp; Technik · Gesamtschule NRW</p>
+  </div>
+</section>
+
 <!-- 0 · Einstieg: nur das Bild, die Geschichte wird erzählt -->
-<section class="slide story active" data-title="Einstieg">
+<section class="slide story" data-title="Einstieg · Bild">
   <div class="story-art" id="storyArt">
     <img src="assets/einstieg.webp" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt"
          onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='assets/einstieg.png'}else{this.parentElement.classList.add('missing')}">
@@ -325,7 +367,7 @@ b,strong{font-weight:700}
 </section>
 
 <!-- 1 -->
-<section class="slide" data-title="Start">
+<section class="slide" data-title="Einordnung · Kurz zu mir">
   <div class="slide-inner two-col">
     <div>
       <div class="kicker">Einordnung · Perspektive eines Praktikers</div>
@@ -366,7 +408,7 @@ b,strong{font-weight:700}
 </section>
 
 <!-- 2 -->
-<section class="slide" data-title="Mythos 1">
+<section class="slide" data-title="Mythos 1" data-section="Fünf Mythen">
   <div class="slide-inner myth-layout">
     <div class="source-art"><div class="myth-art"><img src="assets/myth1.webp" alt="Originalgrafik aus dem früheren Vortrag zu Mythos 1"><div class="myth-cover" style="left:49.5%" aria-hidden="true"></div></div></div>
     <div>
@@ -426,7 +468,7 @@ b,strong{font-weight:700}
 </section>
 
 <!-- 7 -->
-<section class="slide" data-title="SRL ist …">
+<section class="slide" data-title="SRL ist …" data-section="Was SRL ist">
   <div class="slide-inner">
     <div class="kicker">Nach fünf Mythen bleibt der Kern</div>
     <h2>SRL <span class="em-red">ist …</span></h2>
@@ -459,7 +501,7 @@ b,strong{font-weight:700}
 </section>
 
 <!-- 9 -->
-<section class="slide" data-title="SRL-Turbine">
+<section class="slide" data-title="SRL-Turbine" data-section="Die SRL-Turbine">
   <div class="slide-inner turbine-layout">
     <div class="source-art"><div class="turbine-frame"><img src="assets/turbine.png" alt="Originalgrafik der SRL-Turbine aus dem früheren Vortrag"></div><div class="source-note">Abbildung: SRL-Turbine, Karlen et al., Universität Zürich · Quelle: <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html" target="_blank" rel="noopener">selbstreguliertes-lernen.uzh.ch – Was ist selbstreguliertes Lernen?</a></div></div>
     <div>
@@ -528,7 +570,7 @@ b,strong{font-weight:700}
 </section>
 
 <!-- 13 -->
-<section class="slide" data-title="Wissenschaftliche Anker">
+<section class="slide" data-title="Wissenschaftliche Anker" data-section="Forschung & Praxis">
   <div class="slide-inner">
     <div class="kicker">Unsere wissenschaftlichen Orientierungspunkte</div>
     <h2>Drei Linien, die unseren Prozess <span class="em-red">prägen.</span></h2>
@@ -610,7 +652,7 @@ b,strong{font-weight:700}
 </section>
 
 <!-- 18 -->
-<section class="slide" data-title="Reibung & Feedback">
+<section class="slide" data-title="Reibung & Feedback" data-section="Ausblick">
   <div class="slide-inner">
     <div class="kicker">Was wir lernen, wenn es nicht glatt läuft</div>
     <h2>Die interessanten Stellen sind die <span class="em-red">Reibungen.</span></h2>
@@ -668,15 +710,26 @@ b,strong{font-weight:700}
 </main>
 
 <footer class="navbar">
-  <div class="hint">← / → oder Bild↑ / Bild↓ · Leertaste = weiter · P = Präsentationsmodus · F = Vollbild</div>
+  <div class="hint">← / → oder Bild↑ / Bild↓ · Leertaste = weiter · G = Folienübersicht · Zahl + Enter = Folie · P = Präsentationsmodus · F = Vollbild</div>
   <div class="nav-buttons">
     <button class="navbtn present-btn" id="presentBtn" title="Vollbild ohne Leisten (Taste F)">⛶ Präsentieren</button>
+    <button class="navbtn" id="jumpBtn" title="Folienübersicht (Taste G)">☰ Folien</button>
     <button class="navbtn" id="prev">← Zurück</button>
     <button class="navbtn primary" id="next">Weiter →</button>
   </div>
 </footer>
 </div>
 <div id="mini-progress"></div>
+<div class="jump" id="jump" role="dialog" aria-modal="true" aria-label="Folienübersicht">
+  <div class="jump-panel">
+    <div class="jump-head">
+      <b>Folien</b><span>Klicken oder Nummer eingeben + Enter · Esc schließt</span>
+      <input class="jump-num" id="jumpNum" inputmode="numeric" placeholder="Nr." aria-label="Foliennummer">
+      <button class="navbtn" id="jumpClose">✕ Schließen</button>
+    </div>
+    <ol class="jump-grid" id="jumpGrid"></ol>
+  </div>
+</div>
 
 <script>
 const slides=[...document.querySelectorAll('.slide')];
@@ -698,6 +751,14 @@ function showSlide(i){
   next.disabled=index===slides.length-1&&!slides[index].querySelector('.step.hidden');
   next.textContent=index===slides.length-2?'Zum Netzwerk →':'Weiter →';
   if(index===slides.length-1){ setTimeout(initNetwork,40); }
+  try{ history.replaceState(null,'','#'+(index+1)); }catch(_){}
+}
+/* Direkt anspringen: rückwärts → Folie vollständig, vorwärts → Folie verdeckt (wie beim Durchklicken) */
+function goTo(i){
+  i=Math.max(0,Math.min(slides.length-1,i));
+  if(i===index) return;
+  setSteps(slides[i], i>index);
+  showSlide(i);
 }
 /* Aufdecken: Hat die aktuelle Folie noch verdeckte .step-Elemente, deckt „Weiter“ zuerst diese auf.
    Vorwärts auf eine Folie: Schritte verdeckt. Rückwärts: alles sichtbar. */
@@ -731,7 +792,43 @@ document.addEventListener('mousemove',()=>{
   idleTimer=setTimeout(()=>document.body.classList.add('idle'),2000);
 });
 
+/* Folienübersicht */
+const jump=document.getElementById('jump'),jumpGrid=document.getElementById('jumpGrid'),jumpNum=document.getElementById('jumpNum');
+function buildJump(){
+  jumpGrid.innerHTML='';
+  slides.forEach((s,i)=>{
+    if(s.dataset.section){ const h=document.createElement('li'); h.className='sec'; h.textContent=s.dataset.section; jumpGrid.appendChild(h); }
+    const li=document.createElement('li'),b=document.createElement('button');
+    b.innerHTML='<span class="n">'+(i+1)+'</span><span></span>';
+    b.lastChild.textContent=s.dataset.title||('Folie '+(i+1));
+    if(i===index) b.className='current';
+    b.addEventListener('click',()=>{ closeJump(); goTo(i); });
+    li.appendChild(b); jumpGrid.appendChild(li);
+  });
+}
+function openJump(){ buildJump(); jump.classList.add('open'); jumpNum.value=''; jumpNum.focus(); }
+function closeJump(){ jump.classList.remove('open'); jumpNum.blur(); }
+document.getElementById('jumpBtn').addEventListener('click',openJump);
+document.getElementById('jumpClose').addEventListener('click',closeJump);
+counter.addEventListener('click',openJump);
+jump.addEventListener('click',e=>{ if(e.target===jump) closeJump(); });
+jumpNum.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ const n=parseInt(jumpNum.value,10); if(n>=1&&n<=slides.length){ closeJump(); goTo(n-1); } e.preventDefault(); }
+  if(e.key==='Escape'){ closeJump(); e.preventDefault(); }
+  e.stopPropagation();
+});
+
+/* Zahl tippen + Enter springt direkt (ohne Übersicht zu öffnen) */
+let typed='',typedTimer;
 document.addEventListener('keydown',e=>{
+  if(jump.classList.contains('open')){ if(e.key==='Escape'){closeJump();e.preventDefault();} return; }
+  if(/^[0-9]$/.test(e.key)){ typed+=e.key; clearTimeout(typedTimer); typedTimer=setTimeout(()=>typed='',2000); return; }
+  if(e.key==='Enter'&&typed){ const n=parseInt(typed,10); typed=''; if(n>=1&&n<=slides.length) goTo(n-1); e.preventDefault(); return; }
+  if(e.key==='g'||e.key==='G'){ e.preventDefault(); openJump(); }
+});
+
+document.addEventListener('keydown',e=>{
+  if(jump.classList.contains('open'))return;
   if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
   if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();forward();}
   if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();backward();}
@@ -740,8 +837,13 @@ document.addEventListener('keydown',e=>{
   if(e.key==='p'||e.key==='P'){togglePresent();}
   if(e.key==='f'||e.key==='F'){ document.fullscreenElement ? document.exitFullscreen() : enterFullscreen(); }
 });
-setSteps(slides[0],true);
-showSlide(0);
+/* Start: Foliennummer aus der Adresse (#5) übernehmen, z. B. nach einem Neuladen */
+(function(){
+  const n=parseInt((location.hash||'').slice(1),10);
+  const start=(n>=1&&n<=slides.length)?n-1:0;
+  setSteps(slides[start],true);
+  showSlide(start);
+})();
 
 /* Turbine: Folien 10–12 nutzen vorberechnete Fokus-Bilder (assets/turbine-*.png) */
 /* Schlussbild: Landkarte */
