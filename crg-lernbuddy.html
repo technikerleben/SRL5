@@ -318,7 +318,7 @@ const STEPS = [
         <ul><li>Was will ich heute schaffen?</li><li>Wie viel Kraft habe ich gerade?</li><li>Was könnte mich stören?</li></ul>` },
   { ph: 1, t: "Mein Ziel", z: lb => planCells(lb)[0],
     b: `<p>Schreibe auf, was du heute <strong>schaffen willst</strong>.</p>
-        <p class="tip">Zum Beispiel: „Ich mache Übung 3 fertig.“<br>Ein gutes Ziel ist so groß, dass du es heute wirklich schaffen kannst.</p>` },
+        <p class="tip">Zum Beispiel: „Heute möchte ich erklären können, wie man ein Koordinatensystem zeichnet.“<br>Ein gutes Ziel ist so groß, dass du es heute wirklich schaffen kannst.</p>` },
   { ph: 1, t: "Meine Energie", z: lb => planCells(lb)[1],
     b: `<p>Wie viel Kraft hast du gerade? <strong>Male die Batterie aus.</strong></p>
         <ul><li>1 Feld: Ich bin ziemlich müde.</li><li>4 Felder: Ich bin voller Energie.</li></ul>
@@ -347,7 +347,8 @@ const STEPS = [
         <p>Das hilft dir beim nächsten Mal, schneller weiterzukommen.</p>` },
   { ph: 2, t: "Platz für die Strategie-Karte", z: lb => q(lb, ".edge"),
     b: `<p>Am Rand legst du deine <strong>Strategie-Karte</strong> an.</p>
-        <p>So siehst du beim Arbeiten immer, wie die Strategie funktioniert.</p>` },
+        <p>So siehst du beim Arbeiten immer, wie die Strategie funktioniert.</p>
+        <p class="tip">Die Strategie-Karten lernen wir etwas später kennen.</p>` },
 
   { ph: 3, t: "Reflexion: nach dem Lernen", z: lb => lb.querySelectorAll(".band")[1],
     b: `<p>Wenn du fertig bist, schaust du zurück: <strong>Wie lief es?</strong></p>
@@ -358,7 +359,7 @@ const STEPS = [
         <p>Sei ehrlich – nur so kannst du besser werden.</p>` },
   { ph: 3, t: "Darauf bin ich stolz", z: lb => refCells(lb)[1],
     b: `<p>Schreibe auf, was dir <strong>gut gelungen</strong> ist.</p>
-        <p class="tip">Das darf auch etwas Kleines sein! Zum Beispiel: „Ich habe mich nicht ablenken lassen.“</p>` },
+        <p class="tip">Zum Beispiel: „Ich habe mich nicht ablenken lassen.“</p>` },
   { ph: 3, t: "Nächstes Mal", z: lb => refCells(lb)[2],
     b: `<p>Was machst du beim nächsten Mal <strong>genauso</strong>? Was machst du <strong>anders</strong>?</p>
         <p>Das nimmst du mit in deine nächste Planung. So wirst du jedes Mal ein bisschen besser.</p>` },
