@@ -74,7 +74,12 @@ const w1 = await boot('?ui=aus');
   check('Themen mit Abonnenten', (w1.AIU_STORE?.topicsInUse() || []).length >= 10, (w1.AIU_STORE?.topicsInUse() || []).join(','));
   check('Kopfzeile gefüllt', text('#headerWeek').startsWith('Woche 1'), text('#headerWeek'));
   check('Kapitel gesetzt', text('#chapterTitle').length > 5);
-  check('Wochenpunkte gezeichnet', w1.document.querySelectorAll('.week-dot').length === 6);
+  check('Wochenpunkte gezeichnet', w1.document.querySelectorAll('.week-dot').length === 8, String(w1.document.querySelectorAll('.week-dot').length));
+  check('Reise hat acht Wochen', G('CFG').weeks.length === 8, String(G('CFG').weeks.length));
+  check('Stapellauf öffnet alle Bereiche', ['werft','kartenraum','logbuch','antrieb','wissen','zusammenhalt','karte','rat'].every(k => G('CFG').weeks[0].unlocks.includes(k)));
+  check('Phasenanzeige Stapellauf', text('#phaseLabel') === 'Stapellauf', text('#phaseLabel'));
+  check('Wochenfokus in Woche 2 bis 4', ['antrieb','wissen','zusammenhalt'].every((k, i) => G('CFG').weeks[i + 1].focusResource === k));
+  check('Routen schließen lückenlos an', G('CFG').weeks.slice(1).every((w, i) => !w.ort.route.length || w.ort.route[0] === G('CFG').weeks[i].ort.id));
   check('Missionen gerendert', w1.document.querySelectorAll('.mission-card').length >= 3);
   check('Ressourcenkarten gerendert', w1.document.querySelectorAll('.resource').length === 3);
   check('Logbuch gefüllt', w1.document.querySelectorAll('.log-entry').length >= 1);
@@ -95,8 +100,8 @@ const w1 = await boot('?ui=aus');
   check('Alle Routenfelder existieren auf der Startkarte', G('CFG').weeks.flatMap(w => w.ort.route || []).every(id => G('CFG').map.data.tiles.some(f => f.id === id)));
   check('Startkarte eingebunden', G('CFG').map.image === 'startkarte.svg' && G('CFG').map.source === 'startkarte.json');
   check('Routenkarte nutzt dieselbe Startkarte', G('CFG').map.routeImage === 'startkarte.svg');
-  check('Feste Route beginnt an der Hafenausfahrt', G('CFG').weeks[5].ort.route.join('|') === 'home|harbor-exit|first-sea');
-  check('Keine scheinbare freie Zielwahl vor der Ausfahrt', !G('CFG').weeks[4].council.choices.some(x => /Leuchtturm|Grüne Insel|Nebelbucht/.test(x)));
+  check('Feste Route beginnt an der Hafenausfahrt', G('CFG').weeks[1].ort.route.join('|') === 'home|harbor-exit|first-sea');
+  check('Keine scheinbare freie Zielwahl vor der Ausfahrt', !G('CFG').weeks[0].council.choices.some(x => /Leuchtturm|Grüne Insel|Nebelbucht/.test(x)));
   check('Alle Symbole im Sprite', w1.document.querySelectorAll('#icon-sprite symbol').length === 28, String(w1.document.querySelectorAll('#icon-sprite symbol').length));
 
   // Router und Sperren
@@ -105,7 +110,7 @@ const w1 = await boot('?ui=aus');
   check('Ansichtswechsel Aufträge', $('#view-missionen')?.classList.contains('active') && w1.location.hash === '#/missionen');
   w1.gotoView('karte');
   await wait(120);
-  check('Gesperrte Ansicht wird abgewiesen', w1.location.hash === '#/missionen');
+  check('Karte im Stapellauf erreichbar', w1.location.hash === '#/karte', w1.location.hash);
 
   // Store
   G('runtime.week = 6');
@@ -157,7 +162,7 @@ const w2 = await boot('?ui=all');
 
   check('SRL an: Abzeichen auf Missionen', w2.document.querySelectorAll('.mission-card .srl-badge').length >= 3, String(w2.document.querySelectorAll('.mission-card .srl-badge').length));
   check('SRL an: Phasenfilter sichtbar', !$('#srlTabs')?.classList.contains('hidden') && w2.document.querySelectorAll('#srlTabs .area-tab').length === 4);
-  check('SRL an: Schwerpunkt im Kopf', !$('#srlFocusChip')?.classList.contains('hidden') && ($('#srlFocusChip')?.textContent || '').includes('Durchführung'), $('#srlFocusChip')?.textContent);
+  check('SRL an: Schwerpunkt im Kopf', !$('#srlFocusChip')?.classList.contains('hidden') && ($('#srlFocusChip')?.textContent || '').includes('Ganzer Kreislauf'), $('#srlFocusChip')?.textContent);
   const labels = [...w2.document.querySelectorAll('#srlTabs .area-tab')].map(b => b.textContent);
   check('Wortlaut Planung/Durchführung/Reflexion', labels.join('|') === 'Alle Phasen|Planung|Durchführung|Reflexion', labels.join('|'));
 
@@ -167,7 +172,7 @@ const w2 = await boot('?ui=all');
   const gezeigt = [...w2.document.querySelectorAll('.mission-card .srl-badge')].map(b => b.textContent);
   check('Phasenfilter greift', gezeigt.length === 0 || gezeigt.every(t => t === 'Planung'), gezeigt.join(','));
 
-  G('runtime.week = 9');
+  G('runtime.week = 4');
   w2.AIU_STORE.emitSync(...w2.AIU_TOPICS);
   await wait(200);
   check('Reisekarte sichtbar', !$('#routeCard')?.classList.contains('hidden'));
@@ -175,10 +180,10 @@ const w2 = await boot('?ui=all');
   check('Route gezeichnet', !!$('#routeCard polyline'));
   check('Nebelmaske vorhanden', !!$('#routeCard mask#nebelMaske'));
   const loecher = w2.document.querySelectorAll('#routeCard mask circle').length;
-  check('Nur Start- und Routenfelder sind frei', loecher === 12, String(loecher));
-  check('Aktuelle Position benannt', ($('#routeCard')?.textContent || '').includes('Mittleres Fahrwasser'));
+  check('Nur Start- und Routenfelder sind frei', loecher === 11, String(loecher));
+  check('Aktuelle Position benannt', ($('#routeCard')?.textContent || '').includes('Bucht der Grünen Insel'));
   check('Fortschritt liegt auf der Startkarte', $('#routeCard image')?.getAttribute('href') === 'startkarte.svg');
-  check('Positionsanzeige folgt der aktuellen Woche', ($('#mapPosition')?.textContent || '').includes('Mittleres Fahrwasser'));
+  check('Positionsanzeige folgt der aktuellen Woche', ($('#mapPosition')?.textContent || '').includes('Bucht der Grünen Insel'));
 
   check('Schiffsthema hat Abonnenten', (w2.AIU_STORE?.topicsInUse() || []).includes('ship'));
   const hauptbereiche=[...w2.document.querySelectorAll('.ship-board [data-priority="primary"]')];
@@ -239,7 +244,7 @@ const w2 = await boot('?ui=all');
 
   // Meilenstein ausgeloest: erzaehlerische Einblendung
   const meldung = ($('#toast')?.textContent || '');
-  check('Meilenstein meldet sich', $('#toast')?.classList.contains('erzaehlung') && meldung.includes('Probefahrt'), meldung.slice(0, 60));
+  check('Meilenstein meldet sich', $('#toast')?.classList.contains('erzaehlung') && meldung.includes('Segel'), meldung.slice(0, 60));
   // jsdom kennt kein Layout: alle Elemente sind 0 breit. Der Schutz in
   // funken() greift dann zu Recht, deshalb hier eine Groesse vortaeuschen.
   const probeKarte = $('#resourceCards .resource');

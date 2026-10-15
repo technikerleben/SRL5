@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 /* Fester Spielstand, damit die Bilder vergleichbar bleiben.
-   Woche 6 ist gewaehlt, weil dort alle Bereiche freigeschaltet sind. */
+   Woche 2 ist gewaehlt: erste Etappe mit Route und Wochenfokus. */
 const RUNTIME = {
-  week: 6,
+  week: 2,
   resources: { antrieb: 12, wissen: 9, zusammenhalt: 15 },
   studentUntil: 0,
   councilOpen: false,
