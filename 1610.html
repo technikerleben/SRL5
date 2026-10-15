@@ -819,9 +819,9 @@ document.querySelectorAll(".yt .ytp").forEach(b=>b.addEventListener("click",e=>{
 
 /* Glücksrad */
 (function(){
-const DEF=["Gordischer Knoten","Zip Zap Boing","Obstsalat","Aufstellen ohne Worte","Pantomime-Kette","Zusammen bis 20 zählen","Ich packe meinen Koffer","Wer fehlt?"];
+const DEF=["Gordischer Knoten","Obstsalat","Aufstellen ohne Worte","Pantomime-Kette","Zusammen bis 20 zählen","Ich packe meinen Koffer"];
 const COL=["#a9dcc9","#d9ebfa","#fde3c8","#cfe9f0","#e4f5ee","#ffe7a8","#c8dcf4","#f9d2b4"];
-const WK="projekttag-fr-53-rad";
+const WK="projekttag-fr-53-rad2";
 let W={list:DEF.slice(),done:[],rm:true};
 try{const s=JSON.parse(localStorage.getItem(WK)||"null");if(s&&Array.isArray(s.list))W=Object.assign(W,s)}catch(e){}
 const sv=()=>{try{localStorage.setItem(WK,JSON.stringify(W))}catch(e){}};
