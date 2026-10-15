@@ -38,24 +38,24 @@
   },
   "game": {
     "currentWeek": 1,
-    "startDate": "2026-09-01"
+    "startDate": "2026-11-02"
   },
   "resources": {
     "antrieb": {
       "value": 0,
-      "maximum": 30,
+      "maximum": 20,
       "label": "Antrieb",
       "icon": "🌿"
     },
     "wissen": {
       "value": 0,
-      "maximum": 30,
+      "maximum": 20,
       "label": "Wissen",
       "icon": "📜"
     },
     "zusammenhalt": {
       "value": 0,
-      "maximum": 30,
+      "maximum": 20,
       "label": "Zusammenhalt",
       "icon": "🤝"
     }
@@ -106,7 +106,7 @@
   ],
   "logbook": [
     {
-      "date": "2026-09-01",
+      "date": "2026-11-02",
       "title": "Ein Schiff wartet im Hafen",
       "text": "Die Besatzung versammelt sich zum ersten Mal. Das Schiff liegt noch namenlos im Heimathafen. Die Hafenmeisterin zeigt die Startkarte mit den bekannten Hafenorten und den noch nicht besuchten Zielen. Die Reise beginnt.",
       "week": 1

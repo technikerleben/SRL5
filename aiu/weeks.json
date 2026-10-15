@@ -1,0 +1,865 @@
+[
+  {
+    "number": 1,
+    "dates": "2.–6. November",
+    "phase": "einfuehrung",
+    "chapter": "Stapellauf",
+    "short": "Das Schiff gehört uns",
+    "story": "Im Heimathafen liegt ein großes Segelschiff, das lange niemand mehr genutzt hat. Es hat noch keinen Namen, sein Wappen ist leer und die Segel warten auf eure Ideen. Die Hafenmeisterin übergibt der Klasse den Schlüssel, zeigt drei leere Glasgefäße und breitet die Karte mit den bekannten Häfen aus. Nächste Woche soll das Schiff auslaufen.",
+    "routine": {
+      "title": "Erst die Lernaufgabe, dann die Mission",
+      "text": "Bearbeite deinen vereinbarten Auftrag, prüfe ihn und verbessere notwendige Stellen. Danach kannst du eine Mission im Auftragshafen wählen."
+    },
+    "unlocks": [
+      "deck",
+      "missionen",
+      "werft",
+      "kartenraum",
+      "logbuch",
+      "antrieb",
+      "wissen",
+      "zusammenhalt",
+      "karte",
+      "rat",
+      "ausbau"
+    ],
+    "new_unlock": "Das ganze Schiff steht offen.",
+    "unlock_text": "Werft, Kartenraum, Logbuch, Seekarte, Besatzungsrat und alle drei Gefäße sind ab heute geöffnet.",
+    "missions": [
+      {
+        "id": "w1-name",
+        "area": "werft",
+        "resource": "wissen",
+        "title": "Einen Schiffsnamen vorschlagen",
+        "task": "Schlage einen Namen für das Schiff vor. Erkläre kurz, warum der Name gut passt.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w1-wappen",
+        "area": "werft",
+        "resource": "zusammenhalt",
+        "title": "Ein Wappen entwerfen",
+        "task": "Entwirf ein Wappen, das zur Besatzung passt. Fotografiere deine Zeichnung oder zeichne direkt in der App.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w1-segel",
+        "area": "werft",
+        "resource": "antrieb",
+        "title": "Die Segel gestalten",
+        "task": "Gestalte Farben und Muster für die Segel. Überlege, woran man das Schiff sofort erkennen soll.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w1-leitsatz",
+        "area": "werft",
+        "resource": "zusammenhalt",
+        "title": "Unser Leitsatz",
+        "task": "Ergänze den Satz: „Unsere Besatzung soll …“",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w3-frage",
+        "area": "kartenraum",
+        "resource": "wissen",
+        "title": "Eine Frage an die Hafenmeisterin",
+        "task": "Welche Information braucht die Klasse vor der ersten Ausfahrt unbedingt?",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "planung"
+      },
+      {
+        "id": "w5-log",
+        "area": "logbuch",
+        "resource": "wissen",
+        "title": "Der erste Logbucheintrag",
+        "task": "Halte fest, wie die Besatzung das Schiff übernimmt und was sie als Erstes vorbereitet.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "reflexion"
+      }
+    ],
+    "council": {
+      "title": "Wie soll unser Schiff heißen?",
+      "description": "Im ersten Besatzungsrat wählt die Klasse aus den freigegebenen Vorschlägen einen Namen.",
+      "choices": [
+        "Die Vorschläge werden erst gesammelt."
+      ]
+    },
+    "srlFokus": "zyklus",
+    "ort": {
+      "name": "Heimathafen",
+      "id": "home",
+      "route": []
+    }
+  },
+  {
+    "number": 2,
+    "dates": "9.–13. November",
+    "phase": "vollbetrieb",
+    "chapter": "Die erste Ausfahrt",
+    "short": "Wir legen ab",
+    "story": "Das Schiff verlässt den Heimathafen. An der Hafenausfahrt markieren Bojen die sichere Fahrrinne. Dahinter beginnt die Erste offene See. Die Besatzung muss den Kurs aufmerksam planen und gemeinsam halten.",
+    "routine": {
+      "title": "Wir beginnen selbstständig",
+      "text": "Lege dein Material bereit und beginne nach dem Startsignal mit deiner vereinbarten Aufgabe."
+    },
+    "unlocks": [
+      "deck",
+      "missionen",
+      "werft",
+      "kartenraum",
+      "logbuch",
+      "antrieb",
+      "wissen",
+      "zusammenhalt",
+      "karte",
+      "rat",
+      "ausbau"
+    ],
+    "new_unlock": "Wochenfokus: Antrieb",
+    "unlock_text": "Achtet diese Woche besonders darauf, selbstständig zu beginnen und dranzubleiben. Alle drei Gefäße füllen sich weiter.",
+    "focusResource": "antrieb",
+    "missions": [
+      {
+        "id": "w6-route",
+        "area": "kartenraum",
+        "resource": "wissen",
+        "title": "Die Hafenausfahrt vorbereiten",
+        "task": "Untersuche die Bojen und zeichne eine sichere Route durch die Hafenausfahrt bis zur Ersten offenen See.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "planung"
+      },
+      {
+        "id": "w6-ausbau",
+        "area": "werft",
+        "resource": "antrieb",
+        "title": "Den ersten Ausbau vorstellen",
+        "task": "Entwirf einen Kartenraum, ein Beiboot oder einen Ausguck und erkläre seinen Nutzen.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w2-hilfe",
+        "area": "werft",
+        "resource": "antrieb",
+        "title": "Das hilft mir beim Beginnen",
+        "task": "Nenne oder zeichne eine Sache, die dir hilft, mit einer Aufgabe anzufangen.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "planung"
+      },
+      {
+        "id": "w6-abfahrt",
+        "area": "logbuch",
+        "resource": "wissen",
+        "title": "Die Abfahrt festhalten",
+        "task": "Schreibe, zeichne oder erzähle, wie das Schiff den Heimathafen verlässt.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "reflexion"
+      },
+      {
+        "id": "w6-crew",
+        "area": "werft",
+        "resource": "zusammenhalt",
+        "title": "Ein Besatzungsmitglied erfinden",
+        "task": "Erfinde eine Person, ein Tier oder ein anderes Wesen mit Name, Stärke und Aufgabe an Bord.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing",
+          "photo",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      }
+    ],
+    "milestones": {
+      "antrieb": {
+        "target": 6,
+        "reward": "Ein zusätzliches Segel wird gesetzt. Das Schiff nimmt Fahrt auf."
+      }
+    },
+    "council": {
+      "title": "Welcher erste Ausbau kommt an Bord?",
+      "description": "Die Route steht fest. Die Klasse entscheidet, welcher Ausbau die nächsten Erkundungen unterstützen soll.",
+      "choices": [
+        "Kartenraum ausbauen",
+        "Ausguck bauen",
+        "Stauraum ordnen"
+      ]
+    },
+    "srlFokus": "planung",
+    "ort": {
+      "name": "Erste offene See",
+      "id": "first-sea",
+      "route": [
+        "home",
+        "harbor-exit",
+        "first-sea"
+      ]
+    }
+  },
+  {
+    "number": 3,
+    "dates": "16.–20. November",
+    "phase": "vollbetrieb",
+    "chapter": "Die Leuchtturmbucht",
+    "short": "Das aussetzende Licht",
+    "story": "Bei der Annäherung bemerkt die Besatzung, dass das sonst regelmäßige Leuchtfeuer einzelne Signale auslässt. Im Hafen ist weiterhin niemand zu sehen. Die Besatzung untersucht das Licht und bereitet eine vorsichtige Ankunft vor. Hinter dem Leuchtturm führen ein gepflegter Weg und Spuren alter Metallteile über die Felsen zu einer Wiese. Was haben sie mit dem Licht zu tun?",
+    "routine": {
+      "title": "Wir prüfen und verbessern",
+      "text": "Prüfe am Ende eine Lösung oder verbessere einen Teil deiner Arbeit."
+    },
+    "unlocks": [
+      "deck",
+      "missionen",
+      "werft",
+      "kartenraum",
+      "logbuch",
+      "antrieb",
+      "wissen",
+      "zusammenhalt",
+      "karte",
+      "rat",
+      "ausbau"
+    ],
+    "new_unlock": "Wochenfokus: Wissen",
+    "unlock_text": "Achtet diese Woche besonders darauf, Ergebnisse zu prüfen und zu verbessern. Alle drei Gefäße füllen sich weiter.",
+    "focusResource": "wissen",
+    "missions": [
+      {
+        "id": "w7-signal",
+        "area": "werft",
+        "resource": "wissen",
+        "title": "Ein Leuchtturmsignal entwerfen",
+        "task": "Entwirf ein deutliches Signal für die Hafeneinfahrt.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w3-prueftipp",
+        "area": "kartenraum",
+        "resource": "wissen",
+        "title": "Einen Prüftipp sammeln",
+        "task": "Formuliere einen Tipp, mit dem andere ihre Arbeit prüfen können.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "reflexion"
+      },
+      {
+        "id": "w8-zeichen",
+        "area": "werft",
+        "resource": "zusammenhalt",
+        "title": "Alte Metallteile untersuchen",
+        "task": "Zeichne die gefundenen Metallteile und markiere Stellen, die für das Leuchtfeuer wichtig sein könnten.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w7-werkzeug",
+        "area": "kartenraum",
+        "resource": "antrieb",
+        "title": "Reparaturausrüstung auswählen",
+        "task": "Wähle wichtige Werkzeuge und bringe sie in eine sinnvolle Reihenfolge.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "planung"
+      },
+      {
+        "id": "w7-bericht",
+        "area": "logbuch",
+        "resource": "wissen",
+        "title": "Ankunft in der Leuchtturmbucht",
+        "task": "Halte fest, wie die Besatzung die aussetzenden Lichtsignale bemerkt und sicher in die Bucht gelangt.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "reflexion"
+      }
+    ],
+    "milestones": {
+      "wissen": {
+        "target": 6,
+        "reward": "Eine geheime Informationskarte zum Leuchtfeuer wird aufgedeckt."
+      }
+    },
+    "council": {
+      "title": "Das aussetzende Leuchtfeuer",
+      "description": "Die Besatzung entscheidet, womit sie die Untersuchung beginnt.",
+      "choices": [
+        "Leuchtfeuer untersuchen",
+        "Signalflaggen entwickeln",
+        "Reparatur vorbereiten"
+      ]
+    },
+    "srlFokus": "reflexion",
+    "ort": {
+      "name": "Leuchtturmbucht",
+      "id": "light-harbor",
+      "route": [
+        "first-sea",
+        "north-passage",
+        "light-harbor"
+      ]
+    }
+  },
+  {
+    "number": 4,
+    "dates": "23.–27. November",
+    "phase": "vollbetrieb",
+    "chapter": "Die Bucht der Grünen Insel",
+    "short": "Drei Wege auf der Grünen Insel",
+    "story": "Vom Leuchtturm aus segelt die Besatzung zurück über die offene See und folgt dem Mittleren Fahrwasser nach Osten. In der Bucht der Grünen Insel führen drei Wege ins Inselinnere: ein Küstenweg, ein Waldweg und ein Hügelweg. Die Besatzung vergleicht die Wege und bereitet eine Expedition vor.",
+    "routine": {
+      "title": "Wir helfen mit Fragen und Hinweisen",
+      "text": "Frage zuerst, was schon versucht wurde. Gib dann einen Hinweis, aber übernimm nicht die Aufgabe."
+    },
+    "unlocks": [
+      "deck",
+      "missionen",
+      "werft",
+      "kartenraum",
+      "logbuch",
+      "antrieb",
+      "wissen",
+      "zusammenhalt",
+      "karte",
+      "rat",
+      "ausbau"
+    ],
+    "new_unlock": "Wochenfokus: Zusammenhalt",
+    "unlock_text": "Achtet diese Woche besonders darauf, mit Fragen und Hinweisen zu helfen, statt Aufgaben abzunehmen. Alle drei Gefäße füllen sich weiter.",
+    "focusResource": "zusammenhalt",
+    "missions": [
+      {
+        "id": "w10-wrack",
+        "area": "kartenraum",
+        "resource": "wissen",
+        "title": "Drei Wege vergleichen",
+        "task": "Vergleiche Küstenweg, Waldweg und Hügelweg. Begründe, welcher Weg zuerst untersucht werden sollte.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "planung"
+      },
+      {
+        "id": "w10-bergung",
+        "area": "werft",
+        "resource": "antrieb",
+        "title": "Ausrüstung für drei Wege",
+        "task": "Wähle Ausrüstung, die auf dem Küstenweg, dem Waldweg und dem Hügelweg helfen kann.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w4-hilfesatz",
+        "area": "werft",
+        "resource": "zusammenhalt",
+        "title": "Ein hilfreicher Satz",
+        "task": "Formuliere einen Satz, mit dem du jemandem helfen kannst, ohne die Lösung vorzusagen.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w10-fund",
+        "area": "logbuch",
+        "resource": "wissen",
+        "title": "Ankunft an der Grünen Insel",
+        "task": "Dokumentiere die Bucht und die drei sichtbaren Wege.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "reflexion"
+      }
+    ],
+    "milestones": {
+      "zusammenhalt": {
+        "target": 6,
+        "reward": "Eine gemeinsame Expedition ins Inselinnere wird möglich."
+      }
+    },
+    "council": {
+      "title": "Welchen Weg untersuchen wir zuerst?",
+      "description": "Alle drei Wege bleiben auf der Karte. Die Entscheidung bestimmt den Schwerpunkt der Expedition.",
+      "choices": [
+        "Küstenweg",
+        "Waldweg",
+        "Hügelweg"
+      ]
+    },
+    "srlFokus": "planung",
+    "ort": {
+      "name": "Bucht der Grünen Insel",
+      "id": "green-coast",
+      "route": [
+        "light-harbor",
+        "north-passage",
+        "first-sea",
+        "east-channel",
+        "green-coast"
+      ]
+    }
+  },
+  {
+    "number": 5,
+    "dates": "30. November – 4. Dezember",
+    "phase": "vollbetrieb",
+    "chapter": "Spuren und weite Sicht",
+    "short": "Wald und Hügel",
+    "story": "Im Wald der vielen Spuren entdeckt die Besatzung Zeichen früherer Besucher. Vom Hügel der weiten Sicht sind weitere Inseln am Horizont zu erkennen. Nun müssen Spuren und Aussicht zusammenpassen.",
+    "routine": {
+      "title": "Wir bleiben auch bei Unsicherheit handlungsfähig",
+      "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
+    },
+    "unlocks": [
+      "deck",
+      "missionen",
+      "werft",
+      "kartenraum",
+      "logbuch",
+      "antrieb",
+      "wissen",
+      "zusammenhalt",
+      "karte",
+      "rat",
+      "ausbau"
+    ],
+    "new_unlock": "Alle Bereiche des Schiffes stehen zur Verfügung.",
+    "missions": [
+      {
+        "id": "w11-code",
+        "area": "kartenraum",
+        "resource": "wissen",
+        "title": "Spuren im Wald ordnen",
+        "task": "Zeichne oder beschreibe die Spuren und ordne sie in eine mögliche Reihenfolge.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "planung"
+      },
+      {
+        "id": "w11-nebel",
+        "area": "werft",
+        "resource": "antrieb",
+        "title": "Den Horizont kartieren",
+        "task": "Zeichne die Inseln und Wasserwege, die vom Hügel aus zu erkennen sind.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w11-ausguck",
+        "area": "logbuch",
+        "resource": "wissen",
+        "title": "Bericht vom Hügel",
+        "task": "Erzähle, wie die Spuren im Wald und die Sicht vom Hügel zusammenhängen könnten.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "audio",
+          "drawing"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "reflexion"
+      }
+    ],
+    "council": {
+      "title": "Welcher Hinweis weist den nächsten Weg?",
+      "description": "Die Besatzung verbindet ihre Beobachtungen aus Wald und Hügel.",
+      "choices": [
+        "Spuren im Wald",
+        "Inseln am Horizont",
+        "Beide Hinweise verbinden"
+      ]
+    },
+    "srlFokus": "durchfuehrung",
+    "ort": {
+      "name": "Hügel der weiten Sicht",
+      "id": "green-hill",
+      "route": [
+        "green-coast",
+        "green-forest",
+        "green-hill"
+      ]
+    },
+    "unlock_text": "Das vollständige Spielsystem ist aktiv."
+  },
+  {
+    "number": 6,
+    "dates": "7.–11. Dezember",
+    "phase": "vollbetrieb",
+    "chapter": "Die Nebelbucht",
+    "short": "Licht und Glocken im Nebel",
+    "story": "Durch die schmale Wasserstraße zwischen den Inseln erreicht das Schiff die Nebelbucht. In der Nebelbucht erscheinen drei ruhige Lichtpunkte. Vom Ufer erklingen Glocken in einer festen Reihenfolge. Die Bedeutung ist unbekannt. Die Besatzung beobachtet erst genau, bevor sie antwortet.",
+    "routine": {
+      "title": "Wir bleiben ausdauernd und arbeiten sorgfältig",
+      "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
+    },
+    "unlocks": [
+      "deck",
+      "missionen",
+      "werft",
+      "kartenraum",
+      "logbuch",
+      "antrieb",
+      "wissen",
+      "zusammenhalt",
+      "karte",
+      "rat",
+      "ausbau"
+    ],
+    "new_unlock": "Alle Bereiche des Schiffes stehen zur Verfügung.",
+    "missions": [
+      {
+        "id": "w13-check",
+        "area": "kartenraum",
+        "resource": "antrieb",
+        "title": "Lichtfolge notieren",
+        "task": "Stelle die Reihenfolge der drei Lichtpunkte übersichtlich dar.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "planung"
+      },
+      {
+        "id": "w13-segel",
+        "area": "werft",
+        "resource": "wissen",
+        "title": "Glockenfolge darstellen",
+        "task": "Zeichne oder beschreibe die Reihenfolge der Glockentöne.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w13-wetter",
+        "area": "logbuch",
+        "resource": "wissen",
+        "title": "Licht und Klang vergleichen",
+        "task": "Prüfe, ob Lichtpunkte und Glockentöne zusammengehören könnten. Begründe deine Vermutung.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "reflexion"
+      }
+    ],
+    "council": {
+      "title": "Wie reagieren wir auf die Zeichen?",
+      "description": "Die Besatzung entscheidet erst nach genauer Beobachtung über eine vorsichtige Antwort.",
+      "choices": [
+        "Mit Licht antworten",
+        "Mit Klang antworten",
+        "Weiter beobachten"
+      ]
+    },
+    "srlFokus": "durchfuehrung",
+    "ort": {
+      "name": "Nebelbucht",
+      "id": "fog-bay",
+      "route": [
+        "green-hill",
+        "green-coast",
+        "east-sound",
+        "fog-bay"
+      ]
+    },
+    "unlock_text": "Das vollständige Spielsystem ist aktiv."
+  },
+  {
+    "number": 7,
+    "dates": "14.–18. Dezember",
+    "phase": "vollbetrieb",
+    "chapter": "Die Insel der leisen Zeichen",
+    "short": "Zeichen am Ufer",
+    "story": "Am Ufer der leisen Glocken findet die Besatzung Zeichen aus Holz, Stein und Glas. Auf der Insel der leisen Zeichen wiederholt sich dieselbe Reihenfolge. Gemeinsam versucht die Klasse, ihre Bedeutung zu entschlüsseln.",
+    "routine": {
+      "title": "Wir hören verschiedene Sichtweisen an",
+      "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
+    },
+    "unlocks": [
+      "deck",
+      "missionen",
+      "werft",
+      "kartenraum",
+      "logbuch",
+      "antrieb",
+      "wissen",
+      "zusammenhalt",
+      "karte",
+      "rat",
+      "ausbau"
+    ],
+    "new_unlock": "Alle Bereiche des Schiffes stehen zur Verfügung.",
+    "missions": [
+      {
+        "id": "w14-sichten",
+        "area": "kartenraum",
+        "resource": "zusammenhalt",
+        "title": "Zeichen aus drei Materialien ordnen",
+        "task": "Halte die Zeichen aus Holz, Stein und Glas fest und ordne ihre Reihenfolge.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "reflexion"
+      },
+      {
+        "id": "w14-kompromiss",
+        "area": "kartenraum",
+        "resource": "wissen",
+        "title": "Eine Bedeutung prüfen",
+        "task": "Entwickle eine mögliche Bedeutung und prüfe, ob sie zu Licht- und Glockenfolge passt.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "audio",
+          "drawing"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "planung"
+      },
+      {
+        "id": "w14-treff",
+        "area": "werft",
+        "resource": "zusammenhalt",
+        "title": "Eine Antwort aus Zeichen",
+        "task": "Entwirf eine ruhige Antwort mit Holz, Stein und Glas.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      }
+    ],
+    "council": {
+      "title": "Welche Deutung übernehmen wir ins Logbuch?",
+      "description": "Die Besatzung vergleicht die Erklärungen und wählt eine gemeinsame vorläufige Deutung.",
+      "choices": [
+        "Willkommenszeichen",
+        "Wegbeschreibung",
+        "Bitte um Aufmerksamkeit"
+      ]
+    },
+    "srlFokus": "durchfuehrung",
+    "ort": {
+      "name": "Insel der leisen Zeichen",
+      "id": "quiet-island",
+      "route": [
+        "fog-bay",
+        "fog-coast",
+        "quiet-island"
+      ]
+    },
+    "unlock_text": "Das vollständige Spielsystem ist aktiv."
+  },
+  {
+    "number": 8,
+    "dates": "21.–22. Dezember",
+    "phase": "vollbetrieb",
+    "chapter": "Das Südliche Fahrwasser",
+    "short": "Rückblick auf die erste Reise",
+    "story": "Hinter dem Südlichen Inselwald öffnet sich das Südliche Fahrwasser. Die Besatzung blickt auf die erste Reise zurück und entscheidet, an welchem Kartenrand die Welt als Nächstes erweitert werden soll.",
+    "routine": {
+      "title": "Wir reflektieren unseren Fortschritt",
+      "text": "Achte in dieser Woche bewusst auf diese Routine und halte am Ende fest, was dir geholfen hat."
+    },
+    "unlocks": [
+      "deck",
+      "missionen",
+      "werft",
+      "kartenraum",
+      "logbuch",
+      "antrieb",
+      "wissen",
+      "zusammenhalt",
+      "karte",
+      "rat",
+      "ausbau"
+    ],
+    "new_unlock": "Letzte Etappe vor den Ferien",
+    "unlock_text": "Zwei Tage bleiben: Zeit für den Rückblick, das letzte Logbuchkapitel und den letzten Besatzungsrat.",
+    "missions": [
+      {
+        "id": "w15-rueckblick",
+        "area": "logbuch",
+        "resource": "wissen",
+        "title": "Unser wichtigster Moment",
+        "task": "Halte einen wichtigen Moment zwischen Heimathafen und Südlichem Fahrwasser fest.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "reflexion"
+      },
+      {
+        "id": "w15-schiff",
+        "area": "werft",
+        "resource": "antrieb",
+        "title": "Das Schiff heute",
+        "task": "Zeichne oder fotografiere, wie das ausgebaute Schiff jetzt aussieht.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "drawing",
+          "photo"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "durchfuehrung"
+      },
+      {
+        "id": "w15-naechste",
+        "area": "kartenraum",
+        "resource": "wissen",
+        "title": "Den nächsten Kartenrand wählen",
+        "task": "Empfiehl, an welchem offenen Rand der Startkarte die nächste Region angeschlossen werden soll.",
+        "time": "10–15 Min.",
+        "outputs": [
+          "text",
+          "drawing",
+          "audio"
+        ],
+        "result": "Ein Vorschlag für die Besatzung",
+        "srl": "planung"
+      }
+    ],
+    "council": {
+      "title": "Wo soll die Karte weiterwachsen?",
+      "description": "Die erste Reise endet im Südlichen Fahrwasser. Die Klasse bestimmt die Richtung der nächsten Kartenphase.",
+      "choices": [
+        "Weiter nach Süden",
+        "Zur Weite im Osten",
+        "Zurück zur nördlichen Strömung"
+      ]
+    },
+    "srlFokus": "reflexion",
+    "ort": {
+      "name": "Südliches Fahrwasser",
+      "id": "south-open",
+      "route": [
+        "quiet-island",
+        "quiet-forest",
+        "south-open"
+      ]
+    }
+  }
+]
