@@ -237,6 +237,13 @@ button:focus-visible,.timer:focus-visible{outline:4px solid var(--orange);outlin
 #brand{position:absolute;top:18px;left:30px;font-family:var(--f-hand);font-size:24px;color:var(--soft);z-index:5}
 .navbtn{font:700 30px var(--f-disp);border:2px solid var(--line);background:#fff;color:var(--navy);border-radius:14px;width:64px;height:48px;cursor:pointer;line-height:1}
 @media (prefers-reduced-motion:reduce){.slide.on{animation:none}.lbz.anim .lbz-in,.lbz.anim .hl,.step{transition:none}}
+.yt{position:relative;width:min(960px,calc((var(--sh) - 330px)*16/9));aspect-ratio:16/9;border-radius:22px;overflow:hidden;background:#0d1b2a;box-shadow:0 14px 40px rgba(0,0,0,.28)}
+.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ytp{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;cursor:pointer;background:linear-gradient(135deg,#1d3a5c,#0d1b2a);font-family:inherit}
+.ytp img{width:100%;height:100%;object-fit:cover;opacity:.8}
+.ytb{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.95);color:#0d1b2a;font-size:54px;display:grid;place-items:center;padding-left:10px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.ytl{position:absolute;left:0;right:0;bottom:22px;text-align:center;color:#fff;font-weight:700;font-size:26px;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.ytlink{font-size:18px;color:inherit;opacity:.7}
 </style>
 
 <div id="viewport"><div id="stage">
@@ -550,6 +557,15 @@ button:focus-visible,.timer:focus-visible{outline:4px solid var(--orange);outlin
 </section>
 
 <section class="slide c" data-sec="Freitag">
+  <div class="eyebrow">Morgen · unser Klassenspiel</div>
+  <h2>⛵ Aufbruch ins Unbekannte</h2>
+  <div class="yt" data-id="E9rTkmztZA8">
+    <button class="ytp" aria-label="Trailer abspielen"><img src="https://i.ytimg.com/vi/E9rTkmztZA8/hqdefault.jpg" alt="" onerror="this.remove()"><span class="ytb">▶</span><span class="ytl">Trailer abspielen</span></button>
+  </div>
+  <a class="ytlink" href="https://youtu.be/E9rTkmztZA8" target="_blank" rel="noopener">Läuft nicht? Auf YouTube öffnen ↗</a>
+</section>
+
+<section class="slide c" data-sec="Freitag">
   <div class="eyebrow">Unser Ziel – geschafft?</div>
   <h2 style="max-width:1060px">Ich kenne wichtige <span class="mark">Regeln</span> für unterwegs und unser Logbuch.</h2>
   <div class="hand step">Nenn deinem Partnerkind eine Regel und eine Sache aus dem Logbuch.</div>
@@ -685,6 +701,7 @@ function go(n,dir){
   document.getElementById("count").textContent=(n+1)+" / "+slides.length;
   try{history.replaceState(null,"","#s"+(n+1))}catch(e){}
   if(typeof sdUpdate==="function")sdUpdate();
+  if(typeof vidSync==="function")vidSync();
 }
 function next(){const hid=slides[cur].querySelector(".step:not(.vis)");if(hid){hid.classList.add("vis");return;}if(cur<slides.length-1)go(cur+1,1);}
 function prev(){const vis=[...slides[cur].querySelectorAll(".step.vis")];if(vis.length){vis.at(-1).classList.remove("vis");return;}if(cur>0)go(cur-1,-1);}
@@ -703,7 +720,7 @@ document.getElementById("fsBtn").addEventListener("click",e=>{e.stopPropagation(
 if(!(document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen))document.getElementById("fsBtn").hidden=true;
 stage.addEventListener("click",e=>{if(e.target.closest("button,a,#bar,#side,#jump,#pauseOv,input,label,.ed"))return;const r=stage.getBoundingClientRect();(e.clientX-r.left<r.width*0.25)?prev():next();});
 let tx0=null,ty0=0;
-addEventListener("touchstart",e=>{if(e.touches.length!==1||e.target.closest("#side,#jump,#pauseOv,.timer,.treset,.peek,.ed,.vote,.tb")){tx0=null;return;}tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;},{passive:true});
+addEventListener("touchstart",e=>{if(e.touches.length!==1||e.target.closest("#side,#jump,#pauseOv,.timer,.treset,.peek,.ed,.vote,.tb,.yt")){tx0=null;return;}tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;},{passive:true});
 addEventListener("touchend",e=>{if(tx0==null)return;const t=e.changedTouches[0],dx=t.clientX-tx0,dy=t.clientY-ty0;tx0=null;
   if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){e.preventDefault();(dx<0?next:prev)();}});
 
@@ -842,4 +859,9 @@ addEventListener("keydown",e=>{if((e.key==="t"||e.key==="T")&&!e.target.closest?
 fit();
 const h=parseInt((location.hash.match(/^#s(\d+)$/)||[])[1]);
 go(h?h-1:0,1);
+
+function vidSync(){document.querySelectorAll(".yt").forEach(y=>{if(!y.closest(".slide").classList.contains("on")&&y.querySelector("iframe")){y.querySelector("iframe").remove();y.querySelector(".ytp").hidden=false;}});}
+document.querySelectorAll(".yt .ytp").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const y=b.closest(".yt");const f=document.createElement("iframe");
+  f.src="https://www.youtube-nocookie.com/embed/"+y.dataset.id+"?autoplay=1&rel=0&playsinline=1&modestbranding=1";
+  f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.allowFullscreen=true;f.title="Trailer";b.hidden=true;y.appendChild(f);}));
 </script>
