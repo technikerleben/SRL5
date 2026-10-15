@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v15-reise-8-wochen';
+const VERSION='v16-kajuete-gesichert';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
@@ -16,6 +16,7 @@ const CORE=[
   './app-sync.js',
   './app-ship.js',
   './app-gems.js',
+  './app-auth.js',
   './app-input.js',
   './app-teacher.js',
   './segelschiff-header.html',

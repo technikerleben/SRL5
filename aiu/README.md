@@ -18,7 +18,18 @@ Alternativ kann die App innerhalb einer bereits veröffentlichten statischen Web
 
 ## Lehrkräftebereich
 
-Die voreingestellte PIN lautet `2468`.
+Der Zugang ist mit einem 7-stelligen Code gesichert. In `config-base.json` steht nur ein PBKDF2-Hash des Codes, nie der Code selbst. Den Code bitte nicht ins Repository schreiben.
+
+- Nach drei falschen Eingaben wartet die App 30 Sekunden, danach jeweils doppelt so lange (höchstens 5 Minuten).
+- Nach 10 Minuten ohne Eingabe meldet sich die Kajüte automatisch ab. Der Kioskbetrieb meldet beim Rücksprung zum Deck ebenfalls ab.
+
+Neuen Code einrichten (ersetzt `teacherAuth.salz` und `teacherAuth.hash` in `config-base.json`):
+
+```bash
+python3 -c "import hashlib,os,base64,getpass;c=getpass.getpass('Neuer Code: ').encode();s=os.urandom(16);print('salz:',base64.b64encode(s).decode());print('hash:',base64.b64encode(hashlib.pbkdf2_hmac('sha256',c,s,310000,32)).decode())"
+```
+
+Grenzen: Die App läuft ohne eigenen Server. Der Code hält Kinder zuverlässig fern, schützt aber nicht vor technisch versierten Angriffen. Für echten Schutz der zentral gespeicherten Daten braucht es bei aktiver Supabase-Synchronisierung ein Lehrerkonto (Supabase Auth) und strengere Datenbankregeln.
 
 Im Lehrkräftebereich können Woche, Ressourcen, Schülerzugang, Abstimmungen und Schiffsausbauten verwaltet werden.
 

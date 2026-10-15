@@ -27,7 +27,7 @@ async function boot(query = '') {
   window.ResizeObserver = class { observe() {} unobserve() {} disconnect() {} };
   window.indexedDB = indexedDB;
   window.IDBKeyRange = IDBKeyRange;
-  if (!window.crypto?.randomUUID) { try { Object.defineProperty(window, 'crypto', { value: globalThis.crypto, configurable: true }); } catch (e) {} }
+  if (!window.crypto?.randomUUID || !window.crypto?.subtle) { try { Object.defineProperty(window, 'crypto', { value: globalThis.crypto, configurable: true }); } catch (e) {} }
   window.scrollTo = () => {};
   window.URL.createObjectURL = () => 'blob:test';
   window.fetch = async input => {
@@ -41,7 +41,7 @@ async function boot(query = '') {
   // Ladereihenfolge wie in index.html und app.js. app-ship.js baut ein iframe
   // auf, das jsdom nicht ausfuehrt – die Bruecke wird separat geprueft.
   const order = ['vendor/three.min.js', 'app-store.js', 'app-core.js', 'config-loader.js', 'sync-config.js',
-    'app-sync.js', 'app-ship.js', 'app-gems.js', 'app-juice.js', 'app-kiosk.js', 'app-input.js', 'app-teacher.js'];
+    'app-sync.js', 'app-ship.js', 'app-gems.js', 'app-juice.js', 'app-kiosk.js', 'app-auth.js', 'app-input.js', 'app-teacher.js'];
   for (const file of order) {
     try {
       const tag = window.document.createElement('script');
@@ -279,7 +279,7 @@ const w3 = await boot('?ui=all&kiosk=1&ton=aus&ansicht=beamer&leerlauf=7');
   check('Bühne verlassen funktioniert', (() => { $('#buehneVerlassen').click(); return !w3.document.body.classList.contains('buehne'); })());
 
   // Rueckkehr zum Deck raeumt Fenster und Anmeldung ab
-  w3.sessionStorage.setItem('kiu-v2-teacher-auth', '1');
+  w3.sessionStorage.setItem('kiu-v2-teacher-auth', String(Date.now() + 600000));
   $('#missionModal')?.classList.add('open');
   w3.AIU_KIOSK.zurueckZumDeck();
   await wait(150);
@@ -292,7 +292,57 @@ const w3 = await boot('?ui=all&kiosk=1&ton=aus&ansicht=beamer&leerlauf=7');
 const w4 = await boot('?ui=aus&ansicht=beamer');
 check('Bühne ohne Schalter bleibt aus', !w4.document.body.classList.contains('buehne'));
 
-console.log('\nSmoke-Test (Phase 1 bis 3 und Kioskbetrieb)\n' + '='.repeat(60));
+/* =================================================================
+   Durchlauf 5: Kapitänskajüte (Code, Sperre, Ablauf)
+   Der Test nutzt einen eigenen Prüfcode, nie den echten Code.
+   ================================================================= */
+{
+  const { pbkdf2Sync, randomBytes } = await import('node:crypto');
+  const base = JSON.parse(fs.readFileSync(path.join(ROOT, 'config-base.json'), 'utf8'));
+  check('Kein Klartext-Code in der Konfiguration', !('teacherPin' in base.app) && !!base.app.teacherAuth?.hash);
+  check('Code hat sieben Stellen', base.app.teacherAuth.stellen === 7);
+  check('README nennt keinen Code', !/2468/.test(fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8')));
+
+  const w5 = await boot('?ton=aus');
+  const $ = sel => w5.document.querySelector(sel);
+  const salz = randomBytes(16);
+  const testAuth = { verfahren: 'PBKDF2-SHA256', iterationen: 1000, stellen: 7, salz: salz.toString('base64'),
+    hash: pbkdf2Sync('1234567', salz, 1000, 32, 'sha256').toString('base64'), abmeldenNachMinuten: 10 };
+  w5.eval(`CFG.app.teacherAuth = ${JSON.stringify(testAuth)}`);
+  const tippe = async code => { for (const z of code) { w5.document.querySelector(`[data-pin="${z}"]`).click(); await wait(5); } await wait(250); };
+
+  check('Kajüte ohne Anmeldung gesperrt', w5.teacherAuthed() === false);
+  w5.gotoView('lehrer');
+  await wait(80);
+  check('Codefeld öffnet sich', $('#pinModal')?.classList.contains('open'));
+  check('Sieben Codepunkte', w5.document.querySelectorAll('#pinDots .pin-dot').length === 7, String(w5.document.querySelectorAll('#pinDots .pin-dot').length));
+  w5.sessionStorage.setItem('kiu-v2-teacher-auth', '1');
+  check('Alter Merker öffnet nicht mehr', w5.teacherAuthed() === false);
+
+  await tippe('7654321');
+  check('Falscher Code wird abgelehnt', ($('#pinError')?.textContent || '').includes('Falsch') && !$('#view-lehrer')?.classList.contains('active'), $('#pinError')?.textContent);
+  await tippe('7654321'); await tippe('7654321');
+  await wait(800);
+  check('Sperre nach drei Fehlversuchen', w5.pinLockRemaining() > 0 && ($('#pinError')?.textContent || '').includes('warten'), $('#pinError')?.textContent);
+  await tippe('1234567');
+  check('Während der Sperre keine Anmeldung', w5.teacherAuthed() === false);
+  check('Sperre übersteht Neuladen', !!JSON.parse(w5.localStorage.getItem('kiu-v2-pin-lock') || '{}').bis);
+
+  w5.localStorage.removeItem('kiu-v2-pin-lock');
+  w5.openPin();
+  await tippe('1234567');
+  check('Richtiger Code öffnet die Kajüte', w5.teacherAuthed() === true && $('#view-lehrer')?.classList.contains('active'));
+  check('Fehlversuche nach Erfolg zurückgesetzt', JSON.parse(w5.localStorage.getItem('kiu-v2-pin-lock') || '{}').fehler === 0);
+
+  w5.sessionStorage.setItem('kiu-v2-teacher-auth', String(Date.now() - 1000));
+  check('Abgelaufene Sitzung gilt als abgemeldet', w5.teacherAuthed() === false);
+  w5.teacherLogin();
+  $('#teacherLogout').click();
+  await wait(80);
+  check('Abmelden räumt die Sitzung', !w5.sessionStorage.getItem('kiu-v2-teacher-auth') && $('#view-deck')?.classList.contains('active'));
+}
+
+console.log('\nSmoke-Test (Phase 1 bis 3, Kioskbetrieb und Kajüte)\n' + '='.repeat(60));
 let failed = 0;
 for (const c of checks) {
   if (!c.ok) failed++;

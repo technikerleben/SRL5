@@ -25,7 +25,7 @@ const ANSICHTEN = [
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(([runtime]) => {
     localStorage.setItem('kiu-v2-runtime', JSON.stringify(runtime));
-    sessionStorage.setItem('kiu-v2-teacher-auth', '1');
+    sessionStorage.setItem('kiu-v2-teacher-auth', String(Date.now() + 3600000));
   }, [RUNTIME]);
 });
 

@@ -13,6 +13,7 @@
     {src:'app-gems.js',required:false},
     {src:'app-juice.js',required:false},
     {src:'app-kiosk.js',required:false},
+    {src:'app-auth.js',required:true},
     {src:'app-input.js',required:true},
     {src:'app-teacher.js',required:true}
   ];

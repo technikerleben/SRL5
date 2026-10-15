@@ -4,8 +4,16 @@
     "title": "Aufbruch ins Unbekannte",
     "subtitle": "Ein Klassenspiel",
     "version": "2.0.0",
-    "teacherPin": "2468",
-    "defaultStudentMinutes": 15
+    "defaultStudentMinutes": 15,
+    "teacherAuth": {
+      "_hinweis": "Nur der Hash des Kajüten-Codes. Neuen Code erzeugen: siehe README, Abschnitt Lehrkräftebereich.",
+      "verfahren": "PBKDF2-SHA256",
+      "iterationen": 310000,
+      "stellen": 7,
+      "salz": "i4PxEWBuvp5KplX1FIZxRA==",
+      "hash": "w0w8ocoE8yvPoqHFfOKc/U6RY8I0B+NzwR++Ycc+7/E=",
+      "abmeldenNachMinuten": 10
+    }
   },
   "school": {
     "name": "Heinrich-Böll-Gesamtschule Dortmund",
