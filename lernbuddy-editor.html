@@ -117,6 +117,11 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
 .editing .lb .e:hover { background: rgba(72,220,203,.18); box-shadow: 0 0 0 .5mm rgba(36,86,136,.35); }
 .editing .lb .e:focus { background: rgba(240,166,111,.18); box-shadow: 0 0 0 .7mm var(--orange-500); }
 .lb .e:empty::before { content: "…"; color: var(--n300); }
+.lb .checks li .e:empty { height: 5mm; border-bottom: .4mm solid var(--n300); border-radius: 0; }
+.lb .checks li .e:empty::before { content: ""; }
+.lb .anf { position: relative; }
+.lb .anf .checks { margin-top: 1.5mm; font-size: 12pt; line-height: 1.35; }
+.ed.add.corner { position: absolute; right: 2mm; bottom: 1.5mm; margin: 0; }
 .ed { font: 700 9pt Andika, Arial, sans-serif; cursor: pointer; border: .4mm solid var(--blue-300); background: #fff; color: var(--blue-700);
   border-radius: 1.5mm; padding: .6mm 2mm; }
 .ed:hover { background: var(--blue-50); }
@@ -145,6 +150,7 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
     <button type="button" data-hand="rechts">Rechtshänder</button>
     <button type="button" data-hand="links">Linkshänder</button>
   </div>
+  <label class="chk"><input type="checkbox" id="optAnf"> Feld „Was hilft dir …“</label>
   <label class="chk"><input type="checkbox" id="optHint"> Text im Ablagefeld</label>
   <label class="chk"><input type="checkbox" id="optGrau"> Graustufen</label>
   <span class="status" id="status">✓ Alles passt</span>
@@ -158,18 +164,20 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
 <main class="stage"><div class="wrap" id="wrap"><div class="lb" id="lb"></div></div></main>
 
 <script>
-const STORE = "lernbuddy-editor-v1";
+const STORE = "lernbuddy-editor-v2";
 const DEFAULTS = {
-  hand: "rechts", grau: false, dropHint: true,
+  hand: "rechts", grau: false, dropHint: true, showAnfangen: true,
   mark: "5.x", titel: "LERNBUDDY", name: "Name:", fach: "Fach:", datum: "Datum:",
   p1: { num: "1", name: "Planung", when: "vor dem Lernen" },
   ziel: { h: "Mein Ziel", t: "Das will ich heute schaffen:" },
   energie: { h: "Meine Energie", t: "Fülle die Batterie." },
   ablenker: { h: "Meine Ablenker", t: "Was könnte dich vom Lernen abhalten?" },
+  anfangenH: "Was hilft dir, trotzdem anzufangen?",
+  anfangen: ["Gute und schlechte Folgen bedenken", "Klarmachen: Wofür brauche ich das?", ""],
   p2: { num: "2", name: "Durchführung", when: "während des Lernens" },
-  checks: ["Ich lese die Aufgabe genau.", "Ich teile die Aufgabe in Schritte.", "Ich nutze eine passende Strategie.", "Ich prüfe zwischendurch meinen Weg."],
+  checks: ["Ich lese Auftrag und Ziel genau.", "Ich teile die Aufgabe in Schritte.", "Ich nutze eine passende Strategie.", "Ich prüfe zwischendurch meinen Weg."],
   leiterH: "Meine Lösungsleiter",
-  leiter: ["Ich lese die Aufgabe noch einmal.", "Ich prüfe ein Beispiel oder Merkblätter.", "Ich frage eine Mitschülerin oder einen Mitschüler.", "Ich trage mich auf der Fragentafel ein.", "Ich frage die Lehrkraft."],
+  leiter: ["Ich lese die Aufgabe noch einmal.", "Ich prüfe ein Beispiel oder Merkblätter.", "Ich frage eine Mitschülerin oder einen Mitschüler.", "Ich frage die Lehrkraft."],
   fest: "Ich stecke fest bei …", weiter: "So komme ich weiter",
   edge: "Strategie-Karte hier anlegen",
   drop: { b: "Lege hier die Lernaufgabe hin.", s: "Platz für ein Blatt A4 hoch" },
@@ -206,10 +214,12 @@ G.REF_Y = G.MID_Y + G.FH + 4; G.REF_H = 420 - G.M - G.REF_Y;
 function cell(key, flex, extra = "", style = "") {
   return `<div class="cell" style="flex:${flex};${style}"><h3>${ed(key + ".h")}</h3><p class="hint">${ed(key + ".t")}</p>${extra}</div>`;
 }
+function list(name) {
+  return M[name].map((t, i) => `<li><span class="cb"></span>${ed(name + "." + i)}<button class="ed x" data-del="${name}" data-i="${i}" title="Punkt entfernen" aria-label="Punkt entfernen">×</button></li>`).join("");
+}
 function render() {
   const left = M.hand === "rechts";
   const colX = left ? G.M : 297 - G.M - G.COL, fieldX = left ? G.M + G.COL + G.GAP : G.M, W = 297 - 2 * G.M;
-  const checks = M.checks.map((t, i) => `<li><span class="cb"></span>${ed("checks." + i)}<button class="ed x" data-del="checks" data-i="${i}" title="Punkt entfernen" aria-label="Punkt entfernen">×</button></li>`).join("");
   const ladder = M.leiter.map((t, i) => `<li><b>${i + 1}</b>${ed("leiter." + i)}<button class="ed x" data-del="leiter" data-i="${i}" title="Stufe entfernen" aria-label="Stufe entfernen">×</button></li>`).join("");
   const lb = document.getElementById("lb");
   lb.classList.toggle("grau", M.grau);
@@ -222,15 +232,16 @@ function render() {
 </div>
 <div class="abs box band" style="left:${G.M}mm; top:${G.PLAN_Y}mm; width:${W}mm; height:${G.PLAN_H}mm;">
   <div class="tab p1"><div class="num">${ed("p1.num")}</div><div class="name">${ed("p1.name")}</div><div class="when">${ed("p1.when")}</div></div>
-  ${cell("ziel", "1.25")}
+  ${cell("ziel", M.showAnfangen ? "1.2" : "1.25")}
   ${cell("energie", "0 0 44mm", '<div class="battery"><div class="body"><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div><div class="tip"></div></div>')}
   ${cell("ablenker", "1")}
+  ${M.showAnfangen ? `<div class="cell anf" style="flex:1.6"><h3>${ed("anfangenH")}</h3><ul class="checks">${list("anfangen")}</ul><button class="ed add corner" data-add="anfangen">+ Punkt</button></div>` : ""}
 </div>
 <div class="abs box col ${left ? "left" : "right"}" style="left:${colX}mm; top:${G.MID_Y}mm; width:${G.COL}mm; height:${G.FH}mm; border-color:var(--orange-500);">
   <div class="edge">${ed("edge")}</div>
   <div class="inner">
     <div class="tab p2"><div style="display:flex;gap:2.5mm;align-items:center"><div class="num">${ed("p2.num")}</div><div><div class="name">${ed("p2.name")}</div><div class="when">${ed("p2.when")}</div></div></div></div>
-    <section><ul class="checks">${checks}</ul><button class="ed add" data-add="checks">+ Punkt</button></section>
+    <section><ul class="checks">${list("checks")}</ul><button class="ed add" data-add="checks">+ Punkt</button></section>
     <section><h3>${ed("leiterH")}</h3><ol class="ladder">${ladder}</ol><button class="ed add" data-add="leiter">+ Stufe</button></section>
     <section class="write"><h3>${ed("fest")}</h3><div class="lines"></div></section>
     <section class="write"><h3>${ed("weiter")}</h3><div class="lines"></div></section>
@@ -249,6 +260,7 @@ function render() {
 <div class="foot" style="${left ? "right" : "left"}:${G.M}mm">${ed("foot")} · ${left ? "Rechtshänder" : "Linkshänder"}</div>`;
   document.querySelectorAll("[data-hand]").forEach(b => b.setAttribute("aria-pressed", b.dataset.hand === M.hand));
   document.getElementById("optHint").checked = M.dropHint;
+  document.getElementById("optAnf").checked = M.showAnfangen;
   document.getElementById("optGrau").checked = M.grau;
   fit(); check();
 }
@@ -294,7 +306,7 @@ lbEl.addEventListener("paste", e => {
 lbEl.addEventListener("keydown", e => {
   const el = e.target.closest(".e"); if (!el) return;
   const k = el.dataset.k, list = k.split(".")[0];
-  if (e.key === "Enter" && (list === "checks" || list === "leiter")) {   // Enter = neuer Punkt
+  if (e.key === "Enter" && (list === "checks" || list === "leiter" || list === "anfangen")) {   // Enter = neuer Punkt
     e.preventDefault(); const i = +k.split(".")[1];
     M[list].splice(i + 1, 0, ""); save(); render(); focusKey(`${list}.${i + 1}`);
   }
@@ -312,6 +324,7 @@ function focusKey(k) {
 }
 
 document.querySelectorAll("[data-hand]").forEach(b => b.onclick = () => { M.hand = b.dataset.hand; save(); render(); });
+document.getElementById("optAnf").onchange = e => { M.showAnfangen = e.target.checked; save(); render(); };
 document.getElementById("optHint").onchange = e => { M.dropHint = e.target.checked; save(); render(); };
 document.getElementById("optGrau").onchange = e => { M.grau = e.target.checked; save(); render(); };
 document.getElementById("btnPrint").onclick = () => { document.activeElement && document.activeElement.blur(); window.print(); };
