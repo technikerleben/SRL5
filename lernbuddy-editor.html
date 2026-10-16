@@ -40,6 +40,17 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
 .spacer { flex: 1; }
 .status { font-size: .9rem; font-weight: 700; padding: .35rem .7rem; border-radius: 999px; background: var(--mint-400); color: var(--n900); }
 .status.warn { background: #fde2df; color: var(--red); }
+.pop-wrap { position: relative; }
+.pop { position: absolute; top: calc(100% + .5rem); left: 0; z-index: 30; width: 20rem; padding: .9rem 1rem 1rem; border-radius: 1rem;
+  background: #fff; color: var(--n900); box-shadow: 0 18px 40px rgba(15,33,52,.28); }
+.pop-h { margin: .2rem 0 .5rem; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--n700); }
+.crow { display: flex; align-items: center; gap: .7rem; padding: .35rem 0; font-size: .9rem; line-height: 1.25; cursor: pointer; }
+.crow input { flex: 0 0 3rem; width: 3rem; height: 2.4rem; padding: 0; border: 2px solid var(--n200); border-radius: .6rem; background: #fff; cursor: pointer; }
+.presets { display: flex; flex-wrap: wrap; gap: .5rem; }
+.bar .presets button { display: flex; align-items: center; gap: .2rem; color: var(--n900); border-color: var(--n200); font-size: .9rem; }
+.bar .presets button:hover { background: var(--n100); }
+.presets i { width: .9rem; height: .9rem; border-radius: 50%; display: inline-block; }
+.presets i:last-of-type { margin-right: .35rem; }
 .hint-line { padding: .55rem 1rem; font-size: .95rem; color: var(--n700); background: #fff; border-bottom: 1px solid var(--n200); }
 .hint-line b { color: var(--blue-700); }
 
@@ -62,7 +73,7 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
   background: linear-gradient(120deg, var(--blue-700) 0%, var(--blue-600) 45%, var(--mint-400) 80%, var(--orange-400) 100%);
   color: #fff; font-size: 22pt; font-weight: 700; letter-spacing: .06em; }
 .lb .mark { min-width: 9mm; height: 9mm; padding: 0 1mm; display: grid; place-items: center; border: .6mm solid #fff; border-radius: 2.6mm;
-  background: var(--mint-400); color: var(--n900); font-size: 11pt; transform: rotate(-4deg); letter-spacing: 0; }
+  background: var(--mint-400); color: var(--on-mint); font-size: 11pt; transform: rotate(-4deg); letter-spacing: 0; }
 .lb .field { flex: 1; display: flex; align-items: center; padding: 0 4mm; border: .6mm solid var(--blue-300); border-radius: 4mm;
   font-size: 13pt; font-weight: 700; color: var(--blue-700); overflow: hidden; }
 .lb .band { display: flex; }
@@ -70,8 +81,8 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
 .lb .tab .num { width: 9mm; height: 9mm; display: grid; place-items: center; border: .6mm solid currentColor; border-radius: 2.6mm; font-size: 15pt; font-weight: 700; }
 .lb .tab .name { font-size: 15pt; font-weight: 700; line-height: 1.05; }
 .lb .tab .when { font-size: 12pt; line-height: 1.1; }
-.lb .p1 { background: var(--blue-700); color: #fff; }
-.lb .p2 { background: linear-gradient(135deg, var(--orange-100) 0%, var(--orange-400) 100%); color: var(--n900); }
+.lb .p1 { background: var(--blue-700); color: var(--on-blue); }
+.lb .p2 { background: linear-gradient(135deg, var(--orange-100) 0%, var(--orange-400) 100%); color: var(--on-orange4); }
 .lb .p3 { background: linear-gradient(135deg, var(--blue-50) 0%, var(--mint-100) 100%); color: var(--n900); }
 .lb .cell { padding: 2.5mm 3.5mm; border-left: .5mm solid var(--blue-200); overflow: hidden; min-width: 0; }
 .lb .battery { display: flex; align-items: center; margin-top: 2.5mm; }
@@ -98,7 +109,7 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
 .lb .ladder { list-style: none; margin-top: 2mm; display: flex; flex-direction: column-reverse; gap: 1.6mm; }
 .lb .ladder li { position: relative; display: flex; gap: 2mm; align-items: center; padding: 1.8mm 2mm; border: .5mm solid var(--orange-400);
   border-radius: 2.5mm; background: var(--orange-50); font-size: 12pt; line-height: 1.15; }
-.lb .ladder li b { flex: 0 0 6.5mm; height: 6.5mm; display: grid; place-items: center; border-radius: 50%; background: var(--orange-500); color: var(--n900); font-size: 12pt; }
+.lb .ladder li b { flex: 0 0 6.5mm; height: 6.5mm; display: grid; place-items: center; border-radius: 50%; background: var(--orange-500); color: var(--on-orange); font-size: 12pt; }
 .lb .write { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .lb .write .lines { flex: 1; margin-top: 1mm; background-image: linear-gradient(to bottom, transparent calc(100% - .4mm), var(--n300) calc(100% - .4mm)); background-size: 100% 9mm; }
 .lb .edge { flex: 0 0 9mm; background: var(--orange-50); border: 0 dashed var(--orange-500); display: flex; align-items: center; justify-content: center; }
@@ -152,6 +163,20 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
   </div>
   <label class="chk"><input type="checkbox" id="optAnf"> Feld „Was hilft dir …“</label>
   <label class="chk"><input type="checkbox" id="optHint"> Text im Ablagefeld</label>
+  <div class="pop-wrap">
+    <button type="button" id="btnFarben" aria-expanded="false" aria-controls="farbPop">Farben ▾</button>
+    <div class="pop" id="farbPop" hidden>
+      <p class="pop-h">Akzentfarben</p>
+      <label class="crow"><input type="color" data-farbe="blau"><span><b>Farbe 1</b><br>Planung, Rahmen, Überschriften</span></label>
+      <label class="crow"><input type="color" data-farbe="orange"><span><b>Farbe 2</b><br>Durchführung, Lösungsleiter, Sterne</span></label>
+      <label class="crow"><input type="color" data-farbe="minze"><span><b>Farbe 3</b><br>Reflexion, Klassen-Kürzel</span></label>
+      <p class="pop-h">Vorlagen</p>
+      <div class="presets">
+        <button type="button" data-preset="std"><i style="background:#245688"></i><i style="background:#e8833b"></i><i style="background:#48dccb"></i>Klasse 5.x</button>
+        <button type="button" data-preset="srl"><i style="background:#3E5668"></i><i style="background:#D97A4A"></i><i style="background:#7DBB6F"></i>HBG SRL</button>
+      </div>
+    </div>
+  </div>
   <label class="chk"><input type="checkbox" id="optGrau"> Graustufen</label>
   <span class="status" id="status">✓ Alles passt</span>
   <span class="spacer"></span>
@@ -167,6 +192,7 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
 const STORE = "lernbuddy-editor-v2";
 const DEFAULTS = {
   hand: "rechts", grau: false, dropHint: true, showAnfangen: true,
+  farben: { blau: "#245688", orange: "#e8833b", minze: "#48dccb" },
   mark: "5.x", titel: "LERNBUDDY", name: "Name:", fach: "Fach:", datum: "Datum:",
   p1: { num: "1", name: "Planung", when: "vor dem Lernen" },
   ziel: { h: "Mein Ziel", t: "Das will ich heute schaffen:" },
@@ -205,7 +231,7 @@ const set = (p, v) => { const ks = p.split("."), last = ks.pop(); ks.reduce((o, 
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const PT = (() => { const d = document.createElement("div"); d.contentEditable = "plaintext-only"; return d.contentEditable === "plaintext-only"; })();
 const ed = (p, tag = "span") => `<${tag} class="e" data-k="${p}" contenteditable="${PT ? "plaintext-only" : "true"}" spellcheck="true">${esc(get(p))}</${tag}>`;
-const STAR = '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#fff" stroke="#e8833b" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+const STAR = '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#fff" style="stroke:var(--orange-500)" stroke-width="1.6" stroke-linejoin="round"/></svg>';
 
 // Masse in mm (A3 hoch 297 x 420), Ablagefeld 215 x 301 fuer A4 hoch
 const G = { M: 7, COL: 63, GAP: 5, FW: 215, FH: 301, HEAD_Y: 7, HEAD_H: 11, PLAN_Y: 21, PLAN_H: 45, MID_Y: 70 };
@@ -223,6 +249,7 @@ function render() {
   const ladder = M.leiter.map((t, i) => `<li><b>${i + 1}</b>${ed("leiter." + i)}<button class="ed x" data-del="leiter" data-i="${i}" title="Stufe entfernen" aria-label="Stufe entfernen">×</button></li>`).join("");
   const lb = document.getElementById("lb");
   lb.classList.toggle("grau", M.grau);
+  applyColors(lb);
   lb.innerHTML = `
 <div class="abs head" style="left:${G.M}mm; top:${G.HEAD_Y}mm; width:${W}mm; height:${G.HEAD_H}mm;">
   <div class="title"><span class="mark">${ed("mark")}</span>${ed("titel")}</div>
@@ -345,6 +372,40 @@ document.getElementById("fileOpen").onchange = e => {
 addEventListener("resize", () => { fit(); });
 addEventListener("beforeprint", () => { document.body.classList.remove("editing"); });
 addEventListener("afterprint", () => { document.body.classList.add("editing"); });
+
+// ---------- Farben ----------
+const PRESETS = {
+  std: { blau: "#245688", orange: "#e8833b", minze: "#48dccb" },
+  srl: { blau: "#3E5668", orange: "#D97A4A", minze: "#7DBB6F" }
+};
+const hex2rgb = h => { h = h.replace("#", ""); if (h.length === 3) h = h.replace(/./g, c => c + c); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
+const rgb2hex = c => "#" + c.map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0")).join("");
+const mix = (h, t, a) => { const c = hex2rgb(h), d = hex2rgb(t); return rgb2hex(c.map((v, i) => v + (d[i] - v) * a)); };
+const tint = (h, a) => mix(h, "#ffffff", a), shade = (h, a) => mix(h, "#000000", a);
+function lum(h) { return hex2rgb(h).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }).reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0); }
+const onColor = h => lum(h) > .32 ? "#18324a" : "#ffffff";   // dunkle oder weisse Schrift
+function applyColors(el) {
+  const { blau: b, orange: o, minze: m } = M.farben;
+  const v = {
+    "--blue-50": tint(b, .93), "--blue-100": tint(b, .86), "--blue-200": tint(b, .7), "--blue-300": tint(b, .48),
+    "--blue-600": b, "--blue-700": shade(b, .14), "--blue-800": shade(b, .25),
+    "--orange-50": tint(o, .95), "--orange-100": tint(o, .87), "--orange-400": tint(o, .28), "--orange-500": o, "--orange-700": shade(o, .3),
+    "--mint-50": tint(m, .93), "--mint-100": tint(m, .8), "--mint-200": tint(m, .6), "--mint-400": m, "--mint-700": shade(m, .45),
+    "--on-blue": onColor(shade(b, .14)), "--on-orange": onColor(o), "--on-orange4": onColor(tint(o, .28)), "--on-mint": onColor(m)
+  };
+  for (const k in v) el.style.setProperty(k, v[k]);
+  document.querySelectorAll("[data-farbe]").forEach(i => { i.value = M.farben[i.dataset.farbe]; });
+}
+const pop = document.getElementById("farbPop"), btnF = document.getElementById("btnFarben");
+btnF.onclick = e => { e.stopPropagation(); pop.hidden = !pop.hidden; btnF.setAttribute("aria-expanded", !pop.hidden); };
+document.addEventListener("click", e => { if (!pop.hidden && !e.target.closest(".pop-wrap")) { pop.hidden = true; btnF.setAttribute("aria-expanded", "false"); } });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !pop.hidden) { pop.hidden = true; btnF.focus(); } });
+document.querySelectorAll("[data-farbe]").forEach(i => i.addEventListener("input", () => {
+  M.farben[i.dataset.farbe] = i.value; save(); applyColors(document.getElementById("lb"));
+}));
+document.querySelectorAll("[data-preset]").forEach(b => b.onclick = () => {
+  M.farben = { ...PRESETS[b.dataset.preset] }; save(); applyColors(document.getElementById("lb"));
+});
 document.fonts.ready.then(render);
 render();
 </script>
