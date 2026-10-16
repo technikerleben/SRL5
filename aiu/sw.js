@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v16-kajuete-gesichert';
+const VERSION='v17-wochen-ohne-daten';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',

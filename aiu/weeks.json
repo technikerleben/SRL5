@@ -1,7 +1,6 @@
 [
   {
     "number": 1,
-    "dates": "2.–6. November",
     "phase": "einfuehrung",
     "chapter": "Stapellauf",
     "short": "Das Schiff gehört uns",
@@ -128,7 +127,6 @@
   },
   {
     "number": 2,
-    "dates": "9.–13. November",
     "phase": "vollbetrieb",
     "chapter": "Die erste Ausfahrt",
     "short": "Wir legen ab",
@@ -259,7 +257,6 @@
   },
   {
     "number": 3,
-    "dates": "16.–20. November",
     "phase": "vollbetrieb",
     "chapter": "Die Leuchtturmbucht",
     "short": "Das aussetzende Licht",
@@ -385,7 +382,6 @@
   },
   {
     "number": 4,
-    "dates": "23.–27. November",
     "phase": "vollbetrieb",
     "chapter": "Die Bucht der Grünen Insel",
     "short": "Drei Wege auf der Grünen Insel",
@@ -499,7 +495,6 @@
   },
   {
     "number": 5,
-    "dates": "30. November – 4. Dezember",
     "phase": "vollbetrieb",
     "chapter": "Spuren und weite Sicht",
     "short": "Wald und Hügel",
@@ -590,7 +585,6 @@
   },
   {
     "number": 6,
-    "dates": "7.–11. Dezember",
     "phase": "vollbetrieb",
     "chapter": "Die Nebelbucht",
     "short": "Licht und Glocken im Nebel",
@@ -681,7 +675,6 @@
   },
   {
     "number": 7,
-    "dates": "14.–18. Dezember",
     "phase": "vollbetrieb",
     "chapter": "Die Insel der leisen Zeichen",
     "short": "Zeichen am Ufer",
@@ -772,7 +765,6 @@
   },
   {
     "number": 8,
-    "dates": "21.–22. Dezember",
     "phase": "vollbetrieb",
     "chapter": "Das Südliche Fahrwasser",
     "short": "Rückblick auf die erste Reise",
@@ -795,7 +787,7 @@
       "ausbau"
     ],
     "new_unlock": "Letzte Etappe vor den Ferien",
-    "unlock_text": "Zwei Tage bleiben: Zeit für den Rückblick, das letzte Logbuchkapitel und den letzten Besatzungsrat.",
+    "unlock_text": "Zeit für den Rückblick, das letzte Logbuchkapitel und den letzten Besatzungsrat.",
     "missions": [
       {
         "id": "w15-rueckblick",
