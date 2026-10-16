@@ -41,10 +41,14 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
 .status { font-size: .9rem; font-weight: 700; padding: .35rem .7rem; border-radius: 999px; background: var(--mint-400); color: var(--n900); }
 .status.warn { background: #fde2df; color: var(--red); }
 .pop-wrap { position: relative; }
-.pop { position: absolute; top: calc(100% + .5rem); left: 0; z-index: 30; width: 20rem; padding: .9rem 1rem 1rem; border-radius: 1rem;
+.pop { position: absolute; top: calc(100% + .5rem); left: 0; z-index: 30; width: 25rem; max-width: calc(100vw - 2rem); padding: .9rem 1rem 1rem; border-radius: 1rem;
   background: #fff; color: var(--n900); box-shadow: 0 18px 40px rgba(15,33,52,.28); }
 .pop-h { margin: .2rem 0 .5rem; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--n700); }
-.crow { display: flex; align-items: center; gap: .7rem; padding: .35rem 0; font-size: .9rem; line-height: 1.25; cursor: pointer; }
+.crow { display: flex; align-items: center; gap: .7rem; padding: .35rem 0; font-size: .9rem; line-height: 1.25; }
+.crow label { flex: 1; cursor: pointer; }
+.crow .hex { flex: 0 0 5.6rem; width: 5.6rem; padding: .45rem .5rem; border: 2px solid var(--n200); border-radius: .6rem; font: 700 .9rem ui-monospace, Menlo, Consolas, monospace; color: var(--n900); text-transform: uppercase; }
+.crow .hex:focus { outline: none; border-color: var(--blue-600); }
+.crow .hex.bad { border-color: #b42318; background: #fde2df; }
 .crow input { flex: 0 0 3rem; width: 3rem; height: 2.4rem; padding: 0; border: 2px solid var(--n200); border-radius: .6rem; background: #fff; cursor: pointer; }
 .presets { display: flex; flex-wrap: wrap; gap: .5rem; }
 .bar .presets button { display: flex; align-items: center; gap: .2rem; color: var(--n900); border-color: var(--n200); font-size: .9rem; }
@@ -167,12 +171,13 @@ body { background: var(--n100); color: var(--n900); font-family: Andika, Arial, 
     <button type="button" id="btnFarben" aria-expanded="false" aria-controls="farbPop">Farben ▾</button>
     <div class="pop" id="farbPop" hidden>
       <p class="pop-h">Akzentfarben</p>
-      <label class="crow"><input type="color" data-farbe="blau"><span><b>Farbe 1</b><br>Planung, Rahmen, Überschriften</span></label>
-      <label class="crow"><input type="color" data-farbe="orange"><span><b>Farbe 2</b><br>Durchführung, Lösungsleiter, Sterne</span></label>
-      <label class="crow"><input type="color" data-farbe="minze"><span><b>Farbe 3</b><br>Reflexion, Klassen-Kürzel</span></label>
+      <div class="crow"><input type="color" data-farbe="blau" id="c-blau" aria-label="Farbe 1 wählen"><label for="c-blau"><b>Farbe 1</b><br>Planung, Rahmen, Überschriften</label><input type="text" class="hex" data-hex="blau" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Farbe 1 als Hex-Wert"></div>
+      <div class="crow"><input type="color" data-farbe="orange" id="c-orange" aria-label="Farbe 2 wählen"><label for="c-orange"><b>Farbe 2</b><br>Durchführung, Lösungsleiter, Sterne</label><input type="text" class="hex" data-hex="orange" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Farbe 2 als Hex-Wert"></div>
+      <div class="crow"><input type="color" data-farbe="minze" id="c-minze" aria-label="Farbe 3 wählen"><label for="c-minze"><b>Farbe 3</b><br>Reflexion, Klassen-Kürzel</label><input type="text" class="hex" data-hex="minze" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Farbe 3 als Hex-Wert"></div>
       <p class="pop-h">Vorlagen</p>
       <div class="presets">
         <button type="button" data-preset="std"><i style="background:#245688"></i><i style="background:#e8833b"></i><i style="background:#48dccb"></i>Klasse 5.x</button>
+        <button type="button" data-preset="cd"><i style="background:#245688"></i><i style="background:#791D22"></i><i style="background:#3F6B4D"></i>HBG CD</button>
         <button type="button" data-preset="srl"><i style="background:#3E5668"></i><i style="background:#D97A4A"></i><i style="background:#7DBB6F"></i>HBG SRL</button>
       </div>
     </div>
@@ -376,7 +381,8 @@ addEventListener("afterprint", () => { document.body.classList.add("editing"); }
 // ---------- Farben ----------
 const PRESETS = {
   std: { blau: "#245688", orange: "#e8833b", minze: "#48dccb" },
-  srl: { blau: "#3E5668", orange: "#D97A4A", minze: "#7DBB6F" }
+  srl: { blau: "#3E5668", orange: "#D97A4A", minze: "#7DBB6F" },
+  cd:  { blau: "#245688", orange: "#791D22", minze: "#3F6B4D" }
 };
 const hex2rgb = h => { h = h.replace("#", ""); if (h.length === 3) h = h.replace(/./g, c => c + c); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
 const rgb2hex = c => "#" + c.map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0")).join("");
@@ -394,7 +400,8 @@ function applyColors(el) {
     "--on-blue": onColor(shade(b, .14)), "--on-orange": onColor(o), "--on-orange4": onColor(tint(o, .28)), "--on-mint": onColor(m)
   };
   for (const k in v) el.style.setProperty(k, v[k]);
-  document.querySelectorAll("[data-farbe]").forEach(i => { i.value = M.farben[i.dataset.farbe]; });
+  document.querySelectorAll("[data-farbe]").forEach(i => { i.value = M.farben[i.dataset.farbe].toLowerCase(); });
+  document.querySelectorAll("[data-hex]").forEach(i => { if (document.activeElement !== i) { i.value = M.farben[i.dataset.hex].toUpperCase(); i.classList.remove("bad"); } });
 }
 const pop = document.getElementById("farbPop"), btnF = document.getElementById("btnFarben");
 btnF.onclick = e => { e.stopPropagation(); pop.hidden = !pop.hidden; btnF.setAttribute("aria-expanded", !pop.hidden); };
@@ -403,6 +410,16 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && !pop.hidde
 document.querySelectorAll("[data-farbe]").forEach(i => i.addEventListener("input", () => {
   M.farben[i.dataset.farbe] = i.value; save(); applyColors(document.getElementById("lb"));
 }));
+
+const normHex = v => { v = v.trim().replace(/^#?/, "#"); if (/^#[0-9a-f]{3}$/i.test(v)) v = "#" + v.slice(1).replace(/./g, c => c + c); return /^#[0-9a-f]{6}$/i.test(v) ? v.toLowerCase() : null; };
+document.querySelectorAll("[data-hex]").forEach(i => {
+  i.addEventListener("input", () => {
+    const v = normHex(i.value); i.classList.toggle("bad", !v && i.value.trim() !== "");
+    if (v) { M.farben[i.dataset.hex] = v; save(); applyColors(document.getElementById("lb")); }
+  });
+  i.addEventListener("blur", () => { i.value = M.farben[i.dataset.hex].toUpperCase(); i.classList.remove("bad"); });
+  i.addEventListener("keydown", e => { if (e.key === "Enter") i.blur(); });
+});
 document.querySelectorAll("[data-preset]").forEach(b => b.onclick = () => {
   M.farben = { ...PRESETS[b.dataset.preset] }; save(); applyColors(document.getElementById("lb"));
 });
