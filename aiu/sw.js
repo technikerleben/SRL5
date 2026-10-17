@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v20-truhe-3d';
+const VERSION='v21-logbuch-start';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
