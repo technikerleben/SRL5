@@ -181,3 +181,5 @@ body.buehne .modal-wrap{display:none!important}
 #truhe3d-wrap{position:relative;height:250px;border-radius:14px;overflow:hidden;background:radial-gradient(ellipse at 50% 80%,rgba(139,90,46,.18),transparent 60%)}
 #truhe3d-canvas{display:block;width:100%;height:100%}
 @media (max-width:720px){.lg-layout{grid-template-columns:1fr}#truhe3d-wrap{height:220px}}
+
+.log-entry p{white-space:pre-line}
