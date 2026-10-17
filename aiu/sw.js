@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v19-landgang';
+const VERSION='v20-truhe-3d';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
@@ -19,6 +19,7 @@ const CORE=[
   './app-auth.js',
   './app-input.js',
   './app-landgang.js',
+  './app-truhe3d.js',
   './app-teacher.js',
   './segelschiff-header.html',
   './segelschiff-steuermann.html',
