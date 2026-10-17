@@ -41,7 +41,7 @@ async function boot(query = '') {
   // Ladereihenfolge wie in index.html und app.js. app-ship.js baut ein iframe
   // auf, das jsdom nicht ausfuehrt – die Bruecke wird separat geprueft.
   const order = ['vendor/three.min.js', 'app-store.js', 'app-core.js', 'config-loader.js', 'sync-config.js',
-    'app-sync.js', 'app-ship.js', 'app-gems.js', 'app-juice.js', 'app-kiosk.js', 'app-auth.js', 'app-input.js', 'app-teacher.js'];
+    'app-sync.js', 'app-ship.js', 'app-gems.js', 'app-juice.js', 'app-kiosk.js', 'app-auth.js', 'app-input.js', 'app-landgang.js', 'app-teacher.js'];
   for (const file of order) {
     try {
       const tag = window.document.createElement('script');
@@ -102,7 +102,7 @@ const w1 = await boot('?ui=aus');
   check('Routenkarte nutzt dieselbe Startkarte', G('CFG').map.routeImage === 'startkarte.svg');
   check('Feste Route beginnt an der Hafenausfahrt', G('CFG').weeks[1].ort.route.join('|') === 'home|harbor-exit|first-sea');
   check('Keine scheinbare freie Zielwahl vor der Ausfahrt', !G('CFG').weeks[0].council.choices.some(x => /Leuchtturm|Grüne Insel|Nebelbucht/.test(x)));
-  check('Alle Symbole im Sprite', w1.document.querySelectorAll('#icon-sprite symbol').length === 28, String(w1.document.querySelectorAll('#icon-sprite symbol').length));
+  check('Alle Symbole im Sprite', w1.document.querySelectorAll('#icon-sprite symbol').length === 29, String(w1.document.querySelectorAll('#icon-sprite symbol').length));
 
   // Router und Sperren
   w1.gotoView('missionen');
@@ -342,7 +342,54 @@ check('Bühne ohne Schalter bleibt aus', !w4.document.body.classList.contains('b
   check('Abmelden räumt die Sitzung', !w5.sessionStorage.getItem('kiu-v2-teacher-auth') && $('#view-deck')?.classList.contains('active'));
 }
 
-console.log('\nSmoke-Test (Phase 1 bis 3, Kioskbetrieb und Kajüte)\n' + '='.repeat(60));
+/* =================================================================
+   Durchlauf 6: Landgangstruhe, Wochenvorrat und Einsätze
+   ================================================================= */
+{
+  const w6 = await boot('?ton=aus');
+  const $ = sel => w6.document.querySelector(sel);
+  const G = expr => w6.eval(expr);
+  w6.confirm = () => true;
+  w6.teacherLogin();
+  w6.gotoView('lehrer');
+  await wait(200);
+  check('Truhe auf dem Deck', !!$('#landgangCard')?.textContent.includes('Landgangstruhe'));
+  check('Truhe startet leer', w6.lgSum(G('runtime.truhe')) === 0);
+  check('Wochenvorrat ohne Ausbau 2/2/2', JSON.stringify(w6.lgWochenvorrat()) === JSON.stringify({ antrieb: 2, wissen: 2, zusammenhalt: 2 }));
+
+  $('#lgBook').click(); await wait(250);
+  check('Wochenvorrat eingebucht', G('runtime.resources.antrieb') === 2 && G('runtime.resources.wissen') === 2);
+  check('Wochenvorrat nur einmal pro Woche', $('#lgBook')?.disabled === true);
+
+  G('runtime.week = 2; runtime.resources.antrieb = 7');
+  w6.AIU_STORE.emitSync(...w6.AIU_TOPICS); await wait(150);
+  check('Meilenstein als Einsatz angeboten', [...$('#lgZweck').options].some(o => o.value === 'meilenstein-2-antrieb' && o.textContent.includes('Segel')));
+  const vorher = G('runtime.resources.antrieb');
+  $('#lgZweck').value = 'meilenstein-2-antrieb'; $('#lgSpend').click(); await wait(250);
+  check('Ohne Zustimmung kein Einsatz', G('runtime.resources.antrieb') === vorher && w6.lgSum(G('runtime.truhe')) === 0);
+  $('#lgZweck').value = 'meilenstein-2-antrieb'; $('#lgConsent').checked = true; $('#lgSpend').click(); await wait(250);
+  check('Einsatz zieht nur die Kosten ab', G('runtime.resources.antrieb') === vorher - 6);
+  check('Eingesetzte Steine liegen in der Truhe', G('runtime.truhe.antrieb') === 6);
+  check('Segel ist gebaut', G('runtime.upgrades.segel') === true);
+  check('Segel erhöht den Wochenvorrat auf 3 Antrieb', w6.lgWochenvorrat().antrieb === 3);
+  check('Einsatz steht in der Liste', ($('#landgangCard')?.textContent || '').includes('Zusätzliches Segel'));
+
+  G('runtime.resources.wissen = 1');
+  w6.AIU_STORE.emitSync(...w6.AIU_TOPICS); await wait(120);
+  $('#lgZweck').value = 'ausbau-kartenraum'; $('#lgConsent').checked = true; $('#lgSpend').click(); await wait(250);
+  check('Zu wenige Steine: nichts passiert', G('runtime.resources.wissen') === 1 && !G('runtime.upgrades.kartenraum'));
+
+  $('#lgZiel').value = 'spiele'; $('#lgZielSet').click(); await wait(250);
+  check('Ziel festgelegt', G('runtime.landgangZiel') === 'spiele' && ($('#landgangCard')?.textContent || '').includes('Spielestunde'));
+  check('Einlösen gesperrt, solange die Truhe nicht reicht', $('#lgRedeem')?.disabled === true);
+  G("runtime.truhe = {antrieb: 20, wissen: 9, zusammenhalt: 5}");
+  w6.AIU_STORE.emitSync(...w6.AIU_TOPICS); await wait(120);
+  $('#lgRedeem').click(); await wait(250);
+  check('Landgang eingelöst, Rest bleibt in der Truhe', w6.lgSum(G('runtime.truhe')) === 4 && G('runtime.landgaenge.length') === 1 && G('runtime.landgangZiel') === null);
+  check('Ressourcen nie negativ', ['antrieb', 'wissen', 'zusammenhalt'].every(k => G(`runtime.resources.${k}`) >= 0));
+}
+
+console.log('\nSmoke-Test (Phase 1 bis 3, Kioskbetrieb, Kajüte und Landgang)\n' + '='.repeat(60));
 let failed = 0;
 for (const c of checks) {
   if (!c.ok) failed++;

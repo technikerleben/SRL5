@@ -1,5 +1,5 @@
 /* Bei jeder Auslieferung erhoehen. Der alte Cache wird beim Aktivieren geloescht. */
-const VERSION='v18-schiffsname';
+const VERSION='v19-landgang';
 const CACHE=`kiu-begleitapp-${VERSION}`;
 const CORE=[
   './',
@@ -18,6 +18,7 @@ const CORE=[
   './app-gems.js',
   './app-auth.js',
   './app-input.js',
+  './app-landgang.js',
   './app-teacher.js',
   './segelschiff-header.html',
   './segelschiff-steuermann.html',

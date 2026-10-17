@@ -51,65 +51,117 @@
   "resources": {
     "antrieb": {
       "value": 0,
-      "maximum": 20,
+      "maximum": 30,
       "label": "Antrieb",
       "icon": "🌿"
     },
     "wissen": {
       "value": 0,
-      "maximum": 20,
+      "maximum": 30,
       "label": "Wissen",
       "icon": "📜"
     },
     "zusammenhalt": {
       "value": 0,
-      "maximum": 20,
+      "maximum": 30,
       "label": "Zusammenhalt",
       "icon": "🤝"
     }
   },
   "shipUpgrades": [
     {
+      "id": "segel",
+      "title": "Zusätzliches Segel",
+      "icon": "⛵",
+      "effect": "Das Schiff nimmt mehr Fahrt auf.",
+      "unlocked": false,
+      "kosten": {
+        "antrieb": 6
+      },
+      "ertrag": {
+        "antrieb": 1
+      }
+    },
+    {
       "id": "kartenraum",
       "title": "Kartenraum",
       "icon": "🗺️",
       "effect": "Routen können genauer geplant werden.",
-      "unlocked": false
-    },
-    {
-      "id": "beiboot",
-      "title": "Beiboot",
-      "icon": "🛶",
-      "effect": "Flache Küsten und kleine Inseln werden erreichbar.",
-      "unlocked": false
+      "unlocked": false,
+      "kosten": {
+        "wissen": 6
+      },
+      "ertrag": {
+        "wissen": 1
+      }
     },
     {
       "id": "ausguck",
       "title": "Ausguck",
       "icon": "🔭",
       "effect": "Gefahren und besondere Orte werden früher sichtbar.",
-      "unlocked": false
+      "unlocked": false,
+      "kosten": {
+        "wissen": 4,
+        "antrieb": 2
+      },
+      "ertrag": {
+        "wissen": 1
+      }
     },
     {
-      "id": "werkstatt",
-      "title": "Werkstatt",
-      "icon": "🔨",
-      "effect": "Beschädigte Gegenstände können repariert werden.",
-      "unlocked": false
+      "id": "beiboot",
+      "title": "Beiboot",
+      "icon": "🛶",
+      "effect": "Flache Küsten und kleine Inseln werden erreichbar.",
+      "unlocked": false,
+      "kosten": {
+        "antrieb": 6,
+        "zusammenhalt": 2
+      },
+      "ertrag": {
+        "antrieb": 1
+      }
     },
     {
       "id": "lager",
       "title": "Größeres Lager",
       "icon": "📦",
       "effect": "Mehr Ausrüstung kann mitgenommen werden.",
-      "unlocked": false
+      "unlocked": false,
+      "kosten": {
+        "zusammenhalt": 6
+      },
+      "ertrag": {
+        "zusammenhalt": 1
+      }
+    },
+    {
+      "id": "werkstatt",
+      "title": "Werkstatt",
+      "icon": "🔨",
+      "effect": "Beschädigte Gegenstände können repariert werden.",
+      "unlocked": false,
+      "kosten": {
+        "antrieb": 4,
+        "wissen": 4
+      },
+      "ertrag": {
+        "antrieb": 1
+      }
     },
     {
       "id": "versammlung",
       "title": "Versammlungsraum",
       "icon": "🗣️",
       "effect": "Schwierige Entscheidungen können besser vorbereitet werden.",
-      "unlocked": false
+      "unlocked": false,
+      "kosten": {
+        "zusammenhalt": 8
+      },
+      "ertrag": {
+        "zusammenhalt": 1
+      }
     }
   ],
   "logbook": [
@@ -119,5 +171,33 @@
       "text": "Die Besatzung versammelt sich zum ersten Mal. Das Schiff liegt noch namenlos im Heimathafen. Die Hafenmeisterin zeigt die Startkarte mit den bekannten Hafenorten und den noch nicht besuchten Zielen. Die Reise beginnt.",
       "week": 1
     }
-  ]
+  ],
+  "wirtschaft": {
+    "_hinweis": "Wochenvorrat: Basis je Woche plus Ertrag gebauter Ausbauten. Die Lehrkraft bucht ihn in der Kajüte ein.",
+    "basisProWoche": {
+      "antrieb": 2,
+      "wissen": 2,
+      "zusammenhalt": 2
+    }
+  },
+  "landgang": {
+    "_hinweis": "Ziele außerhalb des Spiels. Die Klasse wählt im Besatzungsrat. Steinzahlen hier anpassen.",
+    "ziele": [
+      {
+        "id": "spiele",
+        "titel": "Spielestunde",
+        "steine": 30
+      },
+      {
+        "id": "film",
+        "titel": "Filmstunde",
+        "steine": 50
+      },
+      {
+        "id": "fruehstueck",
+        "titel": "Klassenfrühstück",
+        "steine": 80
+      }
+    ]
+  }
 }

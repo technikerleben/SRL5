@@ -15,6 +15,7 @@
     {src:'app-kiosk.js',required:false},
     {src:'app-auth.js',required:true},
     {src:'app-input.js',required:true},
+    {src:'app-landgang.js',required:true},
     {src:'app-teacher.js',required:true}
   ];
   for(const file of files){

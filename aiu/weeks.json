@@ -232,7 +232,9 @@
     "milestones": {
       "antrieb": {
         "target": 6,
-        "reward": "Ein zusätzliches Segel wird gesetzt. Das Schiff nimmt Fahrt auf."
+        "reward": "Genug Antrieb für ein zusätzliches Segel! Der Besatzungsrat entscheidet, ob ihr es setzt.",
+        "einsatz": "Zusätzliches Segel setzen",
+        "ausbau": "segel"
       }
     },
     "council": {
@@ -357,7 +359,8 @@
     "milestones": {
       "wissen": {
         "target": 6,
-        "reward": "Eine geheime Informationskarte zum Leuchtfeuer wird aufgedeckt."
+        "reward": "Genug Wissen, um die geheime Informationskarte aufzudecken. Der Besatzungsrat entscheidet.",
+        "einsatz": "Geheime Informationskarte aufdecken"
       }
     },
     "council": {
@@ -468,7 +471,8 @@
     "milestones": {
       "zusammenhalt": {
         "target": 6,
-        "reward": "Eine gemeinsame Expedition ins Inselinnere wird möglich."
+        "reward": "Genug Zusammenhalt für eine gemeinsame Expedition ins Inselinnere. Der Besatzungsrat entscheidet.",
+        "einsatz": "Expedition ins Inselinnere starten"
       }
     },
     "council": {
