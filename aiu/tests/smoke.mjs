@@ -41,7 +41,7 @@ async function boot(query = '') {
   // Ladereihenfolge wie in index.html und app.js. app-ship.js baut ein iframe
   // auf, das jsdom nicht ausfuehrt – die Bruecke wird separat geprueft.
   const order = ['vendor/three.min.js', 'app-store.js', 'app-core.js', 'config-loader.js', 'sync-config.js',
-    'app-sync.js', 'app-ship.js', 'app-gems.js', 'app-juice.js', 'app-kiosk.js', 'app-auth.js', 'app-input.js', 'app-landgang.js', 'app-teacher.js'];
+    'app-sync.js', 'app-ship.js', 'app-gems.js', 'app-juice.js', 'app-kiosk.js', 'app-auth.js', 'app-input.js', 'app-landgang.js', 'app-truhe3d.js', 'app-teacher.js'];
   for (const file of order) {
     try {
       const tag = window.document.createElement('script');
