@@ -3,7 +3,7 @@
    Wird als erste Datei geladen und hat bewusst keine Abhaengigkeiten. */
 'use strict';
 
-const AIU_TOPICS = ['chapter', 'locks', 'resources', 'missions', 'map', 'logbook', 'council', 'upgrades', 'session', 'teacher', 'ship'];
+const AIU_TOPICS = ['chapter', 'locks', 'resources', 'missions', 'map', 'logbook', 'council', 'upgrades', 'session', 'teacher', 'ship', 'landgang'];
 
 const AIU_STORE = (() => {
   const handlers = new Map();
