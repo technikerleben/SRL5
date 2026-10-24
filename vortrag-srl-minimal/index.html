@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#163A5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SRL-Vortrag">
 <title>SRL ist keine Methode! · Christoph Wegemann</title>
 <meta name="description" content="Minimalistische Vortragsfassung: Schlagwörter zur Unterstützung des mündlichen Vortrags, Bedienung per Tastatur, Sprechernotizen im zweiten Fenster.">
 <!-- Ordner-URL ohne "/" am Ende: sonst lädt der Browser keine Bilder, Schriften und d3 -->
@@ -22,7 +26,7 @@ html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-fam
 body.idle,body.idle *{cursor:none!important}
 
 /* ---------- Feste 16:9-Bühne (1600 × 900), wird aufs Fenster skaliert ---------- */
-#viewport{position:fixed;inset:0}
+#viewport{position:fixed;inset:0;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%) scale(var(--s,1));transform-origin:center}
 .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:90px 120px}
 .slide.active{display:flex;animation:fade .35s ease both}
@@ -707,7 +711,7 @@ function goTo(i){ i=Math.max(0,Math.min(slides.length-1,i)); if(i===index)return
 
 /* ---------- Folienübersicht (G) ---------- */
 const jump=document.getElementById('jump'),jumpGrid=document.getElementById('jumpGrid'),jumpNum=document.getElementById('jumpNum');
-function openJump(){
+function openJump(byTouch){
   jumpGrid.innerHTML='';
   slides.forEach((s,i)=>{
     if(s.dataset.section){ const h=document.createElement('li'); h.className='sec'; h.textContent=s.dataset.section; jumpGrid.appendChild(h); }
@@ -717,7 +721,7 @@ function openJump(){
     b.addEventListener('click',()=>{closeJump();goTo(i);});
     li.appendChild(b); jumpGrid.appendChild(li);
   });
-  jump.classList.add('open'); jumpNum.value=''; jumpNum.focus();
+  jump.classList.add('open'); jumpNum.value=''; if(!byTouch) jumpNum.focus();
 }
 function closeJump(){ jump.classList.remove('open'); jumpNum.blur(); }
 jump.addEventListener('click',e=>{ if(e.target===jump) closeJump(); });
@@ -760,10 +764,50 @@ document.addEventListener('keydown',e=>{
   else if(k==='Home'){ e.preventDefault(); goTo(0); }
   else if(k==='End'){ e.preventDefault(); setSteps(slides[slides.length-1],false); showSlide(slides.length-1); }
   else if(k==='g'||k==='G'){ e.preventDefault(); openJump(); }
-  else if(k==='f'||k==='F'){ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{}); }
+  else if(k==='f'||k==='F'){ toggleFullscreen(); }
   else if(k==='b'||k==='B'||k==='.'){ document.getElementById('black').classList.toggle('on'); }
   else if(k==='s'||k==='S'){ e.preventDefault(); openNotes(); }
 });
+
+function toggleFullscreen(){
+  const d=document,el=d.documentElement;
+  if(d.fullscreenElement||d.webkitFullscreenElement){ (d.exitFullscreen||d.webkitExitFullscreen).call(d); }
+  else{ const r=el.requestFullscreen||el.webkitRequestFullscreen; if(r){ const p=r.call(el); if(p&&p.catch)p.catch(()=>{}); } }
+}
+
+/* ---------- Touch (iPad) ----------
+   Wischen nach links = weiter, nach rechts = zurück
+   Tippen: rechte zwei Drittel = weiter, linkes Drittel = zurück
+   Wischen nach oben = Folienübersicht, nach unten = schließen
+   Zwei Finger tippen = schwarzer Bildschirm an/aus
+   Vollbild auf dem iPad: Seite über „Teilen → Zum Home-Bildschirm“ als App starten */
+const vp=document.getElementById('viewport');
+let t0x=0,t0y=0,t0t=0,tFingers=0,tMoved=false; const tStart={};
+vp.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){ tFingers=0; tMoved=false; const t=e.touches[0]; t0x=t.clientX; t0y=t.clientY; t0t=Date.now(); }
+  tFingers=Math.max(tFingers,e.touches.length);
+  for(const t of e.changedTouches) tStart[t.identifier]=[t.clientX,t.clientY];
+},{passive:true});
+vp.addEventListener('touchmove',e=>{
+  for(const t of e.changedTouches){ const s0=tStart[t.identifier]; if(s0&&Math.hypot(t.clientX-s0[0],t.clientY-s0[1])>30) tMoved=true; }
+},{passive:true});
+vp.addEventListener('touchend',e=>{
+  for(const t of e.changedTouches){ const s0=tStart[t.identifier]; if(s0&&Math.hypot(t.clientX-s0[0],t.clientY-s0[1])>30) tMoved=true; delete tStart[t.identifier]; }
+  if(e.touches.length) return;                       // erst reagieren, wenn alle Finger weg sind
+  const t=e.changedTouches[0], dt=Date.now()-t0t, black=document.getElementById('black');
+  if(tFingers>=2){ if(!tMoved&&dt<500) black.classList.toggle('on'); return; }
+  const dx=t.clientX-t0x, dy=t.clientY-t0y, adx=Math.abs(dx), ady=Math.abs(dy);
+  if(black.classList.contains('on')){ black.classList.remove('on'); return; }   // erster Tipp holt das Bild zurück
+  if(adx>50 && adx>ady*1.3){ dx<0?forward():backward(); return; }
+  if(dy<-70 && ady>adx*1.3){ openJump(true); return; }
+  if(adx<12 && ady<12 && dt<350){
+    if(e.target.closest&&e.target.closest('a')) return;  // Quellen-Links bleiben antippbar
+    (t.clientX<innerWidth/3)?backward():forward();
+  }
+});
+document.getElementById('black').addEventListener('touchend',e=>{ e.currentTarget.classList.remove('on'); e.preventDefault(); });
+jump.addEventListener('touchstart',e=>{ jump._y=e.touches[0].clientY; },{passive:true});
+jump.addEventListener('touchend',e=>{ const dy=e.changedTouches[0].clientY-(jump._y||0); if(dy>90&&jump.querySelector('.jump-panel').scrollTop<=0) closeJump(); });
 
 /* Mauszeiger nach 2 s Ruhe ausblenden */
 let idleT; document.addEventListener('mousemove',()=>{ document.body.classList.remove('idle'); clearTimeout(idleT); idleT=setTimeout(()=>document.body.classList.add('idle'),2000); });
