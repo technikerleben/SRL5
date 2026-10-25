@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#163A5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SRL-Vortrag">
+<title>SRL ist keine Methode! · Christoph Wegemann</title>
+<meta name="description" content="Minimalistische Vortragsfassung: Schlagwörter zur Unterstützung des mündlichen Vortrags, Bedienung per Tastatur, Sprechernotizen im zweiten Fenster.">
+<!-- Ordner-URL ohne "/" am Ende: sonst lädt der Browser keine Bilder, Schriften und d3 -->
+<script>if(location.protocol!=='file:'&&!/\/$|\.html?$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash);</script>
+<script src="vortrag-srl-minimal/assets/vendor/d3.min.js"></script>
+<style>
+@font-face{font-family:Anton;src:url(vortrag-srl-minimal/assets/fonts/anton.woff2) format("woff2");font-display:block}
+@font-face{font-family:Jost;src:url(vortrag-srl-minimal/assets/fonts/jost.woff2) format("woff2");font-weight:100 900;font-display:block}
+
+:root{
+  --navy:#163A5C;--blue:#245688;--red:#791D22;--mint:#13706A;--orange:#C9773A;
+  --paper:#F7F5F2;--ink:#18324A;--muted:#5A6B7A;--line:rgba(22,58,92,.18);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:Jost,system-ui,sans-serif;overflow:hidden}
+body.idle,body.idle *{cursor:none!important}
+
+/* ---------- Feste 16:9-Bühne (1600 × 900), wird aufs Fenster skaliert ---------- */
+#viewport{position:fixed;inset:0;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%) scale(var(--s,1));transform-origin:center}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:90px 120px}
+.slide.active{display:flex;animation:fade .35s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.notes{display:none}
+
+/* ---------- Drei Schriftgrößen (+ Quellenzeile) ---------- */
+.label{font:700 24px/1.2 Jost,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin:0 0 22px}
+.h{font:400 100px/1.02 Anton,sans-serif;color:var(--navy);margin:0 0 50px;letter-spacing:-.005em;text-wrap:balance}
+.h em,.kw em,.statement em{font-style:normal;color:var(--red)}
+.kw{font:600 52px/1.22 Jost,sans-serif;color:var(--navy);margin:0}
+.kw-list{list-style:none;margin:0;padding:0;display:grid;gap:26px}
+.sm{font:500 28px/1.35 Jost,sans-serif;color:var(--muted);margin:0}
+.src{font:400 20px/1.35 Jost,sans-serif;color:var(--muted);margin:14px 0 0}
+.src a{color:inherit}
+
+/* Klick für Klick */
+.step{transition:opacity .4s ease,transform .4s ease}
+.step.hidden{opacity:0;transform:translateY(10px)}
+
+/* ---------- Folientypen ---------- */
+.split{display:grid;grid-template-columns:auto minmax(0,1fr);gap:90px;align-items:center}
+.split .h{font-size:88px}
+figure{margin:0}
+
+/* Titel */
+.slide.cover{background:radial-gradient(circle at 78% 22%,#24527A 0,var(--navy) 55%,#0F2A44 100%);color:white}
+.cover .mark{display:inline-grid;place-items:center;width:84px;height:84px;border-radius:22px;border:3px solid rgba(255,255,255,.28);font:400 30px Anton,sans-serif;letter-spacing:.05em;margin-bottom:40px;width:max-content;padding:0 18px}
+.cover .h{font-size:150px;color:white;margin-bottom:30px}
+.cover .h em{color:#FFB98A}
+.cover .kw{color:#DCE7F1;font-weight:500}
+.cover .line{width:120px;height:7px;border-radius:9px;background:linear-gradient(90deg,var(--red),#FFB98A);margin:56px 0 26px}
+.cover .sm{color:#C2D3E3;font-weight:600}
+
+/* Vollbild-Bild */
+.slide.full{padding:30px;background:white}
+.slide.full img{width:100%;height:100%;object-fit:contain;display:block}
+.slide.full .src{position:absolute;left:40px;bottom:22px;margin:0;background:rgba(255,255,255,.85);padding:4px 10px;border-radius:6px}
+.slide.kipper{padding:0;background:#222}
+.slide.kipper img{object-fit:cover}
+.slide.kipper .src{background:rgba(0,0,0,.55);color:#eee}
+
+/* Aussage-Folie */
+.statement{font:400 96px/1.08 Anton,sans-serif;color:var(--navy);margin:0;max-width:1300px;text-wrap:balance}
+.quote{font:600 64px/1.3 Jost,sans-serif;color:var(--navy);margin:0;max-width:1300px;text-wrap:balance}
+
+/* Vorab mit Kipper */
+.kipper-teaser{width:420px}
+.kipper-teaser img{width:100%;display:block;border-radius:16px}
+.kipper-teaser .sm{margin-top:18px;color:var(--navy);font-weight:600}
+
+/* Mythen: rechte Bildhälfte verdeckt bis zur Auflösung */
+.myth-art{position:relative;width:760px}
+.myth-art img{display:block;width:100%;border-radius:14px}
+.myth-cover{position:absolute;top:0;right:0;bottom:0;background:var(--paper);transition:opacity .5s ease}
+.slide.steps-done .myth-cover{opacity:0}
+.myth .split{gap:70px}
+.myth .h{font-size:74px;margin-bottom:44px}
+.myth .kw{font-size:46px}
+
+/* SRL ist … */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px 80px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 60px}
+.dotted li{display:grid;grid-template-columns:38px 1fr;align-items:baseline}
+.dotted li::before{content:"";width:16px;height:16px;border-radius:5px;background:var(--red);transform:translateY(-.12em)}
+
+/* Begriffe */
+.terms{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-bottom:60px}
+.terms div{border-top:6px solid var(--line);padding-top:20px}
+.terms b{display:block;font:700 40px/1.15 Jost,sans-serif;color:var(--navy);margin-bottom:12px;hyphens:manual}
+.terms .on{border-top-color:var(--red)}
+.terms .on b{color:var(--red)}
+
+/* Turbine & Bilder */
+.turbine{width:700px;height:700px;display:block;object-fit:contain}
+.turbine.big{width:760px;height:760px}
+.numbered{counter-reset:n}
+.numbered li{counter-increment:n}
+.numbered li::before{content:counter(n);display:inline-grid;place-items:center;width:58px;height:58px;border-radius:14px;background:var(--navy);color:white;font:700 32px Jost,sans-serif;margin-right:26px;vertical-align:.08em}
+.arrows li+li::before{content:"↓";display:block;font:600 36px/1 Jost;color:var(--red);margin:-6px 0 14px 6px}
+.buddy{height:720px;width:auto;display:block;border-radius:10px;box-shadow:0 0 0 2px var(--line)}
+
+/* Forschung / Erprobung */
+.col .name{font:400 60px/1.05 Anton,sans-serif;color:var(--navy);margin:0 0 10px}
+.col .sm{margin-bottom:18px}
+.col .kw{font-size:40px;line-height:1.3}
+.bottom{margin-top:70px}
+
+/* Werkzeuge */
+.pairs{display:grid;grid-template-columns:max-content 1fr;gap:22px 50px;align-items:baseline}
+.pairs .sm{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:26px}
+
+/* Landkarte */
+.map .h{font-size:64px;margin-bottom:20px}
+#network{width:100%;height:690px;display:block}
+.net-link{stroke:#8DA2B4;stroke-opacity:.55;stroke-width:2.4}
+.net-link.major{stroke:var(--blue);stroke-width:4;stroke-opacity:.7}
+.net-node circle{stroke:var(--paper);stroke-width:3}
+.net-node text{font-family:Jost,sans-serif;text-anchor:middle;fill:var(--navy);paint-order:stroke;stroke:var(--paper);stroke-width:7px;stroke-linejoin:round}
+.net-node.root text{fill:white;stroke:none}
+
+/* ---------- Rahmen außerhalb der Bühne ---------- */
+#progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:rgba(22,58,92,.10);z-index:5}
+#progress .bar{height:100%;width:0;background:var(--navy);transition:width .3s ease}
+#progress .tick{position:absolute;top:-3px;width:2px;height:9px;background:rgba(22,58,92,.35)}
+body.dark-slide #progress{background:rgba(255,255,255,.12)}
+body.dark-slide #progress .bar{background:#FFB98A}
+#black{position:fixed;inset:0;background:#000;z-index:40;display:none}
+#black.on{display:block}
+
+/* Folienübersicht (Taste G) */
+#jump{position:fixed;inset:0;z-index:50;display:none;background:rgba(15,42,68,.8);padding:4vh 4vw;font-size:16px}
+#jump.open{display:grid;place-items:center}
+.jump-panel{background:var(--paper);border-radius:18px;width:min(1100px,100%);max-height:92vh;overflow:auto;padding:18px 22px 22px}
+.jump-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.jump-head b{font:400 24px Anton,sans-serif;color:var(--navy)}
+.jump-head span{color:var(--muted);font-size:14px}
+#jumpNum{margin-left:auto;width:90px;padding:8px 10px;border:2px solid var(--line);border-radius:10px;font:600 16px Jost,sans-serif}
+#jumpGrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+#jumpGrid .sec{grid-column:1/-1;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--red);margin:12px 2px 0}
+#jumpGrid button{width:100%;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;text-align:left;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:white;color:var(--ink);cursor:pointer;font:600 15px Jost,sans-serif}
+#jumpGrid button.current{border-color:var(--red)}
+#jumpGrid .n{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--navy);color:white;font-size:13px}
+
+/* ---------- Sprechernotizen-Fenster (?notes) ---------- */
+#notesView{display:none}
+body.notes-mode{overflow:auto;background:#101C29;color:#E6EEF5}
+body.notes-mode #viewport,body.notes-mode #progress{display:none}
+body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh;padding:22px 28px;gap:18px}
+.nv-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.nv-num{font:400 34px Anton,sans-serif;color:#FFB98A}
+.nv-title{font:600 28px Jost,sans-serif}
+.nv-step{font:600 18px Jost,sans-serif;color:#9FB6CC;padding:3px 10px;border:1px solid #33475B;border-radius:99px}
+.nv-time{margin-left:auto;font:600 26px Jost,sans-serif;font-variant-numeric:tabular-nums;color:#CFE0EE}
+.nv-notes{font:400 26px/1.5 Jost,sans-serif;max-width:60em}
+.nv-notes ul{margin:0;padding-left:1.2em}
+.nv-notes li{margin:.3em 0}
+.nv-notes p{margin:.4em 0}
+.nv-notes b{color:#FFD7B8}
+.nv-foot{display:flex;gap:24px;flex-wrap:wrap;font:500 18px Jost,sans-serif;color:#9FB6CC;border-top:1px solid #2A3D50;padding-top:12px}
+.nv-foot b{color:#E6EEF5}
+.nv-warn{color:#FFB98A}
+
+@media print{
+  html,body{overflow:visible;height:auto;background:white}
+  #viewport{position:static}
+  #stage{position:relative;left:auto;top:auto;transform:none;page-break-inside:avoid}
+  .slide{position:relative;display:flex!important;width:1600px;height:900px;page-break-after:always}
+  .step.hidden{opacity:1;transform:none}
+  .myth-cover,#progress,#jump,#black{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- ===================== EINSTIEG ===================== -->
+<section class="slide cover active" data-title="Titel" data-section="Einstieg" data-dark>
+  <div class="mark">SRL</div>
+  <h1 class="h">SRL ist<br><em>keine Methode!</em></h1>
+  <p class="kw">Was selbstreguliertes Lernen (nicht) ist.</p>
+  <div class="line"></div>
+  <p class="sm">Christoph Wegemann</p>
+  <aside class="notes">
+    <ul><li>Begrüßung, Dank für die Einladung.</li><li>Übergang: „Ich möchte mit einer kleinen Geschichte anfangen.“</li></ul>
+  </aside>
+</section>
+
+<section class="slide full" data-title="Einstieg · Bild">
+  <img src="vortrag-srl-minimal/assets/einstieg.webp" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt">
+  <aside class="notes">
+    <ul>
+      <li>Schülerin aus meiner <b>alten Klasse</b>, Deutsch-<b>E-Kurs</b> – dort habe ich viel erprobt und viel gelernt.</li>
+      <li>Nie eine der Leistungsstarken, immer <b>Wackelkandidatin</b> für den Wechsel in den G-Kurs.</li>
+      <li>Eines Tages kommt sie zu mir: In <b>Mathematik</b> hat sie ganz viele Aufgaben geschafft.</li>
+      <li>Und zwar mit <b>Strategien, die sie aus Deutsch kannte</b>.</li>
+      <li>Einer meiner Glücksmomente in Bezug auf SRL.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Kurz zu mir">
+  <p class="label">Kurz zu mir</p>
+  <h2 class="h">Christoph Wegemann</h2>
+  <ul class="kw-list dotted">
+    <li class="kw">Deutsch &amp; Technik · Gesamtschule NRW</li>
+    <li class="kw">ca. 1.200 Lernende, sechszügig</li>
+    <li class="kw">Netzwerk Zukunftsschulen</li>
+    <li class="kw">SRL-Pilot Jahrgang 5</li>
+  </ul>
+  <aside class="notes">
+    <ul>
+      <li><b>Schule:</b> ca. 1.200 Lernende, sechszügige Sekundarstufe I.</li>
+      <li><b>Netzwerk:</b> seit vier Jahren Zukunftsschulen – Lernkultur.</li>
+      <li><b>Erprobung:</b> Deutsch, Technik und aktuell SRL-Pilot im Jahrgang 5.</li>
+      <li><b>Digital &amp; KI:</b> Digitalisierungsbeauftragter – Werkzeuge, um Differenzierung und Materialentwicklung in der Breite realistischer zu machen.</li>
+      <li>Perspektive eines <b>Praktikers</b>, kein fertiges Schulmodell.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Vorab">
+  <div class="split" style="grid-template-columns:minmax(0,1fr) auto">
+    <div>
+      <h2 class="h">Vorab.</h2>
+      <ul class="kw-list dotted">
+        <li class="kw">Bilder ohne Quelle: KI-generiert.</li>
+        <li class="kw">Die Folien gibt’s im Anschluss.</li>
+      </ul>
+    </div>
+    <figure class="kipper-teaser">
+      <img src="vortrag-srl-minimal/assets/muldenkipper-klein.webp" alt="Grüner Elektro-Muldenkipper im Steinbruch">
+      <figcaption class="sm">Wenn er kommt, ist Schluss.</figcaption>
+      <p class="src">Foto: Andreas Sutter · architektur-technik.ch</p>
+    </figure>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li>Präsentation und alle Bilder <b>ohne Quellenangabe</b> sind KI-generiert.</li>
+      <li>Ausnahmen: SRL-Turbine (Universität Zürich) und Lernbuddy (Prof. Joachim Wirth und Team, RUB – von uns angepasst).</li>
+      <li>Folien werden zur Verfügung gestellt – nichts abfotografieren oder mitschreiben nötig.</li>
+      <li><b>Augenzwinkern:</b> „Wenn der Muldenkipper kommt, ist der Vortrag zu Ende.“</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Leitfrage">
+  <p class="label">Leitfrage</p>
+  <p class="statement">Wie befähigen wir Lernende, ihr Lernen <em>selbst zu steuern?</em></p>
+  <aside class="notes">
+    <ul>
+      <li>Leitfrage ausführlich: Wie können wir Lernende <b>zunehmend</b> dazu befähigen, ihr eigenes Lernen zu <b>planen, zu steuern und zu reflektieren</b>?</li>
+      <li>Kein fertiges Schulmodell – ein Versuch, Forschung, Unterrichtserfahrung und laufende Schulentwicklung zu verbinden.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ===================== MYTHEN ===================== -->
+<section class="slide myth" data-title="Mythos 1" data-section="Fünf Mythen">
+  <div class="split">
+    <div class="myth-art"><img src="vortrag-srl-minimal/assets/myth1.webp" alt="Kind vor leerem Blatt – Kind mit Plan und Checkliste"><div class="myth-cover" style="left:49.5%"></div></div>
+    <div>
+      <p class="label">Mythos 1</p>
+      <h2 class="h">„SRL ist <em>Freiarbeit.</em>“</h2>
+      <p class="kw step">Freiheit ohne Strategie = Selbstbeschäftigung.</p>
+    </div>
+  </div>
+  <aside class="notes"><p><b>Realität:</b> Freiarbeit ohne Strategie ist nur Selbstbeschäftigung. SRL braucht explizite Planung, bewusste Durchführung und Reflexion.</p></aside>
+</section>
+
+<section class="slide myth" data-title="Mythos 2">
+  <div class="split">
+    <div class="myth-art"><img src="vortrag-srl-minimal/assets/myth2.webp" alt="Lehrkraft lehnt sich zurück – Lehrkraft begleitet ein Kind"><div class="myth-cover" style="left:50.5%"></div></div>
+    <div>
+      <p class="label">Mythos 2</p>
+      <h2 class="h">„Die Lehrkraft <em>zieht sich zurück.</em>“</h2>
+      <p class="kw step">Andere Rolle: Gerüst, Feedback, Begleitung.</p>
+    </div>
+  </div>
+  <aside class="notes"><p><b>Realität:</b> SRL braucht eine andere Lehrerrolle: Scaffolding, Feedback und Begleitung metakognitiver Prozesse.</p></aside>
+</section>
+
+<section class="slide myth" data-title="Mythos 3">
+  <div class="split">
+    <div class="myth-art"><img src="vortrag-srl-minimal/assets/myth3.webp" alt="Siegertreppchen – viele Kinder auf eigenen Wegen"><div class="myth-cover" style="left:40.5%"></div></div>
+    <div>
+      <p class="label">Mythos 3</p>
+      <h2 class="h">„Das können nur <em>starke Lernende.</em>“</h2>
+      <p class="kw step">Gerade Schwächere profitieren – wenn SRL gelehrt wird.</p>
+    </div>
+  </div>
+  <aside class="notes"><p><b>Realität:</b> Gerade schwächere Lernende können profitieren – wenn SRL explizit gelehrt und Strategien eingeübt werden.</p><p>Bezug zur Schülerin vom Anfang.</p></aside>
+</section>
+
+<section class="slide myth" data-title="Mythos 4">
+  <div class="split">
+    <div class="myth-art"><img src="vortrag-srl-minimal/assets/myth4.webp" alt="Chaotische Projektarbeit – strukturierter Unterricht mit Zyklus an der Tafel"><div class="myth-cover" style="left:48.7%"></div></div>
+    <div>
+      <p class="label">Mythos 4</p>
+      <h2 class="h">„Immer <em>Projektarbeit</em> und offene Methoden.“</h2>
+      <p class="kw step">Jede Unterrichtsform kann SRL fördern.</p>
+    </div>
+  </div>
+  <aside class="notes"><p><b>Realität:</b> Jede Unterrichtsform kann SRL-förderlich sein – auch direkte Instruktion. Gerade bei jüngeren Lernenden ist zu viel Freiheit nicht automatisch hilfreich.</p></aside>
+</section>
+
+<section class="slide myth" data-title="Mythos 5">
+  <div class="split">
+    <div class="myth-art"><img src="vortrag-srl-minimal/assets/myth5.webp" alt="Stempel SRL ja/nein auf Babys – Kind steigt Treppe Planen, Ausprobieren, Reflektieren, Wachsen"><div class="myth-cover" style="left:50.5%"></div></div>
+    <div>
+      <p class="label">Mythos 5</p>
+      <h2 class="h">„SRL ist ein <em>Persönlichkeits­merkmal.</em>“</h2>
+      <p class="kw step">SRL ist erlernbar.</p>
+    </div>
+  </div>
+  <aside class="notes"><p><b>Realität:</b> SRL ist erlernbar – kein Talent, das man entweder hat oder nicht hat.</p></aside>
+</section>
+
+<!-- ===================== WAS SRL IST ===================== -->
+<section class="slide" data-title="SRL ist …" data-section="Was SRL ist">
+  <h2 class="h">SRL ist …</h2>
+  <ul class="kw-list grid2 dotted">
+    <li class="kw step">ein Prozess</li>
+    <li class="kw step">metakognitiv</li>
+    <li class="kw step">erlernbar</li>
+    <li class="kw step">strategisch</li>
+    <li class="kw step">zyklisch</li>
+    <li class="kw step">begleitet</li>
+    <li class="kw step"><em>für alle</em></li>
+  </ul>
+  <aside class="notes">
+    <ul>
+      <li><b>ein Lernprozess</b> – kein Persönlichkeitsmerkmal, keine einzelne Methode</li>
+      <li><b>erlernbar</b> – durch explizite Vermittlung und Übung</li>
+      <li><b>zyklisch</b> – Planung → Durchführung → Reflexion, immer wieder</li>
+      <li><b>metakognitiv</b> – Lernende denken über ihr eigenes Lernen nach</li>
+      <li><b>strategisch</b> – bewusster Einsatz von Lern- und Arbeitsstrategien</li>
+      <li><b>begleitet</b> – Lehrkräfte scaffolden, geben Feedback, bauen Autonomie schrittweise auf</li>
+      <li><b>für alle</b> – unabhängig von Leistungsniveau oder Alter</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Zitat">
+  <p class="quote">„Ich weiß, warum ich lerne, wie ich lerne – und was ich <em style="font-style:normal;color:var(--red)">beim nächsten Mal anders</em> machen will.“</p>
+  <aside class="notes"><p>Der Kern in einem Satz – das Ziel aus der Sicht der Lernenden.</p></aside>
+</section>
+
+<section class="slide" data-title="Begriffe">
+  <h2 class="h">Wo steht SRL?</h2>
+  <div class="terms">
+    <div class="step"><b>selbst­ständig</b><p class="sm">Brauche ich jemanden neben mir?</p></div>
+    <div class="step"><b>selbst­organisiert</b><p class="sm">Wie ordne ich meine Arbeit?</p></div>
+    <div class="step"><b>selbst­verantwortlich</b><p class="sm">Wofür stehe ich ein?</p></div>
+    <div class="step on"><b>selbst­reguliert</b><p class="sm">Wie steuere ich mein Lernen?</p></div>
+  </div>
+  <p class="kw step">Selbstständig ≠ <em>selbstreguliert.</em></p>
+  <aside class="notes">
+    <ul>
+      <li><b>selbstständig:</b> Ich kann eine Aufgabe zunehmend ohne unmittelbare Hilfe bearbeiten.</li>
+      <li><b>selbstorganisiert:</b> Ich organisiere Zeit, Material, Reihenfolge und Arbeitsablauf.</li>
+      <li><b>selbstverantwortlich:</b> Ich übernehme Verantwortung für Entscheidungen und Ergebnisse.</li>
+      <li><b>selbstreguliert:</b> Ich plane, beobachte, passe an und reflektiere meinen eigenen Lernprozess.</li>
+      <li><b>Pointe:</b> Ein Schüler kann völlig selbstständig einen Wochenplan abarbeiten – und dabei kaum selbstreguliert lernen.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ===================== TURBINE ===================== -->
+<section class="slide" data-title="SRL-Turbine" data-section="Die SRL-Turbine">
+  <div class="split">
+    <figure>
+      <img class="turbine" src="vortrag-srl-minimal/assets/turbine.png" alt="SRL-Turbine der Universität Zürich">
+      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
+    </figure>
+    <div>
+      <p class="label">Karlen et al. · Uni Zürich</p>
+      <h2 class="h">Die SRL-<em>Turbine</em></h2>
+      <ol class="kw-list numbered">
+        <li class="kw">Grundbedürfnisse</li>
+        <li class="kw">Lernprozess</li>
+        <li class="kw">Kompetenzbereiche</li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li>Die Turbine hilft, SRL nicht auf „Organisation“ zu verkürzen.</li>
+      <li>Mehrere Ebenen greifen gleichzeitig ineinander und halten den Lernprozess in Bewegung.</li>
+      <li>1 Grundbedürfnisse: Kompetenz, Autonomie, soziale Eingebundenheit.</li>
+      <li>2 Lernprozess: Planung → Durchführung → Reflexion.</li>
+      <li>3 Kompetenzbereiche: Metakognition, Kognition, Mindset, Ressourcen, Emotionen, Motivation.</li>
+      <li>Quelle: selbstreguliertes-lernen.uzh.ch – „Was ist selbstreguliertes Lernen?“</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Turbine · Grundbedürfnisse">
+  <div class="split">
+    <figure>
+      <img class="turbine" src="vortrag-srl-minimal/assets/turbine-needs.png" alt="SRL-Turbine – Fokus Grundbedürfnisse">
+      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
+    </figure>
+    <div>
+      <p class="label">Ebene 1 · Unser Why</p>
+      <h2 class="h">Warum <em>regulieren?</em></h2>
+      <ul class="kw-list dotted">
+        <li class="kw">Kompetenz</li>
+        <li class="kw">Autonomie</li>
+        <li class="kw">Eingebundenheit</li>
+      </ul>
+      <p class="sm bottom" style="margin-top:46px;color:var(--red);font-weight:700">Nicht allein gelassen.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li>Warum sollte ich mein Lernen regulieren <b>wollen</b>?</li>
+      <li><b>Kompetenz:</b> Lernende möchten sich als fähig erleben und Herausforderungen bewältigen können.</li>
+      <li><b>Autonomie:</b> mitgestalten und eigenverantwortlich handeln – in unterschiedlichem Maß.</li>
+      <li><b>Soziale Eingebundenheit:</b> tragfähige Beziehungen und Unterstützung geben Sicherheit und Motivation.</li>
+      <li>Selbstregulation ist nicht dasselbe wie „allein gelassen werden“. Beziehung und Unterstützung gehören zum Modell dazu.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Turbine · Lernprozess">
+  <div class="split">
+    <figure>
+      <img class="turbine" src="vortrag-srl-minimal/assets/turbine-process.png" alt="SRL-Turbine – Fokus Lernprozess">
+      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
+    </figure>
+    <div>
+      <p class="label">Ebene 2 · Lernprozess</p>
+      <h2 class="h">Der <em>Zyklus.</em></h2>
+      <ul class="kw-list arrows" style="gap:14px">
+        <li class="kw">Planung</li>
+        <li class="kw">Durchführung</li>
+        <li class="kw">Reflexion</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li><b>Vor der Lernphase:</b> Ausgangslage analysieren, Ziele setzen, Strategien wählen, Ressourcen planen.</li>
+      <li><b>Während:</b> Vorgehen beobachten, Strategien anpassen, Motivation und Emotionen regulieren, Hilfe nutzen.</li>
+      <li><b>Nach:</b> Ergebnis und Vorgehen bewerten, Ursachen analysieren, Konsequenzen für den nächsten Zyklus ziehen.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Turbine · Kompetenzen">
+  <div class="split">
+    <figure>
+      <img class="turbine big" src="vortrag-srl-minimal/assets/turbine-areas.png" alt="SRL-Turbine – Fokus Kompetenzbereiche">
+      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
+    </figure>
+    <div>
+      <p class="label">Ebene 3 · Kompetenzbereiche</p>
+      <h2 class="h">Mehr&shy;<em>dimensional.</em></h2>
+    </div>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li><b>Metakognition:</b> planen, überwachen, evaluieren.</li>
+      <li><b>Kognition:</b> Informationen aufnehmen, verarbeiten, strukturieren.</li>
+      <li><b>Mindset:</b> Fehler als Lerngelegenheiten, Entwicklung als möglich erleben.</li>
+      <li><b>Ressourcen:</b> Konzentration, Lernumgebung, Material und Hilfe gezielt nutzen.</li>
+      <li><b>Emotionen:</b> Gefühle wahrnehmen und regulieren.</li>
+      <li><b>Motivation:</b> Energie, Selbstwirksamkeit und Nutzen einer Aufgabe regulieren.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ===================== FORSCHUNG & PRAXIS ===================== -->
+<section class="slide" data-title="Forschung" data-section="Forschung &amp; Praxis">
+  <h2 class="h">Drei <em>Anker.</em></h2>
+  <div class="grid3">
+    <div class="col"><p class="name">Stebner</p><p class="sm">Uni Osnabrück</p><p class="kw">Strategien &amp; Implementierung</p></div>
+    <div class="col"><p class="name">Karlen</p><p class="sm">Uni Zürich</p><p class="kw">Metakognition &amp; Motivation</p></div>
+    <div class="col"><p class="name">Wirth</p><p class="sm">Ruhr-Uni Bochum</p><p class="kw">Äußere Struktur</p></div>
+  </div>
+  <p class="kw bottom">Prüfraster, <em>kein Stundenplan.</em></p>
+  <aside class="notes">
+    <ul>
+      <li><b>Ferdinand Stebner</b> (Osnabrück): Lern- und Selbstregulationsstrategien, Diagnostik und gezielte Förderung, Implementierung in Unterricht und Schule.</li>
+      <li><b>Yves Karlen</b> (Zürich): Metakognition und Strategiewissen, Motivation, Emotion und Mindset, SRL als komplexer, zyklischer Prozess.</li>
+      <li><b>Joachim Wirth</b> (Bochum): Selbstregulation unterstützen und trainieren, äußere Struktur als Lernhilfe, Lernbuddy als rahmengebendes Werkzeug.</li>
+      <li>Die Forschung liefert keinen fertigen Stundenplan, sondern ein Prüfraster für unsere Entscheidungen.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Werkzeuge ≠ SRL">
+  <h2 class="h">Werkzeuge sind <em>nicht SRL.</em></h2>
+  <div class="pairs">
+    <span class="sm">Ziel</span><span class="kw">SRL</span>
+    <span class="sm">Weg</span><span class="kw">Strategien</span>
+    <span class="sm">Gerüst</span><span class="kw">Werkzeuge</span>
+    <span class="sm">Raum</span><span class="kw">Unterricht</span>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li><b>SRL</b> ist das Bildungsziel.</li>
+      <li><b>Strategien</b> sind Kompetenzen, die gelernt und geübt werden.</li>
+      <li><b>Werkzeuge</b> geben äußere Struktur und machen Prozesse sichtbar.</li>
+      <li><b>Unterricht</b> schafft Gelegenheiten, diese Regulation immer wieder zu üben.</li>
+      <li>Werkzeuge bei uns: Lernbuddy, Lernwege, Lernnavigator, Kompetenzraster, Strategiekarten, Lösungsleiter, Lernjournal, Mentorengespräche, Gelingensnachweise.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Lernbuddy">
+  <div class="split">
+    <img class="buddy" src="vortrag-srl-minimal/assets/lernbuddy.webp" alt="Arbeitsblatt Lernbuddy der Klasse 5.3 mit Planung, Durchführung und Reflexion">
+    <div>
+      <p class="label">Rahmengebendes Werkzeug</p>
+      <h2 class="h">Der <em>Lernbuddy.</em></h2>
+      <p class="kw">Äußeres Gerüst →<br>innere Routine.</p>
+      <p class="src" style="margin-top:60px;font-size:22px">Entwickelt von Prof. Joachim Wirth und Team, Ruhr-Universität Bochum – für die Klasse 5.3 von uns angepasst.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li><b>Planung:</b> Ziel klären · Energie einschätzen · Ablenker erkennen · ersten Schritt bestimmen.</li>
+      <li><b>Durchführung:</b> Strategie wählen · Arbeit beobachten · Lösungsleiter nutzen · bei Bedarf nachsteuern.</li>
+      <li><b>Reflexion:</b> Ergebnis und Vorgehen prüfen · Erfolg benennen · nächsten Schritt ableiten.</li>
+      <li>Der Lernbuddy ist nicht SRL. Er ist zunächst ein äußeres Gerüst, das langfristig innere Routinen unterstützen soll.</li>
+      <li><b>Jahrgang 5:</b> Die Bereiche werden nacheinander eingeführt. Mehr Selbstregulation kann am Anfang mehr äußere Struktur bedeuten.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Erprobung">
+  <h2 class="h">Wir testen <em>Bausteine.</em></h2>
+  <div class="grid3">
+    <div class="col"><p class="name">Deutsch</p><p class="kw">Lernwege<br>Kompetenzraster</p></div>
+    <div class="col"><p class="name">Technik</p><p class="kw">Lernnavigatoren<br>Werkstatt</p></div>
+    <div class="col"><p class="name">Jahrgang 5</p><p class="kw">Lernbuddy<br>Lösungsleiter</p></div>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li>Kein fertiges Modell – Unterricht als Entwicklungsraum.</li>
+      <li><b>Deutsch:</b> Lernwege in Etappen, Kompetenzraster, Gelingensnachweise, gezielte Übungs- und Rückmeldephasen.</li>
+      <li><b>Technik:</b> digitale Lernnavigatoren, Projekt- und Werkstattarbeit, Strategie- und Reflexionsphasen, analoge Materialien mit digitalen Hilfen verknüpft.</li>
+      <li><b>Jahrgang 5:</b> Lernbuddy und Lösungsleiter, Strategiekarten, Lernjournal, Mentorengespräche, gemeinsame Sprache über Lernen.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="KI &amp; Digital">
+  <p class="label">Perspektive Digitalisierung</p>
+  <h2 class="h" style="font-size:120px">KI macht kein SRL.</h2>
+  <p class="kw step"><em>Aber sie verändert, was skalierbar wird.</em></p>
+  <p class="sm step" style="margin-top:40px">Material · Lernwege · Feedback → mehr Zeit für Begleitung</p>
+  <aside class="notes">
+    <ul>
+      <li><b>Materialvarianten:</b> Differenzierung, sprachliche Zugänge und Übungsangebote schneller erstellen.</li>
+      <li><b>Lernwege:</b> Navigatoren und Materialien flexibler aktuell halten und verbinden.</li>
+      <li><b>Feedback:</b> Vorbereitung von Rückmeldungen und Übungsformaten unterstützen.</li>
+      <li><b>Lehrkräftezeit:</b> weniger reine Produktionsarbeit – mehr Zeit für Lernbegleitung als Zielperspektive.</li>
+      <li><b>Arbeitshypothese:</b> SRL wird in der Breite realistischer, wenn die Material- und Organisationslast nicht vollständig manuell bei einzelnen Lehrkräften liegt.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ===================== AUSBLICK ===================== -->
+<section class="slide" data-title="Reibungen" data-section="Ausblick">
+  <h2 class="h">Wo es <em>reibt.</em></h2>
+  <ul class="kw-list dotted">
+    <li class="kw">Planung ohne Realismus</li>
+    <li class="kw">Reflexion als Floskel</li>
+    <li class="kw">Zu viel Wahl überfordert</li>
+    <li class="kw">Material simuliert Selbstständigkeit</li>
+  </ul>
+  <aside class="notes">
+    <ul>
+      <li>Planungen werden ausgefüllt, bleiben aber unrealistisch.</li>
+      <li>Reflexion wird zur Pflichtformel statt zu echtem Nachdenken.</li>
+      <li>Zu viele Wahlmöglichkeiten können überfordern.</li>
+      <li>Digitale Lernwege können neue Orientierungsprobleme erzeugen.</li>
+      <li>Materialfülle kann Selbstständigkeit simulieren statt Regulation fördern.</li>
+      <li>Im Kollegium gibt es unterschiedliche Vorstellungen davon, was SRL meint.</li>
+      <li><b>Schülerperspektive:</b> Was hilft beim Starten, Dranbleiben, Entscheiden, Reflektieren? Wo entsteht Freiheit – wo Unsicherheit?</li>
+      <li><b>Kollegiumsperspektive:</b> Welche Routinen entlasten? Wo entsteht zunächst Mehrarbeit? Welche gemeinsame Sprache trägt?</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Schulentwicklung">
+  <h2 class="h">Auch <em>Schulentwicklung.</em></h2>
+  <ul class="kw-list grid2 dotted" style="gap:30px 70px">
+    <li class="kw">Gemeinsames Verständnis</li>
+    <li class="kw">Fachliche Freiheit</li>
+    <li class="kw">Gemeinsame Sprache</li>
+    <li class="kw">Zeit &amp; Begleitung</li>
+    <li class="kw">Wenige Routinen</li>
+    <li class="kw">Progression</li>
+  </ul>
+  <aside class="notes">
+    <ul>
+      <li><b>Gemeinsames Verständnis:</b> Was meinen wir, wenn wir SRL sagen?</li>
+      <li><b>Gemeinsame Sprache:</b> Planung, Durchführung und Reflexion wiedererkennbar machen.</li>
+      <li><b>Wenige Routinen:</b> Nicht jedes Fach braucht ein eigenes System.</li>
+      <li><b>Fachliche Freiheit:</b> gemeinsame Prinzipien ohne Einheitsunterricht.</li>
+      <li><b>Zeit &amp; Begleitung:</b> erproben, austauschen, nachsteuern, Lernende individuell begleiten.</li>
+      <li><b>Progression:</b> Selbstregulation über Jahrgänge hinweg schrittweise aufbauen.</li>
+      <li>Hier wird aus einer scheinbar einfachen Idee ein ziemlich komplexes Geflecht.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide map" data-title="Landkarte" style="padding:50px 60px 40px">
+  <h2 class="h">Kein Bauplan. <em>Eine Landkarte.</em></h2>
+  <svg id="network" viewBox="0 0 1480 690" aria-label="Netzwerk der Themen rund um selbstreguliertes Lernen"></svg>
+  <aside class="notes">
+    <ul>
+      <li>SRL ist als Bildungsziel gut formulierbar.</li>
+      <li>Seine Förderung berührt aber Forschung, Strategien, Werkzeuge, Haltung, Unterricht, Digitalisierung, Feedback und Schulentwicklung gleichzeitig.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Pointe">
+  <p class="statement">Nicht alles gleichzeitig lösen.<br><em>Aber die Verbindungen sehen.</em></p>
+  <aside class="notes"><p>Wir müssen nicht alles gleichzeitig lösen. Aber wir sollten sehen, wie die Baustellen miteinander verbunden sind.</p></aside>
+</section>
+
+<section class="slide full kipper" data-title="Muldenkipper" data-dark>
+  <img src="vortrag-srl-minimal/assets/muldenkipper.webp" alt="Elektro-Muldenkipper eDumper im Steinbruch">
+  <p class="src">eDumper im Steinbruch Péry (BE) · Foto: Andreas Sutter · <a href="https://www.architektur-technik.ch/aktuell/groesster-elektro-laster-der-welt/">architektur-technik.ch</a></p>
+  <aside class="notes">
+    <ul>
+      <li>„Der Muldenkipper ist da – der Vortrag ist zu Ende.“</li>
+      <li><b>eDumper:</b> größter Elektro-Muldenkipper der Welt, Steinbruch der Vigier Ciment in Péry (Berner Jura).</li>
+      <li>Kein Neubau: ein <b>vorhandener</b> Diesel-Kipper (Komatsu HD 605-7) wurde umgebaut – 600-kWh-Batterie statt Dieseltank.</li>
+      <li>Entwickelt von <b>Hochschulen</b> (BFH, NTB Buchs, Empa) mit Industriepartnern.</li>
+      <li>Fährt beladen bergab und gewinnt dabei Energie zurück (Rekuperation) – sie reicht weitgehend für die leere Fahrt bergauf.</li>
+      <li><b>Bild für Schule:</b> modernisieren, wissenschaftliche Erkenntnisse nutzen – und vorhandene Ressourcen klug einsetzen.</li>
+      <li>Dank fürs Zuhören, Raum für Fragen.</li>
+    </ul>
+  </aside>
+</section>
+
+</div></div>
+
+<div id="progress"><div class="bar"></div></div>
+<div id="black"></div>
+<div id="jump" role="dialog" aria-modal="true" aria-label="Folienübersicht">
+  <div class="jump-panel">
+    <div class="jump-head"><b>Folien</b><span>Klicken oder Nummer + Enter · Esc schließt</span><input id="jumpNum" inputmode="numeric" placeholder="Nr." aria-label="Foliennummer"></div>
+    <ol id="jumpGrid"></ol>
+  </div>
+</div>
+
+<div id="notesView">
+  <div class="nv-head">
+    <span class="nv-num" id="nvNum">1 / 1</span><span class="nv-title" id="nvTitle"></span><span class="nv-step" id="nvStep"></span>
+    <span class="nv-time" id="nvTime">00:00</span>
+  </div>
+  <div class="nv-notes" id="nvNotes"></div>
+  <div class="nv-foot">
+    <span>Als Nächstes: <b id="nvNext">–</b></span>
+    <span>→ weiter · ← zurück · T Zeit zurücksetzen</span>
+    <span class="nv-warn" id="nvWarn"></span>
+  </div>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const NOTES_MODE=new URLSearchParams(location.search).has('notes');
+
+/* ---------- Bühne skalieren ---------- */
+function fit(){ const s=Math.min(innerWidth/1600,innerHeight/900); document.documentElement.style.setProperty('--s',s); }
+addEventListener('resize',fit); fit();
+
+/* ---------- Fortschritt mit Kapitel-Markierungen ---------- */
+const progress=document.getElementById('progress'),bar=progress.querySelector('.bar');
+slides.forEach((s,i)=>{ if(s.dataset.section&&i>0){ const t=document.createElement('div'); t.className='tick'; t.style.left=(i/slides.length*100)+'%'; progress.appendChild(t); } });
+
+/* ---------- Navigation ---------- */
+let index=0;
+function markDone(sl){ sl.classList.toggle('steps-done',!sl.querySelector('.step.hidden')); }
+function setSteps(sl,hidden){ sl.querySelectorAll('.step').forEach(el=>el.classList.toggle('hidden',hidden)); markDone(sl); }
+function stepInfo(){ const all=slides[index].querySelectorAll('.step').length, open=all-slides[index].querySelectorAll('.step.hidden').length; return {all,open}; }
+function showSlide(i){
+  index=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,n)=>s.classList.toggle('active',n===index));
+  markDone(slides[index]);
+  bar.style.width=((index+1)/slides.length*100)+'%';
+  document.body.classList.toggle('dark-slide','dark' in slides[index].dataset);
+  if(slides[index].querySelector('#network')) initNetwork();
+  try{ history.replaceState(null,'',location.pathname+location.search+'#'+(index+1)); }catch(_){}
+  broadcast();
+}
+function forward(){
+  const nx=slides[index].querySelector('.step.hidden');
+  if(nx){ nx.classList.remove('hidden'); markDone(slides[index]); broadcast(); return; }
+  if(index<slides.length-1){ setSteps(slides[index+1],true); showSlide(index+1); }
+}
+function backward(){ if(index>0){ setSteps(slides[index-1],false); showSlide(index-1); } }
+function goTo(i){ i=Math.max(0,Math.min(slides.length-1,i)); if(i===index)return; setSteps(slides[i],i>index); showSlide(i); }
+
+/* ---------- Folienübersicht (G) ---------- */
+const jump=document.getElementById('jump'),jumpGrid=document.getElementById('jumpGrid'),jumpNum=document.getElementById('jumpNum');
+function openJump(byTouch){
+  jumpGrid.innerHTML='';
+  slides.forEach((s,i)=>{
+    if(s.dataset.section){ const h=document.createElement('li'); h.className='sec'; h.textContent=s.dataset.section; jumpGrid.appendChild(h); }
+    const li=document.createElement('li'),b=document.createElement('button');
+    b.innerHTML='<span class="n">'+(i+1)+'</span><span></span>'; b.lastChild.textContent=s.dataset.title;
+    if(i===index)b.className='current';
+    b.addEventListener('click',()=>{closeJump();goTo(i);});
+    li.appendChild(b); jumpGrid.appendChild(li);
+  });
+  jump.classList.add('open'); jumpNum.value=''; if(!byTouch) jumpNum.focus();
+}
+function closeJump(){ jump.classList.remove('open'); jumpNum.blur(); }
+jump.addEventListener('click',e=>{ if(e.target===jump) closeJump(); });
+jumpNum.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ const n=parseInt(jumpNum.value,10); if(n>=1&&n<=slides.length){closeJump();goTo(n-1);} e.preventDefault(); }
+  if(e.key==='Escape'){ closeJump(); e.preventDefault(); }
+  e.stopPropagation();
+});
+
+/* ---------- Sprechernotizen: Verbindung zwischen den Fenstern ---------- */
+let notesWin=null;
+function broadcast(){
+  if(NOTES_MODE) return;
+  const msg={srl:'state',index,...stepInfo()};
+  try{ if(notesWin&&!notesWin.closed) notesWin.postMessage(msg,'*'); }catch(_){}
+}
+function openNotes(){
+  const url=location.pathname+'?notes#'+(index+1);
+  notesWin=window.open(url,'srl-notizen','width=1000,height=720');
+  setTimeout(broadcast,600);
+}
+addEventListener('message',e=>{
+  const d=e.data||{};
+  if(!NOTES_MODE){
+    if(d.srl==='hello'){ notesWin=e.source; broadcast(); }
+    if(d.srl==='cmd'){ notesWin=e.source; if(d.action==='next')forward(); if(d.action==='prev')backward(); if(d.action==='goto')goTo(d.n); }
+  }
+});
+
+/* ---------- Tastatur ---------- */
+let typed='',typedTimer;
+document.addEventListener('keydown',e=>{
+  if(NOTES_MODE) return;
+  if(jump.classList.contains('open')){ if(e.key==='Escape'){closeJump();e.preventDefault();} return; }
+  const k=e.key;
+  if(/^[0-9]$/.test(k)){ typed+=k; clearTimeout(typedTimer); typedTimer=setTimeout(()=>typed='',2000); return; }
+  if(k==='Enter'&&typed){ const n=parseInt(typed,10); typed=''; if(n>=1&&n<=slides.length) goTo(n-1); e.preventDefault(); return; }
+  if(k==='ArrowRight'||k==='ArrowDown'||k==='PageDown'||k===' '){ e.preventDefault(); forward(); }
+  else if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp'||k==='Backspace'){ e.preventDefault(); backward(); }
+  else if(k==='Home'){ e.preventDefault(); goTo(0); }
+  else if(k==='End'){ e.preventDefault(); setSteps(slides[slides.length-1],false); showSlide(slides.length-1); }
+  else if(k==='g'||k==='G'){ e.preventDefault(); openJump(); }
+  else if(k==='f'||k==='F'){ toggleFullscreen(); }
+  else if(k==='b'||k==='B'||k==='.'){ document.getElementById('black').classList.toggle('on'); }
+  else if(k==='s'||k==='S'){ e.preventDefault(); openNotes(); }
+});
+
+function toggleFullscreen(){
+  const d=document,el=d.documentElement;
+  if(d.fullscreenElement||d.webkitFullscreenElement){ (d.exitFullscreen||d.webkitExitFullscreen).call(d); }
+  else{ const r=el.requestFullscreen||el.webkitRequestFullscreen; if(r){ const p=r.call(el); if(p&&p.catch)p.catch(()=>{}); } }
+}
+
+/* ---------- Touch (iPad) ----------
+   Wischen nach links = weiter, nach rechts = zurück
+   Tippen: rechte zwei Drittel = weiter, linkes Drittel = zurück
+   Wischen nach oben = Folienübersicht, nach unten = schließen
+   Zwei Finger tippen = schwarzer Bildschirm an/aus
+   Vollbild auf dem iPad: Seite über „Teilen → Zum Home-Bildschirm“ als App starten */
+const vp=document.getElementById('viewport');
+let t0x=0,t0y=0,t0t=0,tFingers=0,tMoved=false; const tStart={};
+vp.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){ tFingers=0; tMoved=false; const t=e.touches[0]; t0x=t.clientX; t0y=t.clientY; t0t=Date.now(); }
+  tFingers=Math.max(tFingers,e.touches.length);
+  for(const t of e.changedTouches) tStart[t.identifier]=[t.clientX,t.clientY];
+},{passive:true});
+vp.addEventListener('touchmove',e=>{
+  for(const t of e.changedTouches){ const s0=tStart[t.identifier]; if(s0&&Math.hypot(t.clientX-s0[0],t.clientY-s0[1])>30) tMoved=true; }
+},{passive:true});
+vp.addEventListener('touchend',e=>{
+  for(const t of e.changedTouches){ const s0=tStart[t.identifier]; if(s0&&Math.hypot(t.clientX-s0[0],t.clientY-s0[1])>30) tMoved=true; delete tStart[t.identifier]; }
+  if(e.touches.length) return;                       // erst reagieren, wenn alle Finger weg sind
+  const t=e.changedTouches[0], dt=Date.now()-t0t, black=document.getElementById('black');
+  if(tFingers>=2){ if(!tMoved&&dt<500) black.classList.toggle('on'); return; }
+  const dx=t.clientX-t0x, dy=t.clientY-t0y, adx=Math.abs(dx), ady=Math.abs(dy);
+  if(black.classList.contains('on')){ black.classList.remove('on'); return; }   // erster Tipp holt das Bild zurück
+  if(adx>50 && adx>ady*1.3){ dx<0?forward():backward(); return; }
+  if(dy<-70 && ady>adx*1.3){ openJump(true); return; }
+  if(adx<12 && ady<12 && dt<350){
+    if(e.target.closest&&e.target.closest('a')) return;  // Quellen-Links bleiben antippbar
+    (t.clientX<innerWidth/3)?backward():forward();
+  }
+});
+document.getElementById('black').addEventListener('touchend',e=>{ e.currentTarget.classList.remove('on'); e.preventDefault(); });
+jump.addEventListener('touchstart',e=>{ jump._y=e.touches[0].clientY; },{passive:true});
+jump.addEventListener('touchend',e=>{ const dy=e.changedTouches[0].clientY-(jump._y||0); if(dy>90&&jump.querySelector('.jump-panel').scrollTop<=0) closeJump(); });
+
+/* Mauszeiger nach 2 s Ruhe ausblenden */
+let idleT; document.addEventListener('mousemove',()=>{ document.body.classList.remove('idle'); clearTimeout(idleT); idleT=setTimeout(()=>document.body.classList.add('idle'),2000); });
+
+/* ---------- Landkarte ---------- */
+const netNodes=[
+  {id:'srl',label:'SRL',lvl:0,g:'root'},
+  {id:'begriffe',label:'Begriffe',lvl:1,g:'concept'},{id:'forschung',label:'Forschung',lvl:1,g:'science'},
+  {id:'werkzeuge',label:'Werkzeuge',lvl:1,g:'tools'},{id:'praxis',label:'Praxis',lvl:1,g:'practice'},
+  {id:'reibung',label:'Reibung',lvl:1,g:'friction'},{id:'schule',label:'Schulentwicklung',lvl:1,g:'school'},
+  {id:'digital',label:'Digital & KI',lvl:1,g:'digital'},
+  {id:'stebner',label:'Stebner',lvl:2,g:'science'},{id:'karlen',label:'Karlen',lvl:2,g:'science'},{id:'wirth',label:'Wirth',lvl:2,g:'science'},
+  {id:'buddy',label:'Lernbuddy',lvl:2,g:'tools'},{id:'lernwege',label:'Lernwege',lvl:2,g:'tools'},{id:'raster',label:'Raster',lvl:2,g:'tools'},
+  {id:'nachweis',label:'Nachweise',lvl:2,g:'tools'},{id:'journal',label:'Lernjournal',lvl:2,g:'tools'},{id:'mentor',label:'Mentoring',lvl:2,g:'tools'},
+  {id:'strategie',label:'Strategien',lvl:2,g:'concept'},{id:'loesung',label:'Lösungsleiter',lvl:2,g:'concept'},
+  {id:'deutsch',label:'Deutsch',lvl:2,g:'practice'},{id:'technik',label:'Technik',lvl:2,g:'practice'},{id:'jg5',label:'Pilot Jg. 5',lvl:2,g:'practice'},
+  {id:'sus',label:'Schüler:innen',lvl:2,g:'friction'},{id:'kollegium',label:'Kollegium',lvl:2,g:'school'},{id:'ki',label:'KI-Material',lvl:2,g:'digital'}
+];
+const netEdges=[
+  ['srl','begriffe'],['srl','forschung'],['srl','werkzeuge'],['srl','praxis'],['srl','reibung'],['srl','schule'],['srl','digital'],
+  ['forschung','stebner'],['forschung','karlen'],['forschung','wirth'],
+  ['werkzeuge','buddy'],['werkzeuge','lernwege'],['werkzeuge','raster'],['werkzeuge','nachweis'],['werkzeuge','journal'],['werkzeuge','mentor'],
+  ['begriffe','strategie'],['strategie','loesung'],['wirth','buddy'],['karlen','buddy'],['stebner','strategie'],
+  ['praxis','deutsch'],['praxis','technik'],['praxis','jg5'],['jg5','buddy'],['jg5','mentor'],['deutsch','lernwege'],['technik','lernwege'],
+  ['reibung','sus'],['reibung','kollegium'],['schule','kollegium'],['schule','mentor'],['schule','jg5'],['digital','ki'],
+  ['ki','lernwege'],['ki','deutsch'],['ki','technik'],['nachweis','raster'],['sus','buddy'],['sus','lernwege']
+];
+const netColors={root:'#791D22',concept:'#A8844F',science:'#245688',tools:'#13706A',practice:'#3F6B4D',friction:'#C9773A',school:'#163A5C',digital:'#5B7FA3'};
+let netDone=false;
+function initNetwork(){
+  if(netDone||typeof d3==='undefined') return; netDone=true;
+  const W=1480,H=690,cx=W/2,cy=H/2;
+  const STYLE=[{r:66,fs:42,w:400},{r:30,fs:31,w:700},{r:17,fs:25,w:600}];
+  netNodes.forEach(n=>{Object.assign(n,STYLE[n.lvl]);n.tw=n.label.length*n.fs*.53;});
+  const byId=Object.fromEntries(netNodes.map(n=>[n.id,n]));
+  const ORDER=['begriffe','forschung','werkzeuge','digital','praxis','schule','reibung'];
+  const PARENT={strategie:'begriffe',loesung:'begriffe',stebner:'forschung',karlen:'forschung',wirth:'forschung',
+    buddy:'werkzeuge',journal:'werkzeuge',raster:'werkzeuge',nachweis:'werkzeuge',lernwege:'werkzeuge',mentor:'werkzeuge',
+    ki:'digital',technik:'praxis',deutsch:'praxis',jg5:'praxis',kollegium:'schule',sus:'reibung'};
+  const kids=ORDER.flatMap(m=>Object.keys(PARENT).filter(k=>PARENT[k]===m));
+  const start=-Math.PI/2-Math.PI/kids.length*1.5;
+  const outer={rx:W/2-120,ry:H/2-50}, inner={rx:outer.rx*.52,ry:outer.ry*.55};
+  kids.forEach((id,i)=>{const t=start+i/kids.length*2*Math.PI,n=byId[id];n.ang=t;n.tx=cx+outer.rx*Math.cos(t);n.ty=cy+outer.ry*Math.sin(t);});
+  ORDER.forEach(m=>{const ks=kids.filter(k=>PARENT[k]===m).map(k=>byId[k]);const t=Math.atan2(d3.mean(ks,k=>Math.sin(k.ang)),d3.mean(ks,k=>Math.cos(k.ang)));const n=byId[m];n.tx=cx+inner.rx*Math.cos(t);n.ty=cy+inner.ry*Math.sin(t);});
+  byId.srl.tx=cx;byId.srl.ty=cy;
+  netNodes.forEach(n=>{n.x=n.tx;n.y=n.ty;});
+  const keep=()=>netNodes.forEach(d=>{const mx=Math.max(d.r,d.tw/2)+10;d.x=Math.max(mx,Math.min(W-mx,d.x));d.y=Math.max(d.r+8,Math.min(H-(d.lvl?d.r+d.fs*1.25:d.r)-8,d.y));});
+  const sim=d3.forceSimulation(netNodes)
+    .force('x',d3.forceX(d=>d.tx).strength(.35)).force('y',d3.forceY(d=>d.ty).strength(.35))
+    .force('collide',d3.forceCollide().radius(d=>d.lvl===0?d.r+14:Math.max(d.r,d.tw/2)+9).iterations(3)).stop();
+  for(let i=0;i<300;i++){sim.tick();keep();}
+  const svg=d3.select('#network');
+  svg.append('g').selectAll('line').data(netEdges).join('line')
+    .attr('class',d=>'net-link'+(d[0]==='srl'?' major':''))
+    .attr('x1',d=>byId[d[0]].x).attr('y1',d=>byId[d[0]].y).attr('x2',d=>byId[d[1]].x).attr('y2',d=>byId[d[1]].y);
+  const g=svg.append('g').selectAll('g').data(netNodes).join('g').attr('class',d=>'net-node'+(d.lvl===0?' root':'')).attr('transform',d=>`translate(${d.x},${d.y})`);
+  g.append('circle').attr('r',d=>d.r).attr('fill',d=>netColors[d.g]);
+  g.append('text').attr('dy',d=>d.lvl===0?'.35em':d.r+d.fs*.95).attr('font-size',d=>d.fs).attr('font-weight',d=>d.w)
+    .attr('font-family',d=>d.lvl===0?'Anton,sans-serif':null).text(d=>d.label);
+}
+
+/* ---------- Start ---------- */
+if(NOTES_MODE){
+  /* Notizfenster: zeigt Notizen der aktuellen Folie, steuert das Hauptfenster */
+  document.body.classList.add('notes-mode');
+  document.title='Notizen · SRL ist keine Methode!';
+  const $=id=>document.getElementById(id);
+  let t0=Date.now(), last=null;
+  function render(st){
+    last=st; const s=slides[st.index], nx=slides[st.index+1];
+    $('nvNum').textContent=(st.index+1)+' / '+slides.length;
+    $('nvTitle').textContent=s.dataset.title;
+    $('nvStep').textContent=st.all?('Klick '+st.open+' / '+st.all):'ohne Aufbau';
+    const n=s.querySelector('.notes'); $('nvNotes').innerHTML=n?n.innerHTML:'<p>–</p>';
+    $('nvNext').textContent=nx?nx.dataset.title:'Ende';
+    $('nvWarn').textContent='';
+  }
+  addEventListener('message',e=>{ if((e.data||{}).srl==='state') render(e.data); });
+  const send=msg=>{ try{ if(window.opener&&!window.opener.closed){ window.opener.postMessage(msg,'*'); return true; } }catch(_){} $('nvWarn').textContent='Hauptfenster nicht verbunden – dort S drücken.'; return false; };
+  setInterval(()=>{ if(!last) send({srl:'hello'}); },1500); send({srl:'hello'});
+  setInterval(()=>{ const s=Math.floor((Date.now()-t0)/1000); $('nvTime').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); },500);
+  document.addEventListener('keydown',e=>{
+    const k=e.key;
+    if(k==='ArrowRight'||k==='ArrowDown'||k==='PageDown'||k===' '){ e.preventDefault(); send({srl:'cmd',action:'next'}); }
+    if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp'||k==='Backspace'){ e.preventDefault(); send({srl:'cmd',action:'prev'}); }
+    if(k==='t'||k==='T'){ t0=Date.now(); }
+  });
+  const h=parseInt((location.hash||'').slice(1),10); render({index:(h>=1&&h<=slides.length)?h-1:0,all:0,open:0});
+  last=null;
+}else{
+  const n=parseInt((location.hash||'').slice(1),10);
+  const s=(n>=1&&n<=slides.length)?n-1:0;
+  setSteps(slides[s],true); showSlide(s);
+}
+</script>
+</body>
+</html>
