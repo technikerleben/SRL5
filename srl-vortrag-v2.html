@@ -90,6 +90,7 @@ figure{margin:0}
 /* SRL ist … */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px 80px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 60px}
+.all-box{align-self:center;margin-top:56px;padding:22px 64px;border:4px solid var(--red);border-radius:18px;background:white}
 .dotted li{display:grid;grid-template-columns:38px 1fr;align-items:baseline}
 .dotted li::before{content:"";width:16px;height:16px;border-radius:5px;background:var(--red);transform:translateY(-.12em)}
 
@@ -329,14 +330,14 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
 <section class="slide" data-title="SRL ist …" data-section="Was SRL ist">
   <h2 class="h">SRL ist …</h2>
   <ul class="kw-list grid2 dotted">
-    <li class="kw step">ein Prozess</li>
-    <li class="kw step">metakognitiv</li>
-    <li class="kw step">erlernbar</li>
-    <li class="kw step">strategisch</li>
-    <li class="kw step">zyklisch</li>
-    <li class="kw step">begleitet</li>
-    <li class="kw step"><em>für alle</em></li>
+    <li class="kw">ein Prozess</li>
+    <li class="kw">metakognitiv</li>
+    <li class="kw">erlernbar</li>
+    <li class="kw">strategisch</li>
+    <li class="kw">zyklisch</li>
+    <li class="kw">begleitet</li>
   </ul>
+  <div class="all-box"><span class="kw"><em>für alle</em></span></div>
   <aside class="notes">
     <ul>
       <li><b>ein Lernprozess</b> – kein Persönlichkeitsmerkmal, keine einzelne Methode</li>
