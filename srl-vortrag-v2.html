@@ -89,7 +89,6 @@ figure{margin:0}
 /* SRL ist … */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px 80px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 60px}
-.all-box{align-self:center;margin-top:56px;padding:22px 64px;border:4px solid var(--red);border-radius:18px;background:white}
  .tried .kw{font-size:36px;margin-top:22px}
 .tried .sm{font-size:24px;margin:4px 0 0}
 .ways{display:grid;grid-template-columns:repeat(3,1fr);gap:56px;margin-top:56px}
@@ -97,6 +96,11 @@ figure{margin:0}
 .ways .name{font:400 58px/1.05 Anton,sans-serif;color:var(--navy);margin:0 0 14px}
 .ways .kw{font-size:36px;line-height:1.25;margin-bottom:16px}
 .ways .sm{font-size:26px}
+.stackv{display:grid;grid-template-columns:auto 1fr;gap:110px;align-items:center}
+.stackv .big{font:400 190px/0.95 Anton,sans-serif;color:var(--navy);margin:0}
+.stackv ul{list-style:none;margin:0;padding:0 0 0 60px;border-left:6px solid var(--line);display:grid;gap:12px}
+.stackv li{font:600 54px/1.15 Jost,sans-serif;color:var(--navy)}
+.stackv li.all{margin-top:18px;justify-self:start;background:var(--red);color:white;padding:10px 30px;border-radius:14px}
 .dotted li{display:grid;grid-template-columns:38px 1fr;align-items:baseline}
 .dotted li::before{content:"";width:16px;height:16px;border-radius:5px;background:var(--red);transform:translateY(-.12em)}
 
@@ -533,16 +537,9 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
 </section>
 
 <section class="slide" data-title="SRL ist …">
-  <h2 class="h">SRL ist …</h2>
-  <ul class="kw-list grid2 dotted">
-    <li class="kw">ein Prozess</li>
-    <li class="kw">metakognitiv</li>
-    <li class="kw">erlernbar</li>
-    <li class="kw">strategisch</li>
-    <li class="kw">zyklisch</li>
-    <li class="kw">begleitet</li>
-  </ul>
-  <div class="all-box"><span class="kw"><em>für alle</em></span></div>
+  <div class="stackv"><p class="big">SRL<br>ist …</p>
+    <ul><li>ein Prozess</li><li>erlernbar</li><li>zyklisch</li><li>metakognitiv</li><li>strategisch</li><li>begleitet</li><li class="all">für alle.</li></ul>
+  </div>
   <aside class="notes">
     <ul>
       <li><b>ein Lernprozess</b> – kein Persönlichkeitsmerkmal, keine einzelne Methode</li>
