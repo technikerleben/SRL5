@@ -90,6 +90,8 @@ figure{margin:0}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px 80px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 60px}
 .all-box{align-self:center;margin-top:56px;padding:22px 64px;border:4px solid var(--red);border-radius:18px;background:white}
+ .tried .kw{font-size:36px;margin-top:22px}
+.tried .sm{font-size:24px;margin:4px 0 0}
 .ways{display:grid;grid-template-columns:repeat(3,1fr);gap:56px;margin-top:56px}
 .ways>div{border-top:6px solid var(--red);padding-top:22px}
 .ways .name{font:400 58px/1.05 Anton,sans-serif;color:var(--navy);margin:0 0 14px}
@@ -147,10 +149,28 @@ body.dark-slide #progress .bar{background:#FFB98A}
 #jumpGrid button.current{border-color:var(--red)}
 #jumpGrid .n{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--navy);color:white;font-size:13px}
 
+/* ---------- Menü (Taste M) ---------- */
+#menu{position:fixed;right:18px;bottom:18px;z-index:45;display:none;width:330px;max-width:calc(100vw - 36px);
+  background:rgba(16,28,41,.94);color:#E6EEF5;border-radius:16px;padding:14px 14px 12px;font:500 14px/1.35 Jost,sans-serif;
+  box-shadow:0 18px 50px rgba(0,0,0,.35)}
+#menu.open{display:block}
+#menu .m-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 10px}
+#menu .m-head b{font:400 18px Anton,sans-serif;letter-spacing:.03em}
+#menu .m-head span{color:#9FB6CC;font-size:13px}
+#menu .m-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+#menu button{font:600 13px Jost,sans-serif;color:#E6EEF5;background:#22374C;border:1px solid #33506B;border-radius:10px;padding:9px 4px;cursor:pointer}
+#menu button:hover{background:#2C4862}
+#menu button.wide{grid-column:span 3}
+#menu table{width:100%;border-collapse:collapse}
+#menu td{padding:3px 2px;vertical-align:top}
+#menu td:first-child{white-space:nowrap;padding-right:10px}
+#menu kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 6px;border-radius:6px;background:#2A4157;border:1px solid #3B5874;font:600 12px Jost,sans-serif}
+#menu .m-sec{color:#FFB98A;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding-top:8px}
+
 /* ---------- Sprechernotizen-Fenster (?notes) ---------- */
 #notesView{display:none}
 body.notes-mode{overflow:auto;background:#101C29;color:#E6EEF5}
-body.notes-mode #viewport,body.notes-mode #progress{display:none}
+body.notes-mode #viewport,body.notes-mode #progress,body.notes-mode #menu{display:none!important}
 body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh;padding:22px 28px;gap:18px}
 .nv-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
 .nv-num{font:400 34px Anton,sans-serif;color:#FFB98A}
@@ -172,14 +192,13 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
   #stage{position:relative;left:auto;top:auto;transform:none;page-break-inside:avoid}
   .slide{position:relative;display:flex!important;width:1600px;height:900px;page-break-after:always}
   .step.hidden{opacity:1;transform:none}
-  .myth-cover,#progress,#jump,#black{display:none!important}
+  .myth-cover,#progress,#jump,#black,#menu{display:none!important}
 }
 </style>
 </head>
 <body>
 <div id="viewport"><div id="stage">
 
-<!-- ===================== EINSTIEG ===================== -->
 <section class="slide cover active" data-title="Titel" data-section="Einstieg" data-dark>
   <div class="mark">SRL</div>
   <h1 class="h">SRL ist<br><em>keine Methode!</em></h1>
@@ -260,7 +279,19 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
   </aside>
 </section>
 
-<!-- ===================== MYTHEN ===================== -->
+<section class="slide" data-title="Arbeitsdefinition">
+  <p class="label">Selbstreguliertes Lernen · Arbeitsdefinition</p>
+  <p class="quote">Lernende <em style="font-style:normal;color:var(--red)">planen</em> ihr Lernen, <em style="font-style:normal;color:var(--red)">beobachten</em> es beim Arbeiten und <em style="font-style:normal;color:var(--red)">werten es aus</em> – und steuern dabei auch ihre Motivation.</p>
+  <aside class="notes">
+    <ul>
+      <li>SRL = <b>selbstreguliertes Lernen</b>.</li>
+      <li>Drei Phasen, die immer wiederkehren: <b>Planung – Durchführung – Reflexion</b>.</li>
+      <li>Es geht nicht nur ums Organisieren, sondern auch um Denken über das eigene Lernen (Metakognition), Motivation und Gefühle.</li>
+      <li>Übergang: „Bevor wir genauer hinschauen, räumen wir ein paar verbreitete Missverständnisse aus dem Weg.“</li>
+    </ul>
+  </aside>
+</section>
+
 <section class="slide myth" data-title="Mythos 1" data-section="Fünf Mythen">
   <div class="split">
     <div class="myth-art"><img src="vortrag-srl-minimal/assets/myth1.webp" alt="Kind vor leerem Blatt – Kind mit Plan und Checkliste"><div class="myth-cover" style="left:49.5%"></div></div>
@@ -321,37 +352,7 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
   <aside class="notes"><p><b>Realität:</b> SRL ist erlernbar – kein Talent, das man entweder hat oder nicht hat.</p></aside>
 </section>
 
-<!-- ===================== WAS SRL IST ===================== -->
-<section class="slide" data-title="SRL ist …" data-section="Was SRL ist">
-  <h2 class="h">SRL ist …</h2>
-  <ul class="kw-list grid2 dotted">
-    <li class="kw">ein Prozess</li>
-    <li class="kw">metakognitiv</li>
-    <li class="kw">erlernbar</li>
-    <li class="kw">strategisch</li>
-    <li class="kw">zyklisch</li>
-    <li class="kw">begleitet</li>
-  </ul>
-  <div class="all-box"><span class="kw"><em>für alle</em></span></div>
-  <aside class="notes">
-    <ul>
-      <li><b>ein Lernprozess</b> – kein Persönlichkeitsmerkmal, keine einzelne Methode</li>
-      <li><b>erlernbar</b> – durch explizite Vermittlung und Übung</li>
-      <li><b>zyklisch</b> – Planung → Durchführung → Reflexion, immer wieder</li>
-      <li><b>metakognitiv</b> – Lernende denken über ihr eigenes Lernen nach</li>
-      <li><b>strategisch</b> – bewusster Einsatz von Lern- und Arbeitsstrategien</li>
-      <li><b>begleitet</b> – Lehrkräfte scaffolden, geben Feedback, bauen Autonomie schrittweise auf</li>
-      <li><b>für alle</b> – unabhängig von Leistungsniveau oder Alter</li>
-    </ul>
-  </aside>
-</section>
-
-<section class="slide" data-title="Zitat">
-  <p class="quote">„Ich weiß, warum ich lerne, wie ich lerne – und was ich <em style="font-style:normal;color:var(--red)">beim nächsten Mal anders</em> machen will.“</p>
-  <aside class="notes"><p>Der Kern in einem Satz – das Ziel aus der Sicht der Lernenden.</p></aside>
-</section>
-
-<section class="slide" data-title="Begriffe">
+<section class="slide" data-title="Begriffe" data-section="Begriffe &amp; Forschung">
   <h2 class="h">Wo steht SRL?</h2>
   <div class="terms">
     <div class="step"><b>selbst­ständig</b><p class="sm">Brauche ich jemanden neben mir?</p></div>
@@ -371,7 +372,39 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
   </aside>
 </section>
 
-<!-- ===================== TURBINE ===================== -->
+<section class="slide" data-title="Wirksamkeit">
+  <p class="label">Warum sich das lohnt</p>
+  <h2 class="h" style="font-size:190px;margin-bottom:10px">+7 <em>Monate</em></h2>
+  <p class="kw">zusätzlicher Lernfortschritt im Schuljahr – bei sehr geringen Kosten.</p>
+  <p class="src" style="margin-top:60px;font-size:22px">Education Endowment Foundation (EEF), Teaching and Learning Toolkit: „Metacognition and self-regulation“ · Auswertung von 246 Studien · <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">educationendowmentfoundation.org.uk</a></p>
+  <aside class="notes">
+    <ul>
+      <li>Das <b>Teaching and Learning Toolkit</b> der britischen Education Endowment Foundation fasst Forschung zu Unterrichtsansätzen zusammen.</li>
+      <li><b>Metakognition und Selbstregulation:</b> durchschnittlich etwa <b>+7 Monate</b> zusätzlicher Lernfortschritt über ein Schuljahr.</li>
+      <li>Kosten: sehr gering. Evidenz: hoch, aus 246 Studien – mit Abzug, weil viele Studien nicht unabhängig evaluiert wurden.</li>
+      <li>Kernsatz: Diese Ansätze helfen Lernenden, ausdrücklicher über ihr eigenes Lernen nachzudenken.</li>
+      <li>Wichtig: Durchschnittswert – die Wirkung hängt von der Umsetzung ab.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="slide" data-title="Forschung">
+  <h2 class="h">Ansätze aus der <em>Forschung</em></h2>
+  <div class="grid3">
+    <div class="col"><p class="name">Stebner</p><p class="sm">Uni Osnabrück</p><p class="kw">Strategien &amp; Implementierung</p></div>
+    <div class="col"><p class="name">Karlen</p><p class="sm">Uni Zürich</p><p class="kw">Metakognition &amp; Motivation</p></div>
+    <div class="col"><p class="name">Wirth</p><p class="sm">Ruhr-Uni Bochum</p><p class="kw">Äußere Struktur &amp; Lernbuddy</p></div>
+  </div>
+  <aside class="notes">
+    <ul>
+      <li><b>Ferdinand Stebner</b> (Osnabrück): Lern- und Selbstregulationsstrategien, Diagnostik und gezielte Förderung, Implementierung in Unterricht und Schule.</li>
+      <li><b>Yves Karlen</b> (Zürich): Metakognition und Strategiewissen, Motivation, Emotion und Mindset, SRL als komplexer, zyklischer Prozess.</li>
+      <li><b>Joachim Wirth</b> (Bochum): Selbstregulation unterstützen und trainieren, äußere Struktur als Lernhilfe, Lernbuddy als rahmengebendes Werkzeug.</li>
+      <li>Die Forschung liefert keinen fertigen Stundenplan, sondern ein Prüfraster für unsere Entscheidungen.</li>
+    </ul>
+  </aside>
+</section>
+
 <section class="slide" data-title="SRL-Turbine" data-section="Die SRL-Turbine">
   <div class="split">
     <figure>
@@ -407,8 +440,8 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
       <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
     </figure>
     <div>
-      <p class="label">Ebene 1 · Unser Why</p>
-      <h2 class="h">Warum <em>regulieren?</em></h2>
+      <p class="label">Ebene 1 · Grundbedürfnisse</p>
+      <h2 class="h" style="font-size:68px">Warum sollten Lernende ihr Lernen steuern <em>wollen?</em></h2>
       <ul class="kw-list dotted">
         <li class="kw">Kompetenz</li>
         <li class="kw">Autonomie</li>
@@ -476,27 +509,38 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
   </aside>
 </section>
 
-<!-- ===================== FORSCHUNG & PRAXIS ===================== -->
-<section class="slide" data-title="Forschung" data-section="Forschung &amp; Praxis">
-  <h2 class="h">Ansätze aus der <em>Forschung</em></h2>
-  <div class="grid3">
-    <div class="col"><p class="name">Stebner</p><p class="sm">Uni Osnabrück</p><p class="kw">Strategien &amp; Implementierung</p></div>
-    <div class="col"><p class="name">Karlen</p><p class="sm">Uni Zürich</p><p class="kw">Metakognition &amp; Motivation</p></div>
-    <div class="col"><p class="name">Wirth</p><p class="sm">Ruhr-Uni Bochum</p><p class="kw">Äußere Struktur &amp; Lernbuddy</p></div>
-  </div>
+<section class="slide" data-title="SRL ist …">
+  <h2 class="h">SRL ist …</h2>
+  <ul class="kw-list grid2 dotted">
+    <li class="kw">ein Prozess</li>
+    <li class="kw">metakognitiv</li>
+    <li class="kw">erlernbar</li>
+    <li class="kw">strategisch</li>
+    <li class="kw">zyklisch</li>
+    <li class="kw">begleitet</li>
+  </ul>
+  <div class="all-box"><span class="kw"><em>für alle</em></span></div>
   <aside class="notes">
     <ul>
-      <li><b>Ferdinand Stebner</b> (Osnabrück): Lern- und Selbstregulationsstrategien, Diagnostik und gezielte Förderung, Implementierung in Unterricht und Schule.</li>
-      <li><b>Yves Karlen</b> (Zürich): Metakognition und Strategiewissen, Motivation, Emotion und Mindset, SRL als komplexer, zyklischer Prozess.</li>
-      <li><b>Joachim Wirth</b> (Bochum): Selbstregulation unterstützen und trainieren, äußere Struktur als Lernhilfe, Lernbuddy als rahmengebendes Werkzeug.</li>
-      <li>Die Forschung liefert keinen fertigen Stundenplan, sondern ein Prüfraster für unsere Entscheidungen.</li>
+      <li><b>ein Lernprozess</b> – kein Persönlichkeitsmerkmal, keine einzelne Methode</li>
+      <li><b>erlernbar</b> – durch explizite Vermittlung und Übung</li>
+      <li><b>zyklisch</b> – Planung → Durchführung → Reflexion, immer wieder</li>
+      <li><b>metakognitiv</b> – Lernende denken über ihr eigenes Lernen nach</li>
+      <li><b>strategisch</b> – bewusster Einsatz von Lern- und Arbeitsstrategien</li>
+      <li><b>begleitet</b> – Lehrkräfte scaffolden, geben Feedback, bauen Autonomie schrittweise auf</li>
+      <li><b>für alle</b> – unabhängig von Leistungsniveau oder Alter</li>
     </ul>
   </aside>
 </section>
 
-<section class="slide" data-title="Bildungsziel &amp; Wege">
+<section class="slide" data-title="Zitat">
+  <p class="quote">„Ich weiß, warum ich lerne, wie ich lerne – und was ich <em style="font-style:normal;color:var(--red)">beim nächsten Mal anders</em> machen will.“</p>
+  <aside class="notes"><p>Der Kern in einem Satz – das Ziel aus der Sicht der Lernenden.</p></aside>
+</section>
+
+<section class="slide" data-title="Bildungsziel &amp; Wege" data-section="Vom Modell zur Praxis">
   <p class="label">Vom Modell zur Praxis</p>
-  <h2 class="h" style="margin-bottom:18px">SRL ist ein <em>Bildungsziel.</em></h2>
+  <h2 class="h" style="margin-bottom:18px;font-size:84px">Keine Methode, sondern ein <em>Bildungsziel.</em></h2>
   <p class="kw" style="font-size:44px;font-weight:500">Ein Kompetenzpaket – lernbar, nicht angeboren.</p>
   <div class="ways">
     <div><p class="name">Strukturen</p><p class="kw">geben äußeren Halt</p><p class="sm">Lernbuddy · Lösungsleiter · Kompetenzraster</p></div>
@@ -506,7 +550,7 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
   <p class="sm" style="margin-top:44px;font-weight:600;color:var(--navy)">Werkzeuge sind nicht SRL – sie stützen den Weg dorthin.</p>
   <aside class="notes">
     <ul>
-      <li><b>SRL ist das Bildungsziel</b> – kein Werkzeug, keine Methode.</li>
+      <li><b>Auflösung des Titels:</b> SRL ist keine Methode, sondern ein Bildungsziel – kein Werkzeug, keine Unterrichtsform.</li>
       <li>Selbstregulation ist ein <b>Kompetenzpaket</b> (Metakognition, Kognition, Motivation, Emotion …), das gelernt werden kann.</li>
       <li><b>Strukturen:</b> Werkzeuge geben äußere Struktur und machen Prozesse sichtbar.</li>
       <li><b>Strategien:</b> sind Kompetenzen, die explizit gelernt und geübt werden.</li>
@@ -539,10 +583,16 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
 
 <section class="slide" data-title="Erprobung">
   <h2 class="h">Wir testen <em>Bausteine.</em></h2>
-  <div class="grid3">
-    <div class="col"><p class="name">Deutsch</p><p class="kw">Lernwege<br>Kompetenzraster</p></div>
-    <div class="col"><p class="name">Technik</p><p class="kw">Lernnavigatoren<br>Werkstatt</p></div>
-    <div class="col"><p class="name">Jahrgang 5</p><p class="kw">Lernbuddy<br>Lösungsleiter</p></div>
+  <div class="grid3 tried">
+    <div class="col"><p class="name">Deutsch</p>
+      <p class="kw">Lernwege</p><p class="sm">Etappen mit klarem nächstem Schritt</p>
+      <p class="kw">Kompetenzraster</p><p class="sm">Kriterien und Lernstand sichtbar</p></div>
+    <div class="col"><p class="name">Technik</p>
+      <p class="kw">Lernnavigatoren</p><p class="sm">digitale Lernwege mit Hilfen</p>
+      <p class="kw">Werkstatt</p><p class="sm">Projektarbeit mit Reflexionsphasen</p></div>
+    <div class="col"><p class="name">Jahrgang 5</p>
+      <p class="kw">Lernbuddy</p><p class="sm">Planung, Durchführung, Reflexion auf einem Blatt</p>
+      <p class="kw">Lösungsleiter</p><p class="sm">Hilfe schrittweise selbstständiger nutzen</p></div>
   </div>
   <aside class="notes">
     <ul>
@@ -558,7 +608,8 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
   <p class="label">Perspektive Digitalisierung</p>
   <h2 class="h" style="font-size:120px">KI macht kein SRL.</h2>
   <p class="kw"><em>Aber sie verändert, was skalierbar wird.</em></p>
-  <p class="sm" style="margin-top:40px">Material · Lernwege · Feedback → mehr Zeit für Begleitung</p>
+  <p class="sm" style="margin-top:40px">SRL braucht passendes Material und Rückmeldung – das kostet Zeit.</p>
+  <p class="sm" style="margin-top:10px">KI hilft bei Material · Lernwegen · Feedback → mehr Zeit für Begleitung.</p>
   <aside class="notes">
     <ul>
       <li><b>Materialvarianten:</b> Differenzierung, sprachliche Zugänge und Übungsangebote schneller erstellen.</li>
@@ -570,14 +621,13 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
   </aside>
 </section>
 
-<!-- ===================== AUSBLICK ===================== -->
 <section class="slide" data-title="Reibungen" data-section="Ausblick">
   <h2 class="h">Wo es <em>reibt.</em></h2>
   <ul class="kw-list dotted">
     <li class="kw">Planung ohne Realismus</li>
     <li class="kw">Reflexion als Floskel</li>
     <li class="kw">Zu viel Wahl überfordert</li>
-    <li class="kw">Material simuliert Selbstständigkeit</li>
+    <li class="kw">Viel Material ≠ selbstreguliert</li>
   </ul>
   <aside class="notes">
     <ul>
@@ -617,8 +667,8 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
 </section>
 
 <section class="slide" data-title="Pointe">
-  <p class="statement">Nicht alles gleichzeitig lösen.<br><em>Aber die Verbindungen sehen.</em></p>
-  <aside class="notes"><p>Wir müssen nicht alles gleichzeitig lösen. Aber wir sollten sehen, wie die Baustellen miteinander verbunden sind.</p></aside>
+  <p class="statement">Nicht alles auf einmal.<br><em>Aber gemeinsam und Schritt&nbsp;für&nbsp;Schritt.</em></p>
+  <aside class="notes"><p>Wir müssen nicht alles gleichzeitig lösen. SRL berührt Forschung, Strategien, Werkzeuge, Unterricht, Digitalisierung und Schulentwicklung zugleich – entscheidend ist, gemeinsam anzufangen und schrittweise weiterzugehen.</p></aside>
 </section>
 
 <section class="slide full kipper" data-title="Muldenkipper" data-dark>
@@ -646,6 +696,30 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
     <div class="jump-head"><b>Folien</b><span>Klicken oder Nummer + Enter · Esc schließt</span><input id="jumpNum" inputmode="numeric" placeholder="Nr." aria-label="Foliennummer"></div>
     <ol id="jumpGrid"></ol>
   </div>
+</div>
+
+<div id="menu" role="dialog" aria-label="Steuerung und Tastenkürzel">
+  <div class="m-head"><b>Steuerung</b><span>M schließt</span></div>
+  <div class="m-btns">
+    <button data-act="prev">◀ Zurück</button><button data-act="jump">☰ Folien</button><button data-act="next">Weiter ▶</button>
+    <button data-act="full">⛶ Vollbild</button><button data-act="black">● Schwarz</button><button data-act="notes">✎ Notizen</button>
+  </div>
+  <table>
+    <tr><td><kbd>→</kbd> <kbd>Leertaste</kbd></td><td>weiter / aufdecken</td></tr>
+    <tr><td><kbd>←</kbd></td><td>zurück</td></tr>
+    <tr><td><kbd>G</kbd></td><td>Folienübersicht</td></tr>
+    <tr><td><kbd>12</kbd> <kbd>Enter</kbd></td><td>zu Folie 12 springen</td></tr>
+    <tr><td><kbd>F</kbd></td><td>Vollbild</td></tr>
+    <tr><td><kbd>B</kbd> <kbd>.</kbd></td><td>schwarzer Bildschirm</td></tr>
+    <tr><td><kbd>S</kbd></td><td>Sprechernotizen (2. Fenster)</td></tr>
+    <tr><td><kbd>M</kbd></td><td>dieses Menü</td></tr>
+    <tr><td colspan="2" class="m-sec">iPad</td></tr>
+    <tr><td>Wischen ← →</td><td>weiter / zurück</td></tr>
+    <tr><td>Tippen rechts / links</td><td>weiter / zurück</td></tr>
+    <tr><td>Wischen ↑</td><td>Folienübersicht</td></tr>
+    <tr><td>Zwei Finger tippen</td><td>schwarzer Bildschirm</td></tr>
+    <tr><td>Lange drücken</td><td>dieses Menü</td></tr>
+  </table>
 </div>
 
 <div id="notesView">
@@ -737,6 +811,18 @@ addEventListener('message',e=>{
   }
 });
 
+/* ---------- Menü ---------- */
+const menu=document.getElementById('menu');
+function toggleMenu(force){ menu.classList.toggle('open',force===undefined?!menu.classList.contains('open'):force); }
+menu.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const a=b.dataset.act;
+  if(a==='prev')backward(); if(a==='next')forward(); if(a==='jump'){toggleMenu(false);openJump(true);}
+  if(a==='full')toggleFullscreen(); if(a==='black'){toggleMenu(false);document.getElementById('black').classList.add('on');}
+  if(a==='notes')openNotes();
+  b.blur();                                  // Leertaste soll danach weiterblättern, nicht den Knopf erneut auslösen
+});
+
 /* ---------- Tastatur ---------- */
 let typed='',typedTimer;
 document.addEventListener('keydown',e=>{
@@ -753,6 +839,8 @@ document.addEventListener('keydown',e=>{
   else if(k==='f'||k==='F'){ toggleFullscreen(); }
   else if(k==='b'||k==='B'||k==='.'){ document.getElementById('black').classList.toggle('on'); }
   else if(k==='s'||k==='S'){ e.preventDefault(); openNotes(); }
+  else if(k==='m'||k==='M'){ e.preventDefault(); toggleMenu(); }
+  else if(k==='Escape'&&menu.classList.contains('open')){ toggleMenu(false); }
 });
 
 function toggleFullscreen(){
@@ -786,6 +874,7 @@ vp.addEventListener('touchend',e=>{
   if(black.classList.contains('on')){ black.classList.remove('on'); return; }   // erster Tipp holt das Bild zurück
   if(adx>50 && adx>ady*1.3){ dx<0?forward():backward(); return; }
   if(dy<-70 && ady>adx*1.3){ openJump(true); return; }
+  if(!tMoved && adx<12 && ady<12 && dt>=600){ toggleMenu(); return; }   // lange drücken
   if(adx<12 && ady<12 && dt<350){
     if(e.target.closest&&e.target.closest('a')) return;  // Quellen-Links bleiben antippbar
     (t.clientX<innerWidth/3)?backward():forward();
