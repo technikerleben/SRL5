@@ -10,9 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="SRL-Vortrag">
 <title>SRL ist keine Methode! · Christoph Wegemann</title>
 <meta name="description" content="Minimalistische Vortragsfassung: Schlagwörter zur Unterstützung des mündlichen Vortrags, Bedienung per Tastatur, Sprechernotizen im zweiten Fenster.">
-<!-- Ordner-URL ohne "/" am Ende: sonst lädt der Browser keine Bilder, Schriften und d3 -->
+<!-- Ordner-URL ohne "/" am Ende: sonst lädt der Browser keine Bilder und Schriften -->
 <script>if(location.protocol!=='file:'&&!/\/$|\.html?$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash);</script>
-<script src="vortrag-srl-minimal/assets/vendor/d3.min.js"></script>
 <style>
 @font-face{font-family:Anton;src:url(vortrag-srl-minimal/assets/fonts/anton.woff2) format("woff2");font-display:block}
 @font-face{font-family:Jost;src:url(vortrag-srl-minimal/assets/fonts/jost.woff2) format("woff2");font-weight:100 900;font-display:block}
@@ -124,15 +123,6 @@ figure{margin:0}
 /* Werkzeuge */
 .pairs{display:grid;grid-template-columns:max-content 1fr;gap:22px 50px;align-items:baseline}
 .pairs .sm{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:26px}
-
-/* Landkarte */
-.map .h{font-size:64px;margin-bottom:20px}
-#network{width:100%;height:690px;display:block}
-.net-link{stroke:#8DA2B4;stroke-opacity:.55;stroke-width:2.4}
-.net-link.major{stroke:var(--blue);stroke-width:4;stroke-opacity:.7}
-.net-node circle{stroke:var(--paper);stroke-width:3}
-.net-node text{font-family:Jost,sans-serif;text-anchor:middle;fill:var(--navy);paint-order:stroke;stroke:var(--paper);stroke-width:7px;stroke-linejoin:round}
-.net-node.root text{fill:white;stroke:none}
 
 /* ---------- Rahmen außerhalb der Bühne ---------- */
 #progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:rgba(22,58,92,.10);z-index:5}
@@ -626,17 +616,6 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
   </aside>
 </section>
 
-<section class="slide map" data-title="Landkarte" style="padding:50px 60px 40px">
-  <h2 class="h">Kein Bauplan. <em>Eine Landkarte.</em></h2>
-  <svg id="network" viewBox="0 0 1480 690" aria-label="Netzwerk der Themen rund um selbstreguliertes Lernen"></svg>
-  <aside class="notes">
-    <ul>
-      <li>SRL ist als Bildungsziel gut formulierbar.</li>
-      <li>Seine Förderung berührt aber Forschung, Strategien, Werkzeuge, Haltung, Unterricht, Digitalisierung, Feedback und Schulentwicklung gleichzeitig.</li>
-    </ul>
-  </aside>
-</section>
-
 <section class="slide" data-title="Pointe">
   <p class="statement">Nicht alles gleichzeitig lösen.<br><em>Aber die Verbindungen sehen.</em></p>
   <aside class="notes"><p>Wir müssen nicht alles gleichzeitig lösen. Aber wir sollten sehen, wie die Baustellen miteinander verbunden sind.</p></aside>
@@ -705,7 +684,6 @@ function showSlide(i){
   markDone(slides[index]);
   bar.style.width=((index+1)/slides.length*100)+'%';
   document.body.classList.toggle('dark-slide','dark' in slides[index].dataset);
-  if(slides[index].querySelector('#network')) initNetwork();
   try{ history.replaceState(null,'',location.pathname+location.search+'#'+(index+1)); }catch(_){}
   broadcast();
 }
@@ -819,63 +797,6 @@ jump.addEventListener('touchend',e=>{ const dy=e.changedTouches[0].clientY-(jump
 
 /* Mauszeiger nach 2 s Ruhe ausblenden */
 let idleT; document.addEventListener('mousemove',()=>{ document.body.classList.remove('idle'); clearTimeout(idleT); idleT=setTimeout(()=>document.body.classList.add('idle'),2000); });
-
-/* ---------- Landkarte ---------- */
-const netNodes=[
-  {id:'srl',label:'SRL',lvl:0,g:'root'},
-  {id:'begriffe',label:'Begriffe',lvl:1,g:'concept'},{id:'forschung',label:'Forschung',lvl:1,g:'science'},
-  {id:'werkzeuge',label:'Werkzeuge',lvl:1,g:'tools'},{id:'praxis',label:'Praxis',lvl:1,g:'practice'},
-  {id:'reibung',label:'Reibung',lvl:1,g:'friction'},{id:'schule',label:'Schulentwicklung',lvl:1,g:'school'},
-  {id:'digital',label:'Digital & KI',lvl:1,g:'digital'},
-  {id:'stebner',label:'Stebner',lvl:2,g:'science'},{id:'karlen',label:'Karlen',lvl:2,g:'science'},{id:'wirth',label:'Wirth',lvl:2,g:'science'},
-  {id:'buddy',label:'Lernbuddy',lvl:2,g:'tools'},{id:'lernwege',label:'Lernwege',lvl:2,g:'tools'},{id:'raster',label:'Raster',lvl:2,g:'tools'},
-  {id:'nachweis',label:'Nachweise',lvl:2,g:'tools'},{id:'journal',label:'Lernjournal',lvl:2,g:'tools'},{id:'mentor',label:'Mentoring',lvl:2,g:'tools'},
-  {id:'strategie',label:'Strategien',lvl:2,g:'concept'},{id:'loesung',label:'Lösungsleiter',lvl:2,g:'concept'},
-  {id:'deutsch',label:'Deutsch',lvl:2,g:'practice'},{id:'technik',label:'Technik',lvl:2,g:'practice'},{id:'jg5',label:'Pilot Jg. 5',lvl:2,g:'practice'},
-  {id:'sus',label:'Schüler:innen',lvl:2,g:'friction'},{id:'kollegium',label:'Kollegium',lvl:2,g:'school'},{id:'ki',label:'KI-Material',lvl:2,g:'digital'}
-];
-const netEdges=[
-  ['srl','begriffe'],['srl','forschung'],['srl','werkzeuge'],['srl','praxis'],['srl','reibung'],['srl','schule'],['srl','digital'],
-  ['forschung','stebner'],['forschung','karlen'],['forschung','wirth'],
-  ['werkzeuge','buddy'],['werkzeuge','lernwege'],['werkzeuge','raster'],['werkzeuge','nachweis'],['werkzeuge','journal'],['werkzeuge','mentor'],
-  ['begriffe','strategie'],['strategie','loesung'],['wirth','buddy'],['karlen','buddy'],['stebner','strategie'],
-  ['praxis','deutsch'],['praxis','technik'],['praxis','jg5'],['jg5','buddy'],['jg5','mentor'],['deutsch','lernwege'],['technik','lernwege'],
-  ['reibung','sus'],['reibung','kollegium'],['schule','kollegium'],['schule','mentor'],['schule','jg5'],['digital','ki'],
-  ['ki','lernwege'],['ki','deutsch'],['ki','technik'],['nachweis','raster'],['sus','buddy'],['sus','lernwege']
-];
-const netColors={root:'#791D22',concept:'#A8844F',science:'#245688',tools:'#13706A',practice:'#3F6B4D',friction:'#C9773A',school:'#163A5C',digital:'#5B7FA3'};
-let netDone=false;
-function initNetwork(){
-  if(netDone||typeof d3==='undefined') return; netDone=true;
-  const W=1480,H=690,cx=W/2,cy=H/2;
-  const STYLE=[{r:66,fs:42,w:400},{r:30,fs:31,w:700},{r:17,fs:25,w:600}];
-  netNodes.forEach(n=>{Object.assign(n,STYLE[n.lvl]);n.tw=n.label.length*n.fs*.53;});
-  const byId=Object.fromEntries(netNodes.map(n=>[n.id,n]));
-  const ORDER=['begriffe','forschung','werkzeuge','digital','praxis','schule','reibung'];
-  const PARENT={strategie:'begriffe',loesung:'begriffe',stebner:'forschung',karlen:'forschung',wirth:'forschung',
-    buddy:'werkzeuge',journal:'werkzeuge',raster:'werkzeuge',nachweis:'werkzeuge',lernwege:'werkzeuge',mentor:'werkzeuge',
-    ki:'digital',technik:'praxis',deutsch:'praxis',jg5:'praxis',kollegium:'schule',sus:'reibung'};
-  const kids=ORDER.flatMap(m=>Object.keys(PARENT).filter(k=>PARENT[k]===m));
-  const start=-Math.PI/2-Math.PI/kids.length*1.5;
-  const outer={rx:W/2-120,ry:H/2-50}, inner={rx:outer.rx*.52,ry:outer.ry*.55};
-  kids.forEach((id,i)=>{const t=start+i/kids.length*2*Math.PI,n=byId[id];n.ang=t;n.tx=cx+outer.rx*Math.cos(t);n.ty=cy+outer.ry*Math.sin(t);});
-  ORDER.forEach(m=>{const ks=kids.filter(k=>PARENT[k]===m).map(k=>byId[k]);const t=Math.atan2(d3.mean(ks,k=>Math.sin(k.ang)),d3.mean(ks,k=>Math.cos(k.ang)));const n=byId[m];n.tx=cx+inner.rx*Math.cos(t);n.ty=cy+inner.ry*Math.sin(t);});
-  byId.srl.tx=cx;byId.srl.ty=cy;
-  netNodes.forEach(n=>{n.x=n.tx;n.y=n.ty;});
-  const keep=()=>netNodes.forEach(d=>{const mx=Math.max(d.r,d.tw/2)+10;d.x=Math.max(mx,Math.min(W-mx,d.x));d.y=Math.max(d.r+8,Math.min(H-(d.lvl?d.r+d.fs*1.25:d.r)-8,d.y));});
-  const sim=d3.forceSimulation(netNodes)
-    .force('x',d3.forceX(d=>d.tx).strength(.35)).force('y',d3.forceY(d=>d.ty).strength(.35))
-    .force('collide',d3.forceCollide().radius(d=>d.lvl===0?d.r+14:Math.max(d.r,d.tw/2)+9).iterations(3)).stop();
-  for(let i=0;i<300;i++){sim.tick();keep();}
-  const svg=d3.select('#network');
-  svg.append('g').selectAll('line').data(netEdges).join('line')
-    .attr('class',d=>'net-link'+(d[0]==='srl'?' major':''))
-    .attr('x1',d=>byId[d[0]].x).attr('y1',d=>byId[d[0]].y).attr('x2',d=>byId[d[1]].x).attr('y2',d=>byId[d[1]].y);
-  const g=svg.append('g').selectAll('g').data(netNodes).join('g').attr('class',d=>'net-node'+(d.lvl===0?' root':'')).attr('transform',d=>`translate(${d.x},${d.y})`);
-  g.append('circle').attr('r',d=>d.r).attr('fill',d=>netColors[d.g]);
-  g.append('text').attr('dy',d=>d.lvl===0?'.35em':d.r+d.fs*.95).attr('font-size',d=>d.fs).attr('font-weight',d=>d.w)
-    .attr('font-family',d=>d.lvl===0?'Anton,sans-serif':null).text(d=>d.label);
-}
 
 /* ---------- Start ---------- */
 if(NOTES_MODE){
