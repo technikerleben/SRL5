@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Die Otter-Show · Klasse 5.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --slate-dark:#2C3D4C;--slate-base:#3E5668;--slate-mid:#6A8599;--slate-pale:#D0DCE6;--slate-ghost:#EEF3F7;
+  --rust-dark:#9E4E22;--rust-base:#D97A4A;--rust-mid:#EBA882;--rust-pale:#F5DDD1;--rust-ghost:#FBF0EB;
+  --sage-dark:#4D8B3F;--sage-base:#7DBB6F;--sage-mid:#A8D49D;--sage-pale:#DDF0D8;--sage-ghost:#F0FAF0;
+  --color-warning:#C17B00;--color-error:#C0392B;
+  --bg:#F5F4F1;--text:#1E2A35;--text-muted:#5A6A78;
+  --emoji:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  --head:'Fredoka','Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{font-size:min(1.4vw,2.5vh)}
+body{margin:0;height:100vh;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Nunito',system-ui,sans-serif}
+#app{display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);height:100vh}
+h1,h2,h3{font-family:var(--head);color:var(--slate-dark);margin:0;font-weight:600}
+.emoji{font-family:var(--emoji);font-weight:400}
+button{font-family:inherit}
+[hidden]{display:none!important}
+
+/* Kopfzeile */
+#top{display:flex;align-items:center;gap:.8rem;padding:.45rem 1.2rem;background:var(--slate-dark);color:#fff}
+#top .logo{font-family:var(--head);font-size:1.35rem;font-weight:700;cursor:pointer;white-space:nowrap}
+#top .where{flex:1;text-align:center;font-family:var(--head);font-size:1.3rem;font-weight:500}
+.ib{background:rgba(255,255,255,.13);color:#fff;border:0;border-radius:.6rem;padding:.35rem .7rem;font-size:1rem;cursor:pointer;font-weight:800}
+.ib:hover{background:rgba(255,255,255,.26)}
+
+#main{position:relative;overflow:auto;padding:1.1rem 1.6rem}
+
+/* Punkteleiste */
+#scorebar{overflow:hidden;display:flex;gap:.8rem;padding:.55rem 1.2rem;background:#fff;border-top:3px solid var(--slate-pale)}
+.chip{flex:1;min-width:0;display:flex;align-items:center;gap:.6rem;padding:.35rem .8rem;border-radius:1rem;background:var(--slate-ghost);border:3px solid var(--tc);cursor:pointer;user-select:none}
+.chip:hover{background:#fff}
+.badge{width:2.6rem;height:2.6rem;border-radius:50%;background:var(--tc);display:grid;place-items:center;font-size:1.6rem;flex:none;font-family:var(--emoji);box-shadow:inset 0 0 0 .2rem rgba(255,255,255,.55)}
+.chip .nm{font-weight:800;font-size:1.05rem;line-height:1.1;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip .nm small{display:block;font-weight:700;font-size:.7rem;color:var(--text-muted)}
+.chip .sc{font-family:var(--head);font-weight:700;font-size:2rem;color:var(--tc);white-space:nowrap}
+.chip .sc .emoji{font-size:1.3rem;margin-left:.15rem}
+#scorebar.many .chip .badge{display:none}#scorebar.many .chip .nm small{display:none}#scorebar.many .chip .sc{font-size:1.7rem}#scorebar.many{gap:.5rem}
+.chip.bump{animation:bump .5s}
+@keyframes bump{30%{transform:scale(1.07)}}
+.float{position:fixed;pointer-events:none;font-family:var(--head);font-size:2.2rem;font-weight:700;animation:floatup 1.3s forwards;z-index:99;text-shadow:0 2px 0 #fff}
+@keyframes floatup{to{transform:translateY(-5rem);opacity:0}}
+
+/* Buttons */
+.btn{border:0;border-radius:.9rem;padding:.65rem 1.3rem;font-size:1.15rem;font-weight:800;cursor:pointer;background:var(--slate-base);color:#fff;box-shadow:0 .25rem 0 var(--slate-dark);transition:transform .08s;position:relative}
+.btn:active{transform:translateY(.15rem);box-shadow:0 .1rem 0 var(--slate-dark)}
+.btn.cta{background:var(--rust-base);box-shadow:0 .25rem 0 var(--rust-dark)}
+.btn.ok{background:var(--sage-dark);box-shadow:0 .25rem 0 #35652b}
+.btn.ghost{background:#fff;color:var(--slate-dark);box-shadow:0 .25rem 0 var(--slate-pale);border:2px solid var(--slate-pale)}
+.btn.big{font-size:1.5rem;padding:.9rem 1.8rem}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.primary::after{content:'Leertaste';position:absolute;top:-.75rem;right:.6rem;font-size:.6rem;background:var(--slate-dark);color:#fff;padding:.1rem .45rem;border-radius:.4rem;font-weight:700;letter-spacing:.03em}
+.row{display:flex;gap:1rem;align-items:center;justify-content:center;flex-wrap:wrap}
+.col{display:flex;flex-direction:column;gap:1rem}
+.center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1.1rem}
+.grow{flex:1}
+.card{background:#fff;border-radius:1.2rem;padding:1.2rem 1.6rem;box-shadow:0 .3rem 1rem rgba(44,61,76,.08)}
+.tag{display:inline-block;padding:.2rem .8rem;border-radius:2rem;font-weight:800;font-size:.9rem}
+.tag.wissen{background:var(--slate-pale);color:var(--slate-dark)}
+.tag.kreativ{background:var(--rust-pale);color:var(--rust-dark)}
+.tag.mix{background:var(--sage-pale);color:var(--sage-dark)}
+.hint{color:var(--text-muted);font-size:1.1rem;margin:0;max-width:60rem}
+
+/* Setup */
+.setup{max-width:72rem;margin:0 auto;display:grid;grid-template-columns:1.25fr 1fr;gap:1.4rem}
+.hero{grid-column:1/-1;display:flex;align-items:center;gap:1.4rem}
+.hero .big-otter{font-size:4.6rem;line-height:1}
+.hero h1{font-size:2.9rem;font-weight:700}
+.hero p{margin:.1rem 0 0;font-size:1.15rem;color:var(--text-muted)}
+.nbtn{width:3rem;height:3rem;border-radius:.8rem;border:2px solid var(--slate-pale);background:#fff;font-family:var(--head);font-size:1.4rem;font-weight:700;cursor:pointer;color:var(--slate-dark)}
+.nbtn.on{background:var(--slate-base);color:#fff;border-color:var(--slate-base)}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem}
+.names label{display:flex;align-items:center;gap:.5rem}
+.names input{flex:1;min-width:0;font:inherit;font-weight:800;font-size:1.05rem;padding:.45rem .6rem;border-radius:.6rem;border:2px solid var(--slate-pale)}
+.toggle{display:flex;align-items:center;gap:.7rem;font-weight:700;font-size:1.05rem;margin:.5rem 0;cursor:pointer}
+.toggle input{width:1.4rem;height:1.4rem;accent-color:var(--sage-dark)}
+.plan ol{margin:.5rem 0 0;padding-left:1.3rem;line-height:1.45;font-size:1.05rem}
+.plan b{color:var(--rust-dark)}
+.setup .start{margin-left:auto;justify-content:flex-end}
+
+/* Hub */
+.hub{display:flex;flex-direction:column;gap:.75rem;height:100%}
+.river{height:29vh;flex:none;display:flex;flex-direction:column;border-radius:1.2rem;overflow:hidden;position:relative;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='24'%3E%3Cpath d='M0 12 Q22 2 45 12 T90 12' fill='none' stroke='white' stroke-opacity='.55' stroke-width='2'/%3E%3C/svg%3E") repeat,linear-gradient(180deg,#D7E6EF,#B9D0DF);
+  animation:flow 12s linear infinite}
+@keyframes flow{to{background-position:-180px 0,0 0}}
+.lane{flex:1;position:relative;border-bottom:2px dashed rgba(255,255,255,.75)}
+.lane:last-child{border-bottom:0}
+.lane .otter{position:absolute;top:50%;left:0;transform:translateY(-50%);display:flex;align-items:center;gap:.4rem;transition:left 1.4s cubic-bezier(.3,1.25,.5,1)}
+.lane .otter .badge{width:2.5rem;height:2.5rem;font-size:1.6rem}
+.lane .ofish{background:#fff;border-radius:1rem;padding:.1rem .6rem;font-family:var(--head);font-weight:700;font-size:1.15rem;color:var(--tc);white-space:nowrap}
+.lane .lname{position:absolute;left:4.2rem;top:.1rem;font-size:.75rem;font-weight:800;color:var(--slate-dark);opacity:.55}
+.goal{position:absolute;right:0;top:0;bottom:0;width:4.5rem;background:repeating-linear-gradient(45deg,rgba(255,255,255,.9) 0 .55rem,rgba(208,220,230,.9) .55rem 1.1rem);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:var(--slate-dark);text-align:center;z-index:0}
+.goal .emoji{font-size:2.2rem}
+.games{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem}
+.tile{background:#fff;border-radius:1rem;padding:.45rem .5rem;text-align:center;cursor:pointer;border:3px solid transparent;box-shadow:0 .2rem .6rem rgba(44,61,76,.08);position:relative;transition:transform .15s}
+.tile:hover{transform:translateY(-.2rem);border-color:var(--rust-mid)}
+.tile .ic{font-size:2.1rem;line-height:1.15}
+.tile .tn{font-family:var(--head);font-weight:600;font-size:1.05rem;color:var(--slate-dark);line-height:1.15}
+.tile .tm{font-size:.8rem;color:var(--text-muted);font-weight:700;margin-top:.15rem}
+.tile.played{opacity:.5}
+.tile.played::after{content:'✓';position:absolute;top:.3rem;right:.5rem;color:var(--sage-dark);font-weight:800;font-size:1.3rem}
+.hubbar{display:flex;gap:1rem;justify-content:center}
+
+/* Intro */
+.intro{max-width:62rem;margin:0 auto;height:100%;display:flex;flex-direction:column;justify-content:center;gap:1.2rem}
+.intro .ihead{display:flex;align-items:center;gap:1.4rem}
+.intro .ihead .emoji{font-size:6rem;line-height:1}
+.intro h1{font-size:3.4rem}
+.intro ol{font-size:1.75rem;line-height:1.55;margin:0;padding-left:2.2rem}
+.intro .meta{display:flex;gap:1rem;flex-wrap:wrap;font-size:1.15rem;font-weight:700;color:var(--text-muted)}
+.intro .meta span{background:#fff;border-radius:.7rem;padding:.35rem .8rem}
+
+/* Spielrahmen */
+.gwrap{height:100%;display:flex;flex-direction:column;gap:.8rem}
+.gtop{display:flex;align-items:center;gap:1rem}
+.gstep{font-family:var(--head);font-size:1.2rem;color:var(--text-muted)}
+.gbody{flex:1;display:flex;flex-direction:column;min-height:0}
+.q{font-family:var(--head);font-size:2.6rem;line-height:1.2;max-width:62rem;text-align:center;color:var(--slate-dark);font-weight:600}
+.cd{font-family:var(--head);font-size:5rem;font-weight:700;color:var(--rust-base);animation:pop .4s}
+@keyframes pop{from{transform:scale(1.6);opacity:0}}
+.verdict{font-family:var(--head);font-size:4.5rem;font-weight:700;animation:pop .4s}
+.verdict.yes{color:var(--sage-dark)}.verdict.no{color:var(--color-error)}
+.expl{font-size:1.5rem;max-width:56rem;background:#fff;border-radius:1rem;padding:.8rem 1.2rem}
+.wq-hint{display:flex;gap:2rem;font-size:1.6rem;font-weight:700}
+.wq-hint span{background:#fff;border-radius:1rem;padding:.5rem 1.2rem}
+.wq-res{min-height:7rem;display:flex;flex-direction:column;align-items:center;gap:.6rem}
+
+/* Team-Schnellbuttons & Punktepanel */
+.qt{display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.qtl{font-weight:800;color:var(--text-muted);font-size:.95rem}
+.qtb{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center}
+.qbtn{border:3px solid var(--tc);background:#fff;border-radius:.8rem;padding:.4rem .8rem;font-weight:800;font-size:1.05rem;cursor:pointer;color:var(--text)}
+.qbtn:hover{background:var(--tc);color:#fff}
+.qbtn.done{background:var(--tc);color:#fff;opacity:.6}
+.panel{background:#fff;border-radius:1rem;padding:.7rem 1rem;display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.panel-title{font-weight:800;color:var(--text-muted)}
+.prow{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center}
+.pteam{border-left:.5rem solid var(--tc);background:var(--slate-ghost);border-radius:.7rem;padding:.35rem .6rem;text-align:center}
+.pname{font-weight:800;margin-bottom:.2rem}
+.pb{border:0;border-radius:.5rem;padding:.35rem .65rem;font-weight:800;font-size:1rem;background:var(--sage-pale);color:var(--sage-dark);cursor:pointer;margin:.1rem}
+.pb:hover{background:var(--sage-mid)}
+.pb.minus{background:var(--rust-ghost);color:var(--rust-dark)}
+
+/* Timer */
+.timer{--ts:12rem;display:flex;flex-direction:column;align-items:center;position:relative}
+.timer svg{width:var(--ts);height:var(--ts);transform:rotate(-90deg)}
+.tbg{fill:none;stroke:var(--slate-pale);stroke-width:8}
+.tfg{fill:none;stroke:var(--sage-base);stroke-width:8;stroke-linecap:round;transition:stroke .3s}
+.timer.warn .tfg{stroke:var(--color-warning)}
+.timer.done .tfg{stroke:var(--color-error)}
+.tnum{position:absolute;top:0;left:50%;transform:translateX(-50%);width:var(--ts);height:var(--ts);display:grid;place-items:center;font-family:var(--head);font-size:calc(var(--ts)/4);font-weight:700;color:var(--slate-dark)}
+.timer.warn .tnum{color:var(--color-warning)}
+.timer.done .tnum{color:var(--color-error);animation:pop .5s}
+.tctl{display:flex;gap:.35rem;margin-top:.4rem}
+.tctl button{border:0;border-radius:.5rem;padding:.3rem .6rem;font-weight:800;background:var(--slate-pale);color:var(--slate-dark);cursor:pointer;font-size:.9rem}
+.timer.inline{flex-direction:row;gap:.6rem}
+.timer.inline .tctl{flex-direction:column;margin:0}
+
+/* Kachel */
+.kwrap{display:flex;gap:2.5rem;align-items:center;justify-content:center;flex:1}
+.kachel{position:relative;height:58vh;aspect-ratio:4/3;background:#fff;border-radius:1rem;overflow:hidden}
+.kachel .pic{position:absolute;inset:0;display:grid;place-items:center;font-size:44vh;line-height:1}
+.tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:5px;padding:5px}
+.tl{background:var(--slate-base);border-radius:.5rem;display:grid;place-items:center;color:rgba(255,255,255,.6);font-family:var(--head);font-size:2.2rem;transition:opacity .5s,transform .5s}
+.tl:nth-child(odd){background:var(--slate-mid)}
+.tl.off{opacity:0;transform:scale(.5) rotate(10deg)}
+.kside{width:24rem;display:flex;flex-direction:column;gap:1.1rem;align-items:center}
+.worth{font-size:1.6rem;font-weight:700}
+.sol{font-family:var(--head);font-size:3rem;font-weight:700;color:var(--sage-dark);animation:pop .4s;text-align:center}
+
+/* Schätzer */
+.unit{font-size:1.3rem;color:var(--text-muted)}
+.guesses{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center}
+.guess{display:flex;align-items:center;gap:.5rem;background:#fff;border:3px solid var(--tc);border-radius:1rem;padding:.4rem .6rem;font-weight:800}
+.guess .badge{width:2rem;height:2rem;font-size:1.2rem}
+.guess input{width:8rem;font:inherit;font-size:1.4rem;font-weight:800;border:2px solid var(--slate-pale);border-radius:.5rem;padding:.25rem .5rem;text-align:right}
+.nl{position:relative;width:min(70rem,92%);height:11rem}
+.nl .axis{position:absolute;left:0;right:0;top:50%;height:.5rem;margin-top:-.25rem;background:var(--slate-pale);border-radius:1rem}
+.nl .mk{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;transition:left 1s}
+.nl .mk.t{bottom:calc(50% + .2rem)}
+.nl .mk.t.lift{bottom:calc(50% + 3.3rem)}
+.nl .mk .lbl{background:var(--tc);color:#fff;font-weight:800;border-radius:.5rem;padding:.1rem .45rem;font-size:.95rem;white-space:nowrap}
+.nl .mk .pin{width:.25rem;height:.7rem;background:var(--tc)}
+.nl .mk.t.lift .pin{height:3.8rem}
+.nl .mk.ans{top:calc(50% - .9rem)}
+.nl .mk.ans .star{font-size:2rem;line-height:1}
+.nl .mk.ans .lbl{background:var(--rust-dark);font-size:1.3rem;padding:.2rem .7rem}
+.info{font-size:1.25rem;background:#fff;border-radius:1rem;padding:.6rem 1rem;max-width:60rem}
+
+/* Reihenfolge */
+.rcards{display:flex;gap:1.2rem;justify-content:center}
+.rcard{background:#fff;border-radius:1.2rem;width:14rem;padding:1rem;text-align:center;box-shadow:0 .3rem 1rem rgba(44,61,76,.1);position:relative}
+.rcard .rl{position:absolute;top:-.9rem;left:-.6rem;width:2.8rem;height:2.8rem;border-radius:50%;background:var(--rust-base);color:#fff;font-family:var(--head);font-weight:700;font-size:1.6rem;display:grid;place-items:center}
+.rcard .re{font-size:5rem;line-height:1.2}
+.rcard .rn{font-family:var(--head);font-size:1.5rem;font-weight:600;color:var(--slate-dark)}
+.rcard .rv{min-height:1.6rem;font-weight:800;color:var(--sage-dark);font-size:1.15rem}
+.dir{font-size:1.3rem;font-weight:800;color:var(--text-muted)}
+.solline{font-family:var(--head);font-size:2.4rem;font-weight:700;color:var(--sage-dark)}
+
+/* Emoji */
+.emo{font-size:9rem;line-height:1.1;letter-spacing:.1em}
+.pattern{font-family:var(--head);font-size:2.6rem;letter-spacing:.15em;color:var(--slate-mid);font-weight:600}
+
+/* Walzen */
+.reels{display:flex;gap:1.2rem;justify-content:center}
+.reel{background:#fff;border-radius:1.2rem;border:4px solid var(--rust-mid);width:20rem;min-height:15rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;padding:1rem;text-align:center;cursor:pointer;transition:transform .2s}
+.reel .rl{font-size:.95rem;font-weight:800;text-transform:uppercase;color:var(--rust-dark);letter-spacing:.06em}
+.reel .re{font-size:4.5rem;line-height:1.15;min-height:5rem}
+.reel .rv{font-family:var(--head);font-size:2rem;font-weight:600;color:var(--slate-dark);line-height:1.15}
+.reel.spin{transform:scale(.97)}
+.reel.spin .rv,.reel.spin .re{opacity:.55;filter:blur(1px)}
+.reel.landed{animation:bump .5s}
+.combo{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+.combo span{background:#fff;border:3px solid var(--rust-mid);border-radius:1rem;padding:.4rem 1rem;font-family:var(--head);font-size:1.6rem;font-weight:600;color:var(--slate-dark)}
+.tasks{font-size:1.5rem;line-height:1.6;text-align:left;margin:0}
+.turn{font-family:var(--head);font-size:2.8rem;font-weight:700;color:var(--tc)}
+.turn .badge{display:inline-grid;width:4rem;height:4rem;font-size:2.6rem;vertical-align:middle;margin-right:.6rem}
+.prompt{font-size:1.7rem;font-weight:700;background:#fff;border-radius:1rem;padding:.6rem 1.4rem;border-left:.6rem solid var(--rust-base)}
+
+/* Stadt-Land-Otter */
+.letter{width:12rem;height:12rem;border-radius:1.6rem;background:var(--slate-dark);color:#fff;font-family:var(--head);font-size:8rem;font-weight:700;display:grid;place-items:center}
+.letter.spin{background:var(--slate-mid)}
+.cats{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center}
+.cats span{background:#fff;border-radius:1rem;padding:.5rem 1.1rem;font-size:1.6rem;font-weight:800;border-bottom:.3rem solid var(--slate-mid)}
+.cats span.kreativ{border-bottom-color:var(--rust-base)}
+
+/* Was noch? */
+.thing{font-size:12rem;line-height:1}
+.thingname{font-family:var(--head);font-size:3.4rem;font-weight:700;color:var(--slate-dark)}
+.counts{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center}
+
+/* Applaus */
+.ap-row{display:flex;gap:1.4rem;justify-content:center;align-items:flex-end}
+.ap{display:flex;flex-direction:column;align-items:center;gap:.5rem;width:10rem}
+.ap .bar{width:4.5rem;height:30vh;background:var(--slate-ghost);border-radius:1rem;position:relative;overflow:hidden;border:3px solid var(--tc)}
+.ap .fill{position:absolute;bottom:0;left:0;right:0;background:var(--tc);height:0%;transition:height .08s}
+.ap .val{font-family:var(--head);font-size:2rem;font-weight:700;color:var(--tc);min-height:2.6rem}
+
+/* Overlays */
+#overlay{position:fixed;inset:0;background:rgba(30,42,53,.78);display:grid;place-items:center;z-index:50}
+.modal{background:var(--bg);border-radius:1.4rem;padding:1.6rem 2.2rem;max-width:86vw;max-height:92vh;overflow:auto;position:relative;min-width:30rem}
+.modal .close{position:absolute;top:.7rem;right:.8rem;background:var(--slate-pale);color:var(--slate-dark)}
+.wheelbox{position:relative;width:54vh;height:54vh}
+.wheelbox canvas{width:100%;height:100%}
+.pointer{position:absolute;top:-1.6rem;left:50%;transform:translateX(-50%);font-size:3rem;color:var(--rust-dark);text-shadow:0 2px 0 #fff;line-height:1}
+.wres{min-height:2.6rem;font-family:var(--head);font-size:1.9rem;font-weight:700;color:var(--slate-dark)}
+.secret{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;background:var(--slate-dark);color:#fff;text-align:center}
+.secret .big{font-family:var(--head);font-size:5rem;font-weight:700}
+.secret .word{font-family:var(--head);font-size:8rem;font-weight:700;color:var(--rust-mid)}
+.secret .sbar{width:50vw;height:.8rem;background:rgba(255,255,255,.2);border-radius:1rem;overflow:hidden}
+.secret .sbar div{height:100%;background:var(--rust-base);width:100%}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:.5rem 1.2rem;font-size:1.15rem;margin-top:1rem}
+.keys kbd{background:#fff;border:2px solid var(--slate-pale);border-bottom-width:4px;border-radius:.4rem;padding:.1rem .5rem;font-family:inherit;font-weight:800;white-space:nowrap}
+.editor{max-width:76rem;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.editor .card h3{font-size:1.3rem}
+.editor .fmt{font-size:.9rem;color:var(--text-muted);margin:.2rem 0 .4rem}
+.editor textarea{width:100%;height:9rem;font:inherit;font-size:.95rem;border:2px solid var(--slate-pale);border-radius:.6rem;padding:.5rem}
+
+/* Finale */
+.finale{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;position:relative}
+.podium{display:flex;align-items:flex-end;gap:1.4rem}
+.pod{display:flex;flex-direction:column;align-items:center;gap:.4rem;width:15rem}
+.pod .badge{width:6rem;height:6rem;font-size:4rem}
+.pod .pname2{font-family:var(--head);font-size:1.7rem;font-weight:700;color:var(--slate-dark);text-align:center}
+.pod .block{width:100%;border-radius:1rem 1rem 0 0;background:var(--tc);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:.6rem;color:#fff;font-family:var(--head);font-weight:700;font-size:2rem}
+.pod .medal{font-size:3rem;line-height:1}
+#confetti{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
+.others{display:flex;gap:1rem;font-size:1.3rem;font-weight:800;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="top">
+    <div class="logo" id="logo"><span class="emoji">🦦</span> Otter-Show</div>
+    <div class="where" id="where"></div>
+    <button class="ib" id="bTimer" title="Timer (T)">⏱ Timer</button>
+    <button class="ib" id="bHub" title="Zum Fluss">🌊 Fluss</button>
+    <button class="ib" id="bFull" title="Vollbild (F)">⛶</button>
+    <button class="ib" id="bHelp" title="Hilfe (H)">?</button>
+    <button class="ib" id="bSet" title="Einstellungen">⚙</button>
+  </header>
+  <main id="main"></main>
+  <footer id="scorebar"></footer>
+</div>
+<div id="overlay" hidden></div>
+
+<script>
+/* =========================================================
+   INHALTE
+   ========================================================= */
+const SCHAETZ=[
+ ['Wie viele Knochen hat ein erwachsener Mensch?',206,'Knochen','Babys haben sogar rund 300 – viele wachsen später zusammen.'],
+ ['Wie hoch ist der Kölner Dom?',157,'Meter','Er war von 1880 bis 1884 das höchste Gebäude der Welt.'],
+ ['Wie lang ist der Rhein?',1230,'Kilometer','Er fließt von der Schweiz bis in die Nordsee.'],
+ ['Wie viele Zähne hat ein Erwachsener (mit Weisheitszähnen)?',32,'Zähne','Kinder haben 20 Milchzähne.'],
+ ['Wie viel wiegt ein neugeborenes Elefantenbaby ungefähr?',100,'Kilogramm','Etwa so viel wie zwei Grundschulkinder zusammen – nur ein Baby!'],
+ ['Wie schnell kann ein Gepard für kurze Zeit laufen?',100,'km/h','Geparden sind die schnellsten Landtiere, halten das Tempo aber nur kurz durch.'],
+ ['Wie viele Menschen wohnen in Dortmund?',600000,'Einwohner','Rund 600.000 – Dortmund ist die größte Stadt im Ruhrgebiet.'],
+ ['Wie hoch ist die Zugspitze, Deutschlands höchster Berg?',2962,'Meter','Oben kocht Wasser schon bei etwa 90 °C.'],
+ ['Wie viele Stunden schläft ein Koala pro Tag ungefähr?',20,'Stunden','Eukalyptusblätter liefern kaum Energie – also viel schlafen!'],
+ ['Wie viele Tasten hat ein Klavier?',88,'Tasten','52 weiße und 36 schwarze.'],
+ ['Wie weit ist der Mond von der Erde entfernt?',384400,'Kilometer','Mit dem Auto (100 km/h) bräuchte man etwa 160 Tage ohne Pause.'],
+ ['Wie hoch ist der Mount Everest?',8849,'Meter','Der höchste Berg der Welt.'],
+ ['Wie viele Menschen leben in Deutschland?',83.5,'Millionen','Rund 83,5 Millionen Menschen.'],
+ ['Wie viele Sekunden hat eine Stunde?',3600,'Sekunden','60 Minuten × 60 Sekunden.'],
+ ['Wie lang kann ein Blauwal werden?',30,'Meter','Das schwerste Tier, das je gelebt hat – schwerer als jeder Dinosaurier.'],
+ ['Wie tief ist die tiefste Stelle im Meer (Marianengraben)?',11000,'Meter','Der Mount Everest würde komplett darin verschwinden.'],
+ ['Wie viele Bundesländer hat Deutschland?',16,'Bundesländer','Wir wohnen in Nordrhein-Westfalen.'],
+ ['In welchem Jahr wurde Borussia Dortmund gegründet?',1909,'(Jahr)','Gegründet am 19. Dezember 1909.'],
+ ['Wie viele Zuschauer passen ins Dortmunder Stadion?',81000,'Plätze','Rund 81.000 – eines der größten Stadien Europas.'],
+ ['Wie viele Eier legt ein Huhn ungefähr in einem Jahr?',300,'Eier','Legehennen schaffen fast ein Ei pro Tag.'],
+ ['Wie viele Kilometer läuft man bei einem Marathon?',42,'Kilometer','Genau sind es 42,195 km.'],
+ ['Wie viele Halswirbel hat eine Giraffe?',7,'Halswirbel','Genauso viele wie wir Menschen – nur viel größer!'],
+ ['Wie viele Liter Blut hat ein erwachsener Mensch ungefähr?',5,'Liter','Etwa so viel wie in einen kleinen Eimer passt.'],
+ ['Wie viele Minuten braucht das Sonnenlicht bis zur Erde?',8,'Minuten','Das Licht ist rund 150 Millionen Kilometer unterwegs.'],
+ ['Wie viele Länder gehören zur Europäischen Union?',27,'Länder','Deutschland ist eines der Gründungsländer.'],
+ ['Wie viel wiegt ein ausgewachsener Fischotter ungefähr?',10,'Kilogramm','Meist zwischen 7 und 12 kg.'],
+ ['Wie lang ist der Äquator (einmal um die Erde)?',40075,'Kilometer','Rund 40.000 km.'],
+ ['Wie hoch ist der Eiffelturm in Paris?',330,'Meter','Im Sommer ist er durch die Hitze sogar ein paar Zentimeter höher.'],
+ ['Wie viel Prozent der Erdoberfläche sind von Wasser bedeckt?',71,'Prozent','Deshalb nennt man die Erde auch den „Blauen Planeten“.'],
+ ['Wie alt wurde der Komponist Ludwig van Beethoven?',56,'Jahre','Er lebte von 1770 bis 1827.'],
+ ['Wie viele Sinfonien hat Beethoven komponiert?',9,'Sinfonien','Die 9. enthält die „Ode an die Freude“ – heute die Europahymne.'],
+];
+
+const WQ=[
+ ['Manche Seeotter im Zoo halten sich beim Schlafen an den Pfoten fest, damit sie nicht auseinandertreiben.',true,'Stimmt! In freier Wildbahn wickeln sie sich oft in Seetang ein, damit sie nicht wegtreiben.'],
+ ['Ein Oktopus hat drei Herzen.',true,'Stimmt! Zwei pumpen Blut durch die Kiemen, eines durch den Körper.'],
+ ['Die Chinesische Mauer kann man mit bloßem Auge vom Mond aus sehen.',false,'Quatsch! Dafür ist sie viel zu schmal.'],
+ ['Bananen wachsen an Bäumen.',false,'Quatsch! Die Bananenpflanze ist eine riesige Staude – kein Baum.'],
+ ['Pinguine leben am Nordpol.',false,'Quatsch! Pinguine leben auf der Südhalbkugel, z. B. in der Antarktis.'],
+ ['Ein Tag auf der Venus dauert länger als ein Jahr auf der Venus.',true,'Stimmt! Die Venus dreht sich extrem langsam um sich selbst.'],
+ ['Kühe haben einen Magen mit vier Abteilungen.',true,'Stimmt! Pansen, Netzmagen, Blättermagen und Labmagen.'],
+ ['Ein Blitz schlägt nie zweimal an derselben Stelle ein.',false,'Quatsch! Hohe Türme werden oft viele Male im Jahr getroffen.'],
+ ['Honig kann jahrelang haltbar sein.',true,'Stimmt! Gut verschlossen wird Honig praktisch nicht schlecht.'],
+ ['Die Erde ist der größte Planet in unserem Sonnensystem.',false,'Quatsch! Der Jupiter ist viel größer – über 1.300 Erden würden hineinpassen.'],
+ ['Goldfische können sich nur drei Sekunden lang etwas merken.',false,'Quatsch! Goldfische können sich Dinge monatelang merken.'],
+ ['Erdbeeren sind eigentlich gar keine Beeren.',true,'Stimmt! Botanisch ist die Erdbeere eine Sammelnussfrucht.'],
+ ['Bananen sind – botanisch gesehen – Beeren.',true,'Stimmt! Auch wenn es seltsam klingt.'],
+ ['Eisbären haben unter ihrem Fell schwarze Haut.',true,'Stimmt! Die schwarze Haut nimmt Sonnenwärme besser auf.'],
+ ['Kamele speichern Wasser in ihren Höckern.',false,'Quatsch! Im Höcker ist Fett – eine Energiereserve.'],
+ ['Dortmund liegt am Rhein.',false,'Quatsch! Durch Dortmund fließt die Emscher, im Süden grenzt die Ruhr an.'],
+ ['Das Ruhrgebiet ist nach dem Fluss Ruhr benannt.',true,'Stimmt!'],
+ ['Spinnen sind Insekten.',false,'Quatsch! Spinnen sind Spinnentiere – sie haben acht Beine, Insekten nur sechs.'],
+ ['Wale sind Fische.',false,'Quatsch! Wale sind Säugetiere – sie atmen Luft und säugen ihre Jungen.'],
+ ['Fledermäuse sind blind.',false,'Quatsch! Sie können sehen und orientieren sich zusätzlich mit Ultraschall.'],
+ ['Der Eiffelturm ist im Sommer ein paar Zentimeter höher als im Winter.',true,'Stimmt! Metall dehnt sich bei Wärme aus.'],
+ ['Krokodile können ihre Zunge nicht herausstrecken.',true,'Stimmt! Die Zunge ist am Mundboden festgewachsen.'],
+ ['Giraffen haben genauso viele Halswirbel wie Menschen.',true,'Stimmt! Beide haben sieben.'],
+ ['Der Mond leuchtet von selbst.',false,'Quatsch! Er wird von der Sonne angestrahlt.'],
+ ['Vögel stammen von Dinosauriern ab.',true,'Stimmt! Das Huhn ist sozusagen ein entfernter Verwandter des T-Rex.'],
+ ['Beethoven war am Ende seines Lebens taub und komponierte trotzdem weiter.',true,'Stimmt! Er hörte die Musik in seinem Kopf.'],
+ ['Auf der Zugspitze kocht Wasser schon bei weniger als 100 °C.',true,'Stimmt! Weiter oben ist der Luftdruck geringer – dort kocht Wasser schon bei etwa 90 °C.'],
+ ['Ein Schaltjahr gibt es alle drei Jahre.',false,'Quatsch! Ein Schaltjahr gibt es (fast) alle vier Jahre.'],
+ ['Die Sonne ist ein Stern.',true,'Stimmt! Sie ist der Stern, der uns am nächsten ist.'],
+ ['Seeotter benutzen Steine als Werkzeug.',true,'Stimmt! Damit knacken sie Muscheln auf ihrem Bauch.'],
+ ['Seeotter haben unter dem Arm eine Hauttasche für ihren Lieblingsstein.',true,'Stimmt! Dort bewahren sie Steine und Futter auf.'],
+ ['Seeotter haben das dichteste Fell aller Tiere.',true,'Stimmt! Auf einer Fläche so groß wie ein Daumennagel wachsen über 100.000 Haare.'],
+ ['Elefanten können hoch springen.',false,'Quatsch! Elefanten können gar nicht springen.'],
+ ['Ein Regenbogen hat immer genau sieben Farben.',false,'Quatsch! Die Farben gehen fließend ineinander über – die „sieben“ hat sich ein Mensch ausgedacht.'],
+ ['Haie gab es auf der Erde schon vor den ersten Bäumen.',true,'Stimmt! Haie gibt es seit über 400 Millionen Jahren.'],
+ ['Schmetterlinge schmecken mit ihren Füßen.',true,'Stimmt! An den Füßen sitzen Geschmackssinneszellen.'],
+ ['Erwachsene haben mehr Knochen als Babys.',false,'Quatsch! Babys haben mehr Knochen – viele wachsen später zusammen.'],
+ ['Kraken haben blaues Blut.',true,'Stimmt! Ihr Blut enthält Kupfer statt Eisen.'],
+ ['Ein Jahr auf dem Mars ist länger als ein Jahr auf der Erde.',true,'Stimmt! Ein Marsjahr dauert 687 Erdentage.'],
+ ['Mozart hat schon als kleines Kind Musikstücke komponiert.',true,'Stimmt! Mit etwa fünf Jahren schrieb er erste kleine Stücke.'],
+];
+
+const EMOJI=[
+ ['🐺👵🧺👧','Rotkäppchen','Märchen'],
+ ['👸🍎🪞','Schneewittchen','Märchen'],
+ ['👠🎃🕛','Aschenputtel','Märchen'],
+ ['👦👧🍭🏠🧙‍♀️','Hänsel und Gretel','Märchen'],
+ ['🐸👑💋','Der Froschkönig','Märchen'],
+ ['🫏🐕🐈🐓🎵','Die Bremer Stadtmusikanten','Märchen'],
+ ['👸🌹😴🏰','Dornröschen','Märchen'],
+ ['👱‍♀️🗼💇‍♀️','Rapunzel','Märchen'],
+ ['🦷🪥👩‍⚕️','Zahnärztin','Beruf'],
+ ['🍞🥐🌅','Bäcker','Beruf'],
+ ['🐄🚜🌾','Landwirt','Beruf'],
+ ['📬✉️🚲','Briefträgerin','Beruf'],
+ ['🔥🚒🧯','Feuerwehrfrau','Beruf'],
+ ['🌧️🪱','Regenwurm','Zusammengesetztes Wort'],
+ ['🌞🌻','Sonnenblume','Zusammengesetztes Wort'],
+ ['❄️⛄','Schneemann','Zusammengesetztes Wort'],
+ ['🍎🌳','Apfelbaum','Zusammengesetztes Wort'],
+ ['🦶⚽','Fußball','Zusammengesetztes Wort'],
+ ['👂💍','Ohrring','Zusammengesetztes Wort'],
+ ['🌊⭐','Seestern','Zusammengesetztes Wort'],
+ ['🦷🧚','Zahnfee','Zusammengesetztes Wort'],
+ ['🏠🔑','Haustürschlüssel','Zusammengesetztes Wort'],
+ ['🍯🐝','Honigbiene','Zusammengesetztes Wort'],
+ ['🌙🌸','Mondblume','Zusammengesetztes Wort'],
+ ['🐷✅','Schwein gehabt','Redewendung'],
+ ['🍅👀','Tomaten auf den Augen haben','Redewendung'],
+ ['🪰🪰👋','Zwei Fliegen mit einer Klappe schlagen','Redewendung'],
+ ['🐱🛍️','Die Katze im Sack kaufen','Redewendung'],
+ ['🐘🍽️🏪','Wie ein Elefant im Porzellanladen','Redewendung'],
+ ['👍👍💪','Die Daumen drücken','Redewendung'],
+ ['🌧️🐱🐶','Es regnet Katzen und Hunde (auf Englisch!)','Redewendung'],
+ ['🦦🌊😴','Schlafender Seeotter','Tier'],
+ ['🦁👑','König der Tiere','Tier'],
+ ['🐝🏠','Bienenstock','Zusammengesetztes Wort'],
+ ['🎂🕯️🎉','Geburtstag','Fest'],
+];
+EMOJI.splice(EMOJI.findIndex(e=>e[1]==='Mondblume'),1); // zu unklar
+
+const KACHEL=[
+ ['🦒','Giraffe'],['🗽','Freiheitsstatue'],['🌋','Vulkan'],['🎻','Geige'],['🦔','Igel'],['🪐','Saturn'],
+ ['🏰','Burg / Schloss'],['🦩','Flamingo'],['🐙','Krake / Oktopus'],['🎷','Saxophon'],['🦥','Faultier'],['🌵','Kaktus'],
+ ['🚁','Hubschrauber'],['🦞','Hummer'],['🧲','Magnet'],['🔭','Teleskop / Fernrohr'],['🪕','Banjo'],['🦘','Känguru'],
+ ['🐧','Pinguin'],['🍍','Ananas'],['🥨','Brezel'],['⛵','Segelboot'],['🦚','Pfau'],['🪁','Drachen'],
+ ['🎡','Riesenrad'],['🗿','Steinfigur (Osterinsel)'],['🦕','Dinosaurier'],['🧭','Kompass'],['🪗','Akkordeon'],['🦦','Otter!'],
+ ['🐢','Schildkröte'],['🚂','Dampflok'],['🥁','Trommel'],['🦉','Eule'],['🌍','Erde / Weltkugel'],['🐳','Wal'],
+];
+
+const REIHE=[
+ {q:'Sortiert nach Gewicht!',dir:'leicht ➜ schwer',items:[['🐭','Maus','ca. 20 g'],['🐈','Katze','ca. 4 kg'],['🐎','Pferd','ca. 500 kg'],['🐘','Elefant','ca. 5.000 kg']]},
+ {q:'Was wurde zuerst erfunden?',dir:'alt ➜ neu',items:[['🛞','Rad','vor über 5.000 Jahren'],['📖','Buchdruck','um 1450'],['☎️','Telefon','um 1870'],['📱','Smartphone','um 2000']]},
+ {q:'Sortiert die Planeten nach ihrem Abstand zur Sonne!',dir:'nah ➜ fern',items:[['🔥','Merkur','1. Planet'],['🌕','Venus','2. Planet'],['🌍','Erde','3. Planet'],['🔴','Mars','4. Planet']]},
+ {q:'Was ist am höchsten?',dir:'niedrig ➜ hoch',items:[['⛪','Kölner Dom','157 m'],['🗼','Eiffelturm','330 m'],['🏙️','Burj Khalifa','828 m'],['🏔️','Zugspitze','2.962 m']]},
+ {q:'Sortiert die Flüsse nach Länge!',dir:'kurz ➜ lang',items:[['🏞️','Ruhr','219 km'],['🌊','Elbe','1.094 km'],['🚢','Rhein','1.230 km'],['🐊','Nil','ca. 6.650 km']]},
+ {q:'Sortiert die Städte nach Einwohnerzahl!',dir:'wenig ➜ viel',items:[['⚽','Dortmund','ca. 0,6 Mio.'],['⛪','Köln','ca. 1,1 Mio.'],['⚓','Hamburg','ca. 1,9 Mio.'],['🐻','Berlin','ca. 3,7 Mio.']]},
+ {q:'Wer ist am schnellsten?',dir:'langsam ➜ schnell',items:[['🐌','Schnecke','ca. 0,05 km/h'],['🏃','Mensch (Weltrekord)','ca. 44 km/h'],['🐎','Rennpferd','ca. 70 km/h'],['🐆','Gepard','ca. 100 km/h']]},
+ {q:'Wer lebt am längsten?',dir:'kurz ➜ lang',items:[['🦟','Eintagsfliege','Stunden bis Tage'],['🐹','Hamster','2–3 Jahre'],['🐕','Hund','10–13 Jahre'],['🧑','Mensch','ca. 80 Jahre']]},
+ {q:'Was geschah zuerst?',dir:'früher ➜ später',items:[['🦖','Dinosaurier sterben aus','vor 66 Mio. Jahren'],['🔺','Pyramiden von Gizeh','vor ca. 4.500 Jahren'],['⚔️','Römer in Germanien','vor ca. 2.000 Jahren'],['🚀','Erste Mondlandung','1969']]},
+ {q:'Sortiert die Kontinente nach Größe!',dir:'klein ➜ groß',items:[['🦘','Australien','ca. 8 Mio. km²'],['🏰','Europa','ca. 10 Mio. km²'],['🦁','Afrika','ca. 30 Mio. km²'],['🐼','Asien','ca. 44 Mio. km²']]},
+ {q:'Sortiert die Ozeane nach Größe!',dir:'klein ➜ groß',items:[['🧊','Arktischer Ozean','ca. 14 Mio. km²'],['🐠','Indischer Ozean','ca. 70 Mio. km²'],['⛵','Atlantik','ca. 106 Mio. km²'],['🌺','Pazifik','ca. 165 Mio. km²']]},
+ {q:'Sortiert die Streichinstrumente nach Größe!',dir:'klein ➜ groß',items:[['🎻','Geige','ca. 60 cm'],['🎻','Bratsche','ca. 70 cm'],['🎻','Cello','ca. 120 cm'],['🎻','Kontrabass','ca. 180 cm']]},
+ {q:'Wer hat die meisten Beine?',dir:'wenig ➜ viel',items:[['🐔','Huhn','2 Beine'],['🐕','Hund','4 Beine'],['🐞','Käfer','6 Beine'],['🕷️','Spinne','8 Beine']]},
+ {q:'Was ist am heißesten?',dir:'kalt ➜ heiß',items:[['🧊','Eis schmilzt','0 °C'],['🤒','Körpertemperatur','ca. 37 °C'],['♨️','Wasser kocht','100 °C'],['🍕','Pizzaofen','über 250 °C']]},
+ {q:'Sortiert die Eier nach Größe!',dir:'klein ➜ groß',items:[['🐦','Kolibri-Ei','so groß wie eine Erbse'],['🐔','Hühnerei','ca. 6 cm'],['🪿','Gänseei','ca. 8 cm'],['🦤','Straußenei','ca. 15 cm']]},
+];
+
+const ERF={
+ ding:['Regenschirm','Schulranzen','Fahrrad','Kühlschrank','Zahnbürste','Turnschuh','Bett','Brotdose','Mütze','Füller','Stuhl','Tafel','Mülleimer','Lampe','Kuscheltier','Wecker','Trinkflasche','Schaukel','Badewanne','Toaster','Federmäppchen','Kopfhörer'],
+ kraft:['kann fliegen','spricht alle Sprachen','wird unsichtbar','macht Musik','reinigt sich selbst','wächst mit','leuchtet im Dunkeln','erfüllt einen Wunsch pro Tag','versteht Tiere','läuft mit Sonnenstrom','kann schwimmen','erzählt Witze','ist essbar','kann sich verdoppeln','reist durch die Zeit','wird riesig oder winzig','räumt von allein auf','tröstet, wenn man traurig ist'],
+ wen:['für Otter','für Omas und Opas','für Astronautinnen','für Lehrkräfte','für Babys','für Hunde','für Fußballteams','für die Feuerwehr','für Piraten','für Menschen im Rollstuhl','für Bauernhöfe','für Musikerinnen','für Ritter','für Außerirdische','für die Klasse 5.3','für Schnecken','für Pinguine','für Hausmeister']
+};
+
+const DINGE=[['📎','Büroklammer'],['🥚','Eierkarton'],['🥄','Löffel'],['🧦','Socke'],['📦','Pappkarton'],['📰','Zeitung'],['✏️','Bleistift'],['🎈','Luftballon'],['🧻','Klopapierrolle'],['🧱','Ziegelstein'],['🍲','Kochtopf'],['☂️','Regenschirm'],['🧴','Plastikflasche'],['👟','Schuh'],['🌿','Ast'],['🪣','Eimer'],['🔑','Schlüssel'],['🪢','Seil'],['💿','CD'],['🧺','Wäschekorb'],['🧽','Schwamm'],['🥫','Konservendose'],['🧤','Handschuh'],['🪥','Zahnbürste']];
+
+const STORY={
+ figur:[['🦦','ein mutiger Otter'],['🐉','eine schüchterne Drachin'],['🤖','ein Roboter'],['🏴‍☠️','eine Piratin'],['🐕','ein sprechender Hund'],['🧙‍♀️','eine Hexe'],['👨‍🚀','ein Astronaut'],['🛡️','ein Ritter'],['👸','eine Prinzessin'],['🦕','ein Dinosaurier'],['👻','ein Gespenst'],['🦄','ein Einhorn'],['👩‍🔬','eine Erfinderin'],['⛄','ein Schneemann'],['🐢','eine Schildkröte'],['👽','ein Alien'],['👩‍🏫','eine Lehrerin'],['🐭','eine Maus']],
+ ort:[['🌴','im Dschungel'],['🌙','auf dem Mond'],['🏫','in der Schule'],['🌊','unter Wasser'],['🏰','in einer Burg'],['🦁','im Zoo'],['🥐','in einer Bäckerei'],['🚢','auf einem Schiff'],['🏜️','in der Wüste'],['🏟️','im Fußballstadion'],['🌋','auf einem Vulkan'],['🛒','im Supermarkt'],['🏙️','mitten in Dortmund'],['🎪','im Zirkus'],['❄️','im ewigen Eis'],['🏛️','im Museum'],['🚀','im Weltall'],['🌲','im Zauberwald']],
+ problem:[['🔑','hat den Schlüssel verloren'],['🔄','kann plötzlich nur noch rückwärts sprechen'],['🗺️','findet eine geheime Schatzkarte'],['🎂','muss in einer Stunde einen Riesenkuchen backen'],['🤏','wurde winzig klein geschrumpft'],['⛈️','ein heftiges Gewitter zieht auf'],['😵','hat Schluckauf, der nicht aufhört'],['🥚','ein seltsames Ei schlüpft'],['🎨','alle Farben verschwinden'],['⏰','die Zeit bleibt stehen'],['📜','hat einen Zauberspruch vergessen'],['🔍','der beste Freund ist verschwunden'],['👟','die Schuhe laufen allein weg'],['🍝','es regnet Spaghetti'],['✉️','ein Brief aus der Zukunft kommt an'],['📱','das Handy fängt an zu sprechen'],['💰','unter dem Boden liegt ein Schatz'],['🐘','ein Elefant steht vor der Tür']]
+};
+const STORY_PROMPTS=['Wie fängt die Geschichte an? Stellt die Figur und den Ort vor!','Das Problem taucht auf – was passiert?','Es wird noch schlimmer … oder lustiger!','Wer oder was hilft? Die überraschende Wende!','Wie endet die Geschichte?'];
+
+const SLO_CATS=['Stadt','Land','Fluss','Tier','Vorname','Beruf','Essen','Sportart','Pflanze','Spielzeug','Kleidungsstück','Musikinstrument','Körperteil','Etwas im Klassenraum','Süßigkeit','Fahrzeug','Etwas für den Urlaub'];
+const SLO_CREATIVE=['Erfundenes Tier','Name für einen Superhelden','Erfundene Süßigkeit','Name für ein neues Spiel','Erfundenes Schimpfwort (nett!)','Name für einen Roboter'];
+const SLO_LETTERS='ABDEFGHIKLMNOPRSTUW';
+
+const KRITZEL=['Schneemann','Fahrrad','Leuchtturm','Regenbogen','Gespenst','Pizza','Rakete','Schildkröte','Zahnbürste','Brille','Schatzkiste','Vulkan','Kaktus','Krone','Spinnennetz','Hubschrauber','Eiswaffel','Drache','Burg','Giraffe','Otter','Igel','Zelt','Heißluftballon','Schaukel','Trompete','Gitarre','Hamburger','Pinguin','Banane','Leiter','Wecker','Brücke','Roboter','Anker','Meerjungfrau','Dinosaurier','Schnecke','Kerze','Pilz','Gewitter','Schmetterling','Fußballtor','Tannenbaum','Schlüssel','Kamera','Sonnenbrille','Zauberer','Piratenschiff','Achterbahn','Hexe','Teekanne','Lupe','Ritter','Bienenstock','Iglu','Würfel','Kran','Tintenfisch','Fallschirm','Windmühle','Kuchen'];
+
+/* =========================================================
+   SPIELE
+   ========================================================= */
+const GAMES=[
+ {id:'wq',icon:'🧍',name:'Wahr oder Quatsch?',sh:'Wahr/Quatsch',type:'wissen',min:8,mat:'Nur eure Beine 😄',
+  rules:['Ich zeige eine Behauptung.','Nach dem Countdown: <b>Aufstehen = WAHR</b>, <b>sitzen bleiben = QUATSCH</b>.','Jedes Team, das mehrheitlich richtig liegt, bekommt einen Fisch.'],run:runWQ},
+ {id:'kachel',icon:'🧩',name:'Kachel-Rätsel',sh:'Kachel-Rätsel',type:'wissen',min:7,mat:'Melden!',
+  rules:['Unter den Kacheln versteckt sich ein Bild.','Nach und nach fallen Kacheln weg.','Wer es zuerst errät (melden!), bekommt Fische – <b>je früher, desto mehr</b>.'],run:runKachel},
+ {id:'schaetz',icon:'🎯',name:'Otter-Schätzer',sh:'Schätzer',type:'wissen',min:8,mat:'Ein Zettel oder Mini-Whiteboard pro Team',
+  rules:['Jedes Team schätzt die Antwort und schreibt sie auf.','Beratet euch – aber leise!','Wer am nächsten dran ist, bekommt <b>3 Fische</b>, dann 2 und 1.'],run:runSchaetz},
+ {id:'reihe',icon:'📶',name:'Reihenfolge',sh:'Reihenfolge',type:'wissen',min:8,mat:'Ein Zettel pro Team',
+  rules:['Bringt die vier Karten in die richtige Reihenfolge.','Schreibt die Buchstaben auf, z. B. <b>C – A – D – B</b>.','Alles richtig: <b>2 Fische</b>.'],run:runReihe},
+ {id:'emoji',icon:'🤔',name:'Emoji-Rätsel',sh:'Emoji-Rätsel',type:'wissen',min:7,mat:'Melden!',
+  rules:['Welches Wort, Märchen oder welche Redewendung steckt in den Emojis?','Meldet euch, wenn euer Team es weiß.','Ohne Tipp: <b>2 Fische</b>, mit Tipp: 1 Fisch.'],run:runEmoji},
+ {id:'erfinder',icon:'💡',name:'Erfinder-Werkstatt',sh:'Erfinder',type:'kreativ',min:15,mat:'Papier & Buntstifte pro Team',
+  rules:['Drei Karten ergeben eine verrückte Erfindung.','Gebt ihr einen Namen, zeichnet sie und überlegt: Was kann sie genau?','Jedes Team stellt seine Erfindung vor – die Klasse stimmt ab.'],run:runErfinder},
+ {id:'dinge',icon:'📎',name:'Was kann man damit noch machen?',sh:'Was noch?',type:'kreativ',min:8,mat:'Ein Zettel pro Team',
+  rules:['Ihr seht einen ganz normalen Gegenstand.','Sammelt so viele <b>andere</b> Verwendungen wie möglich – je verrückter, desto besser!','Die meisten Ideen: 3 Fische. Originellste Idee: Bonus!'],run:runDinge},
+ {id:'story',icon:'🎲',name:'Geschichten-Würfel',sh:'Geschichten',type:'kreativ',min:10,mat:'Eure Fantasie',
+  rules:['Drei Würfel bestimmen Figur, Ort und Problem.','Die Teams erzählen nacheinander die Geschichte weiter – jedes Team einen Teil.','Am Ende stimmt die Klasse ab: Welcher Teil war am besten?'],run:runStory},
+ {id:'slo',icon:'🔤',name:'Stadt-Land-Otter',sh:'Stadt-Land-Otter',type:'mix',min:10,mat:'Ein Zettel pro Team',
+  rules:['Das Rad bestimmt einen Buchstaben.','Findet zu jeder Kategorie ein Wort mit diesem Anfangsbuchstaben.','Jedes passende Wort: 1 Fisch. Das hat kein anderes Team? <b>+1 extra!</b>'],run:runSLO},
+ {id:'kritzel',icon:'✏️',name:'Kritzel-Duell',sh:'Kritzel-Duell',type:'kreativ',min:10,mat:'Tafel oder Smartboard',
+  rules:['Ein Kind aus dem Team zeichnet – <b>ohne Buchstaben und Zahlen</b>!','Nur das eigene Team rät: 90 Sekunden.','Richtig: <b>2 Fische</b>. Sonst dürfen die anderen Teams raten (1 Fisch).'],run:runKritzel},
+];
+const G=id=>GAMES.find(g=>g.id===id);
+const typeLabel=t=>({wissen:'Allgemeinwissen',kreativ:'Kreativität',mix:'Wissen + Kreativität'})[t];
+
+/* =========================================================
+   ZUSTAND
+   ========================================================= */
+const KEY='otter-show-53-v1';
+const DEFAULT_NAMES=['Flussotter','Seeotter','Riesenotter','Zwergotter','Fischotter','Glattotter'];
+const TEAM_COLORS=['#D97A4A','#3E5668','#4D8B3F','#C17B00','#7B4F8C','#2F8A8A'];
+function fresh(){return {n:4,names:[...DEFAULT_NAMES],scores:[0,0,0,0,0,0],played:[],used:{},sound:true,applause:false,
+  custom:{schaetz:'',wq:'',emoji:'',kritzel:'',dinge:''},view:'setup',started:false,kritzelTurn:0}}
+let S;
+try{S=Object.assign(fresh(),JSON.parse(localStorage.getItem(KEY)||'null')||{})}catch(e){S=fresh()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function teams(){return Array.from({length:S.n},(_,i)=>({i,name:S.names[i]||DEFAULT_NAMES[i],color:TEAM_COLORS[i],score:S.scores[i]||0}))}
+
+/* =========================================================
+   HILFSFUNKTIONEN
+   ========================================================= */
+const $=(s,el=document)=>el.querySelector(s);
+const h=html=>{const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=v=>Number(v).toLocaleString('de-DE');
+function parseNum(s){if(s==null)return null;s=String(s).trim().replace(/\s/g,'');if(!s)return null;
+  if(/,/.test(s))s=s.replace(/\./g,'').replace(',','.');else if(/^\d{1,3}(\.\d{3})+$/.test(s))s=s.replace(/\./g,'');
+  const v=parseFloat(s);return isNaN(v)?null:v}
+function btn(txt,cls=''){const b=document.createElement('button');b.className='btn '+cls;b.innerHTML=txt;return b}
+let cleanup=[];const reg=f=>cleanup.push(f);
+let primaryBtn=null;
+function setPrimary(b){if(primaryBtn)primaryBtn.classList.remove('primary');primaryBtn=b;if(b)b.classList.add('primary')}
+function setWhere(t){$('#where').textContent=t}
+
+function customPool(key){
+  const lines=(S.custom[key]||'').split('\n').map(l=>l.trim()).filter(Boolean);
+  const parts=l=>l.split('|').map(s=>s.trim());
+  switch(key){
+    case 'schaetz':return lines.map(parts).filter(p=>p.length>=2&&parseNum(p[1])!=null).map(p=>[p[0],parseNum(p[1]),p[2]||'',p[3]||'']);
+    case 'wq':return lines.map(parts).filter(p=>p.length>=2).map(p=>[p[0],/^(w|j|r|s|t)/i.test(p[1]),p[2]||'']);
+    case 'emoji':return lines.map(parts).filter(p=>p.length>=2).map(p=>[p[0],p[1],p[2]||'Eigenes Rätsel']);
+    case 'kritzel':return lines;
+    case 'dinge':return lines.map(l=>{const p=parts(l);return p.length>1?[p[0],p[1]]:['❓',p[0]]});
+  }return [];
+}
+const BASE={schaetz:SCHAETZ,wq:WQ,emoji:EMOJI,kachel:KACHEL,reihe:REIHE,kritzel:KRITZEL,dinge:DINGE};
+function pool(key){return [...BASE[key],...customPool(key)]}
+function pick(key){
+  const p=pool(key);S.used[key]=S.used[key]||[];
+  let avail=p.map((_,i)=>i).filter(i=>!S.used[key].includes(i));
+  if(!avail.length){S.used[key]=[];avail=p.map((_,i)=>i)}
+  const i=rnd(avail);S.used[key].push(i);save();return p[i];
+}
+function rankPoints(vals,better='high'){
+  const idx=vals.map((v,i)=>[v,i]).filter(x=>x[0]!=null&&!isNaN(x[0]));
+  idx.sort((a,b)=>better==='high'?b[0]-a[0]:a[0]-b[0]);
+  const pts=new Array(vals.length).fill(0);let rank=0,prev=null;
+  idx.forEach(([v,i],k)=>{if(prev===null||v!==prev)rank=k;prev=v;pts[i]=[3,2,1][rank]||0});
+  return pts;
+}
+
+/* ---------- Sound ---------- */
+let AC;function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume().catch(()=>{});return AC}
+function tone(f,d=.15,type='sine',vol=.2,delay=0){if(!S.sound)return;const a=ac();if(!a)return;const t=a.currentTime+delay;
+  const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(vol,t);
+  g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(a.destination);o.start(t);o.stop(t+d+.05)}
+const SFX={
+  plop(){tone(520,.08,'sine',.25);tone(880,.14,'sine',.2,.06)},
+  tick(){tone(1100,.04,'square',.05)},
+  gong(){tone(196,1.4,'sine',.35);tone(294,1.1,'sine',.18);tone(392,.9,'sine',.1)},
+  fanfare(){[523,659,784,1047].forEach((f,i)=>tone(f,i===3?.6:.22,'triangle',.22,i*.14))},
+  right(){tone(660,.12,'triangle',.25);tone(990,.25,'triangle',.25,.1)},
+  wrong(){tone(220,.35,'sawtooth',.1)},
+  down(){tone(400,.12,'sine',.15);tone(300,.18,'sine',.15,.08)}
+};
+
+/* ---------- Punkte ---------- */
+function addPoints(i,n){
+  if(i>=S.n||!n)return;
+  S.scores[i]=Math.max(0,(S.scores[i]||0)+n);save();renderScorebar();
+  const chip=$(`.chip[data-i="${i}"]`);
+  if(chip){const r=chip.getBoundingClientRect();const f=h(`<div class="float" style="color:${TEAM_COLORS[i]}">${n>0?'+':''}${n} <span class="emoji">🐟</span></div>`);
+    f.style.left=(r.left+r.width/2-40)+'px';f.style.top=(r.top-20)+'px';document.body.append(f);setTimeout(()=>f.remove(),1400);
+    chip.classList.add('bump');}
+  n>0?SFX.plop():SFX.down();
+  if(S.view==='hub')updateRiver();
+}
+function renderScorebar(){
+  const sb=$('#scorebar');sb.innerHTML='';
+  teams().forEach(t=>{const c=h(`<div class="chip" data-i="${t.i}" style="--tc:${t.color}" title="Klick: +1 · Rechtsklick: −1 · Taste ${t.i+1}">
+    <div class="badge">🦦</div><div class="nm">${esc(t.name)}<small>Taste ${t.i+1} · Rechtsklick −1</small></div><div class="sc">${t.score}<span class="emoji">🐟</span></div></div>`);
+    c.onclick=()=>addPoints(t.i,1);c.oncontextmenu=e=>{e.preventDefault();addPoints(t.i,-1)};sb.append(c)});
+  sb.hidden=['setup','editor'].includes(S.view);sb.classList.toggle('many',S.n>=5);
+}
+function pointsPanel(title='Fische vergeben',btns=[1,2,3]){
+  const el=h(`<div class="panel"><div class="panel-title">${esc(title)}</div><div class="prow"></div></div>`);
+  teams().forEach(t=>{const c=h(`<div class="pteam" style="--tc:${t.color}"><div class="pname">${esc(t.name)}</div><div>${btns.map(b=>`<button class="pb" data-n="${b}">+${b}</button>`).join('')}<button class="pb minus" data-n="-1">−1</button></div></div>`);
+    c.querySelectorAll('.pb').forEach(b=>b.onclick=()=>addPoints(t.i,+b.dataset.n));el.querySelector('.prow').append(c)});
+  return el;
+}
+function quickTeams(label,pts,{once=true,onPick}={}){
+  const el=h(`<div class="qt"><div class="qtl">${esc(label)}</div><div class="qtb"></div></div>`);
+  teams().forEach(t=>{const x=h(`<button class="qbtn" style="--tc:${t.color}"><span class="emoji">🦦</span> ${esc(t.name)}</button>`);
+    x.onclick=()=>{const p=typeof pts==='function'?pts():pts;if(p)addPoints(t.i,p);if(once){x.disabled=true;x.classList.add('done')}onPick&&onPick(t.i,p)};
+    el.querySelector('.qtb').append(x)});
+  return el;
+}
+function allPlusOne(label='Alle Teams +1 fürs Mitmachen'){
+  const b=btn('🤝 '+label,'ghost');b.onclick=()=>{teams().forEach(t=>addPoints(t.i,1));b.disabled=true};return b;
+}
+
+/* ---------- Timer ---------- */
+function timerWidget(sec,{size='12rem',inline=false,onEnd,regf=reg,auto=false}={}){
+  const el=h(`<div class="timer ${inline?'inline':''}" style="--ts:${size}"><div style="position:relative"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" class="tbg"/><circle cx="50" cy="50" r="45" class="tfg"/></svg><div class="tnum"></div></div>
+    <div class="tctl"><button data-a="play">▶ Start</button><button data-a="plus">+30 s</button><button data-a="reset">↺</button></div></div>`);
+  let total=sec,left=sec,running=false,last=0,raf;
+  const fg=$('.tfg',el),num=$('.tnum',el),play=$('[data-a=play]',el),C=2*Math.PI*45;fg.style.strokeDasharray=C;
+  function draw(){const s=Math.ceil(left);num.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+    fg.style.strokeDashoffset=C*(1-left/total);el.classList.toggle('warn',left<=10&&left>0);el.classList.toggle('done',left<=0)}
+  function loop(t){if(!running)return;const prev=Math.ceil(left);left=Math.max(0,left-(t-last)/1000);last=t;
+    if(Math.ceil(left)!==prev&&left<=10&&left>0)SFX.tick();draw();
+    if(left<=0){running=false;play.textContent='▶ Start';SFX.gong();onEnd&&onEnd();return}raf=requestAnimationFrame(loop)}
+  function start(){if(left<=0){left=total=sec}running=true;last=performance.now();play.textContent='⏸ Pause';raf=requestAnimationFrame(loop)}
+  function pause(){running=false;cancelAnimationFrame(raf);play.textContent='▶ Weiter'}
+  play.onclick=()=>running?pause():start();
+  $('[data-a=plus]',el).onclick=()=>{left+=30;total=Math.max(total,left);draw()};
+  $('[data-a=reset]',el).onclick=()=>{pause();left=total=sec;play.textContent='▶ Start';draw()};
+  draw();el._start=start;el._stop=()=>{running=false;cancelAnimationFrame(raf)};regf(el._stop);
+  if(auto)setTimeout(start,50);
+  return el;
+}
+function countdown(el,n,done){let k=n;el.innerHTML=`<div class="cd">${k}</div>`;SFX.tick();
+  const id=setInterval(()=>{k--;if(k<=0){clearInterval(id);done&&done();return}el.innerHTML=`<div class="cd">${k}</div>`;SFX.tick()},1000);reg(()=>clearInterval(id))}
+
+/* ---------- Modal ---------- */
+let modalCleanup=[];
+function openModal(content,cls=''){
+  closeModal();const ov=$('#overlay');const m=h(`<div class="modal ${cls}"><button class="ib close">✕</button></div>`);
+  m.append(content);$('.close',m).onclick=closeModal;ov.append(m);ov.hidden=false;ov.onclick=e=>{if(e.target===ov)closeModal()};
+}
+function closeModal(){modalCleanup.forEach(f=>{try{f()}catch(e){}});modalCleanup=[];const ov=$('#overlay');ov.hidden=true;ov.innerHTML=''}
+function openTimer(){
+  const c=h(`<div class="center"><h2>⏱ Timer</h2><div class="row pres"></div><div class="tslot"></div></div>`);
+  const slot=$('.tslot',c);
+  const set=sec=>{modalCleanup.forEach(f=>f());modalCleanup=[];slot.innerHTML='';slot.append(timerWidget(sec,{size:'22rem',regf:f=>modalCleanup.push(f),auto:true}))};
+  [[30,'30 s'],[60,'1 min'],[120,'2 min'],[180,'3 min'],[300,'5 min'],[600,'10 min']].forEach(([s,l])=>{const b=btn(l,'ghost');b.onclick=()=>set(s);$('.pres',c).append(b)});
+  openModal(c);set(120);
+}
+function openHelp(){
+  openModal(h(`<div><h2>Bedienung</h2><div class="keys">
+   <kbd>Leertaste</kbd><span>Hauptaktion des Bildschirms (Button mit „Leertaste“-Schild)</span>
+   <kbd>1</kbd>–<kbd>6</kbd><span style="grid-column:2">Team 1–6 bekommt einen Fisch · mit <kbd>Shift</kbd>: einen Fisch abziehen</span>
+   <kbd>T</kbd><span>Timer öffnen</span>
+   <kbd>R</kbd><span>Glücksrad (auf dem Fluss)</span>
+   <kbd>F</kbd><span>Vollbild an/aus</span>
+   <kbd>H</kbd><span>diese Hilfe</span>
+   <kbd>Esc</kbd><span>Fenster schließen</span>
+  </div><p class="hint" style="margin-top:1rem">Auf die Team-Kärtchen unten klicken = +1 Fisch, Rechtsklick = −1.<br>Der Spielstand bleibt gespeichert, auch wenn das Fenster geschlossen wird.</p></div>`));
+}
+function toggleFull(){try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){}}
+
+/* =========================================================
+   ANSICHTEN
+   ========================================================= */
+const VIEWS={};
+const main=$('#main');
+function go(view,arg){
+  cleanup.forEach(f=>{try{f()}catch(e){}});cleanup=[];setPrimary(null);closeModal();
+  S.view=view;S.viewArg=arg;save();main.innerHTML='';main.scrollTop=0;renderScorebar();VIEWS[view](arg);
+}
+
+/* ---------- Start ---------- */
+VIEWS.setup=()=>{
+  setWhere('Vorbereitung');
+  const hasGame=S.started&&S.scores.slice(0,S.n).some(x=>x>0);
+  const el=h(`<div class="setup">
+    <div class="hero"><div class="big-otter emoji">🦦</div><div><h1>Die Otter-Show</h1><p>Allgemeinwissen &amp; Kreativität · Klassen-AG der 5.3</p></div><div class="row start"></div></div>
+    <div class="card">
+      <h2>Teams</h2>
+      <div class="row" style="justify-content:flex-start;margin-top:.6rem"><span style="font-weight:800">Anzahl:</span><span class="nsel row" style="gap:.4rem"></span></div>
+      <div class="names"></div>
+      <p class="hint" style="margin-top:.8rem;font-size:.95rem">Tipp: Bei 18 Kindern passen 4 Teams à 4–5 Kinder. Die Teams dürfen sich selbst einen Otter-Namen geben!</p>
+      <h2 style="margin-top:1rem">Einstellungen</h2>
+      <label class="toggle"><input type="checkbox" id="oSound"> Töne (Timer, Fische, Fanfare)</label>
+      <label class="toggle"><input type="checkbox" id="oApp"> 👏 Applaus-O-Meter bei Kreativ-Abstimmungen (braucht Mikrofon)</label>
+    </div>
+    <div class="card plan">
+      <h2>Vorschlag für 60 Minuten</h2>
+      <ol>
+        <li><b>5′</b> Ankommen, Teams bilden, Namen eintragen</li>
+        <li><b>8′</b> 🧍 Wahr oder Quatsch? <i>(Aufwärmen)</i></li>
+        <li><b>8′</b> 🧩 Kachel-Rätsel</li>
+        <li><b>15′</b> 💡 Erfinder-Werkstatt</li>
+        <li><b>8′</b> 🎯 Otter-Schätzer</li>
+        <li><b>10′</b> ✏️ Kritzel-Duell</li>
+        <li><b>6′</b> 🏆 Siegerehrung</li>
+      </ol>
+      <p class="hint" style="font-size:.95rem;margin-top:.6rem">Die anderen Spiele heben wir für die nächsten AG-Stunden auf – Fragen wiederholen sich erst, wenn alle einmal dran waren.</p>
+    </div>
+  </div>`);
+  main.append(el);
+  const nsel=$('.nsel',el),names=$('.names',el);
+  function drawNames(){names.innerHTML='';teams().forEach(t=>{const l=h(`<label><span class="badge" style="--tc:${t.color}">🦦</span><input value="${esc(t.name)}" maxlength="18"></label>`);
+    $('input',l).oninput=e=>{S.names[t.i]=e.target.value||DEFAULT_NAMES[t.i];save()};names.append(l)})}
+  function drawN(){nsel.innerHTML='';for(let n=2;n<=6;n++){const b=h(`<button class="nbtn ${n===S.n?'on':''}">${n}</button>`);b.onclick=()=>{S.n=n;save();drawN();drawNames()};nsel.append(b)}}
+  drawN();drawNames();
+  $('#oSound',el).checked=S.sound;$('#oSound',el).onchange=e=>{S.sound=e.target.checked;save()};
+  $('#oApp',el).checked=S.applause;$('#oApp',el).onchange=e=>{S.applause=e.target.checked;save()};
+  const st=$('.start',el);
+  if(hasGame){const c=btn('🌊 Weiterspielen','cta big');c.onclick=()=>go('hub');st.append(c);setPrimary(c)}
+  const n=btn(hasGame?'🔄 Neue Show (Punkte auf 0)':'🌊 Show starten!',hasGame?'ghost big':'cta big');
+  n.onclick=()=>{S.scores=[0,0,0,0,0,0];S.played=[];S.started=true;S.kritzelTurn=0;save();SFX.fanfare();go('hub')};st.append(n);if(!hasGame)setPrimary(n);
+  const e=btn('✏️ Eigene Inhalte','ghost big');e.onclick=()=>go('editor');st.append(e);
+};
+
+/* ---------- Editor ---------- */
+VIEWS.editor=()=>{
+  setWhere('Eigene Inhalte');
+  const defs=[
+    ['schaetz','🎯 Schätzfragen','Frage | Zahl | Einheit | Info','Wie viele Fenster hat unser Klassenraum? | 8 | Fenster | Zählt nach!'],
+    ['wq','🧍 Wahr oder Quatsch?','Aussage | wahr oder quatsch | Erklärung','Unsere Klasse hat ein Otter-Maskottchen. | wahr | Natürlich!'],
+    ['emoji','🤔 Emoji-Rätsel','Emojis | Lösung | Kategorie','🏫🦦 | Otterklasse | Unsere Klasse'],
+    ['kritzel','✏️ Kritzel-Begriffe','ein Begriff pro Zeile','Klassenzimmer'],
+    ['dinge','📎 Gegenstände für „Was noch?“','Emoji | Gegenstand  (Emoji darf fehlen)','🧃 | Trinkpäckchen'],
+  ];
+  const el=h(`<div><div class="row" style="justify-content:space-between;max-width:76rem;margin:0 auto 1rem"><h1>✏️ Eigene Inhalte</h1><div class="row ebtn"></div></div>
+    <p class="hint" style="max-width:76rem;margin:0 auto 1rem">Eine Zeile = ein Eintrag. Eure Inhalte werden zu den mitgelieferten gemischt. Idee: Die Kinder schreiben in einer AG-Stunde selbst Fragen für die nächste Woche!</p>
+    <div class="editor"></div></div>`);
+  defs.forEach(([k,t,f,ex])=>{const c=h(`<div class="card"><h3>${t}</h3><div class="fmt">Format: <b>${esc(f)}</b><br>Beispiel: ${esc(ex)}</div><textarea data-k="${k}" placeholder="${esc(ex)}"></textarea><div class="fmt cnt"></div></div>`);
+    const ta=$('textarea',c);ta.value=S.custom[k]||'';const cnt=()=>{$('.cnt',c).textContent=customPool(k).length+' gültige eigene Einträge'};
+    ta.oninput=()=>{S.custom[k]=ta.value;save();cnt()};cnt();$('.editor',el).append(c)});
+  const info=h(`<div class="card"><h3>♻️ Schon gespielte Inhalte</h3><p class="fmt">Die App merkt sich, welche Fragen schon dran waren, damit sich nichts wiederholt.</p></div>`);
+  const r=btn('Alle Inhalte wieder freigeben','ghost');r.onclick=()=>{S.used={};save();r.textContent='✓ Freigegeben';r.disabled=true};info.append(r);$('.editor',el).append(info);
+  main.append(el);
+  const b=btn('✓ Fertig','cta');b.onclick=()=>go(S.started?'hub':'setup');$('.ebtn',el).append(b);
+};
+
+/* ---------- Fluss ---------- */
+VIEWS.hub=()=>{
+  setWhere('🌊 Der Otterfluss');
+  const el=h(`<div class="hub"><div class="river"></div><div class="games"></div><div class="hubbar"></div></div>`);
+  main.append(el);
+  const river=$('.river',el);
+  teams().forEach(t=>river.append(h(`<div class="lane" data-i="${t.i}" style="--tc:${t.color}"><div class="otter"><div class="badge">🦦</div><div class="ofish"></div></div></div>`)));
+  river.append(h(`<div class="goal"><span class="emoji">🐟</span>Fisch-<br>fest</div>`));
+  requestAnimationFrame(()=>requestAnimationFrame(updateRiver));
+  GAMES.forEach(g=>{const t=h(`<div class="tile ${S.played.includes(g.id)?'played':''}"><div class="ic emoji">${g.icon}</div><div class="tn">${esc(g.id==='dinge'?'Was kann man damit machen?':g.name)}</div><div class="tm"><span class="tag ${g.type}" style="font-size:.7rem;padding:.05rem .5rem">${typeLabel(g.type)}</span> · ${g.min} min</div></div>`);
+    t.onclick=()=>go('intro',g.id);$('.games',el).append(t)});
+  const w=btn('🎡 Glücksrad drehen','cta big');w.onclick=openWheel;
+  const f=btn('🏆 Siegerehrung','ok big');f.onclick=()=>go('finale');
+  $('.hubbar',el).append(w,f);setPrimary(w);
+};
+function updateRiver(){
+  const lanes=document.querySelectorAll('.lane');if(!lanes.length)return;
+  const ts=teams();const mx=Math.max(...ts.map(t=>t.score));const scale=Math.max(15,mx+4);
+  lanes.forEach(l=>{const t=ts[+l.dataset.i];const o=$('.otter',l);
+    o.style.left=`calc(${(t.score/scale*82).toFixed(2)}% + .4rem)`;
+    $('.ofish',l).innerHTML=`<span style="color:var(--slate-dark);font-weight:600">${esc(t.name)}</span> · ${t.score} <span class="emoji">🐟</span>${mx>0&&t.score===mx?' <span class="emoji">👑</span>':''}`});
+}
+
+/* ---------- Glücksrad ---------- */
+function openWheel(){
+  const open=GAMES.filter(g=>!S.played.includes(g.id));const list=open.length?open:GAMES;
+  const c=h(`<div class="center"><h2>🎡 Glücksrad</h2><div class="wheelbox"><canvas width="1000" height="1000"></canvas><div class="pointer">▼</div></div><div class="wres">&nbsp;</div><div class="row wbtns"></div></div>`);
+  openModal(c);
+  const cv=$('canvas',c),x=cv.getContext('2d'),N=list.length,seg=2*Math.PI/N;
+  const cols=['#3E5668','#D97A4A','#4D8B3F','#6A8599','#9E4E22','#C17B00','#2C3D4C','#7DBB6F'];
+  let ang=-Math.PI/2-seg/2,spinning=false;
+  function draw(){x.clearRect(0,0,1000,1000);x.save();x.translate(500,500);x.rotate(ang);
+    for(let i=0;i<N;i++){x.beginPath();x.moveTo(0,0);x.arc(0,0,480,i*seg,(i+1)*seg);x.closePath();
+      x.fillStyle=cols[(i===N-1&&N%cols.length===1)?2:i%cols.length];x.fill();x.strokeStyle='#fff';x.lineWidth=8;x.stroke();
+      x.save();x.rotate(i*seg+seg/2);x.textBaseline='middle';x.fillStyle='#fff';
+      x.textAlign='right';x.font=`600 ${N>8?36:42}px Fredoka, Nunito, sans-serif`;x.fillText(list[i].sh,445,0);
+      x.textAlign='center';x.font='56px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';x.fillText(list[i].icon,145,4);x.restore()}
+    x.restore();x.beginPath();x.arc(500,500,80,0,2*Math.PI);x.fillStyle='#F5F4F1';x.fill();x.lineWidth=8;x.strokeStyle='#2C3D4C';x.stroke();
+    x.font='90px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('🦦',500,508)}
+  const idxAt=a=>{let r=(-Math.PI/2-a)%(2*Math.PI);if(r<0)r+=2*Math.PI;return Math.floor(r/seg)%N};
+  draw();
+  const sb=btn('Drehen!','cta big');$('.wbtns',c).append(sb);
+  let raf;modalCleanup.push(()=>cancelAnimationFrame(raf));
+  sb.onclick=()=>{if(spinning)return;spinning=true;sb.disabled=true;$('.wres',c).innerHTML='&nbsp;';
+    const target=Math.floor(Math.random()*N);
+    const startA=ang;let endA=-Math.PI/2-(target+.2+Math.random()*.6)*seg;
+    while(endA<startA+2*Math.PI*5)endA+=2*Math.PI;
+    const t0=performance.now(),D=4800;let lastI=idxAt(ang);
+    const step=t=>{const p=Math.min(1,(t-t0)/D),e=1-Math.pow(1-p,4);ang=startA+(endA-startA)*e;draw();
+      const ci=idxAt(ang);if(ci!==lastI){SFX.tick();lastI=ci}
+      if(p<1){raf=requestAnimationFrame(step);return}
+      spinning=false;const g=list[idxAt(ang)];SFX.fanfare();
+      $('.wres',c).innerHTML=`<span class="emoji">${g.icon}</span> ${esc(g.name)}`;
+      $('.wbtns',c).innerHTML='';const p2=btn('▶ Los geht’s!','ok big');p2.onclick=()=>go('intro',g.id);
+      const again=btn('Nochmal drehen','ghost');again.onclick=openWheel;$('.wbtns',c).append(p2,again);setPrimary(p2)};
+    raf=requestAnimationFrame(step)};
+  setPrimary(sb);
+}
+
+/* ---------- Intro ---------- */
+VIEWS.intro=id=>{
+  const g=G(id);setWhere(g.icon+' '+g.name);
+  const el=h(`<div class="intro card">
+    <div class="ihead"><div class="emoji">${g.icon}</div><div><span class="tag ${g.type}">${typeLabel(g.type)}</span><h1>${esc(g.name)}</h1></div></div>
+    <ol>${g.rules.map(r=>`<li>${r}</li>`).join('')}</ol>
+    <div class="meta"><span>⏱ ca. ${g.min} Minuten</span><span>🧰 ${esc(g.mat)}</span></div>
+    <div class="row" style="justify-content:flex-start" id="ib"></div></div>`);
+  main.append(el);
+  const b=btn('▶ Los geht’s!','cta big');b.onclick=()=>{if(!S.played.includes(id))S.played.push(id);save();go('game',id)};
+  const back=btn('🌊 Zurück','ghost big');back.onclick=()=>go('hub');
+  $('#ib',el).append(b,back);setPrimary(b);
+};
+
+/* ---------- Spielrahmen ---------- */
+VIEWS.game=id=>{
+  const g=G(id);setWhere(g.icon+' '+g.name);
+  const w=h(`<div class="gwrap"><div class="gtop"><span class="tag ${g.type}">${typeLabel(g.type)}</span><span class="gstep"></span><span style="flex:1"></span></div><div class="gbody"></div></div>`);
+  const back=btn('🌊 Zurück zum Fluss','ghost');back.onclick=()=>go('hub');$('.gtop',w).append(back);
+  main.append(w);
+  g.run($('.gbody',w),{step:t=>$('.gstep',w).textContent=t});
+};
+
+/* =========================================================
+   MINI-SPIELE
+   ========================================================= */
+function runWQ(body,ctx){
+  let n=0;
+  function next(){
+    n++;ctx.step(`Aussage ${n}`);const it=pick('wq');body.innerHTML='';
+    const w=h(`<div class="center grow"><div class="q">${esc(it[0])}</div>
+      <div class="wq-hint"><span><span class="emoji">🧍</span> Aufstehen = <b>WAHR</b></span><span><span class="emoji">🪑</span> Sitzen bleiben = <b>QUATSCH</b></span></div>
+      <div class="wq-res"></div><div class="row ctl"></div></div>`);
+    body.append(w);const res=$('.wq-res',w),ctl=$('.ctl',w);
+    const vote=btn('⏳ Countdown (5 s)','ghost big'),show=btn('Auflösen','cta big');ctl.append(vote,show);
+    vote.onclick=()=>{vote.disabled=true;countdown(res,5,()=>{res.innerHTML='<div class="cd">Jetzt! Stehen bleiben! ✋</div>';SFX.gong()})};
+    show.onclick=()=>{cleanup.forEach(f=>f());cleanup=[];
+      res.innerHTML=`<div class="verdict ${it[1]?'yes':'no'}">${it[1]?'✅ WAHR':'❌ QUATSCH'}</div>${it[2]?`<div class="expl">${esc(it[2])}</div>`:''}`;
+      it[1]?SFX.right():SFX.wrong();ctl.innerHTML='';
+      ctl.append(quickTeams('Welche Teams lagen richtig? (+1)',1));
+      const nx=btn('Nächste Aussage ▶','cta big');nx.onclick=next;ctl.append(nx);setPrimary(nx)};
+    setPrimary(show);
+  }
+  next();
+}
+
+function runKachel(body,ctx){
+  let n=0;
+  function next(){
+    n++;ctx.step(`Bild ${n} · Tipp: 3 Bilder pro Runde`);const it=pick('kachel');body.innerHTML='';
+    const order=shuffle([...Array(12).keys()]);let k=0,solved=false;
+    const w=h(`<div class="kwrap"><div class="kachel"><div class="pic emoji">${it[0]}</div><div class="tiles">${[...Array(12)].map((_,i)=>`<div class="tl">${i+1}</div>`).join('')}</div></div>
+      <div class="kside"><div class="worth"></div><div class="ans"></div><div class="col ctl" style="align-items:center"></div></div></div>`);
+    body.append(w);
+    const tiles=[...w.querySelectorAll('.tl')],worth=$('.worth',w),ans=$('.ans',w),ctl=$('.ctl',w);
+    const val=()=>{const hid=12-k;return hid>=9?3:hid>=5?2:1};
+    const upd=()=>{worth.innerHTML=solved?'':`Jetzt wert: <b>${val()} <span class="emoji">🐟</span></b>`};
+    const open=btn('🔓 Kachel aufdecken','cta big');
+    open.onclick=()=>{if(k<12){tiles[order[k++]].classList.add('off');SFX.tick();upd();if(k>=12)open.disabled=true}};
+    const reveal=()=>{solved=true;tiles.forEach(t=>t.classList.add('off'));ans.innerHTML=`<div class="sol">${esc(it[1])}</div>`;upd();
+      ctl.innerHTML='';const nx=btn('Nächstes Bild ▶','cta big');nx.onclick=next;ctl.append(nx);setPrimary(nx)};
+    const qt=quickTeams('Wer hat’s erraten?',()=>val(),{once:false,onPick:()=>{SFX.right();reveal()}});
+    const solve=btn('Auflösen (keiner weiß es)','ghost');solve.onclick=reveal;
+    ctl.append(open,qt,solve);upd();setPrimary(open);
+  }
+  next();
+}
+
+function runSchaetz(body,ctx){
+  let n=0;
+  function next(){
+    n++;ctx.step(`Frage ${n}`);const it=pick('schaetz');body.innerHTML='';
+    const w=h(`<div class="center grow"><div class="q">${esc(it[0])}</div>${it[2]?`<div class="unit">Antwort in: <b>${esc(it[2])}</b></div>`:''}
+      <div class="guesses"></div><div class="nlwrap" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:.6rem"></div><div class="row ctl"></div></div>`);
+    body.append(w);const gs=$('.guesses',w),ctl=$('.ctl',w);
+    teams().forEach(t=>gs.append(h(`<label class="guess" style="--tc:${t.color}"><span class="badge">🦦</span><span>${esc(t.name)}</span><input inputmode="decimal" placeholder="Tipp"></label>`)));
+    const tm=timerWidget(90,{size:'5.5rem',inline:true});const rev=btn('🎯 Auflösen','cta big');ctl.append(tm,rev);setPrimary(rev);
+    gs.querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter'){const all=[...gs.querySelectorAll('input')];const nx=all[all.indexOf(i)+1];nx?nx.focus():i.blur()}}));
+    rev.onclick=()=>{
+      tm._stop();const inputs=[...gs.querySelectorAll('input')];const vals=inputs.map(i=>parseNum(i.value));inputs.forEach(i=>i.disabled=true);
+      numberLine($('.nlwrap',w),vals,it);SFX.right();ctl.innerHTML='';
+      const dist=vals.map(v=>v==null?null:Math.abs(v-it[1]));
+      if(dist.some(d=>d!=null)){const pts=rankPoints(dist,'low');
+        const aw=btn('🐟 Fische vergeben ('+teams().filter(t=>pts[t.i]).map(t=>esc(t.name)+' +'+pts[t.i]).join(', ')+')','ok big');
+        aw.onclick=()=>{pts.forEach((p,i)=>p&&addPoints(i,p));aw.disabled=true;setPrimary(nx)};ctl.append(aw);setTimeout(()=>setPrimary(aw));}
+      else ctl.append(pointsPanel('Keine Tipps eingetragen – Fische von Hand vergeben'));
+      const nx=btn('Nächste Frage ▶','cta big');nx.onclick=next;ctl.append(nx);if(!dist.some(d=>d!=null))setPrimary(nx);
+    };
+  }
+  next();
+}
+function numberLine(wrap,vals,it){
+  const ans=it[1];const pts=vals.map((v,i)=>v==null?null:{v,i}).filter(Boolean);
+  const all=[ans,...pts.map(p=>p.v)];let mn=Math.min(...all),mx=Math.max(...all);if(mn===mx){mn-=1;mx+=1}
+  const pad=(mx-mn)*.06;mn-=pad;mx+=pad;const pos=v=>((v-mn)/(mx-mn)*100).toFixed(2)+'%';
+  const nl=h(`<div class="nl"><div class="axis"></div></div>`);
+  pts.sort((a,b)=>a.v-b.v).forEach((p,k)=>{const t=teams()[p.i];
+    nl.append(h(`<div class="mk t ${k%2?'lift':''}" style="left:${pos(p.v)};--tc:${t.color}"><div class="lbl">${esc(t.name)}: ${fmt(p.v)}</div><div class="pin"></div></div>`))});
+  nl.append(h(`<div class="mk ans" style="left:${pos(ans)}"><div class="star emoji">⭐</div><div class="lbl">${fmt(ans)} ${esc(it[2]||'')}</div></div>`));
+  wrap.innerHTML='';wrap.append(nl);if(it[3])wrap.append(h(`<div class="info">💡 ${esc(it[3])}</div>`));
+}
+
+function runReihe(body,ctx){
+  let n=0;const L='ABCD';
+  function next(){
+    n++;ctx.step(`Runde ${n}`);const it=pick('reihe');body.innerHTML='';
+    let order;do{order=shuffle([0,1,2,3])}while(order.join()==='0,1,2,3');
+    const w=h(`<div class="center grow"><div class="q">${esc(it.q)}</div><div class="dir">${esc(it.dir)}</div><div class="rcards"></div><div class="rsol" style="min-height:3rem"></div><div class="row ctl"></div></div>`);
+    const rc=$('.rcards',w);
+    const cards=order.map((ii,pos)=>{const [e,nm,v]=it.items[ii];const c=h(`<div class="rcard"><div class="rl">${L[pos]}</div><div class="re emoji">${e}</div><div class="rn">${esc(nm)}</div><div class="rv"></div></div>`);c._i=ii;c._v=v;rc.append(c);return c});
+    body.append(w);const ctl=$('.ctl',w);
+    const tm=timerWidget(60,{size:'5.5rem',inline:true});const rev=btn('📶 Auflösen','cta big');ctl.append(tm,rev);setPrimary(rev);
+    rev.onclick=()=>{tm._stop();
+      const first=new Map(cards.map(c=>[c,c.getBoundingClientRect()]));
+      [...cards].sort((a,b)=>a._i-b._i).forEach(c=>rc.append(c));
+      cards.forEach(c=>{const f=first.get(c),l=c.getBoundingClientRect();c.style.transition='none';c.style.transform=`translate(${f.left-l.left}px,${f.top-l.top}px)`});
+      requestAnimationFrame(()=>requestAnimationFrame(()=>cards.forEach(c=>{c.style.transition='transform .9s cubic-bezier(.3,1.3,.5,1)';c.style.transform='';$('.rv',c).textContent=c._v})));
+      $('.rsol',w).innerHTML=`<div class="solline">Lösung: ${it.items.map((_,ii)=>L[order.indexOf(ii)]).join(' – ')}</div>`;SFX.right();
+      ctl.innerHTML='';ctl.append(quickTeams('Alles richtig? (+2)',2));
+      const nx=btn('Nächste Runde ▶','cta big');nx.onclick=next;ctl.append(nx);setPrimary(nx)};
+  }
+  next();
+}
+
+function runEmoji(body,ctx){
+  let n=0;
+  function next(){
+    n++;ctx.step(`Rätsel ${n}`);const it=pick('emoji');body.innerHTML='';let tip=false;
+    const w=h(`<div class="center grow"><span class="tag mix" style="font-size:1.2rem">${esc(it[2])}</span><div class="emo emoji">${it[0]}</div><div class="pattern"></div><div class="ans"></div><div class="row ctl"></div></div>`);
+    body.append(w);const ctl=$('.ctl',w),pat=$('.pattern',w);
+    const reveal=()=>{pat.innerHTML='';$('.ans',w).innerHTML=`<div class="sol">${esc(it[1])}</div>`;ctl.innerHTML='';
+      const nx=btn('Nächstes Rätsel ▶','cta big');nx.onclick=next;ctl.append(nx);setPrimary(nx)};
+    const tb=btn('💡 Tipp','ghost big');tb.onclick=()=>{tip=true;tb.disabled=true;setPrimary(null);
+      pat.textContent=it[1].split(' ').map(wd=>wd[0]+' _'.repeat(Math.max(0,[...wd].length-1))).join('   ');};
+    const qt=quickTeams('Wer hat’s? (ohne Tipp 2, mit Tipp 1)',()=>tip?1:2,{once:false,onPick:()=>{SFX.right();reveal()}});
+    const sv=btn('Auflösen','ghost');sv.onclick=reveal;
+    ctl.append(tb,qt,sv);setPrimary(tb);
+  }
+  next();
+}
+
+/* Walzen für Erfinder & Geschichten */
+function reelSet(defs){
+  const el=h(`<div class="reels"></div>`);const vals=[];
+  const reels=defs.map((d,i)=>{const r=h(`<div class="reel" title="Klicken: neu würfeln"><div class="rl">${esc(d.label)}</div><div class="re emoji">${d.icon||''}</div><div class="rv">?</div></div>`);
+    r.onclick=()=>spinOne(i,700);el.append(r);return r});
+  function setv(i,it){vals[i]=it;const [e,t]=Array.isArray(it)?it:[defs[i].icon||'',it];$('.re',reels[i]).textContent=e;$('.rv',reels[i]).textContent=t}
+  function spinOne(i,dur,done){const r=reels[i];r.classList.add('spin');const id=setInterval(()=>{setv(i,rnd(defs[i].pool));SFX.tick()},85);reg(()=>clearInterval(id));
+    setTimeout(()=>{clearInterval(id);r.classList.remove('spin');setv(i,rnd(defs[i].pool));SFX.plop();r.classList.add('landed');setTimeout(()=>r.classList.remove('landed'),500);done&&done()},dur)}
+  return {el,vals,spinAll(done){defs.forEach((_,i)=>spinOne(i,1000+i*650,i===defs.length-1?done:null))}};
+}
+function turnRunner(body,{n,title,prompt,seconds,onDone,doneLabel}){
+  let k=0;
+  function show(){
+    body.innerHTML='';const t=teams()[k%S.n];
+    const w=h(`<div class="center grow"><div class="turn" style="--tc:${t.color}"><span class="badge">🦦</span>${esc(t.name)}</div>${title?`<div class="hint" style="font-size:1.4rem">${title(k)}</div>`:''}${prompt?`<div class="prompt">${prompt(k)}</div>`:''}<div class="tslot"></div><div class="row ctl"></div></div>`);
+    body.append(w);$('.tslot',w).append(timerWidget(seconds,{size:'9rem',auto:true}));
+    const last=k>=n-1;const nx=btn(last?(doneLabel||'Fertig ▶'):'Nächstes Team ▶','cta big');
+    nx.onclick=()=>{cleanup.forEach(f=>f());cleanup=[];if(last)onDone();else{k++;show()}};
+    $('.ctl',w).append(nx);setPrimary(nx);
+  }
+  show();
+}
+function voteBlock(title){
+  const el=h(`<div class="center grow"><h1>${esc(title)}</h1><div class="vbody center"></div><div class="row vctl"></div></div>`);
+  const vb=$('.vbody',el);
+  if(S.applause)applause(vb);
+  else{vb.append(h(`<p class="hint" style="font-size:1.3rem">Abstimmung per Handzeichen: Jedes Kind hat eine Stimme – nicht fürs eigene Team! 😉<br>Dann Fische vergeben (z. B. 3 · 2 · 1):</p>`));vb.append(pointsPanel())}
+  return el;
+}
+async function applause(vb){
+  vb.innerHTML='<p class="hint">🎤 Mikrofon wird gestartet …</p>';
+  let stream,an,buf;
+  try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw 0;
+    stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    const a=ac();const src=a.createMediaStreamSource(stream);an=a.createAnalyser();an.fftSize=2048;src.connect(an);buf=new Float32Array(an.fftSize)}
+  catch(e){vb.innerHTML='<p class="hint" style="font-size:1.3rem">🎤 Das Mikrofon ist hier nicht verfügbar. Abstimmung per Handzeichen – nicht fürs eigene Team! Dann Fische vergeben:</p>';vb.append(pointsPanel());return}
+  reg(()=>stream.getTracks().forEach(t=>t.stop()));
+  const res=Array(S.n).fill(null);let busy=false;
+  vb.innerHTML=`<p class="hint" style="font-size:1.3rem">Team anklicken – dann 4 Sekunden so laut klatschen, wie ihr könnt! <span class="emoji">👏</span> (Nicht fürs eigene Team!)</p><div class="ap-row"></div><div class="row ap-ctl"></div>`;
+  const row=$('.ap-row',vb),ctl=$('.ap-ctl',vb);
+  const level=()=>{an.getFloatTimeDomainData(buf);let s=0;for(let i=0;i<buf.length;i++)s+=buf[i]*buf[i];const db=20*Math.log10(Math.sqrt(s/buf.length)+1e-8);return Math.max(0,Math.min(1,(db+55)/50))};
+  const cols=teams().map(t=>{const c=h(`<div class="ap" style="--tc:${t.color}"><div class="val">–</div><div class="bar"><div class="fill"></div></div><button class="qbtn" style="--tc:${t.color}">👏 ${esc(t.name)}</button></div>`);
+    $('button',c).onclick=()=>{if(!busy){busy=true;measure(t.i)}};row.append(c);return c});
+  function measure(i){const c=cols[i],fill=$('.fill',c),val=$('.val',c);let k=3;val.textContent=k;SFX.tick();
+    const id=setInterval(()=>{k--;if(k>0){val.textContent=k;SFX.tick()}else{clearInterval(id);run()}},700);reg(()=>clearInterval(id));
+    function run(){val.textContent='👏';const t0=performance.now();let sum=0,cnt=0,raf;
+      const f=()=>{const l=level();sum+=l;cnt++;fill.style.height=(l*100)+'%';
+        if(performance.now()-t0<4000){raf=requestAnimationFrame(f)}else{res[i]=Math.round(sum/cnt*100);fill.style.height=res[i]+'%';val.textContent=res[i];busy=false;check()}};
+      raf=requestAnimationFrame(f);reg(()=>cancelAnimationFrame(raf))}}
+  function check(){if(!res.every(v=>v!=null))return;ctl.innerHTML='';const pts=rankPoints(res,'high');
+    const aw=btn('🐟 Fische vergeben (3 · 2 · 1)','ok big');aw.onclick=()=>{pts.forEach((p,i)=>p&&addPoints(i,p));aw.disabled=true;SFX.fanfare()};ctl.append(aw);setPrimary(aw)}
+}
+
+function runErfinder(body,ctx){
+  ctx.step('Schritt 1: Karten ziehen');
+  const rs=reelSet([{label:'Gegenstand',icon:'🧰',pool:ERF.ding},{label:'Superkraft',icon:'✨',pool:ERF.kraft},{label:'Für wen?',icon:'🎯',pool:ERF.wen}]);
+  const w=h(`<div class="center grow"><div class="q">Eure Erfindung …</div><div class="rslot"></div><p class="hint">Eine Karte gefällt nicht? Einfach anklicken – sie wird neu gezogen.</p><div class="row ctl"></div></div>`);
+  $('.rslot',w).append(rs.el);body.append(w);const ctl=$('.ctl',w);
+  const sp=btn('🎰 Karten ziehen','cta big');ctl.append(sp);setPrimary(sp);
+  sp.onclick=()=>{sp.disabled=true;rs.spinAll(()=>{sp.disabled=false;sp.innerHTML='🎰 Nochmal';const go2=btn('✏️ Erfindungszeit!','ok big');go2.onclick=work;ctl.innerHTML='';ctl.append(sp,go2);setPrimary(go2)})};
+  function combo(){return `<div class="combo"><span>🧰 ${esc(rs.vals[0])}</span><span>✨ ${esc(rs.vals[1])}</span><span>🎯 ${esc(rs.vals[2])}</span></div>`}
+  function work(){cleanup.forEach(f=>f());cleanup=[];ctx.step('Schritt 2: Erfinden');body.innerHTML='';
+    const w2=h(`<div class="center grow">${combo()}<div class="row" style="gap:3rem;align-items:center"><ol class="tasks"><li>Gebt eurer Erfindung einen <b>Namen</b>.</li><li><b>Zeichnet</b> sie groß auf euer Blatt.</li><li>Was kann sie genau? Wie funktioniert sie?</li><li>Wer stellt vor? Probt euren <b>Werbespruch</b>!</li></ol><div class="tslot"></div></div><div class="row ctl"></div></div>`);
+    body.append(w2);$('.tslot',w2).append(timerWidget(300,{size:'14rem',auto:true}));
+    const nx=btn('🎤 Präsentationen','cta big');nx.onclick=present;$('.ctl',w2).append(nx);setPrimary(nx)}
+  function present(){cleanup.forEach(f=>f());cleanup=[];ctx.step('Schritt 3: Vorstellen');
+    turnRunner(body,{n:S.n,seconds:60,title:()=>'stellt seine Erfindung vor! <span class="emoji">🎤</span>',prompt:()=>'Name · Was kann sie? · Für wen ist sie?',doneLabel:'🗳️ Zur Abstimmung',onDone:vote})}
+  function vote(){ctx.step('Schritt 4: Abstimmung');body.innerHTML='';const v=voteBlock('Welche Erfindung ist die beste?');body.append(v);
+    const b=allPlusOne();$('.vctl',v).append(b)}
+}
+
+function runDinge(body,ctx){
+  let n=0;
+  function next(){
+    cleanup.forEach(f=>f());cleanup=[];n++;ctx.step(`Gegenstand ${n}`);const it=pick('dinge');body.innerHTML='';
+    const w=h(`<div class="center grow"><div class="row" style="gap:3rem"><div class="center"><div class="thing emoji">${it[0]}</div><div class="thingname">${esc(it[1])}</div></div><div class="center"><div class="q" style="font-size:2rem;max-width:28rem">Was kann man damit noch alles machen?</div><div class="tslot"></div></div></div><div class="row ctl"></div></div>`);
+    body.append(w);const tm=timerWidget(180,{size:'12rem'});$('.tslot',w).append(tm);
+    const st=btn('▶ Ideen sammeln (3 min)','cta big');st.onclick=()=>{tm._start();st.remove();setPrimary(cnt)};
+    const cnt=btn('✋ Ideen zählen','ok big');cnt.onclick=()=>count(it);$('.ctl',w).append(st,cnt);setPrimary(st)}
+  function count(it){cleanup.forEach(f=>f());cleanup=[];body.innerHTML='';
+    const w=h(`<div class="center grow"><h1><span class="emoji">${it[0]}</span> Wie viele Ideen hat jedes Team?</h1><p class="hint" style="font-size:1.2rem">Jedes Team liest seine 2 verrücktesten Ideen vor. Doppelte oder unmögliche Ideen zählen nicht.</p><div class="counts"></div><div class="row aw"></div><div class="bonus"></div><div class="row ctl"></div></div>`);
+    body.append(w);
+    teams().forEach(t=>$('.counts',w).append(h(`<label class="guess" style="--tc:${t.color}"><span class="badge">🦦</span><span>${esc(t.name)}</span><input inputmode="numeric" placeholder="Anzahl" style="width:6rem"></label>`)));
+    const aw=btn('🐟 Fische vergeben (3 · 2 · 1)','ok big');
+    aw.onclick=()=>{const vals=[...w.querySelectorAll('.counts input')].map(i=>parseNum(i.value));const pts=rankPoints(vals,'high');pts.forEach((p,i)=>p&&addPoints(i,p));aw.disabled=true;setPrimary(nx)};
+    $('.aw',w).append(aw);$('.bonus',w).append(quickTeams('🌟 Originellste Idee: +2',2,{once:true}));
+    const nx=btn('Neuer Gegenstand ▶','cta big');nx.onclick=next;$('.ctl',w).append(nx);setPrimary(aw)}
+  next();
+}
+
+function runStory(body,ctx){
+  ctx.step('Würfeln');
+  const rs=reelSet([{label:'Figur',pool:STORY.figur},{label:'Ort',pool:STORY.ort},{label:'Problem',pool:STORY.problem}]);
+  const w=h(`<div class="center grow"><div class="q">Die Würfel bestimmen die Geschichte …</div><div class="rslot"></div><p class="hint">Ein Würfel passt gar nicht? Anklicken = neu würfeln.</p><div class="row ctl"></div></div>`);
+  $('.rslot',w).append(rs.el);body.append(w);const ctl=$('.ctl',w);
+  const sp=btn('🎲 Würfeln','cta big');ctl.append(sp);setPrimary(sp);
+  sp.onclick=()=>{sp.disabled=true;rs.spinAll(()=>{sp.disabled=false;sp.innerHTML='🎲 Nochmal';const g2=btn('📖 Geschichte erzählen','ok big');g2.onclick=tell;ctl.innerHTML='';ctl.append(sp,g2);setPrimary(g2)})};
+  function tell(){
+    const v=rs.vals;const intro=`<span class="emoji">${v[0][0]}</span> ${esc(v[0][1])} · <span class="emoji">${v[1][0]}</span> ${esc(v[1][1])} · <span class="emoji">${v[2][0]}</span> ${esc(v[2][1])}`;
+    const turns=S.n<3?S.n*2:S.n;
+    const prompts=k=>k===0?STORY_PROMPTS[0]:k===turns-1?STORY_PROMPTS[4]:STORY_PROMPTS[1+((k-1)%3)];
+    ctx.step('Erzählen');
+    turnRunner(body,{n:turns,seconds:90,title:()=>intro,prompt:k=>`Teil ${k+1} von ${turns}: ${prompts(k)}`,doneLabel:'🗳️ Abstimmung',
+      onDone:()=>{ctx.step('Abstimmung');body.innerHTML='';const vb=voteBlock('Welcher Teil der Geschichte war am besten?');body.append(vb);$('.vctl',vb).append(allPlusOne())}});
+  }
+}
+
+function runSLO(body,ctx){
+  let n=0;
+  function next(){
+    cleanup.forEach(f=>f());cleanup=[];n++;ctx.step(`Runde ${n}`);body.innerHTML='';
+    const cats=[...shuffle(SLO_CATS).slice(0,4),rnd(SLO_CREATIVE)];
+    const w=h(`<div class="center grow"><div class="row" style="gap:3rem"><div class="letter">?</div><div class="tslot"></div></div>
+      <div class="cats">${cats.map((c,i)=>`<span class="${i===4?'kreativ':''}">${esc(c)}</span>`).join('')}</div><div class="row ctl"></div></div>`);
+    body.append(w);const L=$('.letter',w),ctl=$('.ctl',w);const tm=timerWidget(180,{size:'12rem'});$('.tslot',w).append(tm);
+    const sp=btn('🔤 Buchstaben drehen','cta big');ctl.append(sp);setPrimary(sp);
+    sp.onclick=()=>{sp.disabled=true;L.classList.add('spin');const id=setInterval(()=>{L.textContent=rnd(SLO_LETTERS);SFX.tick()},70);reg(()=>clearInterval(id));
+      setTimeout(()=>{clearInterval(id);L.classList.remove('spin');L.textContent=rnd(SLO_LETTERS);SFX.fanfare();tm._start();
+        ctl.innerHTML='';const stop=btn('✋ STOPP! Auswerten','ok big');stop.onclick=score;ctl.append(stop);setPrimary(stop)},1800)};
+    function score(){tm._stop();ctl.innerHTML='';
+      ctl.append(h(`<p class="hint" style="font-size:1.2rem;width:100%">Reihum vorlesen: Jedes passende Wort = 1 Fisch. Hat kein anderes Team dasselbe Wort? +1 extra!</p>`));
+      ctl.append(pointsPanel('Fische vergeben',[1,2,3,5]));const nx=btn('Neue Runde ▶','cta big');nx.onclick=next;ctl.append(nx);setPrimary(nx)}
+  }
+  next();
+}
+
+function runKritzel(body,ctx){
+  function turn(){
+    cleanup.forEach(f=>f());cleanup=[];const t=teams()[S.kritzelTurn%S.n];const word=pick('kritzel');let guessed=false;
+    ctx.step(`Runde ${S.kritzelTurn+1}`);body.innerHTML='';
+    const w=h(`<div class="center grow"><div class="turn" style="--tc:${t.color}"><span class="badge">🦦</span>${esc(t.name)} zeichnet!</div>
+      <p class="hint" style="font-size:1.4rem">Ein Kind aus dem Team kommt nach vorn an die Tafel. Alle anderen machen gleich die Augen zu! <span class="emoji">🙈</span></p>
+      <div class="tslot"></div><div class="ans"></div><div class="row ctl"></div></div>`);
+    body.append(w);const ctl=$('.ctl',w);const tm=timerWidget(90,{size:'12rem'});$('.tslot',w).append(tm);
+    const show=btn('🙈 Geheimen Begriff zeigen','cta big');ctl.append(show);setPrimary(show);
+    show.onclick=()=>secret(word,()=>{tm._start();ctl.innerHTML='';
+      const ok=btn(`✅ ${esc(t.name)} hat’s! (+2)`,'ok big');ok.onclick=()=>{addPoints(t.i,2);SFX.right();finish()};
+      const steal=btn('🔁 Andere Teams raten','ghost big');steal.onclick=()=>{tm._stop();ctl.innerHTML='';
+        ctl.append(quickTeams('Welches Team hat’s erraten? (+1)',1,{once:true,onPick:()=>{SFX.right();finish()}}));
+        const none=btn('Keiner – auflösen','ghost');none.onclick=finish;ctl.append(none)};
+      const again=btn('👁 Begriff nochmal zeigen','ghost');again.onclick=()=>secret(word,()=>{},true);
+      ctl.append(ok,steal,again);setPrimary(ok)});
+    function finish(){if(guessed)return;guessed=true;tm._stop();$('.ans',w).innerHTML=`<div class="sol">${esc(word)}</div>`;ctl.innerHTML='';
+      S.kritzelTurn++;save();const nx=btn('Nächstes Team ▶','cta big');nx.onclick=turn;ctl.append(nx);setPrimary(nx)}
+  }
+  turn();
+}
+function secret(word,done,quick=false){
+  const ov=h(`<div class="secret"><div class="big">Alle Augen zu! <span class="emoji">🙈</span></div><div class="hint" style="color:#D0DCE6;font-size:1.6rem">Nur das Kind an der Tafel schaut hin.</div><div class="cd" style="color:#EBA882"></div></div>`);
+  document.body.append(ov);reg(()=>ov.remove());const cd=$('.cd',ov);let k=quick?1:3;cd.textContent=k;SFX.tick();
+  const id=setInterval(()=>{k--;if(k>0){cd.textContent=k;SFX.tick();return}clearInterval(id);
+    ov.innerHTML=`<div class="hint" style="color:#D0DCE6;font-size:1.6rem">Dein Begriff:</div><div class="word">${esc(word)}</div><div class="sbar"><div></div></div>`;
+    const bar=$('.sbar div',ov);bar.style.transition='width 5s linear';requestAnimationFrame(()=>requestAnimationFrame(()=>bar.style.width='0%'));
+    const tid=setTimeout(()=>{ov.innerHTML='<div class="big">Augen auf! <span class="emoji">👀</span></div>';SFX.gong();setTimeout(()=>{ov.remove();done()},900)},5000);reg(()=>clearTimeout(tid))},1000);reg(()=>clearInterval(id));
+}
+
+/* ---------- Finale ---------- */
+VIEWS.finale=()=>{
+  setWhere('🏆 Siegerehrung');
+  const ts=teams().sort((a,b)=>b.score-a.score);
+  const place=t=>1+ts.filter(o=>o.score>t.score).length;
+  const medal=p=>['🥇','🥈','🥉'][p-1]||'';
+  const top=ts.slice(0,3);const podOrder=top.length===3?[top[1],top[0],top[2]]:top.length===2?[top[1],top[0]]:top;
+  const hgt=p=>({1:'11rem',2:'8rem',3:'6rem'})[p]||'5rem';
+  const el=h(`<div class="finale"><canvas id="confetti"></canvas><h1 style="font-size:3.2rem">Das große Fischfest! <span class="emoji">🐟</span></h1><div class="podium"></div><div class="others"></div>
+    <p class="hint" style="font-size:1.3rem;text-align:center">Danke an alle Otter – ihr habt heute gewusst, geschätzt, erfunden und gezeichnet! <span class="emoji">🦦💛</span></p><div class="row fctl"></div></div>`);
+  main.append(el);
+  podOrder.forEach(t=>{const p=place(t);$('.podium',el).append(h(`<div class="pod" style="--tc:${t.color}"><div class="medal emoji">${medal(p)}</div><div class="badge">🦦</div><div class="pname2">${esc(t.name)}</div><div class="block" style="height:${hgt(p)}">${t.score} 🐟</div></div>`))});
+  ts.slice(3).forEach(t=>$('.others',el).append(h(`<span style="color:${t.color}">${place(t)}. ${esc(t.name)} · ${t.score} 🐟</span>`)));
+  const b=btn('🌊 Zurück zum Fluss','ghost big');b.onclick=()=>go('hub');
+  const n=btn('🔄 Neue Show','cta big');n.onclick=()=>go('setup');$('.fctl',el).append(b,n);
+  SFX.fanfare();confetti($('#confetti',el));
+};
+function confetti(cv){
+  const r=cv.getBoundingClientRect();cv.width=r.width;cv.height=r.height;const x=cv.getContext('2d');
+  const cols=['#D97A4A','#3E5668','#4D8B3F','#C17B00','#7DBB6F','#EBA882','#6A8599'];
+  const ps=Array.from({length:180},()=>({x:Math.random()*cv.width,y:-Math.random()*cv.height,vx:(Math.random()-.5)*2,vy:2+Math.random()*3,r:Math.random()*6.28,vr:(Math.random()-.5)*.2,w:8+Math.random()*8,c:rnd(cols)}));
+  let raf,t0=performance.now();
+  const f=t=>{x.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;if(p.y>cv.height&&t-t0<6000){p.y=-10;p.x=Math.random()*cv.width}
+    x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.w/2,-p.w/4,p.w,p.w/2);x.restore()});raf=requestAnimationFrame(f)};
+  raf=requestAnimationFrame(f);reg(()=>cancelAnimationFrame(raf));
+}
+
+/* =========================================================
+   START
+   ========================================================= */
+$('#logo').onclick=()=>go(S.started?'hub':'setup');
+$('#bHub').onclick=()=>go(S.started?'hub':'setup');
+$('#bTimer').onclick=openTimer;$('#bFull').onclick=toggleFull;$('#bHelp').onclick=openHelp;$('#bSet').onclick=()=>go('setup');
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea'))return;
+  if(e.key==='Escape'){closeModal();return}
+  if(e.key===' '||e.code==='Space'){if(primaryBtn&&primaryBtn.isConnected&&!primaryBtn.disabled&&!document.querySelector('.secret')){e.preventDefault();primaryBtn.click()}else e.preventDefault();return}
+  const d=e.code&&e.code.startsWith('Digit')?+e.code.slice(5):null;
+  if(d>=1&&d<=S.n&&!['setup','editor'].includes(S.view)){addPoints(d-1,e.shiftKey?-1:1);return}
+  const k=e.key.toLowerCase();
+  if(k==='t')openTimer();else if(k==='f')toggleFull();else if(k==='h'||k==='?')openHelp();
+  else if(k==='r'&&S.view==='hub'&&$('#overlay').hidden)openWheel();
+});
+document.addEventListener('animationend',e=>{if(e.target.classList&&e.target.classList.contains('chip'))e.target.classList.remove('bump')});
+go(S.started&&['hub','finale'].includes(S.view)?S.view:(S.started?'hub':'setup'));
+</script>
+</body>
+</html>
