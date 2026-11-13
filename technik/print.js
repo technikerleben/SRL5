@@ -5,18 +5,18 @@
 (function () {
   const p=id=>document.getElementById(id);
   const skills={
-    sicherheit:"sicher in der Werkstatt arbeiten",
-    werkzeuge:"die Werkzeuge benennen und passend auswählen",
-    saegen:"genau sägen und eine Form herausraspeln",
-    schleifen:"Raspelspuren wegfeilen und von grob nach fein schleifen",
-    qualitaet:"dein Werkstück mit Kriterien prüfen"
+    saegen:"genau sägen",
+    raspeln:"eine runde Form raspeln",
+    feilen:"Raspelspuren wegfeilen",
+    schleifen:"glatt schleifen",
+    form:"einen Handschmeichler gestalten, der gut in der Hand liegt"
   };
   const strengths={
-    sicherheit:"Du hältst die Werkstattregeln ein",
-    werkzeuge:"Du weißt, welches Werkzeug wofür da ist",
-    saegen:"Deine Form ist sauber gesägt und geraspelt",
-    schleifen:"Deine Oberfläche ist sorgfältig geschliffen",
-    qualitaet:"Du prüfst die Qualität deines Werkstücks"
+    saegen:"Dein Sägeschnitt ist genau",
+    raspeln:"Deine Rundungen sind gleichmäßig",
+    feilen:"Die Raspelspuren sind sauber entfernt",
+    schleifen:"Deine Oberfläche ist glatt",
+    form:"Dein Handschmeichler liegt gut in der Hand"
   };
   const names=["Nicht vorhanden","In Ansätzen","Mindeststandard","Regelstandard","Leistungsstandard"];
 
@@ -75,7 +75,7 @@
     }else{
       messages.push(numeric.some(r=>r.level===1)
         ? "Du hast erste Ansätze bei deinem Handschmeichler gezeigt."
-        : "Wir schauen gemeinsam, welche Schritte dir in der Werkstatt helfen.");
+        : "Wir schauen gemeinsam, wie dein nächstes Werkstück gelingt.");
       messages.push("Wir üben die wichtigen Schritte gemeinsam weiter.");
     }
     q("printStrengthsHeading").textContent=numeric.some(r=>r.level>=1)?"Das kannst du schon":"Deine nächsten Lernschritte";

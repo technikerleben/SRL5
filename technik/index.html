@@ -131,9 +131,9 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
 <header>
 <div class="shell header-row">
   <div>
-    <div class="eyebrow">Technik 5 · Handschmeichler aus Dachlatte · Werkstückbewertung</div>
+    <div class="eyebrow">Technik 5 · Handschmeichler aus Dachlatte · Bewertung des Werkstücks</div>
     <h1>Auswertung & Rückmeldung</h1>
-    <p>Fünf Kompetenzbereiche (Sicher arbeiten, Werkzeuge kennen, Sägen und Raspeln, Feilen und Schleifen, Qualität prüfen) nach dem Kernlehrplan Technik (Gesamtschule NRW, Inhaltsfeld 1 „Sicherheit am Arbeitsplatz“) einstufen, Rückmeldung erzeugen und die Note transparent aus den Punkten berechnen. Alle Daten bleiben ausschließlich im Browserspeicher dieses Geräts.</p>
+    <p>Reine Produktbewertung: Sägen, Raspeln, Feilen, Schleifen sowie Form und Funktion werden am Werkstück eingestuft – nicht das Arbeitsverhalten. Rückmeldung erzeugen und die Note transparent aus den Punkten berechnen. Alle Daten bleiben ausschließlich im Browserspeicher dieses Geräts.</p>
   </div>
   <div class="header-badge"><b>Notenlogik · Fach Technik</b><br>Fünf Kategorien mit jeweils 0 bis 4 Punkten ergeben höchstens 20 Punkte. Je Kategorie zählt die höchste vollständig belegte Stufe. Note 4 ab 8, Note 1 ab 16 Punkten. Ist eine Kategorie „nicht beurteilbar“, wird keine Summe gebildet.</div>
 </div>
@@ -162,7 +162,7 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
     <div class="editor" id="editor">
       <div id="welcome" class="empty">
         <h2>Auswertung starten</h2>
-        <p>Lege ein Kind an oder wähle links einen vorhandenen Eintrag. Die fünf Kategorien entsprechen dem Kompetenzraster „Handschmeichler“.</p>
+        <p>Lege ein Kind an oder wähle links einen vorhandenen Eintrag. Die fünf Kategorien entsprechen dem Bewertungsraster für das Werkstück „Handschmeichler“.</p>
       </div>
 
       <div id="formWrap" class="hidden">
@@ -199,7 +199,7 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
           <button class="btn orange" id="printFeedback">Rückmeldung drucken</button>
           <button class="btn danger" id="deleteStudent">Eintrag löschen</button>
         </div>
-        <div class="notice">Die Note wird ausschließlich aus den Punkten berechnet (Bezug: 20 Punkte). Stufen sind kumulativ: Eine Stufe gilt nur, wenn auch alle Anforderungen der Stufen darunter erfüllt sind. Kategorie 1, 3 und 4 brauchen eine Beobachtung während der Arbeit oder am Werkstück, Kategorie 2 ein kurzes Gespräch oder einen Eintrag im Lerntagebuch. Fehlt diese Grundlage, „nicht beurteilbar“ wählen.</div>
+        <div class="notice">Die Note wird ausschließlich aus den Punkten berechnet (Bezug: 20 Punkte). Stufen sind kumulativ: Eine Stufe gilt nur, wenn auch alle Anforderungen der Stufen darunter erfüllt sind. Bewertet wird nur das Werkstück. Den Sägeschnitt vor dem Raspeln am Rohling abnehmen, weil die Schnittfläche später überarbeitet wird. Fehlt diese Abnahme, „nicht beurteilbar“ wählen.</div>
       </div>
     </div>
   </section>
@@ -217,7 +217,7 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
     </div>
 
     <h2 class="print-section">Das hast du erreicht</h2>
-    <p class="print-intro">Hier siehst du, wie sicher dir die verschiedenen Teile der Werkstückarbeit schon gelingen.</p>
+    <p class="print-intro">Hier siehst du, wie gut die einzelnen Arbeitsgänge an deinem Handschmeichler gelungen sind.</p>
     <table class="print-levels" aria-label="Erreichte Niveaustufen">
       <thead><tr><th>Kompetenz</th><th>Dein erreichtes Niveau</th><th>Punkte</th></tr></thead>
       <tbody id="printRows"></tbody>
@@ -225,7 +225,7 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
 
     <h2 class="print-section strengths-heading" id="printStrengthsHeading">Das kannst du schon</h2>
     <div class="print-strengths" id="printStrengths"></div>
-    <div class="print-tip" id="printTip"><strong>Dein nächster Übungstipp</strong><span id="printTipText"></span></div>
+    <div class="print-tip" id="printTip"><strong>Tipp für dein nächstes Werkstück</strong><span id="printTipText"></span></div>
     <div class="print-warning hidden" id="printWarning">Die Punkteschwelle für eine ausreichende Leistung ist noch nicht erreicht. Herr Wegemann wird mit dir planen, welche Schritte dir beim Weiterlernen helfen.</div>
     <div class="print-custom hidden" id="printCustom"></div>
 
@@ -247,7 +247,7 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
     <div class="page-eyebrow">ZUM NACHLESEN · TECHNIK 5 · HANDSCHMEICHLER</div>
     <h2 class="print-back-title">Unser Kompetenzraster</h2>
     <div class="print-title-band" aria-hidden="true"></div>
-    <p class="print-back-intro">Das Raster zeigt, was wir bei deiner Werkstückarbeit betrachten. Jede höhere Stufe schließt die Stufen darunter ein.</p>
+    <p class="print-back-intro">Das Raster zeigt, was wir an deinem fertigen Werkstück betrachten. Jede höhere Stufe schließt die Stufen darunter ein.</p>
     <div class="print-legend">
       <span class="print-level-badge print-level-0">0 · Nicht vorhanden</span>
       <span class="print-level-badge print-level-1">1 · In Ansätzen</span>
@@ -258,7 +258,7 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
     <div class="print-rubric-grid" id="printRubricGrid"></div>
     <div class="print-back-notes">
       <div><strong>So wird gezählt:</strong> In jeder Kategorie zählt die höchste Stufe, die du vollständig gezeigt hast. Alle fünf Kategorien zählen gleich viel.</div>
-      <div><strong>Nicht beurteilbar:</strong> Fehlt in einer Kategorie die Grundlage (z. B. weil du gefehlt hast), wird keine Gesamtpunktzahl gebildet.</div>
+      <div><strong>Nicht beurteilbar:</strong> Fehlt in einer Kategorie die Grundlage (z. B. weil der Sägeschnitt nicht abgenommen wurde), wird keine Gesamtpunktzahl gebildet.</div>
     </div>
     <div class="print-evaluation">
       <h3>Notenschlüssel</h3>
@@ -304,112 +304,27 @@ const LEVEL_NAMES=["nicht vorhanden","In Ansätzen","Mindeststandard","Regelstan
 const NB_NAME="nicht beurteilbar";
 
 const CRITERIA=[
-  {
-    id:"sicherheit", title:"1. Sicher arbeiten", short:"Sicher arbeiten",
-    desc:"Werkstattregeln einhalten, Gefahren erkennen und Schutzmaßnahmen nennen.",
-    plan:"KLP Technik GE, IF 1 · SK: sicherheitsrelevante Aspekte erklären · UK: eigenes Arbeitsverhalten bewerten",
-    levels:[
-      "Die Werkstattregeln werden noch nicht eingehalten, auch nicht nach Erinnerung.",
-      "Du kannst die Werkstattregeln einhalten, wenn die Lehrkraft dich daran erinnert.",
-      "Du hältst die Regeln ohne Erinnerung ein: Holz fest eingespannt, beide Hände hinter dem Werkzeug, Platz am Ende aufgeräumt.",
-      "Zusätzlich nennst du zu Feinsäge, Raspel, Feile und Schleifpapier je eine Gefahr und die passende Schutzmaßnahme.",
-      "Zusätzlich erkennst du Gefahren an deinem und an anderen Arbeitsplätzen, sprichst sie an und schlägst eine Lösung vor."
-    ]
-  },
-  {
-    id:"werkzeuge", title:"2. Werkzeuge kennen und auswählen", short:"Werkzeuge kennen",
-    desc:"Werkzeuge benennen, ihre Aufgabe erklären und passend auswählen.",
-    plan:"KLP Technik GE, IF 1 · SK: Werkzeuge benennen, Handhabung erläutern · UK: Werkzeugeinsatz erörtern",
-    levels:[
-      "Die Werkzeuge werden noch nicht erkannt.",
-      "Du zeigst auf das richtige Werkzeug, wenn es genannt wird.",
-      "Du benennst Feinsäge, Raspel, Feile und Schleifpapier und sagst, wofür sie da sind (trennen, grob abtragen, fein abtragen, glätten).",
-      "Zusätzlich erklärst du die Reihenfolge Raspel → Feile → Schleifpapier von grob nach fein und liest die Körnung (kleine Zahl = grob).",
-      "Zusätzlich zeigst du Hirnholz und Faserrichtung am Werkstück und erklärst, wie du deshalb arbeitest (z. B. zur Mitte hin raspeln)."
-    ]
-  },
-  {
-    id:"saegen", title:"3. Sägen und Raspeln", short:"Sägen und Raspeln",
-    desc:"Rohling absägen und die Form mit der Raspel herausarbeiten.",
-    plan:"KLP Technik GE · HK 1: einfache Werkstoffe verarbeiten · HK 2: Werkzeuge sachgerecht bedienen · IF 1, SK: Arbeitsschritte bei Fertigungsverfahren erläutern",
-    levels:[
-      "Gesägt und geraspelt wurde noch nicht.",
-      "Du sägst mit Hilfe die Latte ab und raspelst die Form grob an.",
-      "Du sägst alleine (höchstens ca. 2 mm neben dem Strich) und arbeitest die Form mit der Raspel heraus.",
-      "Zusätzlich: Schnitt am Strich (höchstens ca. 1 mm), Druck nur beim Vorschieben; die Form folgt deiner Vorzeichnung und alle Kanten sind gerundet.",
-      "Zusätzlich: Die Rundungen sind gleichmäßig, ohne Dellen oder Flachstellen; an den Hirnholzkanten ist nichts ausgerissen."
-    ]
-  },
-  {
-    id:"schleifen", title:"4. Feilen und Schleifen", short:"Feilen und Schleifen",
-    desc:"Raspelspuren entfernen und die Oberfläche von grob nach fein glätten.",
-    plan:"KLP Technik GE · HK 1 · HK 2 · HK 4: einfache Werkstücke erstellen",
-    levels:[
-      "Die Oberfläche ist noch nicht bearbeitet.",
-      "Du schleifst mit Hilfe einzelne Stellen.",
-      "Du schleifst das ganze Werkstück mit mindestens einer Körnung; es sind keine Splitter mehr da.",
-      "Zusätzlich: Raspelspuren sind mit der Feile entfernt (Druck nur beim Vorschieben); du schleifst mit mindestens zwei Körnungen nacheinander von grob nach fein.",
-      "Zusätzlich: Die Oberfläche fühlt sich überall gleich glatt an; im Gegenlicht sind keine Kratzer zu sehen."
-    ]
-  },
-  {
-    id:"qualitaet", title:"5. Qualität prüfen und beurteilen", short:"Qualität prüfen",
-    desc:"Das eigene Werkstück mit Kriterien prüfen und Verbesserungen ableiten.",
-    plan:"KLP Technik GE, IF 1 · UK: Arbeitsergebnis nach Maßhaltigkeit, Verarbeitung, Funktionalität und Design beurteilen · MK 7",
-    levels:[
-      "Eine Prüfung des Werkstücks ist noch nicht erkennbar.",
-      "Du sagst mit einer Checkliste, ob dein Werkstück fertig ist.",
-      "Du prüfst mit der Checkliste: Kanten rund, keine Splitter, Oberfläche fühlt sich mit geschlossenen Augen glatt an.",
-      "Zusätzlich beurteilst du Maß (Vergleich mit deiner Vorzeichnung), Verarbeitung, Funktion und Design und nennst für jedes Kriterium einen Beleg.",
-      "Zusätzlich entwickelst du ein eigenes Qualitätskriterium, erklärst die Ursache eines Mangels und nennst einen passenden Verbesserungsschritt."
-    ]
-  }
+  {"id": "saegen", "title": "1. Sägen", "short": "Sägen", "desc": "Zuschnitt des Rohlings: Länge und Schnittfläche (Abnahme am Rohling vor dem Raspeln).", "plan": "KLP Technik GE · HK 1: einfache Werkstoffe verarbeiten · IF 1, UK: Arbeitsergebnis hinsichtlich Maßhaltigkeit beurteilen", "levels": ["Der Rohling ist noch nicht abgesägt.", "Du kannst den Rohling absägen. Der Schnitt liegt mehr als ca. 2 mm neben dem Strich oder ist deutlich schief.", "Du kannst so sägen, dass der Schnitt höchstens ca. 2 mm neben dem Strich liegt. Die Schnittfläche hat keine Stufen vom Neuansetzen.", "Du kannst außerdem auf ca. 1 mm genau sägen. Die Schnittfläche ist rechtwinklig (Winkelprobe: kaum Lichtspalt) und unten nicht ausgerissen.", "Du kannst außerdem genau am Strich sägen (Strich noch halb sichtbar). Die Schnittfläche ist in beide Richtungen rechtwinklig."]},
+  {"id": "raspeln", "title": "2. Raspeln", "short": "Raspeln", "desc": "Form herausarbeiten: Lattenkanten entfernen, Rundungen herstellen.", "plan": "KLP Technik GE · HK 1 · IF 1, UK: Arbeitsergebnis hinsichtlich Verarbeitung beurteilen", "levels": ["Die Form ist noch nicht angeraspelt.", "Du kannst die Form grob anraspeln. Die Kanten der Latte sind noch an mehreren Stellen zu sehen.", "Du kannst alle Kanten der Latte wegraspeln. Das Werkstück ist rundum gerundet.", "Du kannst außerdem Rundungen ohne Dellen oder Flachstellen raspeln. An den Hirnholzkanten ist nichts ausgerissen.", "Du kannst außerdem fließende Übergänge raspeln. Gleiche Seiten sind gleich gerundet, wenn die Form das vorsieht."]},
+  {"id": "feilen", "title": "3. Feilen", "short": "Feilen", "desc": "Raspelspuren entfernen, ohne die Form zu verändern.", "plan": "KLP Technik GE · HK 2: Werkzeuge sachgerecht bedienen · IF 1, UK: Arbeitsergebnis hinsichtlich Verarbeitung beurteilen", "levels": ["Es ist noch nicht gefeilt.", "Du kannst einzelne Stellen feilen. Raspelspuren sind noch deutlich zu sehen.", "Du kannst die groben Raspelspuren fast überall entfernen.", "Du kannst außerdem alle Raspelspuren entfernen. Die Feilspuren verlaufen gleichmäßig.", "Du kannst außerdem so feilen, dass keine neuen Kanten (Facetten) oder Dellen entstehen. Die Form bleibt erhalten."]},
+  {"id": "schleifen", "title": "4. Schleifen", "short": "Schleifen", "desc": "Oberfläche von grob nach fein glätten – auch das Hirnholz.", "plan": "KLP Technik GE · HK 4: einfache Werkstücke erstellen · IF 1, UK: Arbeitsergebnis hinsichtlich Verarbeitung beurteilen", "levels": ["Es ist noch nicht geschliffen.", "Du kannst Teile des Werkstücks schleifen. Splitter oder raue Stellen sind noch zu fühlen.", "Du kannst das ganze Werkstück schleifen. Es gibt keine Splitter und keine scharfen Stellen.", "Du kannst außerdem alle Feilspuren wegschleifen. Mit geschlossenen Augen fühlt sich das Werkstück überall glatt an, auch am Hirnholz.", "Du kannst außerdem so fein schleifen, dass im Gegenlicht keine Kratzer oder Querriefen zu sehen sind. Das Hirnholz ist so glatt wie das Längsholz."]},
+  {"id": "form", "title": "5. Form und Funktion", "short": "Form und Funktion", "desc": "Der Handschmeichler liegt gut in der Hand und ist sorgfältig gestaltet.", "plan": "KLP Technik GE · HK 4 · IF 1, UK: Arbeitsergebnis hinsichtlich Funktionalität und Design beurteilen", "levels": ["Eine Form ist noch nicht erkennbar.", "Du kannst eine Form herstellen, die man in die Hand nehmen kann. Sie wirkt noch unfertig.", "Du kannst eine Form herstellen, die in die geschlossene Hand passt und an keiner Stelle drückt.", "Du kannst außerdem deine Vorzeichnung erkennbar umsetzen. Alle Seiten sind gleich sorgfältig gestaltet.", "Du kannst außerdem ein besonderes Gestaltungsmerkmal sauber ausführen, das zur Hand passt (z. B. Daumenmulde, Welle, Symmetrie)."]}
 ];
 
 const FEEDBACK={
-  sicherheit:[
-    "Die Werkstattregeln hältst du noch nicht ein.",
-    "Mit Erinnerung hältst du die Werkstattregeln ein.",
-    "Du hältst die Werkstattregeln selbstständig ein.",
-    "Du arbeitest sicher und kennst zu jedem Werkzeug Gefahr und Schutzmaßnahme.",
-    "Du achtest auf Sicherheit – auch bei anderen – und findest Lösungen."
-  ],
-  werkzeuge:[
-    "Die Werkzeuge kennst du noch nicht.",
-    "Du erkennst die Werkzeuge, wenn sie genannt werden.",
-    "Du kennst die vier Werkzeuge und weißt, wofür sie da sind.",
-    "Du erklärst, warum man von grob nach fein arbeitet, und kannst die Körnung lesen.",
-    "Du verstehst auch, wie Hirnholz und Faserrichtung deine Arbeit beeinflussen."
-  ],
-  saegen:[
-    "Gesägt und geraspelt hast du noch nicht.",
-    "Mit Hilfe hast du gesägt und die Form grob angeraspelt.",
-    "Du sägst selbstständig und arbeitest die Form mit der Raspel heraus.",
-    "Du sägst genau am Strich und raspelst eine saubere, gerundete Form.",
-    "Deine Rundungen sind gleichmäßig, und an den Kanten ist nichts ausgerissen."
-  ],
-  schleifen:[
-    "Die Oberfläche hast du noch nicht bearbeitet.",
-    "Mit Hilfe hast du einzelne Stellen geschliffen.",
-    "Du schleifst dein Werkstück, sodass keine Splitter mehr da sind.",
-    "Du entfernst Raspelspuren mit der Feile und schleifst von grob nach fein.",
-    "Dein Handschmeichler ist überall gleich glatt und ohne Kratzer."
-  ],
-  qualitaet:[
-    "Dein Werkstück hast du noch nicht geprüft.",
-    "Mit der Checkliste prüfst du, ob dein Werkstück fertig ist.",
-    "Du prüfst Kanten, Splitter und Oberfläche mit der Checkliste.",
-    "Du beurteilst dein Werkstück mit vier Kriterien und nennst Belege.",
-    "Du entwickelst eigene Kriterien und weißt, wie du Mängel verbesserst."
-  ]
+  saegen:["Der Rohling ist noch nicht abgesägt.", "Dein Rohling ist abgesägt, der Schnitt ist aber noch ungenau.", "Dein Sägeschnitt liegt nah am Strich und ist ohne Stufen.", "Dein Sägeschnitt ist genau und rechtwinklig.", "Dein Sägeschnitt ist sehr genau – direkt am Strich und rechtwinklig."],
+  raspeln:["Die Form ist noch nicht angeraspelt.", "Deine Form ist grob angeraspelt.", "Dein Werkstück ist rundum gerundet.", "Deine Rundungen sind gleichmäßig, ohne Dellen und Ausrisse.", "Deine Rundungen gehen fließend ineinander über."],
+  feilen:["Es ist noch nicht gefeilt.", "Du hast einzelne Stellen gefeilt.", "Du hast die groben Raspelspuren entfernt.", "Auf deinem Werkstück sind keine Raspelspuren mehr zu sehen.", "Du feilst so sauber, dass die Form ohne Facetten erhalten bleibt."],
+  schleifen:["Es ist noch nicht geschliffen.", "Du hast Teile deines Werkstücks geschliffen.", "Dein Werkstück ist ohne Splitter und scharfe Stellen.", "Dein Werkstück fühlt sich überall glatt an.", "Deine Oberfläche ist so fein, dass im Gegenlicht keine Kratzer zu sehen sind."],
+  form:["Eine Form ist noch nicht erkennbar.", "Dein Handschmeichler lässt sich in die Hand nehmen.", "Dein Handschmeichler liegt angenehm in der Hand.", "Deine Formidee ist erkennbar umgesetzt, alle Seiten sind sorgfältig.", "Dein Handschmeichler hat ein besonderes, sauber gearbeitetes Gestaltungsmerkmal."]
 };
 
 const NEXT_STEPS={
-  sicherheit:"Geh vor jedem Arbeitsschritt die Werkstattregeln durch: Ist das Holz fest eingespannt? Sind beide Hände hinter dem Werkzeug? Welche Gefahr gibt es bei diesem Werkzeug?",
-  werkzeuge:"Erkläre einem Partner die Reihenfolge Raspel → Feile → Schleifpapier. Vergleiche zwei Schleifpapiere: Welche Körnung ist grob, welche fein?",
-  saegen:"Säge langsam und genau am Strich. Drücke die Raspel nur beim Vorschieben auf und arbeite an den Hirnholzkanten zur Mitte hin.",
-  schleifen:"Entferne zuerst alle Raspelspuren mit der Feile. Schleife danach Schritt für Schritt von grob nach fein, zum Beispiel 80 → 120 → 240.",
-  qualitaet:"Prüfe dein Werkstück mit der Checkliste: Vergleiche es mit deiner Vorzeichnung, fühle mit geschlossenen Augen und halte es gegen das Licht. Notiere, was du verbessern kannst."
+  saegen:"Säge langsam mit wenig Druck und halte die Säge senkrecht. Beginne den Schnitt neben dem Strich auf der Abfallseite und prüfe mit dem Winkel.",
+  raspeln:"Raspel mit langen Zügen und drücke nur beim Vorschieben. Arbeite an Hirnholzkanten zur Mitte hin und drehe das Werkstück oft, um Dellen zu entdecken.",
+  feilen:"Feile die Raspelspuren Fläche für Fläche weg. Führe die Feile in gleichmäßigen Zügen über die Rundung, damit keine neuen Kanten entstehen.",
+  schleifen:"Schleife von grob nach fein (z. B. 80 → 120 → 240) und wechsle erst, wenn die Spuren der groben Körnung weg sind. Prüfe mit geschlossenen Augen und im Gegenlicht.",
+  form:"Nimm deinen Handschmeichler immer wieder in die Hand: Wo drückt er? Vergleiche ihn mit deiner Vorzeichnung und arbeite alle Seiten gleich sorgfältig aus."
 };
 
 // Vorgabe: 80 % des durchgängigen Mindeststandards (5 × 2 = 10 → 8 P.) reichen für eine 4,
@@ -550,7 +465,7 @@ function renderRubric(){
         return '<button type="button" class="level-btn '+(sel?'selected':'')+'" aria-pressed="'+sel+'" data-level="'+n+'" data-cid="'+c.id+'" title="'+escapeHtml(n===NB?NB_NAME:c.levels[n])+'">'+label+'</button>';
       }).join("")+'</div>'+
       '<div class="descriptor'+(lv===null||lv===NB?' muted':'')+'">'+escapeHtml(desc)+'</div>'+
-      '<div class="criterion-note"><input data-note="'+c.id+'" value="'+escapeHtml(s.notes?.[c.id]||"")+'" placeholder="Optional: Beobachtung, Datum, Beleg am Werkstück"></div>'+
+      '<div class="criterion-note"><input data-note="'+c.id+'" value="'+escapeHtml(s.notes?.[c.id]||"")+'" placeholder="Optional: Beleg am Werkstück (z. B. Stelle, Messwert)"></div>'+
     '</div>';
   }).join("");
   document.querySelectorAll("[data-cid]").forEach(b=>b.onclick=()=>{
@@ -570,16 +485,16 @@ function feedbackText(s){
   const lowest=[...vals].sort((a,b)=>a.lv-b.lv||a.i-b.i);
   const strengths=best.filter(x=>x.lv>=3).slice(0,2);
   let intro;
-  if(m.overall==="Leistungsstandard")intro="Du zeigst bei deinem Handschmeichler sehr viele Kompetenzen besonders sicher.";
-  else if(m.overall==="Regelstandard")intro="Du hast deinen Handschmeichler insgesamt sicher gefertigt.";
-  else if(m.overall==="Mindeststandard")intro="Du hast die wichtigen Grundlagen der Werkstückarbeit erreicht.";
-  else intro="Du zeigst schon einzelne wichtige Grundlagen. An einigen Stellen brauchst du noch Unterstützung.";
+  if(m.overall==="Leistungsstandard")intro="Dein Handschmeichler ist in fast allen Bereichen besonders sorgfältig gearbeitet.";
+  else if(m.overall==="Regelstandard")intro="Dein Handschmeichler ist insgesamt sauber und sorgfältig gearbeitet.";
+  else if(m.overall==="Mindeststandard")intro="Dein Handschmeichler erfüllt die wichtigen Grundanforderungen.";
+  else intro="An deinem Handschmeichler sind erste Arbeitsschritte gelungen. An einigen Stellen fehlt noch Sorgfalt.";
   const parts=[intro,"","Das gelingt dir schon:"];
   if(strengths.length)strengths.forEach(x=>parts.push("• "+FEEDBACK[x.c.id][x.lv]));
   else if(best[0].lv>=1)parts.push("• "+FEEDBACK[best[0].c.id][best[0].lv]);
   else parts.push("• Wir besprechen gemeinsam deinen ersten Schritt.");
   if(!m.complete||m.grade>2){
-    parts.push("","Dein nächster Übungstipp:","• "+NEXT_STEPS[lowest[0].c.id]);
+    parts.push("","Tipp für dein nächstes Werkstück:","• "+NEXT_STEPS[lowest[0].c.id]);
   }
   if(m.hasNb){parts.push("","Hinweis: Mindestens eine Kategorie ist nicht beurteilbar. Deshalb wird keine Gesamtpunktzahl gebildet.");}
   else if(m.complete){
