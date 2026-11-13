@@ -133,9 +133,9 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
   <div>
     <div class="eyebrow">Technik 5 · Handschmeichler aus Dachlatte · Werkstückbewertung</div>
     <h1>Auswertung & Rückmeldung</h1>
-    <p>Fünf Kompetenzbereiche nach dem Kernlehrplan Technik (Gesamtschule NRW, Inhaltsfeld 1 „Sicherheit am Arbeitsplatz“) einstufen, Rückmeldung erzeugen und die Note transparent aus den Punkten berechnen. Alle Daten bleiben ausschließlich im Browserspeicher dieses Geräts.</p>
+    <p>Fünf Kompetenzbereiche (Sicher arbeiten, Werkzeuge kennen, Sägen und Raspeln, Feilen und Schleifen, Qualität prüfen) nach dem Kernlehrplan Technik (Gesamtschule NRW, Inhaltsfeld 1 „Sicherheit am Arbeitsplatz“) einstufen, Rückmeldung erzeugen und die Note transparent aus den Punkten berechnen. Alle Daten bleiben ausschließlich im Browserspeicher dieses Geräts.</p>
   </div>
-  <div class="header-badge"><b>Notenlogik · Fach Technik</b><br>Fünf Kategorien mit jeweils 0 bis 4 Punkten ergeben höchstens 20 Punkte. Je Kategorie zählt die höchste vollständig belegte Stufe. Ist eine Kategorie „nicht beurteilbar“, wird keine Summe gebildet.</div>
+  <div class="header-badge"><b>Notenlogik · Fach Technik</b><br>Fünf Kategorien mit jeweils 0 bis 4 Punkten ergeben höchstens 20 Punkte. Je Kategorie zählt die höchste vollständig belegte Stufe. Note 4 ab 8, Note 1 ab 16 Punkten. Ist eine Kategorie „nicht beurteilbar“, wird keine Summe gebildet.</div>
 </div>
 </header>
 
@@ -199,7 +199,7 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
           <button class="btn orange" id="printFeedback">Rückmeldung drucken</button>
           <button class="btn danger" id="deleteStudent">Eintrag löschen</button>
         </div>
-        <div class="notice">Die Note wird ausschließlich aus den Punkten berechnet (Bezug: 20 Punkte). Stufen sind kumulativ: Eine Stufe gilt nur, wenn auch alle Anforderungen der Stufen darunter erfüllt sind. Kategorie 1 und 4 brauchen eine Beobachtung während der Arbeit, Kategorie 3 ein kurzes Gespräch oder einen Eintrag im Lerntagebuch. Fehlt diese Grundlage, „nicht beurteilbar“ wählen.</div>
+        <div class="notice">Die Note wird ausschließlich aus den Punkten berechnet (Bezug: 20 Punkte). Stufen sind kumulativ: Eine Stufe gilt nur, wenn auch alle Anforderungen der Stufen darunter erfüllt sind. Kategorie 1, 3 und 4 brauchen eine Beobachtung während der Arbeit oder am Werkstück, Kategorie 2 ein kurzes Gespräch oder einen Eintrag im Lerntagebuch. Fehlt diese Grundlage, „nicht beurteilbar“ wählen.</div>
       </div>
     </div>
   </section>
@@ -275,14 +275,14 @@ dialog::backdrop{background:rgba(20,35,45,.4)}
 
 <dialog id="settingsDialog">
   <div class="dialog-head"><h2>Notenschlüssel · Fach Technik</h2><button class="btn secondary small" id="closeSettings">Schließen</button></div>
-  <p>Die Prozentgrenzen der Fachschaft beziehen sich auf <strong>20 Punkte</strong>. Ein Punkt entspricht 5 %.</p>
+  <p>Die Grenzen beziehen sich auf <strong>20 Punkte</strong>. Ein Punkt entspricht 5 %. Eine 4 gibt es ab 8 Punkten, eine 1 ab 16 Punkten.</p>
   <div class="settings-grid" id="gradeKeyScreen"></div>
   <h3>Beispielrechnungen</h3>
   <table class="example-table">
     <thead><tr><th>Durchgängig</th><th>Punkte</th><th>Anteil</th><th>Note</th></tr></thead>
     <tbody id="exampleRows"></tbody>
   </table>
-  <div class="warn-box"><strong>Hinweis zur Passung:</strong> Durchgängiger Regelstandard ergibt bereits die Note 2, weil 75 % nur knapp über der Grenze von 73 % liegt. Für eine 4 reichen schon 9 Punkte; eine Kategorie darf dann noch „In Ansätzen“ sein. Die Lehrkraft begründet ihre Entscheidung pädagogisch.</div>
+  <div class="warn-box"><strong>Hinweis zur Passung:</strong> Vorgabe der Fachschaft für dieses Vorhaben: 80 % des durchgängigen Mindeststandards (8 von 10 Punkten) reichen für eine 4, 80 % des durchgängigen Leistungsstandards (16 von 20 Punkten) für eine 1. Die Grenzen für Note 2 und 3 sind gleichmäßig dazwischen verteilt, Note 5 bleibt ab 18 %. Die Lehrkraft begründet ihre Entscheidung pädagogisch.</div>
 </dialog>
 
 <dialog id="gradeChartDialog" class="grade-chart-dialog" aria-labelledby="gradeChartTitle">
@@ -317,19 +317,7 @@ const CRITERIA=[
     ]
   },
   {
-    id:"planung", title:"2. Planen und skizzieren", short:"Planen und skizzieren",
-    desc:"Form skizzieren, auf das Holz übertragen und Arbeitsschritte ordnen.",
-    plan:"KLP Technik GE, IF 1 · SK: Skizzen nutzen · UK: Reihenfolge der Arbeitsschritte · MK 8",
-    levels:[
-      "Eine Form oder Planung ist noch nicht erkennbar.",
-      "Du zeichnest mit Hilfe eine Form auf das Holz.",
-      "Du zeichnest deine Form als Skizze von oben, überträgst sie auf das Holz und ordnest vorgegebene Arbeitsschritte richtig.",
-      "Zusätzlich: Skizze mit zwei Ansichten (oben, seitlich) und drei Maßen in mm; eigener Arbeitsplan mit passendem Werkzeug für jeden Schritt.",
-      "Zusätzlich begründest du, warum deine Form gut in der Hand liegt, und schreibst Änderungen am Plan auf, wenn etwas nicht klappt."
-    ]
-  },
-  {
-    id:"werkzeuge", title:"3. Werkzeuge kennen und auswählen", short:"Werkzeuge kennen",
+    id:"werkzeuge", title:"2. Werkzeuge kennen und auswählen", short:"Werkzeuge kennen",
     desc:"Werkzeuge benennen, ihre Aufgabe erklären und passend auswählen.",
     plan:"KLP Technik GE, IF 1 · SK: Werkzeuge benennen, Handhabung erläutern · UK: Werkzeugeinsatz erörtern",
     levels:[
@@ -341,15 +329,27 @@ const CRITERIA=[
     ]
   },
   {
-    id:"fertigung", title:"4. Werkstück fertigen", short:"Werkstück fertigen",
-    desc:"Sägen, raspeln, feilen und schleifen nach Plan.",
-    plan:"KLP Technik GE · HK 1: einfache Werkstoffe verarbeiten · HK 2: Werkzeuge sachgerecht bedienen · HK 4",
+    id:"saegen", title:"3. Sägen und Raspeln", short:"Sägen und Raspeln",
+    desc:"Rohling absägen und die Form mit der Raspel herausarbeiten.",
+    plan:"KLP Technik GE · HK 1: einfache Werkstoffe verarbeiten · HK 2: Werkzeuge sachgerecht bedienen · IF 1, SK: Arbeitsschritte bei Fertigungsverfahren erläutern",
     levels:[
-      "Ein Werkstück ist noch nicht entstanden.",
+      "Gesägt und geraspelt wurde noch nicht.",
       "Du sägst mit Hilfe die Latte ab und raspelst die Form grob an.",
-      "Du sägst alleine (höchstens ca. 2 mm neben dem Strich), arbeitest die Form mit der Raspel heraus und schleifst mit mindestens einer Körnung.",
-      "Zusätzlich: Schnitt am Strich (höchstens ca. 1 mm), Druck nur beim Vorschieben, Form folgt der Skizze, Raspelspuren mit der Feile entfernt, mindestens zwei Körnungen nacheinander.",
-      "Zusätzlich: gleichmäßige Rundungen ohne Dellen oder Flachstellen; im Gegenlicht sind keine Kratzer zu sehen."
+      "Du sägst alleine (höchstens ca. 2 mm neben dem Strich) und arbeitest die Form mit der Raspel heraus.",
+      "Zusätzlich: Schnitt am Strich (höchstens ca. 1 mm), Druck nur beim Vorschieben; die Form folgt deiner Vorzeichnung und alle Kanten sind gerundet.",
+      "Zusätzlich: Die Rundungen sind gleichmäßig, ohne Dellen oder Flachstellen; an den Hirnholzkanten ist nichts ausgerissen."
+    ]
+  },
+  {
+    id:"schleifen", title:"4. Feilen und Schleifen", short:"Feilen und Schleifen",
+    desc:"Raspelspuren entfernen und die Oberfläche von grob nach fein glätten.",
+    plan:"KLP Technik GE · HK 1 · HK 2 · HK 4: einfache Werkstücke erstellen",
+    levels:[
+      "Die Oberfläche ist noch nicht bearbeitet.",
+      "Du schleifst mit Hilfe einzelne Stellen.",
+      "Du schleifst das ganze Werkstück mit mindestens einer Körnung; es sind keine Splitter mehr da.",
+      "Zusätzlich: Raspelspuren sind mit der Feile entfernt (Druck nur beim Vorschieben); du schleifst mit mindestens zwei Körnungen nacheinander von grob nach fein.",
+      "Zusätzlich: Die Oberfläche fühlt sich überall gleich glatt an; im Gegenlicht sind keine Kratzer zu sehen."
     ]
   },
   {
@@ -360,7 +360,7 @@ const CRITERIA=[
       "Eine Prüfung des Werkstücks ist noch nicht erkennbar.",
       "Du sagst mit einer Checkliste, ob dein Werkstück fertig ist.",
       "Du prüfst mit der Checkliste: Kanten rund, keine Splitter, Oberfläche fühlt sich mit geschlossenen Augen glatt an.",
-      "Zusätzlich beurteilst du Maß (Vergleich mit der Skizze), Verarbeitung, Funktion und Design und nennst für jedes Kriterium einen Beleg.",
+      "Zusätzlich beurteilst du Maß (Vergleich mit deiner Vorzeichnung), Verarbeitung, Funktion und Design und nennst für jedes Kriterium einen Beleg.",
       "Zusätzlich entwickelst du ein eigenes Qualitätskriterium, erklärst die Ursache eines Mangels und nennst einen passenden Verbesserungsschritt."
     ]
   }
@@ -374,13 +374,6 @@ const FEEDBACK={
     "Du arbeitest sicher und kennst zu jedem Werkzeug Gefahr und Schutzmaßnahme.",
     "Du achtest auf Sicherheit – auch bei anderen – und findest Lösungen."
   ],
-  planung:[
-    "Eine Planung für deinen Handschmeichler fehlt noch.",
-    "Mit Hilfe hast du eine Form auf das Holz gezeichnet.",
-    "Du hast deine Form skizziert und die Arbeitsschritte richtig geordnet.",
-    "Deine Skizze hat zwei Ansichten mit Maßen, und du hast einen eigenen Arbeitsplan geschrieben.",
-    "Du planst durchdacht, begründest deine Form und passt den Plan selbstständig an."
-  ],
   werkzeuge:[
     "Die Werkzeuge kennst du noch nicht.",
     "Du erkennst die Werkzeuge, wenn sie genannt werden.",
@@ -388,12 +381,19 @@ const FEEDBACK={
     "Du erklärst, warum man von grob nach fein arbeitet, und kannst die Körnung lesen.",
     "Du verstehst auch, wie Hirnholz und Faserrichtung deine Arbeit beeinflussen."
   ],
-  fertigung:[
-    "Dein Werkstück ist noch nicht entstanden.",
+  saegen:[
+    "Gesägt und geraspelt hast du noch nicht.",
     "Mit Hilfe hast du gesägt und die Form grob angeraspelt.",
-    "Du hast selbstständig gesägt, die Form herausgearbeitet und geschliffen.",
-    "Du arbeitest genau am Strich, führst die Werkzeuge richtig und schleifst in mehreren Körnungen.",
-    "Dein Handschmeichler hat gleichmäßige Rundungen und eine kratzerfreie Oberfläche."
+    "Du sägst selbstständig und arbeitest die Form mit der Raspel heraus.",
+    "Du sägst genau am Strich und raspelst eine saubere, gerundete Form.",
+    "Deine Rundungen sind gleichmäßig, und an den Kanten ist nichts ausgerissen."
+  ],
+  schleifen:[
+    "Die Oberfläche hast du noch nicht bearbeitet.",
+    "Mit Hilfe hast du einzelne Stellen geschliffen.",
+    "Du schleifst dein Werkstück, sodass keine Splitter mehr da sind.",
+    "Du entfernst Raspelspuren mit der Feile und schleifst von grob nach fein.",
+    "Dein Handschmeichler ist überall gleich glatt und ohne Kratzer."
   ],
   qualitaet:[
     "Dein Werkstück hast du noch nicht geprüft.",
@@ -406,17 +406,18 @@ const FEEDBACK={
 
 const NEXT_STEPS={
   sicherheit:"Geh vor jedem Arbeitsschritt die Werkstattregeln durch: Ist das Holz fest eingespannt? Sind beide Hände hinter dem Werkzeug? Welche Gefahr gibt es bei diesem Werkzeug?",
-  planung:"Zeichne vor dem Arbeiten eine Skizze von oben und von der Seite und schreibe drei Maße in mm dazu. Notiere dann die Arbeitsschritte mit dem passenden Werkzeug.",
   werkzeuge:"Erkläre einem Partner die Reihenfolge Raspel → Feile → Schleifpapier. Vergleiche zwei Schleifpapiere: Welche Körnung ist grob, welche fein?",
-  fertigung:"Säge langsam und genau am Strich. Drücke Raspel und Feile nur beim Vorschieben auf. Schleife danach Schritt für Schritt von grob nach fein.",
-  qualitaet:"Prüfe dein Werkstück mit der Checkliste: Vergleiche es mit deiner Skizze, fühle mit geschlossenen Augen und halte es gegen das Licht. Notiere, was du verbessern kannst."
+  saegen:"Säge langsam und genau am Strich. Drücke die Raspel nur beim Vorschieben auf und arbeite an den Hirnholzkanten zur Mitte hin.",
+  schleifen:"Entferne zuerst alle Raspelspuren mit der Feile. Schleife danach Schritt für Schritt von grob nach fein, zum Beispiel 80 → 120 → 240.",
+  qualitaet:"Prüfe dein Werkstück mit der Checkliste: Vergleiche es mit deiner Vorzeichnung, fühle mit geschlossenen Augen und halte es gegen das Licht. Notiere, was du verbessern kannst."
 };
 
-const GRADE_PERCENTAGES={1:87,2:73,3:59,4:45,5:18};
+// Vorgabe: 80 % des durchgängigen Mindeststandards (5 × 2 = 10 → 8 P.) reichen für eine 4,
+// 80 % des durchgängigen Leistungsstandards (5 × 4 = 20 → 16 P.) reichen für eine 1.
+// Note 2 und 3 linear dazwischen (je 8/3 Punkte, aufgerundet); Note 5 ab 18 % wie im Fachschaftsschlüssel.
 const MAX_POINTS=CRITERIA.length*4; // 20
-const GRADE_POINT_THRESHOLDS=Object.fromEntries(
-  Object.entries(GRADE_PERCENTAGES).map(([grade,p])=>[grade,Math.ceil(MAX_POINTS*p/100-1e-9)])
-);
+const GRADE_POINT_THRESHOLDS={1:16,2:14,3:11,4:8,5:4};
+const GRADE_PERCENTAGES=Object.fromEntries(Object.entries(GRADE_POINT_THRESHOLDS).map(([g,pt])=>[g,Math.round(pt/MAX_POINTS*100)]));
 
 let students=load(STORAGE_KEY,[]);
 if(!Array.isArray(students))students=[];
@@ -475,22 +476,13 @@ function gradeFor(total){
 function gradeDisplayFor(total){
   // Feinabstufung nur für die Anzeige; Notengrenzen beruhen auf gradeFor().
   const p=Number(total)||0;
-  if(p>=20)return "1+";
-  if(p>=19)return "1";
-  if(p>=18)return "1−";
-  if(p>=17)return "2+";
-  if(p>=16)return "2";
-  if(p>=15)return "2−";
-  if(p>=14)return "3+";
-  if(p>=13)return "3";
-  if(p>=12)return "3−";
-  if(p>=11)return "4+";
-  if(p>=10)return "4";
-  if(p>=9)return "4−";
-  if(p>=8)return "5+";
-  if(p>=5)return "5";
-  if(p>=4)return "5−";
-  return "6";
+  const g=gradeFor(p);
+  if(g===6)return "6";
+  const r=gradeRanges().find(x=>x.n===g);
+  const size=r.hi-r.lo+1;
+  if(size>=3&&p===r.hi)return g+"+";
+  if(size>=2&&p===r.lo)return g+"−";
+  return String(g);
 }
 function gradeRanges(){
   const rows=[];let upper=MAX_POINTS;
@@ -498,7 +490,7 @@ function gradeRanges(){
     const lo=GRADE_POINT_THRESHOLDS[g];
     rows.push({n:g,pct:"ab "+GRADE_PERCENTAGES[g]+" %",lo,hi:upper});upper=lo-1;
   }
-  rows.push({n:6,pct:"unter 18 %",lo:0,hi:upper});
+  rows.push({n:6,pct:"unter 20 %",lo:0,hi:upper});
   return rows;
 }
 const GRADE_NAMES={1:"sehr gut (1)",2:"gut (2)",3:"befriedigend (3)",4:"ausreichend (4)",5:"mangelhaft (5)",6:"ungenügend (6)"};
@@ -579,7 +571,7 @@ function feedbackText(s){
   const strengths=best.filter(x=>x.lv>=3).slice(0,2);
   let intro;
   if(m.overall==="Leistungsstandard")intro="Du zeigst bei deinem Handschmeichler sehr viele Kompetenzen besonders sicher.";
-  else if(m.overall==="Regelstandard")intro="Du hast deinen Handschmeichler insgesamt sicher geplant und gefertigt.";
+  else if(m.overall==="Regelstandard")intro="Du hast deinen Handschmeichler insgesamt sicher gefertigt.";
   else if(m.overall==="Mindeststandard")intro="Du hast die wichtigen Grundlagen der Werkstückarbeit erreicht.";
   else intro="Du zeigst schon einzelne wichtige Grundlagen. An einigen Stellen brauchst du noch Unterstützung.";
   const parts=[intro,"","Das gelingt dir schon:"];

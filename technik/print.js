@@ -6,16 +6,16 @@
   const p=id=>document.getElementById(id);
   const skills={
     sicherheit:"sicher in der Werkstatt arbeiten",
-    planung:"deinen Handschmeichler planen und skizzieren",
     werkzeuge:"die Werkzeuge benennen und passend auswählen",
-    fertigung:"sägen, raspeln, feilen und schleifen",
+    saegen:"genau sägen und eine Form herausraspeln",
+    schleifen:"Raspelspuren wegfeilen und von grob nach fein schleifen",
     qualitaet:"dein Werkstück mit Kriterien prüfen"
   };
   const strengths={
     sicherheit:"Du hältst die Werkstattregeln ein",
-    planung:"Deine Planung passt zu deinem Werkstück",
     werkzeuge:"Du weißt, welches Werkzeug wofür da ist",
-    fertigung:"Dein Werkstück ist sorgfältig gefertigt",
+    saegen:"Deine Form ist sauber gesägt und geraspelt",
+    schleifen:"Deine Oberfläche ist sorgfältig geschliffen",
     qualitaet:"Du prüfst die Qualität deines Werkstücks"
   };
   const names=["Nicht vorhanden","In Ansätzen","Mindeststandard","Regelstandard","Leistungsstandard"];
