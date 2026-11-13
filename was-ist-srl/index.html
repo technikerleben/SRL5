@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2C3D4C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SRL-Vortrag">
+<title>Was ist SRL? · Online-Fortbildung</title>
+<meta name="description" content="Online-Fortbildung zum selbstregulierten Lernen: Grundlagen, Mythen, SRL-Turbine und erste Bausteine aus der Praxis.">
+<!-- Ordner-URL ohne "/" am Ende: sonst lädt der Browser keine Bilder und Schriften -->
+<script>if(location.protocol!=='file:'&&!/\/$|\.html?$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash);</script>
+<style>
+@font-face{font-family:Anton;src:url(assets/fonts/anton.woff2) format("woff2");font-display:block}
+@font-face{font-family:Jost;src:url(assets/fonts/jost.woff2) format("woff2");font-weight:100 900;font-display:block}
+
+:root{
+  --slate-dark:#2C3D4C;--slate-base:#3E5668;--slate-mid:#6A8599;--slate-pale:#D0DCE6;--slate-ghost:#EEF3F7;--rust-dark:#9E4E22;--rust-base:#D97A4A;--rust-mid:#EBA882;--rust-pale:#F5DDD1;--sage-dark:#4D8B3F;--sage-base:#7DBB6F;
+  --navy:var(--slate-dark);--blue:var(--slate-base);--red:var(--rust-dark);--mint:var(--sage-dark);--orange:var(--rust-base);
+  --paper:#F5F4F1;--ink:#1E2A35;--muted:#5A6A78;--line:rgba(44,61,76,.18);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:Jost,system-ui,sans-serif;overflow:hidden}
+body.idle,body.idle *{cursor:none!important}
+
+/* ---------- Feste 16:9-Bühne (1600 × 900), wird aufs Fenster skaliert ---------- */
+#viewport{position:fixed;inset:0;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%) scale(var(--s,1));transform-origin:center}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:90px 120px}
+/* ---------- Bewegung: kurz, gerichtet, ruhig ---------- */
+:root{--t:.45s;--ease:cubic-bezier(.22,.7,.2,1)}
+.slide.active{display:flex;z-index:2;animation:inFwd var(--t) var(--ease) both}
+body.dir-back .slide.active{animation-name:inBack}
+.slide.active.anchored{animation-name:fadeIn}
+.slide.leaving{display:flex;z-index:1;animation:fadeOut .26s ease both;pointer-events:none}
+.slide.leaving.anchored{animation:none}
+.slide.leaving.anchored>*:not(.split),.slide.leaving.anchored .split>*:not(figure){animation:fadeOut .2s ease both}
+@keyframes inFwd{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+@keyframes inBack{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+/* gestaffelter Aufbau */
+.stag{animation:rise .5s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 90ms)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.qr-box.stag{animation-name:pop}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+/* Akzentlinien zeichnen sich ein */
+.draw{animation:draw .7s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 200ms)}
+@keyframes draw{from{background-size:0 6px}to{background-size:100% 6px}}
+.stag.draw{animation:rise .5s var(--ease) both,draw .7s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 90ms),calc(var(--i,0)*70ms + 260ms)}
+.cover .line.draw,.cover .line.stag.draw{animation:drawLine .7s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 300ms)}
+@keyframes drawLine{from{width:0}to{width:120px}}
+/* Ken Burns nur auf großen Bildfolien */
+.slide.full.active img{animation:kb 14s ease-out both}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.04)}}
+.slide.full{overflow:hidden}
+body.overlay .slide.full.active img{animation-play-state:paused}
+.notes{display:none}
+
+/* ---------- Drei Schriftgrößen (+ Quellenzeile) ---------- */
+.label{font:700 24px/1.2 Jost,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin:0 0 22px}
+.h{font:400 100px/1.02 Anton,sans-serif;color:var(--navy);margin:0 0 50px;letter-spacing:-.005em;text-wrap:balance}
+.h em,.kw em,.statement em{font-style:normal;color:var(--rust-dark)}
+.h em,.statement em{color:var(--rust-base)}
+.kw{font:600 52px/1.22 Jost,sans-serif;color:var(--navy);margin:0}
+.kw-list{list-style:none;margin:0;padding:0;display:grid;gap:26px}
+.sm{font:500 28px/1.35 Jost,sans-serif;color:var(--muted);margin:0}
+.src{font:400 20px/1.35 Jost,sans-serif;color:var(--muted);margin:14px 0 0}
+.src a{color:inherit}
+
+/* Klick für Klick */
+.step{transition:opacity .4s ease,transform .4s ease}
+.step.hidden{opacity:0;transform:translateY(10px)}
+
+/* ---------- Folientypen ---------- */
+.split{display:grid;grid-template-columns:auto minmax(0,1fr);gap:90px;align-items:center}
+.split .h{font-size:88px}
+figure{margin:0}
+
+/* Titel */
+.slide.cover{background:radial-gradient(circle at 78% 22%,#3E5668 0,var(--slate-dark) 55%,#1F2C38 100%);color:white}
+.cover .mark{display:inline-grid;place-items:center;width:84px;height:84px;border-radius:22px;border:3px solid rgba(255,255,255,.28);font:400 30px Anton,sans-serif;letter-spacing:.05em;margin-bottom:40px;width:max-content;padding:0 18px}
+.cover .h{font-size:150px;color:white;margin-bottom:30px}
+.cover .h em{color:var(--rust-mid)}
+.cover .kw{color:var(--slate-pale);font-weight:500}
+.cover .line{width:120px;height:7px;border-radius:9px;background:linear-gradient(90deg,var(--rust-base),var(--rust-mid));margin:56px 0 26px}
+.cover .sm{color:var(--slate-pale);font-weight:600}
+.cover .sm.event{font-weight:500;color:#A9BAC7;margin-top:10px}
+
+/* Vollbild-Bild */
+.slide.full{padding:30px;background:white}
+.slide.full img{width:100%;height:100%;object-fit:contain;display:block}
+.slide.full .src{position:absolute;left:40px;bottom:22px;margin:0;background:rgba(255,255,255,.85);padding:4px 10px;border-radius:6px}
+.slide.kipper{padding:0;background:#222}
+.slide.kipper img{object-fit:cover}
+.slide.kipper .src{background:rgba(0,0,0,.55);color:#eee}
+
+/* Aussage-Folie */
+.statement{font:400 96px/1.08 Anton,sans-serif;color:var(--navy);margin:0;max-width:1300px;text-wrap:balance}
+.quote{font:600 64px/1.3 Jost,sans-serif;color:var(--navy);margin:0;max-width:1300px;text-wrap:balance}
+
+/* Vorab mit Kipper */
+.kipper-teaser{width:420px}
+.kipper-teaser img{width:100%;display:block;border-radius:16px}
+.kipper-teaser .sm{margin-top:18px;color:var(--navy);font-weight:600}
+
+/* Mythen: rechte Bildhälfte verdeckt bis zur Auflösung */
+.myth-art{position:relative;width:760px}
+.myth-art img{display:block;width:100%;border-radius:14px}
+.myth-cover{position:absolute;top:0;right:0;bottom:0;background:var(--paper);transform-origin:right center;transition:transform .7s var(--ease)}
+.slide.steps-done .myth-cover{transform:scaleX(0)}
+.myth .split{gap:70px}
+.myth .h{font-size:74px;margin-bottom:44px}
+.myth .kw{font-size:46px}
+/* Salbeigrün = was stimmt, wirkt, gelingt */
+.myth .kw.step{position:relative;border-left:8px solid var(--sage-dark);padding:6px 0 6px 92px;border-radius:4px}
+.myth .kw.step::before{content:"";position:absolute;left:26px;top:50%;width:46px;height:46px;margin-top:-23px;border-radius:50%;background:var(--sage-dark) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/30px no-repeat}
+.checks li{padding-left:84px;text-indent:-84px}
+.checks li::before{content:"";display:inline-block;width:58px;height:58px;vertical-align:-.28em;border-radius:14px;background:var(--sage-dark) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/38px no-repeat;margin-right:26px}
+.recs.dotted li::before,.blocks.dotted li::before{background:var(--sage-dark)}
+
+/* SRL ist … */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px 80px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 60px}
+ .tried .kw{font-size:36px;margin-top:22px}
+.tried .sm{font-size:24px;margin:4px 0 0}
+.about{display:grid;grid-template-columns:1fr 560px;gap:70px;align-items:center}
+.about .h{font-size:84px;margin-bottom:34px}
+.about .kw-list{gap:16px}
+.about .kw{font-size:40px}
+.about-img{margin:0}
+.about-img img{display:block;width:560px;height:560px;border-radius:14px;box-shadow:0 2px 4px rgba(44,61,76,.12),0 18px 40px -16px rgba(44,61,76,.4)}
+.ways{display:grid;grid-template-columns:repeat(3,1fr);gap:56px;margin-top:56px}
+.ways>div{padding-top:28px;background:linear-gradient(var(--sage-dark),var(--sage-dark)) left top/100% 6px no-repeat}
+.ways .name{font:400 58px/1.05 Anton,sans-serif;color:var(--navy);margin:0 0 14px}
+.ways .kw{font-size:36px;line-height:1.25;margin-bottom:16px}
+.ways .sm{font-size:26px}
+.stackv{display:grid;grid-template-columns:auto 1fr;gap:110px;align-items:center}
+.stackv .big{font:400 190px/0.95 Anton,sans-serif;color:var(--navy);margin:0}
+.stackv ul{list-style:none;margin:0;padding:0 0 0 60px;border-left:6px solid var(--line);display:grid;gap:12px}
+.stackv li{font:600 54px/1.15 Jost,sans-serif;color:var(--navy)}
+.stackv li.all{margin-top:18px;justify-self:start;background:var(--sage-dark);color:white;padding:10px 30px;border-radius:14px}
+.recs{gap:22px}
+.recs .kw{font-size:44px}
+.thanks-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:90px;align-items:center}
+.thanks .h{font-size:130px;margin-bottom:40px}
+.thanks .url{font:700 48px/1.2 Jost,sans-serif;color:var(--sage-dark);margin:10px 0 0;letter-spacing:-.005em}
+.qr-box{background:white;border-radius:26px;padding:34px;box-shadow:0 0 0 2px var(--line)}
+.qr-box .qr{display:block;width:440px;height:440px}
+.qr-box figcaption{font:600 24px Jost,sans-serif;color:var(--muted);text-align:center;margin-top:18px}
+.scale{position:relative;margin-top:120px;height:84px}
+.sc-above{position:absolute;bottom:calc(100% + 26px);font:500 24px/1.25 Jost,sans-serif;color:var(--muted);white-space:nowrap}
+.sc-above b{color:var(--navy);font-weight:700}
+.sc-srl b{color:var(--ink)}
+.sc-track{position:absolute;left:0;right:0;top:0;height:22px;border-radius:11px;background:var(--slate-ghost)}
+.sc-zone{position:absolute;top:0;bottom:0;border-radius:0 11px 11px 0;background:var(--slate-pale)}
+.sc-band{position:absolute;top:-8px;bottom:-8px;border-radius:9px;background:var(--sage-dark);transform-origin:left center}
+.sc-hinge{position:absolute;top:-30px;bottom:-14px;width:4px;margin-left:-2px;background:var(--navy);border-radius:2px}
+.sc-ticks{position:absolute;left:0;right:0;top:36px}
+.sc-ticks span{position:absolute;transform:translateX(-50%);font:600 22px Jost,sans-serif;color:var(--navy);text-align:center}
+.sc-ticks span:first-child{transform:none}
+.sc-ticks span:last-child{transform:translateX(-100%)}
+.sc-ticks i{display:block;font:500 20px Jost,sans-serif;font-style:normal;color:var(--muted)}
+.scale.stag .sc-band{animation:grow .8s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 300ms)}
+@keyframes grow{from{transform:scaleX(0)}to{transform:none}}
+.blocks{gap:30px 70px;grid-template-rows:repeat(4,auto);grid-auto-flow:column;grid-template-columns:.85fr 1.15fr}
+.blocks .kw{font-size:46px}
+.blocks small{display:block;font:500 26px/1.3 Jost,sans-serif;color:var(--muted);margin-top:4px}
+.thanks .contact{margin-top:40px;display:grid;gap:4px}
+.thanks .contact .sm{color:var(--navy);font-size:28px}
+.thanks .contact b{font-weight:700}
+.thanks .contact a{color:inherit;text-decoration:none;border-bottom:2px solid var(--line)}
+.ai-note{position:absolute;left:120px;bottom:40px;margin:0;font:400 20px Jost,sans-serif;color:var(--muted)}
+.thanks .contact .link{display:flex;align-items:center;gap:14px}
+.ico{width:30px;height:30px;flex:none;fill:none;stroke:var(--red);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.res-link{display:flex;align-items:center;gap:10px;margin-top:22px!important;font-size:24px!important}
+.res-link .ico{width:24px;height:24px}
+.res-link a{color:var(--navy);text-decoration:none;border-bottom:2px solid var(--line)}
+.dotted li{display:grid;grid-template-columns:38px 1fr;align-items:baseline}
+.dotted li::before{content:"";width:16px;height:16px;border-radius:5px;background:var(--red);transform:translateY(-.12em)}
+
+/* Begriffe */
+.terms{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-bottom:60px}
+.terms div{border-top:6px solid var(--line);padding-top:20px}
+.terms b{display:block;font:700 40px/1.15 Jost,sans-serif;color:var(--navy);margin-bottom:12px;hyphens:manual}
+.terms .on{border-top-color:var(--red)}
+.terms .on b{color:var(--red)}
+
+/* Turbine & Bilder */
+.turbine{width:700px;height:700px;display:block;object-fit:contain}
+.turbine.big{width:760px;height:760px}
+.numbered{counter-reset:n}
+.numbered li{counter-increment:n}
+.rings li{display:flex;align-items:center;gap:26px}
+.rings small{display:block;font:500 24px/1.2 Jost,sans-serif;color:var(--muted);letter-spacing:.04em;margin-top:2px}
+.ring-ico{width:74px;height:74px;flex:none}
+.ring-ico .off{stroke:var(--slate-pale)}.ring-ico .off.fill{fill:var(--slate-pale);stroke:none}
+.ring-ico .on{stroke:var(--sage-dark)}.ring-ico .on.fill{fill:var(--sage-dark);stroke:none}
+.numbered li::before{content:counter(n);display:inline-grid;place-items:center;width:58px;height:58px;border-radius:14px;background:var(--navy);color:white;font:700 32px Jost,sans-serif;margin-right:26px;vertical-align:.08em}
+.cyc{position:relative;width:max-content;padding-right:120px}
+.cyc-back{position:absolute;right:0;top:0;width:120px;height:100%;overflow:visible}
+.cyc-back.step.hidden{opacity:1;transform:none}
+.cyc-line{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s var(--ease)}
+.cyc-head{opacity:0;transition:opacity .25s ease .75s}
+.cyc-back:not(.hidden) .cyc-line{stroke-dashoffset:0}
+.cyc-back:not(.hidden) .cyc-head{opacity:1}
+.read .cyc-line{stroke-dashoffset:0!important}.read .cyc-head{opacity:1!important}
+.arrows li+li::before{content:"";display:block;width:24px;height:52px;margin:-2px 0 12px 4px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 52'%3E%3Cpath d='M12 4V28' stroke='%234D8B3F' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M1.5 28H22.5L12 49Z' fill='%234D8B3F' stroke='%234D8B3F' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+.buddy{height:720px;width:auto;display:block;border-radius:10px;box-shadow:0 0 0 2px var(--line)}
+/* Lernbuddy: Klick 1 obere Hälfte, Klick 2 untere Hälfte, Klick 3 zurück */
+.zs{display:none!important}
+.buddy-zoom{position:relative;z-index:5;transform-origin:0 0;transition:transform 1s cubic-bezier(.65,0,.35,1)}
+.buddy-zoom+div{transition:opacity .5s ease}
+.zs1:not(.hidden)~.split .buddy-zoom{transform:translate(57px,-80px) scale(2.444)}
+.zs2:not(.hidden)~.split .buddy-zoom{transform:translate(57px,-960px) scale(2.444)}
+.zs3:not(.hidden)~.split .buddy-zoom{transform:none}
+.zs1:not(.hidden)~.split .buddy-zoom+div{opacity:0}
+.zs3:not(.hidden)~.split .buddy-zoom+div{opacity:1}
+.no-anim .buddy-zoom,.no-anim .buddy-zoom+div{transition:none}
+/* Wandernde Begriffe zwischen Folien */
+.slide.measure,.slide.measure *{animation:none!important;transition:none!important}
+#morphLayer{position:absolute;inset:0;z-index:40;pointer-events:none}
+.morph-clone{position:absolute;margin:0;line-height:normal;white-space:nowrap;transform-origin:0 0;will-change:transform,opacity}
+.morph-hide{visibility:hidden}
+[data-morph]{display:inline-block}
+.flash{animation:flash .56s ease-in-out both}
+@keyframes flash{0%,100%{transform:none}35%,60%{transform:scale(1.14);color:var(--red);text-shadow:0 0 18px rgba(201,119,58,.55)}}
+
+/* Forschung / Erprobung */
+.col .name{font:400 60px/1.05 Anton,sans-serif;color:var(--navy);margin:0 0 10px}
+.books{gap:56px;align-items:start}
+.book{display:flex;flex-direction:column;gap:22px}
+.book .cover{height:250px;width:auto;align-self:flex-start;border-radius:3px;box-shadow:0 1px 2px rgba(44,61,76,.18),0 10px 24px -8px rgba(44,61,76,.35)}
+.book .who{font:600 19px/1.3 Jost,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin:0 0 8px}
+.book .name{font-size:40px;margin-bottom:0}
+.book .sm{font-size:24px}
+.book .desc{font:400 25px/1.4 Jost,sans-serif;color:var(--ink);margin:14px 0 0}
+.book .res-link{margin-top:16px!important}
+.book .res-link .pub{color:var(--muted);margin-right:14px}
+.read .book .desc{font-size:36px}
+.read .book .sm{font-size:34px}
+.read .book .who{font-size:26px}
+.read .book{flex-direction:row;align-items:flex-start;gap:36px}
+.read .book .cover{width:220px;height:auto;flex:none}
+.col .sm{margin-bottom:18px}
+.col .kw{font-size:40px;line-height:1.3}
+.bottom{margin-top:70px}
+
+/* Werkzeuge */
+.pairs{display:grid;grid-template-columns:max-content 1fr;gap:22px 50px;align-items:baseline}
+.pairs .sm{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:26px}
+
+/* ---------- Rahmen außerhalb der Bühne ---------- */
+#progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:rgba(44,61,76,.10);z-index:5}
+#progress .bar{height:100%;width:0;background:var(--navy);transition:width .3s ease}
+#progress .tick{position:absolute;top:-3px;width:2px;height:9px;background:rgba(44,61,76,.35)}
+body.dark-slide #progress{background:rgba(255,255,255,.12)}
+body.dark-slide #progress .bar{background:var(--rust-mid)}
+#black{position:fixed;inset:0;background:#000;z-index:40;display:none}
+#black.on{display:block}
+
+/* Folienübersicht (Taste G) */
+#jump,#menu{touch-action:manipulation}
+#jump{position:fixed;inset:0;z-index:50;display:none;background:rgba(15,42,68,.8);padding:4vh 4vw;font-size:16px}
+#jump.open{display:grid;place-items:center}
+.jump-panel{background:var(--paper);border-radius:18px;width:min(1100px,100%);max-height:92vh;overflow:auto;padding:18px 22px 22px}
+.jump-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.jump-head b{font:400 24px Anton,sans-serif;color:var(--navy)}
+.jump-head span{color:var(--muted);font-size:14px}
+#jumpNum{margin-left:auto;width:90px;padding:8px 10px;border:2px solid var(--line);border-radius:10px;font:600 16px Jost,sans-serif}
+#jumpGrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+#jumpGrid .sec{grid-column:1/-1;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--red);margin:12px 2px 0}
+#jumpGrid button{width:100%;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;text-align:left;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:white;color:var(--ink);cursor:pointer;font:600 15px Jost,sans-serif}
+#jumpGrid button.current{border-color:var(--red)}
+#jumpGrid .n{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--navy);color:white;font-size:13px}
+
+/* ---------- Menü (Taste M) ---------- */
+#menu{position:fixed;right:18px;bottom:18px;z-index:45;display:none;width:330px;max-width:calc(100vw - 36px);
+  background:rgba(16,28,41,.94);color:#E6EEF5;border-radius:16px;padding:14px 14px 12px;font:500 14px/1.35 Jost,sans-serif;
+  box-shadow:0 18px 50px rgba(0,0,0,.35)}
+#menu.open{display:block}
+#menu .m-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 10px}
+#menu .m-head b{font:400 18px Anton,sans-serif;letter-spacing:.03em}
+#menu .m-head span{color:#9FB6CC;font-size:13px}
+#menu .m-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+#menu button{font:600 13px Jost,sans-serif;color:#E6EEF5;background:#22374C;border:1px solid #33506B;border-radius:10px;padding:9px 4px;cursor:pointer}
+#menu button:hover{background:#2C4862}
+#menu button.wide{grid-column:span 3}
+#menu table{width:100%;border-collapse:collapse}
+#menu td{padding:3px 2px;vertical-align:top}
+#menu td:first-child{white-space:nowrap;padding-right:10px}
+#menu kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 6px;border-radius:6px;background:#2A4157;border:1px solid #3B5874;font:600 12px Jost,sans-serif}
+#menu .m-sec{color:#FFB98A;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding-top:8px}
+
+/* ---------- Sprechernotizen-Fenster (?notes) ---------- */
+#notesView{display:none}
+body.notes-mode{overflow:auto;background:#101C29;color:#E6EEF5}
+body.notes-mode #viewport,body.notes-mode #progress,body.notes-mode #menu{display:none!important}
+body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh;padding:22px 28px;gap:18px}
+.nv-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.nv-num{font:400 34px Anton,sans-serif;color:#FFB98A}
+.nv-title{font:600 28px Jost,sans-serif}
+.nv-step{font:600 18px Jost,sans-serif;color:#9FB6CC;padding:3px 10px;border:1px solid #33475B;border-radius:99px}
+.nv-time{margin-left:auto;font:600 26px Jost,sans-serif;font-variant-numeric:tabular-nums;color:#CFE0EE}
+.nv-notes{font:400 26px/1.5 Jost,sans-serif;max-width:60em}
+.nv-notes ul{margin:0;padding-left:1.2em}
+.nv-notes li{margin:.3em 0}
+.nv-notes p{margin:.4em 0}
+.nv-notes b{color:#FFD7B8}
+.nv-foot{display:flex;gap:24px;flex-wrap:wrap;font:500 18px Jost,sans-serif;color:#9FB6CC;border-top:1px solid #2A3D50;padding-top:12px}
+.nv-foot b{color:#E6EEF5}
+.nv-warn{color:#FFB98A}
+
+#readNote{display:none}
+.read #readNote{display:block;padding:14px 18px;background:var(--navy);color:var(--slate-pale);font:500 15px/1.45 Jost,sans-serif}
+.read #readNote b{color:#fff;font-weight:700}
+.read #readNote a{color:var(--rust-mid);font-weight:600}
+  /* ---------- Videofassung ---------- */
+.chapter{justify-content:center}
+.chapter .chap-no{position:absolute;right:120px;top:50%;transform:translateY(-50%);margin:0;font:400 520px/1 Anton,sans-serif;color:rgba(255,255,255,.07)}
+.chapter .label{color:var(--rust-mid)}
+.chapter .h{font-size:130px}
+.chapters{gap:22px}
+.chapters li{display:grid;grid-template-columns:76px 1fr auto;align-items:center;gap:26px;border-bottom:2px solid var(--line);padding-bottom:16px;max-width:1150px}
+.chapters .cn{display:grid;place-items:center;width:60px;height:60px;border-radius:50%;background:var(--slate-dark);color:#fff;font:400 32px Anton,sans-serif}
+.chapters small{font:500 28px Jost,sans-serif;color:var(--muted)}
+.team li{padding-left:84px;text-indent:-84px}
+.team li::before{text-indent:0}
+.pause .label{display:flex;align-items:center;gap:16px}
+.pause-ico{width:40px;height:40px;fill:var(--sage-dark)}
+.thanks .contact{margin-top:46px}
+body.rec #progress,body.rec #readNote,body.rec .toast{display:none!important}
+body.rec,body.rec *{cursor:none!important}
+.read .chapter .chap-no{display:none}
+.read .chapters li{grid-template-columns:60px 1fr;}
+.read .chapters small{grid-column:2}
+/* ---------- Leseansicht fürs Handy: Folien untereinander, alles aufgedeckt ---------- */
+html.read,html.read body{overflow:auto;height:auto}
+.read #viewport{position:static;touch-action:auto;-webkit-user-select:text;user-select:text}
+.read #stage{position:static;width:auto;height:auto;transform:none}
+.read #progress,.read #menu,.read #jump,.read #black,.read #morphLayer{display:none!important}
+.read .slide{display:flex!important;position:relative;inset:auto;width:1000px;zoom:var(--z,.39);padding:90px 50px;justify-content:flex-start;border-bottom:2px solid var(--line)}
+.read .slide,.read .slide *{animation:none!important;transition:none!important}
+.read .step.hidden{opacity:1;transform:none}
+.read .myth-cover{transform:scaleX(0)}
+.read .slide.cover{padding:120px 50px}
+.read .cover .h{font-size:120px}
+.read .slide.full{padding:0;background:white;border:0}
+.read .slide.full img{height:auto}
+.read .slide.full .src,.read .ai-note{position:static;margin:16px 30px}
+.read .slide.kipper .src{margin:0;border-radius:0;padding:12px 30px}
+.read .label{font-size:30px}
+.read .sm{font-size:36px}
+.read .src{font-size:30px}
+.read .res-link{font-size:34px!important}
+.read .res-link .ico{width:32px;height:32px}
+.read .ai-note{font-size:28px}
+.read .about,.read .split,.read .stackv,.read .thanks-grid,.read .grid2,.read .grid3,.read .ways,.read .blocks{grid-template-columns:1fr!important;grid-template-rows:none;grid-auto-flow:row}
+.read .split,.read .thanks-grid{gap:50px}
+.read .split>figure,.read .split>.buddy-zoom{justify-self:center}
+.read .stackv{gap:40px}
+.read .stackv ul{padding-left:40px}
+.read .terms{grid-template-columns:1fr 1fr}
+.read .ways{gap:44px}
+.read .myth-art,.read .kipper-teaser{width:100%}
+.read .turbine,.read .turbine.big{width:900px;height:auto}
+.read .about-img img{width:100%;height:auto}
+.read .buddy{height:auto;width:100%;max-width:900px}
+.read .buddy-zoom+div{opacity:1!important}
+.read .qr-box{justify-self:start}
+.read .scale{margin-top:200px}
+.read .sc-above{font-size:28px;white-space:normal;width:300px}
+.read .sc-ticks span,.read .sc-ticks i{font-size:26px}
+body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{
+  html,body{overflow:visible;height:auto;background:white}
+  #viewport{position:static}
+  #stage{position:relative;left:auto;top:auto;transform:none;page-break-inside:avoid}
+  .slide{position:relative;display:flex!important;width:1600px;height:900px;page-break-after:always}
+  .step.hidden{opacity:1;transform:none}
+  .myth-cover,#progress,#jump,#black,#menu{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="readNote"><b>Mobile Ansicht</b> – alle Folien untereinander zum Lesen. Für die Ansicht als Folienpräsentation im Browser „Desktopversion“ wählen oder <a href="?folien">hier tippen</a>.</div>
+<div id="viewport"><div id="stage"><div id="morphLayer"></div>
+
+<section class="slide cover active" data-title="Titel" data-section="Einstieg" data-dark>
+  <div class="mark">SRL</div>
+  <h1 class="h">SRL ist<br><em>keine Methode!</em></h1>
+  <p class="kw">Was selbstreguliertes Lernen (nicht) ist.</p>
+  <div class="line"></div>
+  <p class="sm">Christoph Wegemann</p>
+  <p class="sm event">Online-Fortbildung · in fünf Kapiteln</p>
+</section>
+
+<section class="slide full" data-title="Einstieg · Bild">
+  <img src="assets/einstieg.webp" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt">
+</section>
+
+<section class="slide" data-title="Überblick">
+  <p class="label">Überblick</p>
+  <h2 class="h" style="margin-bottom:44px">Was dich <em>erwartet.</em></h2>
+  <ol class="kw-list chapters">
+    <li class="kw"><span class="cn">1</span><span>Was SRL ist – und was nicht</span><small>ca. 8 min</small></li>
+    <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span><small>ca. 4 min</small></li>
+    <li class="kw"><span class="cn">3</span><span>Das Modell</span><small>ca. 7 min</small></li>
+    <li class="kw"><span class="cn">4</span><span>Was wir erproben</span><small>ca. 6 min</small></li>
+    <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span><small>ca. 5 min</small></li>
+  </ol>
+  <p class="sm" style="margin-top:44px">Bilder ohne Quellenangabe sind KI-generiert.</p>
+</section>
+
+<section class="slide cover chapter" data-title="Kapitel 1" data-section="1 · Was SRL ist – und was nicht" data-dark>
+  <p class="chap-no">1</p>
+  <p class="label">Kapitel 1 von 5</p>
+  <h2 class="h">Was SRL ist –<br><em>und was nicht.</em></h2>
+</section>
+
+<section class="slide" data-title="Leitfrage">
+  <p class="label">Leitfrage</p>
+  <p class="statement">Wie befähigen wir Lernende, ihr Lernen <em>selbst zu steuern?</em></p>
+</section>
+
+<section class="slide" data-title="Arbeitsdefinition">
+  <p class="label">Selbstreguliertes Lernen · Arbeitsdefinition</p>
+  <p class="quote">Lernende <em style="font-style:normal;color:var(--red)">planen</em> ihr Lernen, <em style="font-style:normal;color:var(--red)">beobachten</em> es beim Arbeiten und <em style="font-style:normal;color:var(--red)">werten es aus</em> – und steuern dabei auch ihre Motivation.</p>
+</section>
+
+<section class="slide myth" data-title="Mythos 1">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth1.webp" alt="Kind vor leerem Blatt – Kind mit Plan und Checkliste"><div class="myth-cover" style="left:49.5%"></div></div>
+    <div>
+      <p class="label">Mythos 1</p>
+      <h2 class="h">„SRL ist <em>Freiarbeit.</em>“</h2>
+      <p class="kw step">Freiheit ohne Strategie = Selbstbeschäftigung.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide myth" data-title="Mythos 2">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth2.webp" alt="Lehrkraft lehnt sich zurück – Lehrkraft begleitet ein Kind"><div class="myth-cover" style="left:50.5%"></div></div>
+    <div>
+      <p class="label">Mythos 2</p>
+      <h2 class="h">„Die Lehrkraft <em>zieht sich zurück.</em>“</h2>
+      <p class="kw step">Andere Rolle: Gerüst, Feedback, Begleitung.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide myth" data-title="Mythos 3">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth3.webp" alt="Siegertreppchen – viele Kinder auf eigenen Wegen"><div class="myth-cover" style="left:40.5%"></div></div>
+    <div>
+      <p class="label">Mythos 3</p>
+      <h2 class="h">„Das können nur <em>starke Lernende.</em>“</h2>
+      <p class="kw step">Gerade Schwächere profitieren – wenn SRL gelehrt wird.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide myth" data-title="Mythos 4">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth4.webp" alt="Chaotische Projektarbeit – strukturierter Unterricht mit Zyklus an der Tafel"><div class="myth-cover" style="left:48.7%"></div></div>
+    <div>
+      <p class="label">Mythos 4</p>
+      <h2 class="h">„Immer <em>Projektarbeit</em> und offene Methoden.“</h2>
+      <p class="kw step">Jede Unterrichtsform kann SRL fördern.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide myth" data-title="Mythos 5">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth5.webp" alt="Stempel SRL ja/nein auf Babys – Kind steigt Treppe Planen, Ausprobieren, Reflektieren, Wachsen"><div class="myth-cover" style="left:50.5%"></div></div>
+    <div>
+      <p class="label">Mythos 5</p>
+      <h2 class="h">„SRL ist ein <em>Persönlichkeits­merkmal.</em>“</h2>
+      <p class="kw step">SRL ist erlernbar.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide pause" data-title="Kurz anhalten 1">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement" style="font-size:84px">Welcher dieser Mythen ist dir schon begegnet – bei anderen oder bei dir selbst?</p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+</section>
+
+<section class="slide" data-title="Begriffe">
+  <h2 class="h">Wo steht SRL?</h2>
+  <div class="terms">
+    <div class="step"><b>selbst­ständig</b><p class="sm">Brauche ich jemanden neben mir?</p></div>
+    <div class="step"><b>selbst­organisiert</b><p class="sm">Wie ordne ich meine Arbeit?</p></div>
+    <div class="step"><b>selbst­verantwortlich</b><p class="sm">Wofür stehe ich ein?</p></div>
+    <div class="step on"><b>selbst­reguliert</b><p class="sm">Wie steuere ich mein Lernen?</p></div>
+  </div>
+  <p class="kw step">Selbstständig ≠ <em>selbstreguliert.</em></p>
+</section>
+
+<section class="slide cover chapter" data-title="Kapitel 2" data-section="2 · Warum es sich lohnt" data-dark>
+  <p class="chap-no">2</p>
+  <p class="label">Kapitel 2 von 5</p>
+  <h2 class="h">Warum es sich<br><em>lohnt.</em></h2>
+</section>
+
+<section class="slide" data-title="Wirksamkeit">
+  <p class="label">Warum sich das lohnt</p>
+  <h2 class="h" style="font-size:140px;margin-bottom:4px">d ≈ <em><span class="count" data-to="0.6" data-dec="1">0,6</span></em></h2>
+  <p class="kw" style="font-size:40px">Effektstärke von SRL und Metakognition – deutlich über dem Durchschnitt.</p>
+  <div class="scale">
+    <div class="sc-above" style="left:40%;transform:translateX(-100%);text-align:right;padding-right:14px">Durchschnitt aller Maßnahmen<br><b>0,40</b> (Hattie)</div>
+    <div class="sc-above sc-srl" style="left:52%;padding-left:6px">SRL &amp; Metakognition<br><b>0,52–0,61</b> (Hattie, EEF)</div>
+    <div class="sc-track">
+      <div class="sc-zone" style="left:40%;right:0"></div>
+      <div class="sc-band" style="left:52%;width:9%"></div>
+      <div class="sc-hinge" style="left:40%"></div>
+    </div>
+    <div class="sc-ticks">
+      <span style="left:0%">0</span><span style="left:20%">0,2<i>klein</i></span><span style="left:40%">0,4</span>
+      <span style="left:50%">0,5<i>mittel</i></span><span style="left:60%">0,6</span><span style="left:80%">0,8<i>groß</i></span><span style="left:100%">1,0</span>
+    </div>
+  </div>
+  <p class="sm" style="margin-top:40px">Zum Vergleich: Die EEF übersetzt d = 0,53–0,61 als <b style="color:var(--navy)">„+7 Monate“</b> zusätzlichen Lernfortschritt im Schuljahr – gegenüber ähnlichen Lernenden ohne diese Förderung.</p>
+  <p class="src" style="margin-top:22px;font-size:20px">Hattie, Visible Learning (Stand 2017): metakognitive Strategien 0,60, Selbstregulationsstrategien 0,52, Durchschnitt 0,40 · <a href="https://visible-learning.org/hattie-ranking-influences-effect-sizes-learning-achievement/">visible-learning.org</a> · EEF Teaching and Learning Toolkit 2025, 246 Studien · <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">educationendowmentfoundation.org.uk</a> · Einordnung klein/mittel/groß nach Cohen</p>
+</section>
+
+<section class="slide" data-title="Was wirkt">
+  <p class="label">Was laut EEF wirkt</p>
+  <h2 class="h">Was <em>wirkt?</em></h2>
+  <ol class="kw-list checks" style="gap:30px">
+    <li class="kw">Strategien <em>explizit</em> unterrichten</li>
+    <li class="kw">Eigenes Denken <em>vormachen</em></li>
+    <li class="kw">Anspruchsvolle Aufgaben <em>im Fachunterricht</em></li>
+    <li class="kw">Fortbildung für ein <em>gemeinsames Bild</em></li>
+  </ol>
+  <p class="src" style="margin-top:50px;font-size:22px">Education Endowment Foundation (EEF), Teaching and Learning Toolkit: „Metacognition and self-regulation“ · <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">educationendowmentfoundation.org.uk</a></p>
+</section>
+
+<section class="slide cover chapter" data-title="Kapitel 3" data-section="3 · Das Modell" data-dark>
+  <p class="chap-no">3</p>
+  <p class="label">Kapitel 3 von 5</p>
+  <h2 class="h">Das Modell:<br><em>die SRL-Turbine.</em></h2>
+</section>
+
+<section class="slide" data-title="Forschung">
+  <h2 class="h">Ansätze aus der <em>Forschung</em></h2>
+  <div class="grid3">
+    <div class="col"><p class="name">Stebner</p><p class="sm">Uni Osnabrück</p><p class="kw">Strategien &amp; Implementierung</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.ferdinand-stebner.de/" target="_blank" rel="noopener">ferdinand-stebner.de</a></p></div>
+    <div class="col"><p class="name"><span data-morph="karlen">Karlen</span></p><p class="sm">Uni Zürich</p><p class="kw">Metakognition &amp; Motivation</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.selbstreguliertes-lernen.uzh.ch/de.html" target="_blank" rel="noopener">selbstreguliertes-lernen.uzh.ch</a></p></div>
+    <div class="col"><p class="name">Wirth</p><p class="sm">Ruhr-Uni Bochum</p><p class="kw">Äußere Struktur &amp; Lernbuddy</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.pe.ruhr-uni-bochum.de/erziehungswissenschaft/lllf/index.html.de" target="_blank" rel="noopener">pe.ruhr-uni-bochum.de</a></p></div>
+  </div>
+</section>
+
+<section class="slide" data-anchor="turbine" data-title="SRL-Turbine">
+  <div class="split">
+    <figure>
+      <img class="turbine" src="assets/turbine.png" alt="SRL-Turbine der Universität Zürich">
+      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
+    </figure>
+    <div>
+      <p class="label"><span data-morph="karlen">Karlen</span> et al. · Uni Zürich</p>
+      <h2 class="h">Die SRL-<em>Turbine</em></h2>
+      <ol class="kw-list rings">
+        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="off" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="on fill" cx="32" cy="32" r="8"/></svg><span>Grundbedürfnisse<small>innen</small></span></li>
+        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="off" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="on" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Lernprozess<small>mittlerer Ring</small></span></li>
+        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Kompetenzbereiche<small>außen</small></span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-anchor="turbine" data-title="Turbine · Grundbedürfnisse">
+  <div class="split">
+    <figure>
+      <img class="turbine" src="assets/turbine-needs.png" alt="SRL-Turbine – Fokus Grundbedürfnisse">
+      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
+    </figure>
+    <div>
+      <p class="label">Ebene 1 · Grundbedürfnisse</p>
+      <h2 class="h" style="font-size:68px">Warum sollten Lernende ihr Lernen steuern <em>wollen?</em></h2>
+      <ul class="kw-list dotted">
+        <li class="kw">Kompetenz</li>
+        <li class="kw">Autonomie</li>
+        <li class="kw">Eingebundenheit</li>
+      </ul>
+      <p class="sm bottom" style="margin-top:46px;color:var(--red);font-weight:700">Nicht allein gelassen.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-anchor="turbine" data-title="Turbine · Lernprozess">
+  <div class="split">
+    <figure>
+      <img class="turbine" src="assets/turbine-process.png" alt="SRL-Turbine – Fokus Lernprozess">
+      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
+    </figure>
+    <div>
+      <p class="label">Ebene 2 · Lernprozess</p>
+      <h2 class="h">Der <em>Zyklus.</em></h2>
+      <div class="cyc">
+      <ul class="kw-list arrows" style="gap:14px">
+        <li class="kw">Planung</li>
+        <li class="kw">Durchführung</li>
+        <li class="kw">Reflexion</li>
+      </ul>
+      <svg class="cyc-back step" viewBox="0 0 120 306" aria-hidden="true"><path class="cyc-line" pathLength="1" d="M-80 274 C 40 274, 88 236, 88 152 S 40 31, -98 31" fill="none" stroke="var(--sage-dark)" stroke-width="5" stroke-linecap="round"/><path class="cyc-head" d="M-98 20.5 L-98 41.5 L-119 31 Z" fill="var(--sage-dark)" stroke="var(--sage-dark)" stroke-width="2" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-anchor="turbine" data-title="Turbine · Kompetenzen">
+  <div class="split">
+    <figure>
+      <img class="turbine" src="assets/turbine-areas.png" alt="SRL-Turbine – Fokus Kompetenzbereiche">
+      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
+    </figure>
+    <div>
+      <p class="label">Ebene 3 · Kompetenzbereiche</p>
+      <h2 class="h">Mehr&shy;<em>dimensional.</em></h2>
+      <p class="sm" style="margin-top:36px;max-width:560px">Jeder dieser Kompetenzbereiche wäre einen eigenen Vortrag wert. Gutes Material dazu gibt es bei der Uni Zürich:</p>
+      <p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html" target="_blank" rel="noopener">selbstreguliertes-lernen.uzh.ch</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide pause" data-title="Kurz anhalten 2">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement" style="font-size:84px">Welche Ebene der Turbine kommt in deinem Unterricht schon vor – und welche <em>kaum?</em></p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+</section>
+
+<section class="slide" data-title="SRL ist …">
+  <div class="stackv"><p class="big">SRL<br>ist …</p>
+    <ul><li>ein Prozess</li><li>erlernbar</li><li>zyklisch</li><li>metakognitiv</li><li>strategisch</li><li>begleitet</li><li class="all">für alle.</li></ul>
+  </div>
+</section>
+
+<section class="slide" data-title="Zitat">
+  <p class="quote">„Ich weiß, warum ich lerne, wie ich lerne – und was ich <em style="font-style:normal;color:var(--red)">beim nächsten Mal anders</em> machen will.“</p>
+</section>
+
+<section class="slide cover chapter" data-title="Kapitel 4" data-section="4 · Was wir erproben" data-dark>
+  <p class="chap-no">4</p>
+  <p class="label">Kapitel 4 von 5</p>
+  <h2 class="h">Was wir<br><em>erproben.</em></h2>
+</section>
+
+<section class="slide" data-title="Bildungsziel &amp; Wege">
+  <p class="label">Vom Modell zur Praxis</p>
+  <h2 class="h" style="margin-bottom:18px;font-size:84px">Keine Methode, sondern ein <em>Bildungsziel.</em></h2>
+  <p class="kw" style="font-size:44px;font-weight:500">Ein Kompetenzpaket – lernbar, nicht angeboren.</p>
+  <div class="ways">
+    <div><p class="name">Strukturen</p><p class="kw">geben äußeren Halt</p><p class="sm"><span data-morph="buddy">Lernbuddy</span> · Lösungsleiter · Kompetenzraster</p></div>
+    <div><p class="name">Strategien</p><p class="kw">werden explizit gelernt und geübt</p><p class="sm">Strategiekarten · Lernwege</p></div>
+    <div><p class="name">Routinen</p><p class="kw">machen Regulation zur Gewohnheit</p><p class="sm">Planung · Durchführung · Reflexion – immer wieder</p></div>
+  </div>
+  <p class="sm" style="margin-top:44px;font-weight:600;color:var(--navy)">Werkzeuge sind nicht SRL – sie stützen den Weg dorthin.</p>
+</section>
+
+<section class="slide" data-title="Lernbuddy">
+  <i class="step zs zs1"></i><i class="step zs zs2"></i><i class="step zs zs3"></i>
+  <div class="split">
+    <div class="buddy-zoom"><img class="buddy" src="assets/lernbuddy.webp" alt="Arbeitsblatt Lernbuddy der Klasse 5.3 mit Planung, Durchführung und Reflexion"></div>
+    <div>
+      <p class="label">Rahmengebendes Werkzeug</p>
+      <h2 class="h">Der <em><span data-morph="buddy">Lernbuddy.</span></em></h2>
+      <p class="kw">Äußeres Gerüst →<br>innere Routine.</p>
+      <p class="src" style="margin-top:60px;font-size:22px">Entwickelt von Prof. Joachim Wirth und Team, Ruhr-Universität Bochum – für die Klasse 5.3 von uns angepasst.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Erprobung">
+  <p class="label">Punktuell erprobt · vor allem im Jahrgang 5</p>
+  <h2 class="h" style="margin-bottom:44px">Wir testen <em>Bausteine.</em></h2>
+  <ul class="kw-list grid2 dotted blocks">
+    <li class="kw">Lernbuddy</li>
+    <li class="kw">Lösungsleiter</li>
+    <li class="kw">Lernwege und Lerntheken</li>
+    <li class="kw">Lernsettings öffnen</li>
+    <li class="kw"><span>Räume umgestalten<small>z. B. Lernbüro, Churer Modell</small></span></li>
+    <li class="kw"><span>Coaching<small>1:1-Mentorengespräche</small></span></li>
+    <li class="kw">Logbuch mit Lerntagebuch</li>
+    <li class="kw"><span>Passende Prüfungsformate<small>Gelingensnachweise, Open-Book-Arbeiten, Wahltermine</small></span></li>
+  </ul>
+</section>
+
+<section class="slide" data-title="KI &amp; Digital">
+  <p class="label">Perspektive Digitalisierung</p>
+  <h2 class="h" style="font-size:120px">KI macht kein SRL.</h2>
+  <p class="kw"><em style="color:var(--sage-dark)">Aber sie verändert, was skalierbar wird.</em></p>
+  <p class="sm" style="margin-top:40px">SRL braucht passendes Material und Rückmeldung – das kostet Zeit.</p>
+  <p class="sm" style="margin-top:10px">KI hilft bei Material · Lernwegen · Feedback → mehr Zeit für Begleitung.</p>
+</section>
+
+<section class="slide cover chapter" data-title="Kapitel 5" data-section="5 · Wie es weitergeht" data-dark>
+  <p class="chap-no">5</p>
+  <p class="label">Kapitel 5 von 5</p>
+  <h2 class="h">Wie es<br><em>weitergeht.</em></h2>
+</section>
+
+<section class="slide" data-title="Reibungen">
+  <h2 class="h">Wo es <em>reibt.</em></h2>
+  <ul class="kw-list dotted">
+    <li class="kw">Planung ohne Realismus</li>
+    <li class="kw">Reflexion als Floskel</li>
+    <li class="kw">Zu viel Wahl überfordert</li>
+    <li class="kw">Viel Material ≠ selbstreguliert</li>
+  </ul>
+</section>
+
+<section class="slide" data-title="Schulentwicklung">
+  <h2 class="h">Auch <em>Schulentwicklung.</em></h2>
+  <ul class="kw-list grid2 dotted" style="gap:30px 70px">
+    <li class="kw">Gemeinsames Verständnis</li>
+    <li class="kw">Fachliche Freiheit</li>
+    <li class="kw">Gemeinsame Sprache</li>
+    <li class="kw">Zeit &amp; Begleitung</li>
+    <li class="kw">Wenige Routinen</li>
+    <li class="kw">Progression</li>
+  </ul>
+</section>
+
+<section class="slide" data-title="Empfehlungen">
+  <p class="label">Aus der Erfahrung der letzten Jahre</p>
+  <h2 class="h" style="margin-bottom:40px">Was wir <em>gelernt haben.</em></h2>
+  <ul class="kw-list dotted recs">
+    <li class="kw">Veränderung geht langsam – sehr langsam.</li>
+    <li class="kw">Lernende brauchen verlässlichen Zugang zu Lernaufgaben.</li>
+    <li class="kw">Ändert sich die eigene Rolle im Raum, entstehen Freiräume.</li>
+    <li class="kw"><em>Mehr vom Kind aus denken als vom Lehrplan.</em></li>
+    <li class="kw">Geduld wird belohnt: SRL gelingt nicht in einer Doppelstunde.</li>
+  </ul>
+</section>
+
+<section class="slide" data-title="Pointe">
+  <p class="statement">Nicht alles auf einmal.<br><em style="color:var(--sage-dark)">Aber gemeinsam und Schritt&nbsp;für&nbsp;Schritt.</em></p>
+</section>
+
+<section class="slide" data-title="Fürs Team">
+  <p class="label">Für den Austausch im Team</p>
+  <h2 class="h" style="margin-bottom:44px">Drei <em>Fragen.</em></h2>
+  <ol class="kw-list numbered team" style="gap:30px">
+    <li class="kw">Wo fördern wir SRL schon – ohne es so zu nennen?</li>
+    <li class="kw">Welche Routine aus Planung, Durchführung und Reflexion könnten wir <em>gemeinsam</em> einführen?</li>
+    <li class="kw">Welchen Baustein möchten wir uns einmal genauer ansehen?</li>
+  </ol>
+</section>
+
+<section class="slide" data-title="Literatur">
+  <p class="label">Zum Weiterlesen</p>
+  <h2 class="h" style="margin-bottom:36px;font-size:96px">Literatur&shy;<em>empfehlungen.</em></h2>
+  <div class="grid3 books">
+    <div class="col book"><img class="cover" src="assets/book-karlen.webp" alt="Cover: Gewusst wie!"><div class="btxt"><p class="who">Yves Karlen (Hrsg.)</p><p class="name">Gewusst wie!</p><p class="desc">Das Buch von Prof. Karlen und Team.</p><p class="sm res-link"><span class="pub">hep Verlag · 2026</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.hep-verlag.ch/gewusst-wie" target="_blank" rel="noopener">hep-verlag.ch</a></p></div></div>
+    <div class="col book"><img class="cover" src="assets/book-ruppaner.webp" alt="Cover: Das könnte Schule machen"><div class="btxt"><p class="who">Stefan Ruppaner · Anke Willers</p><p class="name">Das könnte Schule machen</p><p class="desc">Einblick in eine der bekanntesten Schulen, die neue Konzepte eingeführt hat: die Alemannenschule Wutöschingen.</p><p class="sm res-link"><span class="pub">Rowohlt · 2025</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.rowohlt.de/buch/stefan-ruppaner-anke-willers-das-koennte-schule-machen-9783499016394" target="_blank" rel="noopener">rowohlt.de</a></p></div></div>
+    <div class="col book"><img class="cover" src="assets/book-pruefungskultur.webp" alt="Cover: Wege zu einer zeitgemäßen Prüfungskultur"><div class="btxt"><p class="who">Langela-Bickenbach · Dreier · Wampfler · Albrecht (Hrsg.)</p><p class="name">Wege zu einer zeitgemäßen Prüfungskultur</p><p class="desc">Das Buch zum Thema zeitgemäße Prüfungskultur.</p><p class="sm res-link"><span class="pub">Beltz · 2024</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://pruefungskultur.de/buch/" target="_blank" rel="noopener">pruefungskultur.de</a></p></div></div>
+  </div>
+</section>
+
+<section class="slide thanks" data-title="Danke">
+  <h2 class="h">Danke fürs <em>Zuschauen!</em></h2>
+  <p class="kw" style="margin-top:20px">Fragen, Austausch oder einen Blick in den Unterricht?</p>
+  <div class="contact">
+    <p class="sm"><b>Christoph Wegemann</b></p>
+    <p class="sm link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg><a href="mailto:christoph.wegemann@hbgdo-edu.de">christoph.wegemann@hbgdo-edu.de</a></p>
+  </div>
+  <p class="ai-note">Diese HTML-Präsentation wurde mithilfe von KI programmiert.</p>
+</section>
+</div></div>
+
+<div id="progress"><div class="bar"></div></div>
+<div id="black"></div>
+<div id="jump" role="dialog" aria-modal="true" aria-label="Folienübersicht">
+  <div class="jump-panel">
+    <div class="jump-head"><b>Folien</b><span>Klicken oder Nummer + Enter · Esc schließt</span><input id="jumpNum" inputmode="numeric" placeholder="Nr." aria-label="Foliennummer"></div>
+    <ol id="jumpGrid"></ol>
+  </div>
+</div>
+
+<div id="menu" role="dialog" aria-label="Steuerung und Tastenkürzel">
+  <div class="m-head"><b>Steuerung</b><span>M schließt</span></div>
+  <div class="m-btns">
+    <button data-act="prev">◀ Zurück</button><button data-act="jump">☰ Folien</button><button data-act="next">Weiter ▶</button>
+    <button data-act="full">⛶ Vollbild</button><button data-act="black">● Schwarz</button><button data-act="anim">⏸ Animation aus</button>
+  </div>
+  <table>
+    <tr><td><kbd>→</kbd> <kbd>Leertaste</kbd></td><td>weiter / aufdecken</td></tr>
+    <tr><td><kbd>←</kbd></td><td>zurück</td></tr>
+    <tr><td><kbd>G</kbd></td><td>Folienübersicht</td></tr>
+    <tr><td><kbd>12</kbd> <kbd>Enter</kbd></td><td>zu Folie 12 springen</td></tr>
+    <tr><td><kbd>F</kbd></td><td>Vollbild</td></tr>
+    <tr><td><kbd>B</kbd> <kbd>.</kbd></td><td>schwarzer Bildschirm</td></tr>
+    <tr><td><kbd>M</kbd></td><td>dieses Menü</td></tr>
+    <tr><td><kbd>A</kbd></td><td>Animationen an/aus</td></tr>
+    <tr><td><kbd>R</kbd></td><td>Aufnahmemodus (ohne Balken und Mauszeiger)</td></tr>
+    <tr><td colspan="2" class="m-sec">iPad</td></tr>
+    <tr><td>Wischen ← →</td><td>weiter / zurück</td></tr>
+    <tr><td>Tippen rechts / links</td><td>weiter / zurück</td></tr>
+    <tr><td>Wischen ↑</td><td>Folienübersicht</td></tr>
+    <tr><td>Zwei Finger tippen</td><td>schwarzer Bildschirm</td></tr>
+    <tr><td>Lange drücken</td><td>dieses Menü</td></tr>
+  </table>
+</div>
+
+<div id="notesView">
+  <div class="nv-head">
+    <span class="nv-num" id="nvNum">1 / 1</span><span class="nv-title" id="nvTitle"></span><span class="nv-step" id="nvStep"></span>
+    <span class="nv-time" id="nvTime">00:00</span>
+  </div>
+  <div class="nv-notes" id="nvNotes"></div>
+  <div class="nv-foot">
+    <span>Als Nächstes: <b id="nvNext">–</b></span>
+    <span>→ weiter · ← zurück · T Zeit zurücksetzen</span>
+    <span class="nv-warn" id="nvWarn"></span>
+  </div>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const NOTES_MODE=new URLSearchParams(location.search).has('notes');
+
+/* ---------- Bühne skalieren ---------- */
+function fit(){ const s=Math.min(innerWidth/1600,innerHeight/900); document.documentElement.style.setProperty('--s',s); }
+addEventListener('resize',fit); fit();
+/* Leseansicht auf Handys (schmal hochkant oder flach quer) */
+const readMQ=matchMedia('(max-width:760px),(max-height:500px) and (max-width:950px) and (orientation:landscape)');
+const isRead=()=>document.documentElement.classList.contains('read');
+function setRead(){
+  const q=new URLSearchParams(location.search), on=readMQ.matches&&!q.has('notes')&&!q.has('folien');
+  document.documentElement.classList.toggle('read',on);
+  document.documentElement.style.setProperty('--z',Math.min(1,innerWidth/1000));
+}
+readMQ.addEventListener('change',setRead); addEventListener('resize',setRead); setRead();
+
+/* ---------- Fortschritt mit Kapitel-Markierungen ---------- */
+const progress=document.getElementById('progress'),bar=progress.querySelector('.bar');
+slides.forEach((s,i)=>{ if(s.dataset.section&&i>0){ const t=document.createElement('div'); t.className='tick'; t.style.left=(i/slides.length*100)+'%'; progress.appendChild(t); } });
+
+/* ---------- Navigation ---------- */
+let index=0;
+function markDone(sl){ sl.classList.toggle('steps-done',!sl.querySelector('.step.hidden')); }
+function setSteps(sl,hidden){ sl.querySelectorAll('.step').forEach(el=>el.classList.toggle('hidden',hidden)); markDone(sl); }
+function stepInfo(){ const all=slides[index].querySelectorAll('.step').length, open=all-slides[index].querySelectorAll('.step.hidden').length; return {all,open}; }
+/* Bewegung: Richtung merken, alte Folie kurz ausblenden, Inhalte gestaffelt aufbauen */
+let navDir=1, leaveTimer;
+const STAG_SEL='.scale,.label,.h,.statement,.quote,.kw,.sm,.src,.kw-list>li,.terms>div,.grid3>div,.ways>div,.pairs>*,figure,.myth-art,.stackv .big,.stackv li,.buddy,.qr-box,.mark,.line';
+function animOff(){ return document.body.classList.contains('no-anim'); }
+function stagger(sl,anchored){
+  sl.querySelectorAll('.stag,.draw').forEach(el=>el.classList.remove('stag','draw'));
+  if(animOff()) return;
+  const all=[...sl.querySelectorAll(STAG_SEL)].filter(el=>!el.closest('.notes')&&!el.closest('.step')&&!el.classList.contains('step'));
+  const top=all.filter(el=>!all.some(o=>o!==el&&o.contains(el)));
+  let k=0;
+  top.forEach(el=>{
+    if(anchored&&el.tagName==='FIGURE') return;           // Turbine bleibt stehen
+    el.style.setProperty('--i',Math.min(k++,10));
+    void el.offsetWidth; el.classList.add('stag');
+  });
+  sl.querySelectorAll('.ways>div,.cover .line').forEach((el,j)=>{ el.style.setProperty('--i',j); void el.offsetWidth; el.classList.add('draw'); });
+  const c=sl.querySelector('.count');
+  if(c&&navDir>0){ const to=+c.dataset.to,dec=+(c.dataset.dec||0),t0=performance.now(),d=650;
+    const fmt=v=>v.toFixed(dec).replace('.',',');
+    const step=t=>{ const p=Math.min(1,(t-t0-250)/d); c.textContent=fmt(p<=0?0:to*(1-Math.pow(1-p,3))); if(p<1)requestAnimationFrame(step); };
+    c.textContent=fmt(0); requestAnimationFrame(step); }
+}
+/* Begriff wandert von einer Folie zur nächsten (data-morph="schlüssel") */
+const stageEl=document.getElementById('stage'),morphLayer=document.getElementById('morphLayer');
+const reduceMotion=matchMedia('(prefers-reduced-motion:reduce)');
+function stageBox(el){ const sr=stageEl.getBoundingClientRect(),k=sr.width/1600,r=el.getBoundingClientRect();
+  return {x:(r.left-sr.left)/k,y:(r.top-sr.top)/k,w:r.width/k,h:r.height/k}; }
+function morphClone(el,b){ const cs=getComputedStyle(el),c=document.createElement('span');
+  c.className='morph-clone'; c.textContent=el.textContent;
+  ['fontFamily','fontSize','fontWeight','fontStyle','letterSpacing','textTransform','color'].forEach(p=>c.style[p]=cs[p]);
+  c.style.left=b.x+'px'; c.style.top=b.y+'px'; morphLayer.appendChild(c); return c; }
+let morphAnims=[];
+function clearMorph(){ morphAnims.forEach(a=>a.cancel()); morphAnims=[]; morphLayer.innerHTML=''; document.querySelectorAll('.morph-hide').forEach(e=>e.classList.remove('morph-hide')); }
+function prepMorph(from,to){
+  clearMorph();
+  if(animOff()||reduceMotion.matches||from===to) return null;
+  const pairs=[...from.querySelectorAll('[data-morph]')].map(s=>[s,to.querySelector('[data-morph="'+s.dataset.morph+'"]')]).filter(p=>p[1]);
+  if(!pairs.length) return null;
+  return pairs.map(([s,t])=>({s,t,sb:stageBox(s)}));
+}
+function runMorph(list,to){
+  if(!list) return;
+  to.classList.add('measure'); void to.offsetWidth;
+  list.forEach(m=>m.tb=stageBox(m.t));
+  to.classList.remove('measure');
+  const D=900,E='cubic-bezier(.65,0,.35,1)';
+  list.forEach(({s,t,sb,tb})=>{
+    const a=morphClone(s,sb),b=morphClone(t,tb);
+    const ka=tb.h/sb.h,kb=sb.h/tb.h;
+    s.classList.add('morph-hide'); t.classList.add('morph-hide');
+    morphAnims.push(
+      a.animate([{transform:'none',opacity:1},{opacity:1,offset:.35},{transform:`translate(${tb.x-sb.x}px,${tb.y-sb.y}px) scale(${ka})`,opacity:0}],{duration:D,easing:E,fill:'both'}),
+      b.animate([{transform:`translate(${sb.x-tb.x}px,${sb.y-tb.y}px) scale(${kb})`,opacity:0},{opacity:0,offset:.3},{transform:'none',opacity:1}],{duration:D,easing:E,fill:'both'})
+    );
+  });
+  Promise.all(morphAnims.map(a=>a.finished)).then(clearMorph,()=>{});
+}
+function showSlide(i){
+  const prev=index;
+  const morph=prepMorph(slides[prev],slides[Math.max(0,Math.min(slides.length-1,i))]);
+  index=Math.max(0,Math.min(slides.length-1,i));
+  const from=slides[prev], to=slides[index];
+  const anchored=prev!==index&&from.dataset.anchor&&from.dataset.anchor===to.dataset.anchor;
+  document.body.classList.toggle('dir-back',navDir<0);
+  slides.forEach(s=>s.classList.remove('leaving','anchored'));
+  clearTimeout(leaveTimer);
+  if(prev!==index&&!animOff()){
+    from.classList.add('leaving'); if(anchored){from.classList.add('anchored');to.classList.add('anchored');}
+    leaveTimer=setTimeout(()=>slides.forEach(s=>s.classList.remove('leaving')),480);
+  }
+  slides.forEach((s,n)=>{ s.classList.remove('active'); if(n===index){ void s.offsetWidth; s.classList.add('active'); } });
+  stagger(to,anchored);
+  runMorph(morph,to);
+  markDone(slides[index]);
+  bar.style.width=((index+1)/slides.length*100)+'%';
+  document.body.classList.toggle('dark-slide','dark' in slides[index].dataset);
+  try{ history.replaceState(null,'',location.pathname+location.search+'#'+(index+1)); }catch(_){}
+  broadcast();
+}
+function forward(){
+  const nx=slides[index].querySelector('.step.hidden');
+  if(nx){ nx.classList.remove('hidden'); markDone(slides[index]); broadcast(); return; }
+  if(index<slides.length-1){ flashThen(slides[index],slides[index+1],()=>{ navDir=1; setSteps(slides[index+1],true); showSlide(index+1); }); }
+}
+/* Vor dem Flug blinkt der Begriff kurz auf, damit der Blick ihm folgt */
+let flashing=false;
+function flashThen(from,to,go){
+  if(flashing) return;
+  const src=[...from.querySelectorAll('[data-morph]')].filter(s=>to.querySelector('[data-morph="'+s.dataset.morph+'"]'));
+  if(!src.length||animOff()||reduceMotion.matches){ go(); return; }
+  flashing=true;
+  src.forEach(s=>{ s.classList.remove('flash'); void s.offsetWidth; s.classList.add('flash'); });
+  setTimeout(()=>{ src.forEach(s=>s.classList.remove('flash')); flashing=false; if(slides[index]===from) go(); },560);
+}
+function backward(){ if(index>0){ navDir=-1; setSteps(slides[index-1],false); showSlide(index-1); } }
+function goTo(i){ i=Math.max(0,Math.min(slides.length-1,i)); if(i===index)return; navDir=i>index?1:-1; setSteps(slides[i],i>index); showSlide(i); }
+function toggleAnim(){
+  const off=!document.body.classList.contains('no-anim');
+  document.body.classList.toggle('no-anim',off);
+  try{ localStorage.setItem('srl-no-anim',off?'1':'0'); }catch(_){}
+  const b=document.querySelector('#menu [data-act=anim]'); if(b) b.textContent=off?'▶ Animation an':'⏸ Animation aus';
+}
+try{ if(localStorage.getItem('srl-no-anim')==='1'){ document.body.classList.add('no-anim'); const b=document.querySelector('#menu [data-act=anim]'); if(b) b.textContent='▶ Animation an'; } }catch(_){}
+
+/* ---------- Folienübersicht (G) ---------- */
+const jump=document.getElementById('jump'),jumpGrid=document.getElementById('jumpGrid'),jumpNum=document.getElementById('jumpNum');
+function openJump(byTouch){
+  jumpGrid.innerHTML='';
+  slides.forEach((s,i)=>{
+    if(s.dataset.section){ const h=document.createElement('li'); h.className='sec'; h.textContent=s.dataset.section; jumpGrid.appendChild(h); }
+    const li=document.createElement('li'),b=document.createElement('button');
+    b.innerHTML='<span class="n">'+(i+1)+'</span><span></span>'; b.lastChild.textContent=s.dataset.title;
+    if(i===index)b.className='current';
+    b.addEventListener('click',()=>{closeJump();goTo(i);});
+    li.appendChild(b); jumpGrid.appendChild(li);
+  });
+  jump.classList.add('open'); document.body.classList.add('overlay'); jumpNum.value=''; if(!byTouch) jumpNum.focus();
+}
+function closeJump(){ jump.classList.remove('open'); document.body.classList.remove('overlay'); jumpNum.blur(); }
+jump.addEventListener('click',e=>{ if(e.target===jump) closeJump(); });
+jumpNum.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ const n=parseInt(jumpNum.value,10); if(n>=1&&n<=slides.length){closeJump();goTo(n-1);} e.preventDefault(); }
+  if(e.key==='Escape'){ closeJump(); e.preventDefault(); }
+  e.stopPropagation();
+});
+
+/* ---------- Sprechernotizen: Verbindung zwischen den Fenstern ---------- */
+let notesWin=null;
+function broadcast(){
+  if(NOTES_MODE) return;
+  const msg={srl:'state',index,...stepInfo()};
+  try{ if(notesWin&&!notesWin.closed) notesWin.postMessage(msg,'*'); }catch(_){}
+}
+function openNotes(){
+  const url=location.pathname+'?notes#'+(index+1);
+  notesWin=window.open(url,'srl-notizen','width=1000,height=720');
+  setTimeout(broadcast,600);
+}
+addEventListener('message',e=>{
+  const d=e.data||{};
+  if(!NOTES_MODE){
+    if(d.srl==='hello'){ notesWin=e.source; broadcast(); }
+    if(d.srl==='cmd'){ notesWin=e.source; if(d.action==='next')forward(); if(d.action==='prev')backward(); if(d.action==='goto')goTo(d.n); }
+  }
+});
+
+/* ---------- Menü ---------- */
+const menu=document.getElementById('menu');
+function toggleMenu(force){ menu.classList.toggle('open',force===undefined?!menu.classList.contains('open'):force); }
+menu.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const a=b.dataset.act;
+  if(a==='prev')backward(); if(a==='next')forward(); if(a==='jump'){toggleMenu(false);openJump(true);}
+  if(a==='full')toggleFullscreen(); if(a==='black'){toggleMenu(false);document.getElementById('black').classList.add('on');}
+  if(a==='notes')openNotes();
+  if(a==='anim')toggleAnim();
+  b.blur();                                  // Leertaste soll danach weiterblättern, nicht den Knopf erneut auslösen
+});
+
+/* ---------- Tastatur ---------- */
+let typed='',typedTimer;
+document.addEventListener('keydown',e=>{
+  if(NOTES_MODE||isRead()) return;
+  if(jump.classList.contains('open')){ if(e.key==='Escape'){closeJump();e.preventDefault();} return; }
+  const k=e.key;
+  if(/^[0-9]$/.test(k)){ typed+=k; clearTimeout(typedTimer); typedTimer=setTimeout(()=>typed='',2000); return; }
+  if(k==='Enter'&&typed){ const n=parseInt(typed,10); typed=''; if(n>=1&&n<=slides.length) goTo(n-1); e.preventDefault(); return; }
+  if(k==='ArrowRight'||k==='ArrowDown'||k==='PageDown'||k===' '){ e.preventDefault(); forward(); }
+  else if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp'||k==='Backspace'){ e.preventDefault(); backward(); }
+  else if(k==='Home'){ e.preventDefault(); goTo(0); }
+  else if(k==='End'){ e.preventDefault(); setSteps(slides[slides.length-1],false); showSlide(slides.length-1); }
+  else if(k==='g'||k==='G'){ e.preventDefault(); openJump(); }
+  else if(k==='f'||k==='F'){ toggleFullscreen(); }
+  else if(k==='b'||k==='B'||k==='.'){ document.getElementById('black').classList.toggle('on'); }
+  else if(k==='m'||k==='M'){ e.preventDefault(); toggleMenu(); }
+  else if(k==='a'||k==='A'){ e.preventDefault(); toggleAnim(); }
+  else if(k==='r'||k==='R'){ document.body.classList.toggle('rec'); }
+  else if(k==='Escape'&&menu.classList.contains('open')){ toggleMenu(false); }
+});
+
+function toggleFullscreen(){
+  const d=document,el=d.documentElement;
+  if(d.fullscreenElement||d.webkitFullscreenElement){ (d.exitFullscreen||d.webkitExitFullscreen).call(d); }
+  else{ const r=el.requestFullscreen||el.webkitRequestFullscreen; if(r){ const p=r.call(el); if(p&&p.catch)p.catch(()=>{}); } }
+}
+
+/* ---------- Touch (iPad) ----------
+   Wischen nach links = weiter, nach rechts = zurück
+   Tippen: rechte zwei Drittel = weiter, linkes Drittel = zurück
+   Wischen nach oben = Folienübersicht, nach unten = schließen
+   Zwei Finger tippen = schwarzer Bildschirm an/aus
+   Vollbild auf dem iPad: Seite über „Teilen → Zum Home-Bildschirm“ als App starten */
+const vp=document.getElementById('viewport');
+let t0x=0,t0y=0,t0t=0,tFingers=0,tMoved=false; const tStart={};
+vp.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){ tFingers=0; tMoved=false; const t=e.touches[0]; t0x=t.clientX; t0y=t.clientY; t0t=Date.now(); }
+  tFingers=Math.max(tFingers,e.touches.length);
+  for(const t of e.changedTouches) tStart[t.identifier]=[t.clientX,t.clientY];
+},{passive:true});
+vp.addEventListener('touchmove',e=>{
+  for(const t of e.changedTouches){ const s0=tStart[t.identifier]; if(s0&&Math.hypot(t.clientX-s0[0],t.clientY-s0[1])>30) tMoved=true; }
+},{passive:true});
+vp.addEventListener('touchend',e=>{
+  for(const t of e.changedTouches){ const s0=tStart[t.identifier]; if(s0&&Math.hypot(t.clientX-s0[0],t.clientY-s0[1])>30) tMoved=true; delete tStart[t.identifier]; }
+  if(e.touches.length) return;                       // erst reagieren, wenn alle Finger weg sind
+  if(isRead()) return;                               // Leseansicht: normales Scrollen
+  const t=e.changedTouches[0], dt=Date.now()-t0t, black=document.getElementById('black');
+  if(tFingers>=2){ if(!tMoved&&dt<500) black.classList.toggle('on'); return; }
+  const dx=t.clientX-t0x, dy=t.clientY-t0y, adx=Math.abs(dx), ady=Math.abs(dy);
+  if(black.classList.contains('on')){ black.classList.remove('on'); return; }   // erster Tipp holt das Bild zurück
+  if(adx>50 && adx>ady*1.3){ dx<0?forward():backward(); return; }
+  if(dy<-70 && ady>adx*1.3){ openJump(true); return; }
+  if(!tMoved && adx<12 && ady<12 && dt>=600){ toggleMenu(); return; }   // lange drücken
+  if(adx<12 && ady<12 && dt<350){
+    if(e.target.closest&&e.target.closest('a')) return;  // Quellen-Links bleiben antippbar
+    (t.clientX<innerWidth/3)?backward():forward();
+  }
+});
+document.getElementById('black').addEventListener('touchend',e=>{ e.currentTarget.classList.remove('on'); e.preventDefault(); });
+jump.addEventListener('touchstart',e=>{ jump._y=e.touches[0].clientY; },{passive:true});
+jump.addEventListener('touchend',e=>{ const dy=e.changedTouches[0].clientY-(jump._y||0); if(dy>90&&jump.querySelector('.jump-panel').scrollTop<=0) closeJump(); });
+
+/* Mauszeiger nach 2 s Ruhe ausblenden */
+let idleT; document.addEventListener('mousemove',()=>{ document.body.classList.remove('idle'); clearTimeout(idleT); idleT=setTimeout(()=>document.body.classList.add('idle'),2000); });
+
+/* ---------- Start ---------- */
+if(NOTES_MODE){
+  /* Notizfenster: zeigt Notizen der aktuellen Folie, steuert das Hauptfenster */
+  document.body.classList.add('notes-mode');
+  document.title='Notizen · SRL ist keine Methode!';
+  const $=id=>document.getElementById(id);
+  let t0=Date.now(), last=null;
+  function render(st){
+    last=st; const s=slides[st.index], nx=slides[st.index+1];
+    $('nvNum').textContent=(st.index+1)+' / '+slides.length;
+    $('nvTitle').textContent=s.dataset.title;
+    $('nvStep').textContent=st.all?('Klick '+st.open+' / '+st.all):'ohne Aufbau';
+    const n=s.querySelector('.notes'); $('nvNotes').innerHTML=n?n.innerHTML:'<p>–</p>';
+    $('nvNext').textContent=nx?nx.dataset.title:'Ende';
+    $('nvWarn').textContent='';
+  }
+  addEventListener('message',e=>{ if((e.data||{}).srl==='state') render(e.data); });
+  const send=msg=>{ try{ if(window.opener&&!window.opener.closed){ window.opener.postMessage(msg,'*'); return true; } }catch(_){} $('nvWarn').textContent='Hauptfenster nicht verbunden – dort S drücken.'; return false; };
+  setInterval(()=>{ if(!last) send({srl:'hello'}); },1500); send({srl:'hello'});
+  setInterval(()=>{ const s=Math.floor((Date.now()-t0)/1000); $('nvTime').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); },500);
+  document.addEventListener('keydown',e=>{
+    const k=e.key;
+    if(k==='ArrowRight'||k==='ArrowDown'||k==='PageDown'||k===' '){ e.preventDefault(); send({srl:'cmd',action:'next'}); }
+    if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp'||k==='Backspace'){ e.preventDefault(); send({srl:'cmd',action:'prev'}); }
+    if(k==='t'||k==='T'){ t0=Date.now(); }
+  });
+  const h=parseInt((location.hash||'').slice(1),10); render({index:(h>=1&&h<=slides.length)?h-1:0,all:0,open:0});
+  last=null;
+}else{
+  const n=parseInt((location.hash||'').slice(1),10);
+  const s=(n>=1&&n<=slides.length)?n-1:0;
+  setSteps(slides[s],true); showSlide(s);
+}
+</script>
+</body>
+</html>

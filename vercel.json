@@ -10,6 +10,11 @@
       "source": "/vortrag-srl-landkarte",
       "destination": "/vortrag-srl-landkarte/",
       "permanent": false
+    },
+    {
+      "source": "/was-ist-srl",
+      "destination": "/was-ist-srl/",
+      "permanent": false
     }
   ]
 }
