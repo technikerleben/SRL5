@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#245688">
+<title>Auswertung · Technik 5 · Handschmeichler</title>
+<style>
+:root{
+  --blue:#245688;--blue2:#173d63;--mint:#48DCCB;--mint-soft:#e8fbf8;
+  --orange:#F0A66F;--orange-soft:#fff2e8;--paper:#f6f7f8;--ink:#1f2933;
+  --muted:#687680;--line:#d8e0e6;--white:#fff;--danger:#b64646;--violet:#5b4a7a;
+  --shadow:0 10px 28px rgba(26,55,78,.09);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:var(--paper);color:var(--ink)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.shell{width:min(1380px,calc(100% - 24px));margin:auto}
+header{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border-bottom:6px solid var(--mint);padding:22px 0}
+.header-row{display:flex;gap:18px;justify-content:space-between;align-items:flex-end;flex-wrap:wrap}
+.eyebrow{font-size:.78rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+h1{margin:5px 0 8px;font-size:clamp(1.8rem,4vw,3rem);line-height:1.05}
+header p{margin:0;color:rgba(255,255,255,.86);max-width:780px;line-height:1.45}
+.header-badge{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.09);border-radius:16px;padding:12px 15px;max-width:340px;font-size:.88rem;line-height:1.4}
+main{padding:20px 0 48px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.btn{border:0;border-radius:11px;padding:10px 13px;font-weight:850;background:var(--blue);color:#fff}
+.btn.secondary{background:#fff;color:var(--blue);border:1px solid var(--line)}
+.btn.mint{background:#1fae9f}
+.btn.orange{background:#d77b39}
+.btn.danger{background:#fff;color:var(--danger);border:1px solid #e7bcbc}
+.btn.small{padding:7px 10px;font-size:.86rem}
+.grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:16px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.sidebar{position:sticky;top:10px;overflow:hidden}
+.panel-head{padding:15px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}
+.panel-head h2,.panel-head h3{margin:0;color:var(--blue2)}
+.panel-body{padding:16px}
+.search{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fbfcfd}
+.student-list{max-height:70vh;overflow:auto;padding:7px}
+.student-item{width:100%;text-align:left;border:1px solid transparent;background:#fff;padding:10px;border-radius:12px;margin-bottom:5px;display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center}
+.student-item:hover{background:#f5f8fa}
+.student-item.active{background:var(--mint-soft);border-color:#9de7df}
+.student-item strong{display:block;color:var(--blue2)}
+.student-item small{color:var(--muted)}
+.grade-pill{min-width:34px;height:34px;padding:0 6px;border-radius:999px;display:grid;place-items:center;background:#edf1f4;font-weight:950;color:var(--blue)}
+.grade-pill.open{color:var(--muted);font-size:.8rem}
+.empty{padding:22px 14px;text-align:center;color:var(--muted);line-height:1.5}
+.editor{padding:18px}
+.top-form{display:grid;grid-template-columns:1.4fr .6fr .8fr;gap:12px;margin-bottom:18px}
+.field label{display:block;font-size:.78rem;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#fff;color:var(--ink)}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 18px}
+.stat{border:1px solid var(--line);border-radius:14px;padding:11px;background:#fbfcfd}
+.stat b{display:block;font-size:1.25rem;color:var(--blue2)}
+.stat span{font-size:.76rem;color:var(--muted);font-weight:750}
+.stat.level{background:var(--mint-soft)}
+.stat.grade{background:var(--orange-soft)}
+.status-line{margin:-6px 0 16px;padding:9px 12px;border-radius:10px;font-size:.88rem;line-height:1.4}
+.status-line.open{background:#f1f4f6;color:#4d5d67;border:1px solid var(--line)}
+.status-line.nb{background:#f1edf8;color:var(--violet);border:1px solid #cfc3e3}
+.rubric{display:grid;gap:12px}
+.criterion{border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.criterion-head{padding:12px 14px;background:#f8fafb;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.criterion-head h3{margin:0;color:var(--blue2);font-size:1rem}
+.criterion-head p{margin:3px 0 0;color:var(--muted);font-size:.86rem;line-height:1.35}
+.criterion-head .plan{font-size:.76rem;font-style:italic;color:#7d8d97}
+.level-buttons{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;padding:11px 12px 8px}
+.level-btn{min-width:0;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 7px;text-align:center;font-size:.78rem;font-weight:850;color:#52616b;overflow-wrap:normal;hyphens:auto;transition:background-color .12s,border-color .12s,box-shadow .12s}
+.level-btn small{display:block;font-weight:700;font-size:.72rem;opacity:.8}
+.rubric .level-btn.selected::before{content:"✓ ";font-weight:1000}
+.rubric .level-btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.level-btn[data-level="0"].selected{background:#f6e8e8;border-color:#b97070;color:#873c3c}
+.level-btn[data-level="1"].selected{background:#edf0f2;border-color:#a1afb8;color:#4a5d67}
+.level-btn[data-level="2"].selected{background:#fff1e6;border-color:#e2a171;color:#844918}
+.level-btn[data-level="3"].selected{background:#eaf5ff;border-color:#91c1e8;color:#195d91}
+.level-btn[data-level="4"].selected{background:#b4efe4;border:2px solid #067f71;color:#064f48;box-shadow:inset 0 0 0 1px #067f71,0 2px 6px rgba(6,103,91,.12)}
+.level-btn[data-level="nb"]{border-style:dashed}
+.level-btn[data-level="nb"].selected{background:#efeaf7;border-color:#8b78ad;color:var(--violet)}
+.descriptor{padding:0 13px 9px;color:#46545d;font-size:.88rem;min-height:30px}
+.descriptor.muted{color:var(--muted);font-style:italic}
+.criterion-note{padding:0 12px 12px}
+.criterion-note input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px}
+.feedback-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.feedback-card{border:1px solid var(--line);border-radius:16px;padding:14px}
+.feedback-card h3{margin:0 0 8px;color:var(--blue2)}
+.feedback-text{white-space:pre-wrap;background:#fbfcfd;border:1px solid var(--line);border-radius:10px;padding:11px;min-height:120px;line-height:1.45}
+.feedback-card textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:10px;padding:11px}
+.actions-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.notice{margin-top:12px;font-size:.82rem;color:var(--muted);line-height:1.4}
+dialog{border:0;border-radius:18px;box-shadow:0 20px 70px rgba(0,0,0,.25);max-width:min(760px,calc(100% - 24px));width:100%}
+dialog::backdrop{background:rgba(20,35,45,.4)}
+.dialog-head{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:10px}
+.dialog-head h2{margin:0}
+.settings-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:15px 0}
+.setting{border:1px solid var(--line);border-radius:12px;padding:11px}
+.setting label{font-weight:850;color:var(--blue2);display:block;margin-bottom:5px}
+.example-table{width:100%;border-collapse:collapse;font-size:.9rem;margin:6px 0 4px}
+.example-table th,.example-table td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left}
+.example-table th{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.03em}
+.warn-box{background:var(--orange-soft);border:1px solid #efc39f;border-radius:12px;padding:10px 12px;font-size:.86rem;line-height:1.45;margin-top:10px}
+
+/* Klassenübersicht: Säulendiagramm ohne Bibliothek */
+.grade-chart-dialog{max-width:min(780px,calc(100% - 24px))}
+.grade-chart-info{font-size:.92rem;color:var(--muted);line-height:1.5;margin:12px 0 6px}
+.grade-chart{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;padding:18px 12px 12px;border:1px solid var(--line);border-radius:14px;background:#fbfcfd}
+.grade-chart-col{display:flex;flex-direction:column;align-items:stretch;min-width:0;text-align:center}
+.grade-chart-count{font-size:1.05rem;font-weight:900;color:var(--blue2);line-height:1.5}
+.grade-chart-plot{height:218px;display:flex;flex-direction:column;justify-content:flex-end;border-bottom:2px solid #96a9b7;background:repeating-linear-gradient(to top,transparent,transparent calc(25% - 1px),#e1e9ee 25%)}
+.grade-chart-bar{flex:none;width:min(100%,65px);margin:0 auto;background:#245688;border-radius:7px 7px 0 0;min-height:0;transition:height .18s ease}
+.grade-chart-col[data-grade="6"] .grade-chart-bar{background:#9aa9b3}
+.grade-chart-col[data-grade="5"] .grade-chart-bar{background:#e5ad88}
+.grade-chart-col[data-grade="4"] .grade-chart-bar{background:#eab16e}
+.grade-chart-col[data-grade="3"] .grade-chart-bar{background:#6696bd}
+.grade-chart-col[data-grade="2"] .grade-chart-bar{background:#3674ab}
+.grade-chart-col[data-grade="1"] .grade-chart-bar{background:#169c8f}
+.grade-chart-label{margin-top:9px;color:var(--blue2);font-size:.86rem;font-weight:850}
+.grade-chart-note{font-size:.8rem;color:var(--muted);margin:12px 2px 0;line-height:1.4}
+@media(max-width:520px){.grade-chart{gap:5px;padding:12px 7px 8px}.grade-chart-plot{height:165px}.grade-chart-count{font-size:.88rem}.grade-chart-label{font-size:.75rem}}
+
+.hidden{display:none!important}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}.sidebar{position:static}.student-list{max-height:280px}.level-buttons{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){.top-form{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,1fr)}.level-buttons{grid-template-columns:1fr 1fr}.feedback-grid{grid-template-columns:1fr}.settings-grid{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="print.css">
+</head>
+<body>
+<header>
+<div class="shell header-row">
+  <div>
+    <div class="eyebrow">Technik 5 · Handschmeichler aus Dachlatte · Werkstückbewertung</div>
+    <h1>Auswertung & Rückmeldung</h1>
+    <p>Fünf Kompetenzbereiche nach dem Kernlehrplan Technik (Gesamtschule NRW, Inhaltsfeld 1 „Sicherheit am Arbeitsplatz“) einstufen, Rückmeldung erzeugen und die Note transparent aus den Punkten berechnen. Alle Daten bleiben ausschließlich im Browserspeicher dieses Geräts.</p>
+  </div>
+  <div class="header-badge"><b>Notenlogik · Fach Technik</b><br>Fünf Kategorien mit jeweils 0 bis 4 Punkten ergeben höchstens 20 Punkte. Je Kategorie zählt die höchste vollständig belegte Stufe. Ist eine Kategorie „nicht beurteilbar“, wird keine Summe gebildet.</div>
+</div>
+</header>
+
+<main class="shell">
+<div class="toolbar no-print">
+  <button class="btn" id="newStudent">+ Neues Kind</button>
+  <button class="btn secondary" id="settingsBtn">Notenschlüssel</button>
+  <button class="btn secondary" id="showGradeChart" type="button">Notenverteilung</button>
+  <button class="btn orange" id="printAllFeedback" type="button" title="Alle Rückmeldungen als zweiseitigen Klassensatz drucken">Alles drucken</button>
+  <button class="btn secondary" id="exportCsv">CSV exportieren</button>
+  <button class="btn secondary" id="exportJson">Sicherung exportieren</button>
+  <label class="btn secondary" for="importJson" style="cursor:pointer">Sicherung importieren</label>
+  <input id="importJson" class="hidden" type="file" accept=".json,application/json">
+</div>
+
+<div class="grid">
+  <aside class="panel sidebar no-print">
+    <div class="panel-head"><h2>Klasse</h2><span id="countBadge">0 Kinder</span></div>
+    <div class="panel-body" style="padding-bottom:8px"><input class="search" id="search" placeholder="Name suchen …"></div>
+    <div class="student-list" id="studentList"></div>
+  </aside>
+
+  <section class="panel">
+    <div class="editor" id="editor">
+      <div id="welcome" class="empty">
+        <h2>Auswertung starten</h2>
+        <p>Lege ein Kind an oder wähle links einen vorhandenen Eintrag. Die fünf Kategorien entsprechen dem Kompetenzraster „Handschmeichler“.</p>
+      </div>
+
+      <div id="formWrap" class="hidden">
+        <div class="top-form">
+          <div class="field"><label>Name des Kindes</label><input id="studentName" autocomplete="off"></div>
+          <div class="field"><label>Klasse</label><input id="studentClass" value="5.3"></div>
+          <div class="field"><label>Abgabe am</label><input id="studentDate" type="date"></div>
+        </div>
+
+        <div class="summary">
+          <div class="stat"><b id="corePoints">0 / 20</b><span>Punkte</span></div>
+          <div class="stat level"><b id="percentValue">–</b><span>Anteil an 20 Punkten</span></div>
+          <div class="stat"><b id="ratedCount">0 / 5</b><span>Kategorien eingestuft</span></div>
+          <div class="stat grade"><b id="gradeSuggestion">–</b><span>Note</span></div>
+        </div>
+        <div class="status-line hidden" id="statusLine"></div>
+
+        <div class="rubric" id="rubric"></div>
+
+        <div class="feedback-grid">
+          <div class="feedback-card">
+            <h3>Automatische Rückmeldung</h3>
+            <div class="feedback-text" id="autoFeedback"></div>
+          </div>
+          <div class="feedback-card">
+            <h3>Eigene Ergänzung</h3>
+            <textarea id="teacherComment" placeholder="Optional: persönliche Rückmeldung, Beobachtung am Werkstück, nächster Lernschritt …"></textarea>
+          </div>
+        </div>
+
+        <div class="actions-row no-print">
+          <button class="btn mint" id="saveStudent">Speichern</button>
+          <button class="btn secondary" id="copyFeedback">Rückmeldung kopieren</button>
+          <button class="btn orange" id="printFeedback">Rückmeldung drucken</button>
+          <button class="btn danger" id="deleteStudent">Eintrag löschen</button>
+        </div>
+        <div class="notice">Die Note wird ausschließlich aus den Punkten berechnet (Bezug: 20 Punkte). Stufen sind kumulativ: Eine Stufe gilt nur, wenn auch alle Anforderungen der Stufen darunter erfüllt sind. Kategorie 1 und 4 brauchen eine Beobachtung während der Arbeit, Kategorie 3 ein kurzes Gespräch oder einen Eintrag im Lerntagebuch. Fehlt diese Grundlage, „nicht beurteilbar“ wählen.</div>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<div id="printSheet" aria-label="Zweiseitige Rückmeldung für den Duplexdruck">
+  <section class="print-page print-front" aria-label="Vorderseite: persönliche Lernrückmeldung">
+    <div class="page-eyebrow">TECHNIK 5 · HANDSCHMEICHLER AUS DACHLATTE</div>
+    <h1 class="print-title">Rückmeldung zu deinem Handschmeichler</h1>
+    <div class="print-title-band" aria-hidden="true"></div>
+    <div class="print-meta">
+      <div class="print-name"><strong>Name:</strong> <span id="printName"></span></div>
+      <div class="print-meta-small"><strong>Klasse:</strong> <span id="printClass"></span> &nbsp; <strong>Abgabe am:</strong> <span id="printDate"></span></div>
+    </div>
+
+    <h2 class="print-section">Das hast du erreicht</h2>
+    <p class="print-intro">Hier siehst du, wie sicher dir die verschiedenen Teile der Werkstückarbeit schon gelingen.</p>
+    <table class="print-levels" aria-label="Erreichte Niveaustufen">
+      <thead><tr><th>Kompetenz</th><th>Dein erreichtes Niveau</th><th>Punkte</th></tr></thead>
+      <tbody id="printRows"></tbody>
+    </table>
+
+    <h2 class="print-section strengths-heading" id="printStrengthsHeading">Das kannst du schon</h2>
+    <div class="print-strengths" id="printStrengths"></div>
+    <div class="print-tip" id="printTip"><strong>Dein nächster Übungstipp</strong><span id="printTipText"></span></div>
+    <div class="print-warning hidden" id="printWarning">Die Punkteschwelle für eine ausreichende Leistung ist noch nicht erreicht. Herr Wegemann wird mit dir planen, welche Schritte dir beim Weiterlernen helfen.</div>
+    <div class="print-custom hidden" id="printCustom"></div>
+
+    <footer class="print-front-footer">
+      <div class="print-front-result">
+        <span>Erreichte Punkte: <strong><span id="printFrontPoints"></span></strong> <span id="printFrontBonus"></span></span>
+        <span id="printFrontGradeWrap">Diese Leistung entspricht der Note <strong><span id="printFrontGrade"></span></strong>.</span>
+      </div>
+      <p class="print-priority-short">Du lernst Schritt für Schritt weiter. Wichtig ist, was du schon kannst und woran du als Nächstes arbeitest. Die Rückmeldung zu deinen Fähigkeiten ist wichtiger als die Note.</p>
+      <div class="print-signatures">
+        <div><div class="print-sig-line"></div><div class="print-sig-label">Unterschrift Herr Wegemann</div></div>
+        <div><div class="print-sig-line"></div><div class="print-sig-label">Kenntnisnahme der Eltern (Unterschrift)</div></div>
+      </div>
+      <p class="print-date-line">Datum der Rückmeldung: <span id="printToday"></span></p>
+    </footer>
+  </section>
+
+  <section class="print-page print-back" aria-label="Rückseite: vollständiges Kompetenzraster und Bewertung">
+    <div class="page-eyebrow">ZUM NACHLESEN · TECHNIK 5 · HANDSCHMEICHLER</div>
+    <h2 class="print-back-title">Unser Kompetenzraster</h2>
+    <div class="print-title-band" aria-hidden="true"></div>
+    <p class="print-back-intro">Das Raster zeigt, was wir bei deiner Werkstückarbeit betrachten. Jede höhere Stufe schließt die Stufen darunter ein.</p>
+    <div class="print-legend">
+      <span class="print-level-badge print-level-0">0 · Nicht vorhanden</span>
+      <span class="print-level-badge print-level-1">1 · In Ansätzen</span>
+      <span class="print-level-badge print-level-2">2 · Mindeststandard</span>
+      <span class="print-level-badge print-level-3">3 · Regelstandard</span>
+      <span class="print-level-badge print-level-4">4 · Leistungsstandard</span>
+    </div>
+    <div class="print-rubric-grid" id="printRubricGrid"></div>
+    <div class="print-back-notes">
+      <div><strong>So wird gezählt:</strong> In jeder Kategorie zählt die höchste Stufe, die du vollständig gezeigt hast. Alle fünf Kategorien zählen gleich viel.</div>
+      <div><strong>Nicht beurteilbar:</strong> Fehlt in einer Kategorie die Grundlage (z. B. weil du gefehlt hast), wird keine Gesamtpunktzahl gebildet.</div>
+    </div>
+    <div class="print-evaluation">
+      <h3>Notenschlüssel</h3>
+      <div class="print-key-grid" id="printGradeKey"></div>
+      <p class="print-points">Bewertungsbasis: 20 Punkte (5 × maximal 4).</p>
+    </div>
+    <div class="print-philosophy">
+      <strong>Was wirklich zählt:</strong> Der Aufbau deiner Kompetenzen steht im Vordergrund. Eine Note kann nicht deinen gesamten Lernerfolg zeigen. Die Rückmeldung zu deinen Fähigkeiten und deinen nächsten Lernschritten ist deshalb wichtiger als die Note.
+    </div>
+  </section>
+</div>
+
+<div id="printBatch" aria-label="Alle zweiseitigen Rückmeldungen der Klasse für den Duplexdruck"></div>
+
+<dialog id="settingsDialog">
+  <div class="dialog-head"><h2>Notenschlüssel · Fach Technik</h2><button class="btn secondary small" id="closeSettings">Schließen</button></div>
+  <p>Die Prozentgrenzen der Fachschaft beziehen sich auf <strong>20 Punkte</strong>. Ein Punkt entspricht 5 %.</p>
+  <div class="settings-grid" id="gradeKeyScreen"></div>
+  <h3>Beispielrechnungen</h3>
+  <table class="example-table">
+    <thead><tr><th>Durchgängig</th><th>Punkte</th><th>Anteil</th><th>Note</th></tr></thead>
+    <tbody id="exampleRows"></tbody>
+  </table>
+  <div class="warn-box"><strong>Hinweis zur Passung:</strong> Durchgängiger Regelstandard ergibt bereits die Note 2, weil 75 % nur knapp über der Grenze von 73 % liegt. Für eine 4 reichen schon 9 Punkte; eine Kategorie darf dann noch „In Ansätzen“ sein. Die Lehrkraft begründet ihre Entscheidung pädagogisch.</div>
+</dialog>
+
+<dialog id="gradeChartDialog" class="grade-chart-dialog" aria-labelledby="gradeChartTitle">
+  <div class="dialog-head">
+    <h2 id="gradeChartTitle">Notenverteilung</h2>
+    <button class="btn secondary small" id="closeGradeChart" type="button">Schließen</button>
+  </div>
+  <p id="gradeChartInfo" class="grade-chart-info"></p>
+  <div id="gradeChartBars" class="grade-chart" role="list" aria-label="Häufigkeit der Noten, von Note 6 links bis Note 1 rechts"></div>
+  <p class="grade-chart-note">Gezählt werden nur vollständig eingestufte Einträge ohne „nicht beurteilbar“. Die Übersicht zeigt keine Namen.</p>
+</dialog>
+
+<script>
+const STORAGE_KEY="srl5_technik_handschmeichler_v1";
+const DATA_VERSION=1;
+const NB="nb";
+
+const LEVEL_NAMES=["nicht vorhanden","In Ansätzen","Mindeststandard","Regelstandard","Leistungsstandard"];
+const NB_NAME="nicht beurteilbar";
+
+const CRITERIA=[
+  {
+    id:"sicherheit", title:"1. Sicher arbeiten", short:"Sicher arbeiten",
+    desc:"Werkstattregeln einhalten, Gefahren erkennen und Schutzmaßnahmen nennen.",
+    plan:"KLP Technik GE, IF 1 · SK: sicherheitsrelevante Aspekte erklären · UK: eigenes Arbeitsverhalten bewerten",
+    levels:[
+      "Die Werkstattregeln werden noch nicht eingehalten, auch nicht nach Erinnerung.",
+      "Du kannst die Werkstattregeln einhalten, wenn die Lehrkraft dich daran erinnert.",
+      "Du hältst die Regeln ohne Erinnerung ein: Holz fest eingespannt, beide Hände hinter dem Werkzeug, Platz am Ende aufgeräumt.",
+      "Zusätzlich nennst du zu Feinsäge, Raspel, Feile und Schleifpapier je eine Gefahr und die passende Schutzmaßnahme.",
+      "Zusätzlich erkennst du Gefahren an deinem und an anderen Arbeitsplätzen, sprichst sie an und schlägst eine Lösung vor."
+    ]
+  },
+  {
+    id:"planung", title:"2. Planen und skizzieren", short:"Planen und skizzieren",
+    desc:"Form skizzieren, auf das Holz übertragen und Arbeitsschritte ordnen.",
+    plan:"KLP Technik GE, IF 1 · SK: Skizzen nutzen · UK: Reihenfolge der Arbeitsschritte · MK 8",
+    levels:[
+      "Eine Form oder Planung ist noch nicht erkennbar.",
+      "Du zeichnest mit Hilfe eine Form auf das Holz.",
+      "Du zeichnest deine Form als Skizze von oben, überträgst sie auf das Holz und ordnest vorgegebene Arbeitsschritte richtig.",
+      "Zusätzlich: Skizze mit zwei Ansichten (oben, seitlich) und drei Maßen in mm; eigener Arbeitsplan mit passendem Werkzeug für jeden Schritt.",
+      "Zusätzlich begründest du, warum deine Form gut in der Hand liegt, und schreibst Änderungen am Plan auf, wenn etwas nicht klappt."
+    ]
+  },
+  {
+    id:"werkzeuge", title:"3. Werkzeuge kennen und auswählen", short:"Werkzeuge kennen",
+    desc:"Werkzeuge benennen, ihre Aufgabe erklären und passend auswählen.",
+    plan:"KLP Technik GE, IF 1 · SK: Werkzeuge benennen, Handhabung erläutern · UK: Werkzeugeinsatz erörtern",
+    levels:[
+      "Die Werkzeuge werden noch nicht erkannt.",
+      "Du zeigst auf das richtige Werkzeug, wenn es genannt wird.",
+      "Du benennst Feinsäge, Raspel, Feile und Schleifpapier und sagst, wofür sie da sind (trennen, grob abtragen, fein abtragen, glätten).",
+      "Zusätzlich erklärst du die Reihenfolge Raspel → Feile → Schleifpapier von grob nach fein und liest die Körnung (kleine Zahl = grob).",
+      "Zusätzlich zeigst du Hirnholz und Faserrichtung am Werkstück und erklärst, wie du deshalb arbeitest (z. B. zur Mitte hin raspeln)."
+    ]
+  },
+  {
+    id:"fertigung", title:"4. Werkstück fertigen", short:"Werkstück fertigen",
+    desc:"Sägen, raspeln, feilen und schleifen nach Plan.",
+    plan:"KLP Technik GE · HK 1: einfache Werkstoffe verarbeiten · HK 2: Werkzeuge sachgerecht bedienen · HK 4",
+    levels:[
+      "Ein Werkstück ist noch nicht entstanden.",
+      "Du sägst mit Hilfe die Latte ab und raspelst die Form grob an.",
+      "Du sägst alleine (höchstens ca. 2 mm neben dem Strich), arbeitest die Form mit der Raspel heraus und schleifst mit mindestens einer Körnung.",
+      "Zusätzlich: Schnitt am Strich (höchstens ca. 1 mm), Druck nur beim Vorschieben, Form folgt der Skizze, Raspelspuren mit der Feile entfernt, mindestens zwei Körnungen nacheinander.",
+      "Zusätzlich: gleichmäßige Rundungen ohne Dellen oder Flachstellen; im Gegenlicht sind keine Kratzer zu sehen."
+    ]
+  },
+  {
+    id:"qualitaet", title:"5. Qualität prüfen und beurteilen", short:"Qualität prüfen",
+    desc:"Das eigene Werkstück mit Kriterien prüfen und Verbesserungen ableiten.",
+    plan:"KLP Technik GE, IF 1 · UK: Arbeitsergebnis nach Maßhaltigkeit, Verarbeitung, Funktionalität und Design beurteilen · MK 7",
+    levels:[
+      "Eine Prüfung des Werkstücks ist noch nicht erkennbar.",
+      "Du sagst mit einer Checkliste, ob dein Werkstück fertig ist.",
+      "Du prüfst mit der Checkliste: Kanten rund, keine Splitter, Oberfläche fühlt sich mit geschlossenen Augen glatt an.",
+      "Zusätzlich beurteilst du Maß (Vergleich mit der Skizze), Verarbeitung, Funktion und Design und nennst für jedes Kriterium einen Beleg.",
+      "Zusätzlich entwickelst du ein eigenes Qualitätskriterium, erklärst die Ursache eines Mangels und nennst einen passenden Verbesserungsschritt."
+    ]
+  }
+];
+
+const FEEDBACK={
+  sicherheit:[
+    "Die Werkstattregeln hältst du noch nicht ein.",
+    "Mit Erinnerung hältst du die Werkstattregeln ein.",
+    "Du hältst die Werkstattregeln selbstständig ein.",
+    "Du arbeitest sicher und kennst zu jedem Werkzeug Gefahr und Schutzmaßnahme.",
+    "Du achtest auf Sicherheit – auch bei anderen – und findest Lösungen."
+  ],
+  planung:[
+    "Eine Planung für deinen Handschmeichler fehlt noch.",
+    "Mit Hilfe hast du eine Form auf das Holz gezeichnet.",
+    "Du hast deine Form skizziert und die Arbeitsschritte richtig geordnet.",
+    "Deine Skizze hat zwei Ansichten mit Maßen, und du hast einen eigenen Arbeitsplan geschrieben.",
+    "Du planst durchdacht, begründest deine Form und passt den Plan selbstständig an."
+  ],
+  werkzeuge:[
+    "Die Werkzeuge kennst du noch nicht.",
+    "Du erkennst die Werkzeuge, wenn sie genannt werden.",
+    "Du kennst die vier Werkzeuge und weißt, wofür sie da sind.",
+    "Du erklärst, warum man von grob nach fein arbeitet, und kannst die Körnung lesen.",
+    "Du verstehst auch, wie Hirnholz und Faserrichtung deine Arbeit beeinflussen."
+  ],
+  fertigung:[
+    "Dein Werkstück ist noch nicht entstanden.",
+    "Mit Hilfe hast du gesägt und die Form grob angeraspelt.",
+    "Du hast selbstständig gesägt, die Form herausgearbeitet und geschliffen.",
+    "Du arbeitest genau am Strich, führst die Werkzeuge richtig und schleifst in mehreren Körnungen.",
+    "Dein Handschmeichler hat gleichmäßige Rundungen und eine kratzerfreie Oberfläche."
+  ],
+  qualitaet:[
+    "Dein Werkstück hast du noch nicht geprüft.",
+    "Mit der Checkliste prüfst du, ob dein Werkstück fertig ist.",
+    "Du prüfst Kanten, Splitter und Oberfläche mit der Checkliste.",
+    "Du beurteilst dein Werkstück mit vier Kriterien und nennst Belege.",
+    "Du entwickelst eigene Kriterien und weißt, wie du Mängel verbesserst."
+  ]
+};
+
+const NEXT_STEPS={
+  sicherheit:"Geh vor jedem Arbeitsschritt die Werkstattregeln durch: Ist das Holz fest eingespannt? Sind beide Hände hinter dem Werkzeug? Welche Gefahr gibt es bei diesem Werkzeug?",
+  planung:"Zeichne vor dem Arbeiten eine Skizze von oben und von der Seite und schreibe drei Maße in mm dazu. Notiere dann die Arbeitsschritte mit dem passenden Werkzeug.",
+  werkzeuge:"Erkläre einem Partner die Reihenfolge Raspel → Feile → Schleifpapier. Vergleiche zwei Schleifpapiere: Welche Körnung ist grob, welche fein?",
+  fertigung:"Säge langsam und genau am Strich. Drücke Raspel und Feile nur beim Vorschieben auf. Schleife danach Schritt für Schritt von grob nach fein.",
+  qualitaet:"Prüfe dein Werkstück mit der Checkliste: Vergleiche es mit deiner Skizze, fühle mit geschlossenen Augen und halte es gegen das Licht. Notiere, was du verbessern kannst."
+};
+
+const GRADE_PERCENTAGES={1:87,2:73,3:59,4:45,5:18};
+const MAX_POINTS=CRITERIA.length*4; // 20
+const GRADE_POINT_THRESHOLDS=Object.fromEntries(
+  Object.entries(GRADE_PERCENTAGES).map(([grade,p])=>[grade,Math.ceil(MAX_POINTS*p/100-1e-9)])
+);
+
+let students=load(STORAGE_KEY,[]);
+if(!Array.isArray(students))students=[];
+students=normalizeStudents(students);
+let currentId=null;
+
+const el=id=>document.getElementById(id);
+function load(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch(e){return fallback}}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(students))}catch(e){}}
+function uid(){return "s_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7)}
+function today(){return new Date().toISOString().slice(0,10)}
+function normLevel(v){
+  if(v===NB)return NB;
+  if(v===null||v===undefined||v==="")return null;
+  const n=Number(v);
+  return Number.isFinite(n)?Math.max(0,Math.min(4,Math.round(n))):null;
+}
+function normalizeStudents(list){
+  return list.map(s=>({
+    ...s,
+    notes:s.notes||{},
+    levels:Object.fromEntries(CRITERIA.map(c=>[c.id,normLevel(s.levels?.[c.id])]))
+  }));
+}
+function blankStudent(){return {id:uid(),name:"",className:"5.3",date:today(),levels:Object.fromEntries(CRITERIA.map(c=>[c.id,null])),notes:{},teacherComment:"",createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}}
+function current(){return students.find(s=>s.id===currentId)||null}
+function escapeHtml(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+function levelLabel(v){return v===NB?NB_NAME:(v===null?"noch offen":LEVEL_NAMES[v])}
+
+function metrics(s){
+  const vals=CRITERIA.map(c=>normLevel(s.levels[c.id]));
+  const numeric=vals.filter(v=>typeof v==="number");
+  const hasNb=vals.includes(NB);
+  const open=vals.filter(v=>v===null).length;
+  const rated=CRITERIA.length-open;
+  const core=numeric.reduce((a,b)=>a+b,0);
+  const complete=!hasNb&&open===0;
+  const status=hasNb?"nb":(open?"open":"complete");
+  const atLeast=t=>numeric.filter(v=>v>=t).length;
+  let overall="In Ansätzen";
+  if(atLeast(4)>=4)overall="Leistungsstandard";
+  else if(atLeast(3)>=4)overall="Regelstandard";
+  else if(atLeast(2)>=4)overall="Mindeststandard";
+  return {
+    core,rated,open,hasNb,complete,status,overall,
+    percent:complete?Math.round(core/MAX_POINTS*100):null,
+    grade:complete?gradeFor(core):null,
+    gradeDisplay:complete?gradeDisplayFor(core):(hasNb?"n. b.":"offen")
+  };
+}
+function gradeFor(total){
+  const p=Number(total)||0;
+  for(const g of [1,2,3,4,5]){if(p>=GRADE_POINT_THRESHOLDS[g])return g}
+  return 6;
+}
+function gradeDisplayFor(total){
+  // Feinabstufung nur für die Anzeige; Notengrenzen beruhen auf gradeFor().
+  const p=Number(total)||0;
+  if(p>=20)return "1+";
+  if(p>=19)return "1";
+  if(p>=18)return "1−";
+  if(p>=17)return "2+";
+  if(p>=16)return "2";
+  if(p>=15)return "2−";
+  if(p>=14)return "3+";
+  if(p>=13)return "3";
+  if(p>=12)return "3−";
+  if(p>=11)return "4+";
+  if(p>=10)return "4";
+  if(p>=9)return "4−";
+  if(p>=8)return "5+";
+  if(p>=5)return "5";
+  if(p>=4)return "5−";
+  return "6";
+}
+function gradeRanges(){
+  const rows=[];let upper=MAX_POINTS;
+  for(const g of [1,2,3,4,5]){
+    const lo=GRADE_POINT_THRESHOLDS[g];
+    rows.push({n:g,pct:"ab "+GRADE_PERCENTAGES[g]+" %",lo,hi:upper});upper=lo-1;
+  }
+  rows.push({n:6,pct:"unter 18 %",lo:0,hi:upper});
+  return rows;
+}
+const GRADE_NAMES={1:"sehr gut (1)",2:"gut (2)",3:"befriedigend (3)",4:"ausreichend (4)",5:"mangelhaft (5)",6:"ungenügend (6)"};
+
+function renderSettings(){
+  el("gradeKeyScreen").innerHTML=gradeRanges().map(r=>
+    '<div class="setting"><label>'+GRADE_NAMES[r.n]+'</label><strong>'+r.pct+' · '+r.lo+'–'+r.hi+' Punkte</strong></div>'
+  ).join("");
+  el("exampleRows").innerHTML=[1,2,3,4].map(l=>{
+    const pts=l*CRITERIA.length;
+    return '<tr><td>'+LEVEL_NAMES[l]+'</td><td>'+CRITERIA.length+' × '+l+' = '+pts+'</td><td>'+Math.round(pts/MAX_POINTS*100)+' %</td><td>'+gradeFor(pts)+'</td></tr>';
+  }).join("");
+}
+function gradeCounts(){
+  const counts={6:0,5:0,4:0,3:0,2:0,1:0};let skipped=0;
+  students.forEach(s=>{const m=metrics(s);if(m.complete)counts[m.grade]++;else skipped++});
+  return {counts,skipped};
+}
+function renderGradeChart(){
+  const {counts,skipped}=gradeCounts();
+  const peak=Math.max(1,...Object.values(counts));
+  const n=students.length-skipped;
+  el("gradeChartInfo").textContent=students.length===0
+    ? "Noch keine Einträge vorhanden."
+    : n+" vollständig eingestufte "+(n===1?"Eintrag":"Einträge")+(skipped?" · "+skipped+" offen oder nicht beurteilbar":"");
+  el("gradeChartBars").innerHTML=[6,5,4,3,2,1].map(grade=>{
+    const count=counts[grade],height=count===0?0:Math.round(count/peak*100);
+    return '<div class="grade-chart-col" data-grade="'+grade+'" role="listitem" aria-label="Note '+grade+': '+count+' '+(count===1?'Kind':'Kinder')+'">'+
+      '<div class="grade-chart-count">'+count+'</div>'+
+      '<div class="grade-chart-plot"><div class="grade-chart-bar" style="height:'+height+'%"></div></div><div class="grade-chart-label">Note '+grade+'</div></div>';
+  }).join("");
+}
+function renderList(){
+  const q=el("search").value.trim().toLowerCase();
+  const list=students.filter(s=>(s.name||"").toLowerCase().includes(q)).sort((a,b)=>(a.name||"").localeCompare(b.name||"","de"));
+  el("countBadge").textContent=students.length+" "+(students.length===1?"Kind":"Kinder");
+  if(!list.length){el("studentList").innerHTML='<div class="empty">Noch keine Einträge.</div>';return}
+  el("studentList").innerHTML=list.map(s=>{
+    const m=metrics(s);
+    const sub=m.complete?m.core+" / 20 Punkte":(m.hasNb?"nicht beurteilbar":m.rated+" / 5 eingestuft");
+    return '<button class="student-item '+(s.id===currentId?'active':'')+'" data-id="'+s.id+'"><span><strong>'+escapeHtml(s.name||"Ohne Namen")+'</strong><small>'+escapeHtml(s.className||"")+' · '+sub+'</small></span><span class="grade-pill'+(m.complete?'':' open')+'">'+m.gradeDisplay+'</span></button>';
+  }).join("");
+  document.querySelectorAll(".student-item").forEach(b=>b.onclick=()=>openStudent(b.dataset.id));
+}
+function renderRubric(){
+  const s=current(); if(!s)return;
+  const options=[0,1,2,3,4,NB];
+  el("rubric").innerHTML=CRITERIA.map(c=>{
+    const lv=normLevel(s.levels[c.id]);
+    const pill=lv===null?"–":(lv===NB?"n. b.":lv);
+    const desc=lv===null?"Noch nicht eingestuft.":(lv===NB?"Keine Bewertungsgrundlage – für diese Person wird keine Summe gebildet.":c.levels[lv]);
+    return '<div class="criterion" data-criterion="'+c.id+'">'+
+      '<div class="criterion-head"><div><h3>'+escapeHtml(c.title)+'</h3><p>'+escapeHtml(c.desc)+'</p><p class="plan">'+escapeHtml(c.plan)+'</p></div><span class="grade-pill">'+pill+'</span></div>'+
+      '<div class="level-buttons">'+options.map(n=>{
+        const sel=lv===n;
+        const label=n===NB?'n. b.<small>nicht beurteilbar</small>':LEVEL_NAMES[n]+'<small>'+n+' P.</small>';
+        return '<button type="button" class="level-btn '+(sel?'selected':'')+'" aria-pressed="'+sel+'" data-level="'+n+'" data-cid="'+c.id+'" title="'+escapeHtml(n===NB?NB_NAME:c.levels[n])+'">'+label+'</button>';
+      }).join("")+'</div>'+
+      '<div class="descriptor'+(lv===null||lv===NB?' muted':'')+'">'+escapeHtml(desc)+'</div>'+
+      '<div class="criterion-note"><input data-note="'+c.id+'" value="'+escapeHtml(s.notes?.[c.id]||"")+'" placeholder="Optional: Beobachtung, Datum, Beleg am Werkstück"></div>'+
+    '</div>';
+  }).join("");
+  document.querySelectorAll("[data-cid]").forEach(b=>b.onclick=()=>{
+    const s=current();const v=b.dataset.level===NB?NB:Number(b.dataset.level);
+    s.levels[b.dataset.cid]=(s.levels[b.dataset.cid]===v)?null:v; // erneuter Klick hebt die Auswahl auf
+    s.updatedAt=new Date().toISOString();persist();renderAll();
+  });
+  document.querySelectorAll("[data-note]").forEach(inp=>inp.oninput=()=>{
+    const s=current();if(!s.notes)s.notes={};s.notes[inp.dataset.note]=inp.value;s.updatedAt=new Date().toISOString();persist();
+  });
+}
+function feedbackText(s){
+  const m=metrics(s);
+  const vals=CRITERIA.map((c,i)=>({c,i,lv:normLevel(s.levels[c.id])})).filter(x=>typeof x.lv==="number");
+  if(!vals.length)return "Noch keine Kategorie eingestuft.";
+  const best=[...vals].sort((a,b)=>b.lv-a.lv||a.i-b.i);
+  const lowest=[...vals].sort((a,b)=>a.lv-b.lv||a.i-b.i);
+  const strengths=best.filter(x=>x.lv>=3).slice(0,2);
+  let intro;
+  if(m.overall==="Leistungsstandard")intro="Du zeigst bei deinem Handschmeichler sehr viele Kompetenzen besonders sicher.";
+  else if(m.overall==="Regelstandard")intro="Du hast deinen Handschmeichler insgesamt sicher geplant und gefertigt.";
+  else if(m.overall==="Mindeststandard")intro="Du hast die wichtigen Grundlagen der Werkstückarbeit erreicht.";
+  else intro="Du zeigst schon einzelne wichtige Grundlagen. An einigen Stellen brauchst du noch Unterstützung.";
+  const parts=[intro,"","Das gelingt dir schon:"];
+  if(strengths.length)strengths.forEach(x=>parts.push("• "+FEEDBACK[x.c.id][x.lv]));
+  else if(best[0].lv>=1)parts.push("• "+FEEDBACK[best[0].c.id][best[0].lv]);
+  else parts.push("• Wir besprechen gemeinsam deinen ersten Schritt.");
+  if(!m.complete||m.grade>2){
+    parts.push("","Dein nächster Übungstipp:","• "+NEXT_STEPS[lowest[0].c.id]);
+  }
+  if(m.hasNb){parts.push("","Hinweis: Mindestens eine Kategorie ist nicht beurteilbar. Deshalb wird keine Gesamtpunktzahl gebildet.");}
+  else if(m.complete){
+    parts.push("");
+    if(m.grade<=2)parts.push("Weiter so – du arbeitest bereits sehr sicher.");
+    else if(m.grade===3)parts.push("Du bist auf einem guten Weg. Mit deinem nächsten Schritt wird dein Werkstück noch besser.");
+    else if(m.grade===4)parts.push("Die wichtigsten Grundlagen sind da. Übe jetzt gezielt deinen nächsten Schritt.");
+    else parts.push("Arbeite Schritt für Schritt weiter. Nutze deine Rückmeldung, um genau eine Sache als Nächstes zu üben.");
+  }
+  return parts.join("\n");
+}
+function renderSummary(){
+  const s=current(); if(!s)return;const m=metrics(s);
+  el("corePoints").textContent=(m.hasNb?"–":m.core)+" / 20";
+  el("percentValue").textContent=m.complete?m.percent+" %":"–";
+  el("ratedCount").textContent=m.rated+" / 5";
+  el("gradeSuggestion").textContent=m.complete?m.gradeDisplay:(m.hasNb?"nicht beurteilbar":"offen");
+  const line=el("statusLine");
+  line.classList.toggle("hidden",m.complete);
+  line.className="status-line "+(m.complete?"hidden":m.status);
+  line.textContent=m.hasNb
+    ? "Mindestens eine Kategorie ist „nicht beurteilbar“. Es wird keine Summe und keine Note gebildet."
+    : (m.open?"Noch "+m.open+" "+(m.open===1?"Kategorie":"Kategorien")+" offen. Die Note erscheint, sobald alle fünf eingestuft sind.":"");
+  el("autoFeedback").textContent=feedbackText(s);
+}
+function renderAll(){
+  renderList();
+  const s=current();
+  el("welcome").classList.toggle("hidden",!!s);
+  el("formWrap").classList.toggle("hidden",!s);
+  if(!s)return;
+  el("studentName").value=s.name||"";el("studentClass").value=s.className||"";el("studentDate").value=s.date||today();
+  el("teacherComment").value=s.teacherComment||"";
+  renderRubric();renderSummary();
+}
+function openStudent(id){currentId=id;renderAll();window.scrollTo({top:0,behavior:"smooth"})}
+function syncTop(){
+  const s=current();if(!s)return;
+  s.name=el("studentName").value.trim();s.className=el("studentClass").value.trim();s.date=el("studentDate").value;
+  s.teacherComment=el("teacherComment").value;s.updatedAt=new Date().toISOString();persist();renderList();renderSummary();
+}
+function createStudent(){const s=blankStudent();students.push(s);currentId=s.id;persist();renderAll();el("studentName").focus()}
+function deleteCurrent(){const s=current();if(!s)return;if(!confirm('Eintrag für "'+(s.name||"dieses Kind")+'" wirklich löschen?'))return;students=students.filter(x=>x.id!==s.id);persist();currentId=students[0]?.id||null;renderAll()}
+function download(name,text,type){const blob=new Blob([text],{type});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function csv(){
+  const headers=["Name","Klasse","Abgabe",...CRITERIA.map(c=>c.short),"Punkte","Prozent","Note","Status","Lehrkraft_Rueckmeldung"];
+  const rows=students.map(s=>{const m=metrics(s);return [s.name,s.className,s.date,...CRITERIA.map(c=>levelLabel(normLevel(s.levels[c.id]))),m.hasNb?"":m.core,m.complete?m.percent:"",m.complete?m.gradeDisplay:"",m.complete?"vollständig":(m.hasNb?"nicht beurteilbar":"offen"),s.teacherComment||""]});
+  const esc=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  return "﻿"+[headers,...rows].map(r=>r.map(esc).join(";")).join("\n");
+}
+function fullFeedback(s){
+  const m=metrics(s);let t=(s.name||"Rückmeldung")+" – Handschmeichler (Technik 5)\n";
+  t+=m.complete?("Punkte: "+m.core+" / 20 ("+m.percent+" %) · Note: "+m.gradeDisplay+"\n\n"):(m.hasNb?"Nicht beurteilbar – keine Summe\n\n":"Bewertung noch offen\n\n");
+  t+=feedbackText(s);
+  if(s.teacherComment?.trim())t+="\n\nPersönliche Rückmeldung:\n"+s.teacherComment.trim();
+  return t;
+}
+el("newStudent").onclick=createStudent;
+el("search").oninput=renderList;
+["studentName","studentClass","studentDate","teacherComment"].forEach(id=>el(id).addEventListener("input",syncTop));
+el("saveStudent").onclick=()=>{syncTop();el("saveStudent").textContent="Gespeichert ✓";setTimeout(()=>el("saveStudent").textContent="Speichern",1200)};
+el("deleteStudent").onclick=deleteCurrent;
+el("copyFeedback").onclick=async()=>{const s=current();if(!s)return;try{await navigator.clipboard.writeText(fullFeedback(s));el("copyFeedback").textContent="Kopiert ✓";setTimeout(()=>el("copyFeedback").textContent="Rückmeldung kopieren",1200)}catch(e){alert("Kopieren nicht möglich. Bitte markiere den Text manuell.")}};
+el("printFeedback").onclick=()=>window.print();
+el("exportCsv").onclick=()=>download("Technik5_Handschmeichler_Auswertung.csv",csv(),"text/csv;charset=utf-8");
+el("exportJson").onclick=()=>download("Technik5_Handschmeichler_Sicherung.json",JSON.stringify({app:"srl5-technik-handschmeichler",version:DATA_VERSION,exportedAt:new Date().toISOString(),gradePercentages:GRADE_PERCENTAGES,gradePointThresholds:GRADE_POINT_THRESHOLDS,students},null,2),"application/json");
+el("importJson").onchange=async e=>{
+  const file=e.target.files[0];if(!file)return;
+  try{const data=JSON.parse(await file.text());if(!Array.isArray(data.students))throw new Error();if(!confirm("Vorhandene Daten durch die Sicherung ersetzen?"))return;students=normalizeStudents(data.students);persist();currentId=students[0]?.id||null;renderAll()}
+  catch(err){alert("Die Datei konnte nicht als gültige Sicherung gelesen werden.")}finally{e.target.value=""}
+};
+el("settingsBtn").onclick=()=>{renderSettings();el("settingsDialog").showModal()};
+el("closeSettings").onclick=()=>el("settingsDialog").close();
+el("showGradeChart").onclick=()=>{renderGradeChart();el("gradeChartDialog").showModal()};
+el("closeGradeChart").onclick=()=>el("gradeChartDialog").close();
+window.addEventListener("beforeunload",()=>{if(current())syncTop()});
+if(students.length)currentId=students[0].id;
+renderAll();
+</script>
+<script src="print.js"></script>
+</body>
+</html>
