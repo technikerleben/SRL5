@@ -326,6 +326,33 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
 .chapters li{display:grid;grid-template-columns:76px 1fr auto;align-items:center;gap:26px;border-bottom:2px solid var(--line);padding-bottom:16px;max-width:1150px}
 .chapters .cn{display:grid;place-items:center;width:60px;height:60px;border-radius:50%;background:var(--slate-dark);color:#fff;font:400 32px Anton,sans-serif}
 .chapters small{font:500 28px Jost,sans-serif;color:var(--muted)}
+.pack{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-top:56px}
+.pack>div{border-top:6px solid var(--sage-dark);padding-top:24px}
+.pack .ring-ico{width:56px;height:56px;margin-bottom:14px}
+.pack .name{font:400 46px/1.05 Anton,sans-serif;color:var(--navy);margin:0 0 10px}
+.pack .sm{font-size:27px;line-height:1.35}
+.lever-grid{display:grid;grid-template-columns:1fr 150px 1fr;align-items:center;gap:36px}
+.lever-grid .col-h{font:700 24px Jost,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+.lever-grid .kw{font-size:42px}
+.lever-grid .kw-list{gap:14px}
+.lever-arrow svg{width:150px;height:60px;display:block}
+.lever-arrow{opacity:0;transition:opacity .5s ease}
+.lever-grid:has(.step:not(.hidden)) .lever-arrow,.read .lever-arrow,body.no-anim .lever-arrow{opacity:1}
+.target-list li{display:flex;align-items:center;gap:18px}
+.target-list .ring-ico{width:48px;height:48px;flex:none}
+.lever .label{display:flex;align-items:center;gap:14px}
+.lever .label .ring-ico{width:38px;height:38px;flex:none}
+.lever .h{font-size:100px;margin-bottom:14px}
+.lever .lead{font:500 38px/1.3 Jost,sans-serif;color:var(--muted);margin:0 0 34px}
+.lever .kw-list{gap:16px}
+.lever .kw{font-size:42px}
+.lever .dotted li::before,.lever-grid .dotted li::before{background:var(--sage-dark)}
+.tried{margin:40px 0 0;font:500 27px/1.4 Jost,sans-serif;color:var(--muted)}
+.tried b{color:var(--navy);font-weight:700}
+.read .pack{grid-template-columns:1fr 1fr}
+.read .lever-grid{grid-template-columns:1fr}
+.read .lever-arrow svg{transform:rotate(90deg);margin:0 0 0 20px}
+.read .lever .tried{font-size:34px}
 .team li{padding-left:84px;text-indent:-84px}
 .team li::before{text-indent:0}
 .pause .label{display:flex;align-items:center;gap:16px}
@@ -409,7 +436,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw"><span class="cn">1</span><span>Was SRL ist – und was nicht</span><small>ca. 8 min</small></li>
     <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span><small>ca. 4 min</small></li>
     <li class="kw"><span class="cn">3</span><span>Das Modell</span><small>ca. 7 min</small></li>
-    <li class="kw"><span class="cn">4</span><span>Was wir erproben</span><small>ca. 6 min</small></li>
+    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 11 min</small></li>
     <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span><small>ca. 5 min</small></li>
   </ol>
   <p class="sm" style="margin-top:44px">Bilder ohne Quellenangabe sind KI-generiert.</p>
@@ -646,22 +673,60 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
   <p class="quote">„Ich weiß, warum ich lerne, wie ich lerne – und was ich <em style="font-style:normal;color:var(--red)">beim nächsten Mal anders</em> machen will.“</p>
 </section>
 
-<section class="slide cover chapter" data-title="Kapitel 4" data-section="4 · Was wir erproben" data-dark>
+<section class="slide cover chapter" data-title="Kapitel 4" data-section="4 · Vom Bildungsziel zur Praxis" data-dark>
   <p class="chap-no">4</p>
   <p class="label">Kapitel 4 von 5</p>
-  <h2 class="h">Was wir<br><em>erproben.</em></h2>
+  <h2 class="h">Vom Bildungsziel<br><em>zur Praxis.</em></h2>
 </section>
 
-<section class="slide" data-title="Bildungsziel &amp; Wege">
+<section class="slide" data-title="Bildungsziel">
   <p class="label">Vom Modell zur Praxis</p>
   <h2 class="h" style="margin-bottom:18px;font-size:84px">Keine Methode, sondern ein <em>Bildungsziel.</em></h2>
   <p class="kw" style="font-size:44px;font-weight:500">Ein Kompetenzpaket – lernbar, nicht angeboren.</p>
-  <div class="ways">
-    <div><p class="name">Strukturen</p><p class="kw">geben äußeren Halt</p><p class="sm"><span data-morph="buddy">Lernbuddy</span> · Lösungsleiter · Kompetenzraster</p></div>
-    <div><p class="name">Strategien</p><p class="kw">werden explizit gelernt und geübt</p><p class="sm">Strategiekarten · Lernwege</p></div>
-    <div><p class="name">Routinen</p><p class="kw">machen Regulation zur Gewohnheit</p><p class="sm">Planung · Durchführung · Reflexion – immer wieder</p></div>
+  <div class="pack">
+    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Metakognition</p><p class="sm">planen, überwachen, auswerten</p></div>
+    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Motivation</p><p class="sm">sich etwas zutrauen und dranbleiben</p></div>
+    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Emotion</p><p class="sm">Frust und Unsicherheit regulieren</p></div>
+    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Ressourcen</p><p class="sm">Zeit, Material, Ort und Hilfe nutzen</p></div>
   </div>
-  <p class="sm" style="margin-top:44px;font-weight:600;color:var(--navy)">Werkzeuge sind nicht SRL – sie stützen den Weg dorthin.</p>
+  <p class="src" style="margin-top:40px">Ausgewählte Kompetenzbereiche der SRL-Turbine (Karlen et al., Universität Zürich)</p>
+</section>
+
+<section class="slide" data-title="Mittel, nicht Ziel">
+  <p class="label">Settings · Methoden · Prüfungsformate</p>
+  <h2 class="h" style="margin-bottom:40px">Mittel, nicht <em>Ziel.</em></h2>
+  <div class="lever-grid">
+    <div><p class="col-h">Was wir verändern</p>
+      <ul class="kw-list dotted">
+        <li class="kw">Lernsettings und Methoden</li>
+        <li class="kw">Aufbau der Unterrichtsreihen</li>
+        <li class="kw">Prüfungsformate</li>
+        <li class="kw">Lernräume</li>
+        <li class="kw">Coaching</li>
+      </ul></div>
+    <div class="lever-arrow"><svg viewBox="0 0 150 60" aria-hidden="true"><path d="M8 30H118" stroke="var(--sage-dark)" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M118 19.5L139 30L118 40.5Z" fill="var(--sage-dark)" stroke="var(--sage-dark)" stroke-width="2" stroke-linejoin="round"/></svg></div>
+    <div class="step"><p class="col-h">Worauf es zielt</p>
+      <ul class="kw-list target-list">
+        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Metakognition</span></li>
+        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Motivation</span></li>
+        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Emotion</span></li>
+        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Ressourcen</span></li>
+      </ul></div>
+  </div>
+  <p class="sm" style="margin-top:40px;font-weight:600;color:var(--navy)">Neue Settings sind Begleiterscheinungen – sie wirken, wenn sie gezielt Kompetenzbereiche stärken.</p>
+</section>
+
+<section class="slide lever" data-title="Metakognition">
+  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Metakognition</p>
+  <h2 class="h">Denken über das <em>Lernen.</em></h2>
+  <p class="lead">Eine Routine des zyklischen, metakognitiv aktivierten Lernens.</p>
+  <ul class="kw-list dotted">
+    <li class="kw">Strategien explizit einführen und üben</li>
+    <li class="kw">Laut denken: Lehrkräfte machen ihr Denken sichtbar</li>
+    <li class="kw">Introspektion: Lernende beobachten und beschreiben ihr Lernen</li>
+    <li class="kw">Planung, Durchführung, Reflexion – in jeder Reihe wieder</li>
+  </ul>
+  <p class="tried"><b>Bei uns punktuell erprobt:</b> <span data-morph="buddy">Lernbuddy</span> · Logbuch mit Lerntagebuch · Gelingensnachweise</p>
 </section>
 
 <section class="slide" data-title="Lernbuddy">
@@ -677,19 +742,64 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
   </div>
 </section>
 
-<section class="slide" data-title="Erprobung">
-  <p class="label">Punktuell erprobt · vor allem im Jahrgang 5</p>
-  <h2 class="h" style="margin-bottom:44px">Wir testen <em>Bausteine.</em></h2>
-  <ul class="kw-list grid2 dotted blocks">
-    <li class="kw">Lernbuddy</li>
-    <li class="kw">Lösungsleiter</li>
-    <li class="kw">Lernwege und Lerntheken</li>
-    <li class="kw">Lernsettings öffnen</li>
-    <li class="kw"><span>Räume umgestalten<small>z. B. Lernbüro, Churer Modell</small></span></li>
-    <li class="kw"><span>Coaching<small>1:1-Mentorengespräche</small></span></li>
-    <li class="kw">Logbuch mit Lerntagebuch</li>
-    <li class="kw"><span>Passende Prüfungsformate<small>Gelingensnachweise, Open-Book-Arbeiten, Wahltermine</small></span></li>
+<section class="slide lever" data-title="Motivation">
+  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Motivation</p>
+  <h2 class="h">Selbstwirksam durch <em>Wahl.</em></h2>
+  <p class="lead">Unterrichtsreihen so aufbauen, dass Lernende Entscheidungen treffen.</p>
+  <ul class="kw-list dotted">
+    <li class="kw">Wo arbeite ich? – Arbeitsort</li>
+    <li class="kw">Wie schnell? – eigenes Tempo</li>
+    <li class="kw">Wie schwer? – Schwierigkeitsgrad</li>
+    <li class="kw">Wann bin ich bereit? – Zeitpunkt des Nachweises</li>
   </ul>
+  <p class="tried"><b>Bei uns punktuell erprobt:</b> Lernwege und Lerntheken · geöffnete Lernsettings · Wahltermine</p>
+</section>
+
+<section class="slide lever" data-title="Ressourcen">
+  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Ressourcen</p>
+  <h2 class="h">Ressourcen, die <em>passen.</em></h2>
+  <p class="lead">Material, Hilfe und Zeit so planen, dass Wahl überhaupt möglich wird.</p>
+  <ul class="kw-list dotted">
+    <li class="kw">Verlässlicher Zugang zu Aufgaben und Material</li>
+    <li class="kw">Gestufte Hilfe statt sofortiger Lösung</li>
+    <li class="kw">Hilfsmittel sinnvoll nutzen lernen</li>
+    <li class="kw">Zeitfenster, die eigene Planung erlauben</li>
+  </ul>
+  <p class="tried"><b>Bei uns punktuell erprobt:</b> Lösungsleiter · Lernwege · Open-Book-Arbeiten</p>
+</section>
+
+<section class="slide lever" data-title="Lernraum">
+  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Ressourcen · Emotion</p>
+  <h2 class="h">Der Raum als <em>dritter Pädagoge.</em></h2>
+  <p class="lead">Lernräume sind äußere Ressource – und prägen, wie man sich darin fühlt.</p>
+  <ul class="kw-list dotted">
+    <li class="kw">Orientierung: Wo finde ich was, wo arbeite ich wie?</li>
+    <li class="kw">Zonen für Ruhe, Austausch und Input</li>
+    <li class="kw">Wohlbefinden: ein Ort, an dem man gern lernt</li>
+  </ul>
+  <p class="tried"><b>Bei uns punktuell erprobt:</b> Lernbüro · Churer Modell</p>
+</section>
+
+<section class="slide lever" data-title="Coaching">
+  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Emotion · Motivation · Metakognition</p>
+  <h2 class="h">Begleiten im <em>Gespräch.</em></h2>
+  <p class="lead">Coaching unterstützt, was sich nicht verordnen lässt.</p>
+  <ul class="kw-list dotted">
+    <li class="kw">Emotion: Frust, Unsicherheit und Prüfungsangst ansprechen</li>
+    <li class="kw">Motivation: Ziele vereinbaren, Fortschritte sichtbar machen</li>
+    <li class="kw">Metakognition: über das eigene Lernen sprechen</li>
+  </ul>
+  <p class="tried"><b>Bei uns punktuell erprobt:</b> 1:1-Mentorengespräche</p>
+</section>
+
+<section class="slide" data-title="Fazit Praxis">
+  <p class="statement">Nicht das Setting ist das Ziel – <em>sondern die Kompetenz, die es stärkt.</em></p>
+</section>
+
+<section class="slide pause" data-title="Kurz anhalten 3">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement" style="font-size:84px">Was veränderst du schon im Unterricht – und auf welchen Kompetenzbereich <em>zielt es?</em></p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
 </section>
 
 <section class="slide" data-title="KI &amp; Digital">
