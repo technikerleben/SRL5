@@ -8,7 +8,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SRL-Vortrag">
-<title>Was ist SRL? · Online-Fortbildung</title>
+<title>SRL ist keine Methode! · Online-Fortbildung in fünf Teilen</title>
 <meta name="description" content="Online-Fortbildung zum selbstregulierten Lernen: Grundlagen, Mythen, SRL-Turbine und erste Bausteine aus der Praxis.">
 <!-- Ordner-URL ohne "/" am Ende: sonst lädt der Browser keine Bilder und Schriften -->
 <script>if(location.protocol!=='file:'&&!/\/$|\.html?$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash);</script>
@@ -403,6 +403,153 @@ html.read,html.read body{overflow:auto;height:auto}
 .read .scale{margin-top:200px}
 .read .sc-above{font-size:28px;white-space:normal;width:300px}
 .read .sc-ticks span,.read .sc-ticks i{font-size:26px}
+/* ================= Videofassung in fünf Teilen: Sprechtakt, Turbine, Webcam ================= */
+.slide.cover{overflow:hidden}
+/* Punkte im Sprechtakt: der aktuelle Punkt steht voll, frühere treten zurück */
+.seq:not(.steps-done) .step:not(.hidden):not(.cur){opacity:.42}
+.dotted li small,.areas small{display:block;grid-column:2;font:500 25px/1.25 Jost,sans-serif;color:var(--muted);margin-top:2px}
+.punch{margin-top:34px!important;color:var(--rust-dark)!important;font-weight:700!important;font-size:32px!important}
+em.r{font-style:normal;color:var(--red)}
+/* bewegte Typo: Aussagen bauen sich Wort für Wort auf */
+.kin .w{display:inline-block}
+.slide.active .kin .w{animation:word .55s var(--ease) both;animation-delay:calc(var(--w)*70ms + 220ms)}
+@keyframes word{from{opacity:0;transform:translateY(.38em)}to{opacity:1;transform:none}}
+/* Mythos wird bei der Auflösung durchgestrichen */
+.myth .h{text-decoration:line-through;text-decoration-thickness:5px;text-decoration-color:transparent;transition:text-decoration-color .5s ease .25s,opacity .5s ease .25s}
+.myth.steps-done .h{text-decoration-color:var(--rust-dark);opacity:.6}
+.read .myth .h{text-decoration:none;opacity:1}
+/* drehender Turbinenring auf dunklen Folien */
+.orbit{position:absolute;left:800px;top:-50px;width:1000px;height:1000px;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(rgba(255,255,255,.075) 0 55deg,transparent 55deg 60deg);
+  -webkit-mask:radial-gradient(closest-side,transparent 70%,#000 70.5%,#000 99%,transparent 100%);mask:radial-gradient(closest-side,transparent 70%,#000 70.5%,#000 99%,transparent 100%);
+  animation:spin 140s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cover>*:not(.orbit):not(.chap-no){position:relative}
+.chapter .chap-no{right:auto;left:1300px;transform:translate(-50%,-50%);transition:opacity .4s ease}
+.outro .h{font-size:92px}
+.read .orbit{display:none}
+/* Einstiegsgeschichte */
+.story .split{align-items:start;gap:80px}
+.story-img img{display:block;height:700px;width:auto;border-radius:14px}
+.story .h{margin-bottom:36px}
+.read .story-img img{height:auto;width:100%}
+/* Kein Zusatzprogramm */
+.nots{gap:24px}
+.nots li{display:grid;grid-template-columns:78px 1fr;align-items:center}
+.nots li::before{content:"";width:54px;height:54px;border-radius:50%;background:var(--rust-dark) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 7l10 10M17 7L7 17' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/32px no-repeat}
+.nots li.yes::before{background-color:var(--sage-dark);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.chapters li{max-width:1050px}
+.chapters li.on .cn{background:var(--rust-base)}
+/* Definition: drei Phasen als Schleife */
+.phases{position:relative;display:flex;align-items:center;gap:22px;width:max-content;margin-top:64px;padding-bottom:96px}
+.phases .ph{font:400 52px/1 Anton,sans-serif;color:#fff;background:var(--slate-dark);padding:18px 34px;border-radius:16px}
+.ph-arr{position:relative;width:74px;height:6px;border-radius:3px;background:var(--sage-dark)}
+.ph-arr::after{content:"";position:absolute;right:-4px;top:50%;margin-top:-13px;border-left:22px solid var(--sage-dark);border-top:13px solid transparent;border-bottom:13px solid transparent}
+.ph-back{position:absolute;left:0;bottom:0;width:100%;height:84px;overflow:visible}
+.step .cyc-line{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s var(--ease) .45s}
+.step .cyc-head{opacity:0;transition:opacity .25s ease 1.25s}
+.step:not(.hidden) .cyc-line{stroke-dashoffset:0}
+.step:not(.hidden) .cyc-head{opacity:1}
+.read .phases{flex-wrap:wrap}.read .ph-back{display:none}
+/* Wirksamkeit */
+.hero{display:flex;align-items:center;gap:44px}
+.hero-n{font:400 230px/.9 Anton,sans-serif;color:var(--rust-base);margin:0}
+.hero-t{font:600 58px/1.14 Jost,sans-serif;color:var(--navy);margin:0}
+.hero-t em{font-style:normal;color:var(--rust-dark)}
+.hero-t small{display:block;font:500 28px/1.3 Jost,sans-serif;color:var(--muted);margin-top:12px}
+.effect .scale{margin-top:128px}
+.effect .scale.stag .sc-band{animation:none}
+.effect .sc-hinge{opacity:0;transition:opacity .4s ease}
+.effect .sc-band{transform:scaleX(0);transition:transform .8s var(--ease) .15s}
+.effect .scale:has(.sc-above:not(.sc-srl):not(.hidden)) .sc-hinge,.read .effect .sc-hinge{opacity:1}
+.effect .scale:has(.sc-srl:not(.hidden)) .sc-band,.read .effect .sc-band{transform:none}
+.read .hero{flex-direction:column;align-items:flex-start;gap:10px}
+/* Turbine als gezeichnetes Bauteil */
+.tb{display:block;flex:none}
+.tb svg{display:block;width:100%;height:100%;overflow:visible}
+.tb .shape{transition:fill .45s ease}
+.tb .g{transition:opacity .5s ease}
+.tb text{font-family:Jost,sans-serif;font-weight:700;font-size:17px;transition:fill .45s ease,opacity .45s ease}
+.tb .g-areas .shape{fill:var(--slate-pale)}
+.tb .g-areas text{fill:var(--slate-base)}
+.tb .g-proc .shape{fill:var(--slate-base)}
+.tb .g-proc text{fill:#fff}
+.tb .g-needs .shape{fill:var(--slate-ghost);stroke:var(--slate-pale);stroke-width:2;transition:fill .45s ease,stroke .45s ease}
+.tb .g-needs text{fill:var(--slate-base);font-size:15px;font-weight:600}
+.tb[data-focus=needs] .g-proc,.tb[data-focus=needs] .g-areas,.tb[data-focus=process] .g-needs,.tb[data-focus=process] .g-areas,.tb[data-focus=areas] .g-needs,.tb[data-focus=areas] .g-proc{opacity:.26}
+.tb[data-focus=needs] .g-needs .shape{fill:#fff;stroke:var(--sage-dark);stroke-width:4}
+.tb .g-areas .on .shape{fill:var(--sage-dark)}
+.tb .g-areas .on text{fill:#fff}
+.tb .g-proc .on .shape{fill:var(--rust-base)}
+.tb .g-needs text.on{fill:var(--rust-dark);font-weight:800}
+.tb .k{transform-box:view-box;transform-origin:center}
+.tb.build .k{animation:segIn .6s var(--ease) both;animation-delay:calc(var(--i)*55ms + 140ms)}
+@keyframes segIn{from{opacity:0;transform:scale(.8) rotate(-16deg)}to{opacity:1;transform:none}}
+.tb .k.pulse{animation:segPulse .65s var(--ease)}
+@keyframes segPulse{40%{transform:scale(1.07)}}
+.tb .runner{display:none}
+.tb.run .runner{display:block}
+.tbbig{width:700px;height:700px}
+.tbmid{width:430px;height:430px}
+.tbmid .g-proc text,.tbmid .g-needs text,.tbnav .g-proc text,.tbnav .g-needs text,.tbico text{display:none}
+.tbico{width:74px;height:74px}
+.tbico[data-focus=needs] .g-needs .shape,.tbico[data-focus=process] .g-proc .shape,.tbico[data-focus=areas] .g-areas .shape{fill:var(--sage-dark);stroke:none}
+.tbnav{position:absolute;right:80px;top:230px;width:420px;height:420px;transition:top .7s var(--ease),right .7s var(--ease),width .7s var(--ease),height .7s var(--ease)}
+.tbnav .g-areas text{opacity:0}
+.tbnav .g-areas .on text{opacity:1}
+.lvl .h{margin-bottom:34px}
+.lvl .kw-list{gap:18px}
+.areas{gap:11px!important}
+.areas .kw{font-size:38px;line-height:1.1;padding-left:20px;border-left:7px solid var(--slate-pale);transition:opacity .4s ease,transform .4s ease,border-color .4s ease}
+.areas .kw:not(.hidden){border-left-color:var(--sage-dark)}
+.areas small{font-size:23px}
+.means .lever-grid{grid-template-columns:1fr 150px 430px;gap:50px}
+.means .lever-arrow{opacity:1}
+.means .lever-arrow.step.hidden{opacity:1;transform:none}
+/* Hebel-Folien */
+.slide.lever{padding:64px 120px}
+.lever .h{font-size:86px;max-width:940px}
+.lever .lead{font-size:34px;margin-bottom:26px;max-width:940px}
+.lever .kw-list{gap:14px;max-width:940px}
+.lever .kw{font-size:38px}
+.lever .tried{margin-top:26px;max-width:940px}
+.eg{margin:24px 0 0;max-width:900px;font:500 28px/1.35 Jost,sans-serif;color:var(--navy);background:#fff;border-left:8px solid var(--rust-base);border-radius:6px 16px 16px 6px;padding:14px 22px;box-shadow:0 0 0 2px var(--line)}
+.eg b{font-weight:700;color:var(--rust-dark)}
+.read .seq .step{opacity:1!important}
+.read .tbnav{position:static;width:300px;height:300px;margin-bottom:30px}
+.read .tbbig,.read .tbmid{width:860px;height:860px;max-width:100%}
+.read .means .lever-grid{grid-template-columns:1fr}
+/* ---------- Webcam: läuft direkt in der Seite (Taste C) ---------- */
+#cam{position:absolute;z-index:30;left:1270px;top:570px;width:280px;height:280px;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.6);pointer-events:none;background:var(--slate-base);
+  box-shadow:0 0 0 6px #fff,0 0 0 12px var(--sage-dark),0 20px 44px -10px rgba(30,42,53,.5);
+  transition:left .7s var(--ease),top .7s var(--ease),width .7s var(--ease),height .7s var(--ease),opacity .4s ease,transform .5s var(--ease),box-shadow .5s ease}
+#cam video{display:none;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+#cam.live video{display:block}
+#cam.live .cam-ph{display:none}
+.cam-ph{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:6px;color:var(--slate-pale);font:600 20px Jost,sans-serif;text-align:center}
+.cam-ph svg{width:46%;height:46%;fill:var(--slate-pale);opacity:.8}
+body.cam-on[data-cam=pip] #cam,body.cam-on[data-cam=big] #cam{opacity:1;transform:none}
+body.cam-on[data-cam=big] #cam{left:1080px;top:230px;width:440px;height:440px}
+body.cam-on.dark-slide #cam{box-shadow:0 0 0 6px rgba(255,255,255,.92),0 0 0 12px var(--rust-base),0 20px 44px -10px rgba(0,0,0,.6)}
+.read #cam{display:none}
+@media print{#cam{display:none}}
+/* Platz für das Kamerabild, sobald es läuft */
+body.cam-on .slide[data-cam=big] .statement{max-width:900px;font-size:78px}
+body.cam-on .slide[data-cam=big].pause .statement{font-size:70px!important}
+body.cam-on .slide[data-cam=big] .quote{max-width:900px;font-size:56px}
+body.cam-on .slide[data-cam=big] .sm,body.cam-on .slide[data-cam=big] .kw{max-width:880px}
+body.cam-on .slide.cover:not(.chapter) .h{font-size:124px}
+body.cam-on .slide.cover:not(.chapter) .kw{font-size:42px}
+body.cam-on .chapter .h{font-size:104px}
+body.cam-on .outro .h{font-size:76px;max-width:900px}
+body.cam-on .thanks .h{font-size:104px}
+body.cam-on .chap-no{opacity:0}
+body.cam-on .tbnav{top:66px;right:60px;width:320px;height:320px}
+body.cam-on .slide[data-cam=pip] .recs,body.cam-on .slide[data-cam=pip] .team,body.cam-on .slide[data-cam=pip] .sdev,body.cam-on .slide[data-cam=pip] .rub{max-width:1090px}
+body.cam-on .termsl{padding-bottom:210px}
+#menu .m-parts{display:flex;align-items:center;gap:6px;margin:0 2px 12px;color:#9FB6CC;font-size:13px}
+#menu .m-parts a{flex:1;text-align:center;color:#E6EEF5;text-decoration:none;background:#22374C;border:1px solid #33506B;border-radius:8px;padding:6px 0;font-weight:600}
+#menu .m-parts a.cur{background:var(--rust-dark);border-color:var(--rust-base)}
 body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!important;transition:none!important}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media print{
@@ -419,136 +566,165 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
 <div id="readNote"><b>Mobile Ansicht</b> – alle Folien untereinander zum Lesen. Für die Ansicht als Folienpräsentation im Browser „Desktopversion“ wählen oder <a href="?folien">hier tippen</a>.</div>
 <div id="viewport"><div id="stage"><div id="morphLayer"></div>
 
-<section class="slide cover active" data-title="Titel" data-section="Einstieg" data-dark>
+<section class="slide cover" data-part="1" data-title="Titel" data-cam="big" data-section="1 · Was SRL ist – und was nicht" data-dark>
+  <div class="orbit" aria-hidden="true"></div>
   <div class="mark">SRL</div>
   <h1 class="h">SRL ist<br><em>keine Methode!</em></h1>
   <p class="kw">Was selbstreguliertes Lernen (nicht) ist.</p>
   <div class="line"></div>
   <p class="sm">Christoph Wegemann</p>
-  <p class="sm event">Online-Fortbildung · in fünf Kapiteln</p>
+  <p class="sm event">Online-Fortbildung in fünf kurzen Teilen · Teil 1</p>
 </section>
 
-<section class="slide full" data-title="Einstieg · Bild">
-  <img src="assets/einstieg.webp" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt">
+<section class="slide story" data-part="1" data-title="Geschichte" data-cam="pip">
+  <div class="split">
+    <figure class="story-img"><img src="assets/einstieg.webp" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt"></figure>
+    <div>
+      <p class="label">Eine Geschichte vorab</p>
+      <h2 class="h">Ein Glücks&shy;<em>moment.</em></h2>
+      <p class="kw step">Strategien aus Deutsch – selbst auf Mathe übertragen.</p>
+      <p class="src" style="margin-top:36px">Bild: KI-generiert. Die Geschichte ist echt.</p>
+    </div>
+  </div>
 </section>
 
-<section class="slide" data-title="Überblick">
+<section class="slide" data-part="1" data-title="These" data-cam="big">
+  <p class="label">Die These dieser Fortbildung</p>
+  <p class="statement kin">SRL ist keine Methode – sondern ein <em>Bildungsziel.</em></p>
+  <p class="kw step" style="margin-top:44px;font-weight:500;max-width:900px">Etwas, das Lernende <em>können</em> sollen. Nicht etwas, das wir „machen“.</p>
+</section>
+
+<section class="slide seq" data-part="1" data-title="Kein Zusatzprogramm" data-cam="pip">
+  <p class="label">Was das für dich heißt</p>
+  <h2 class="h">Kein Zusatz&shy;<em>programm.</em></h2>
+  <ul class="kw-list nots">
+    <li class="kw step no">Kein neues Fach</li>
+    <li class="kw step no">Keine Methode, die du übernehmen musst</li>
+    <li class="kw step yes">Ein anderer Blick auf das, was du schon tust</li>
+  </ul>
+</section>
+
+<section class="slide" data-part="1" data-title="Überblick" data-cam="pip">
   <p class="label">Überblick</p>
-  <h2 class="h" style="margin-bottom:44px">Was dich <em>erwartet.</em></h2>
+  <h2 class="h" style="margin-bottom:44px">Fünf kurze <em>Teile.</em></h2>
   <ol class="kw-list chapters">
-    <li class="kw"><span class="cn">1</span><span>Was SRL ist – und was nicht</span><small>ca. 8 min</small></li>
-    <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span><small>ca. 4 min</small></li>
-    <li class="kw"><span class="cn">3</span><span>Das Modell</span><small>ca. 7 min</small></li>
-    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 11 min</small></li>
-    <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span><small>ca. 6 min</small></li>
+    <li class="kw on"><span class="cn">1</span><span>Was SRL ist – und was nicht</span><small>ca. 7 min</small></li>
+    <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span><small>ca. 3 min</small></li>
+    <li class="kw"><span class="cn">3</span><span>Das Modell: die SRL-Turbine</span><small>ca. 5 min</small></li>
+    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 8 min</small></li>
+    <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span><small>ca. 5 min</small></li>
   </ol>
-  <p class="sm" style="margin-top:44px">Bilder ohne Quellenangabe sind KI-generiert.</p>
+  <p class="sm" style="margin-top:36px">Jeder Teil endet mit einer Frage zum Anhalten. Bilder ohne Quellenangabe sind KI-generiert.</p>
 </section>
 
-<section class="slide cover chapter" data-title="Kapitel 1" data-section="1 · Was SRL ist – und was nicht" data-dark>
-  <p class="chap-no">1</p>
-  <p class="label">Kapitel 1 von 5</p>
-  <h2 class="h">Was SRL ist –<br><em>und was nicht.</em></h2>
-</section>
-
-<section class="slide" data-title="Leitfrage">
+<section class="slide" data-part="1" data-title="Leitfrage" data-cam="big">
   <p class="label">Leitfrage</p>
-  <p class="statement">Wie befähigen wir Lernende, ihr Lernen <em>selbst zu steuern?</em></p>
+  <p class="statement kin">Wie befähigen wir Lernende, ihr Lernen <em>selbst zu steuern?</em></p>
 </section>
 
-<section class="slide" data-title="Arbeitsdefinition">
+<section class="slide defn" data-part="1" data-title="Arbeitsdefinition" data-cam="off">
   <p class="label">Selbstreguliertes Lernen · Arbeitsdefinition</p>
-  <p class="quote">Lernende <em style="font-style:normal;color:var(--red)">planen</em> ihr Lernen, <em style="font-style:normal;color:var(--red)">beobachten</em> es beim Arbeiten und <em style="font-style:normal;color:var(--red)">werten es aus</em> – und steuern dabei auch ihre Motivation.</p>
+  <p class="quote kin">Lernende <em class="r">planen</em> ihr Lernen, <em class="r">beobachten</em> es beim Arbeiten und <em class="r">werten es aus</em> – und steuern dabei auch ihre Motivation.</p>
+  <div class="phases step">
+    <span class="ph">Planung</span><i class="ph-arr"></i><span class="ph">Durchführung</span><i class="ph-arr"></i><span class="ph">Reflexion</span>
+    <svg class="ph-back" viewBox="0 0 1000 80" preserveAspectRatio="none" aria-hidden="true"><path class="cyc-line" pathLength="1" d="M900 6 C 900 70, 700 70, 500 70 S 100 70, 100 14" fill="none" stroke="var(--sage-dark)" stroke-width="5" stroke-linecap="round"/><path class="cyc-head" d="M88 16 L112 16 L100 -4 Z" fill="var(--sage-dark)"/></svg>
+  </div>
 </section>
 
-<section class="slide myth" data-title="Mythos 1">
+<section class="slide myth" data-part="1" data-title="Mythos 1" data-cam="off">
   <div class="split">
     <div class="myth-art"><img src="assets/myth1.webp" alt="Kind vor leerem Blatt – Kind mit Plan und Checkliste"><div class="myth-cover" style="left:49.5%"></div></div>
     <div>
-      <p class="label">Mythos 1</p>
+      <p class="label">Mythos 1 von 5</p>
       <h2 class="h">„SRL ist <em>Freiarbeit.</em>“</h2>
       <p class="kw step">Freiheit ohne Strategie = Selbstbeschäftigung.</p>
     </div>
   </div>
 </section>
 
-<section class="slide myth" data-title="Mythos 2">
+<section class="slide myth" data-part="1" data-title="Mythos 2" data-cam="off">
   <div class="split">
     <div class="myth-art"><img src="assets/myth2.webp" alt="Lehrkraft lehnt sich zurück – Lehrkraft begleitet ein Kind"><div class="myth-cover" style="left:50.5%"></div></div>
     <div>
-      <p class="label">Mythos 2</p>
+      <p class="label">Mythos 2 von 5</p>
       <h2 class="h">„Die Lehrkraft <em>zieht sich zurück.</em>“</h2>
       <p class="kw step">Andere Rolle: Gerüst, Feedback, Begleitung.</p>
     </div>
   </div>
 </section>
 
-<section class="slide myth" data-title="Mythos 3">
+<section class="slide myth" data-part="1" data-title="Mythos 3" data-cam="off">
   <div class="split">
     <div class="myth-art"><img src="assets/myth3.webp" alt="Siegertreppchen – viele Kinder auf eigenen Wegen"><div class="myth-cover" style="left:40.5%"></div></div>
     <div>
-      <p class="label">Mythos 3</p>
+      <p class="label">Mythos 3 von 5</p>
       <h2 class="h">„Das können nur <em>starke Lernende.</em>“</h2>
       <p class="kw step">Gerade Schwächere profitieren – wenn SRL gelehrt wird.</p>
     </div>
   </div>
 </section>
 
-<section class="slide myth" data-title="Mythos 4">
+<section class="slide myth" data-part="1" data-title="Mythos 4" data-cam="off">
   <div class="split">
     <div class="myth-art"><img src="assets/myth4.webp" alt="Chaotische Projektarbeit – strukturierter Unterricht mit Zyklus an der Tafel"><div class="myth-cover" style="left:48.7%"></div></div>
     <div>
-      <p class="label">Mythos 4</p>
+      <p class="label">Mythos 4 von 5</p>
       <h2 class="h">„Immer <em>Projektarbeit</em> und offene Methoden.“</h2>
       <p class="kw step">Jede Unterrichtsform kann SRL fördern.</p>
     </div>
   </div>
 </section>
 
-<section class="slide myth" data-title="Mythos 5">
+<section class="slide myth" data-part="1" data-title="Mythos 5" data-cam="off">
   <div class="split">
     <div class="myth-art"><img src="assets/myth5.webp" alt="Stempel SRL ja/nein auf Babys – Kind steigt Treppe Planen, Ausprobieren, Reflektieren, Wachsen"><div class="myth-cover" style="left:50.5%"></div></div>
     <div>
-      <p class="label">Mythos 5</p>
-      <h2 class="h">„SRL ist ein <em>Persönlichkeits­merkmal.</em>“</h2>
+      <p class="label">Mythos 5 von 5</p>
+      <h2 class="h">„SRL ist ein <em>Persönlichkeits&shy;merkmal.</em>“</h2>
       <p class="kw step">SRL ist erlernbar.</p>
     </div>
   </div>
 </section>
 
-<section class="slide pause" data-title="Kurz anhalten 1">
-  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
-  <p class="statement" style="font-size:84px">Welcher dieser Mythen ist dir schon begegnet – bei anderen oder bei dir selbst?</p>
-  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
-</section>
-
-<section class="slide" data-title="Begriffe">
+<section class="slide seq termsl" data-part="1" data-title="Begriffe" data-cam="pip">
   <h2 class="h">Wo steht SRL?</h2>
   <div class="terms">
-    <div class="step"><b>selbst­ständig</b><p class="sm">Brauche ich jemanden neben mir?</p></div>
-    <div class="step"><b>selbst­organisiert</b><p class="sm">Wie ordne ich meine Arbeit?</p></div>
-    <div class="step"><b>selbst­verantwortlich</b><p class="sm">Wofür stehe ich ein?</p></div>
-    <div class="step on"><b>selbst­reguliert</b><p class="sm">Wie steuere ich mein Lernen?</p></div>
+    <div class="step"><b>selbst&shy;ständig</b><p class="sm">Brauche ich jemanden neben mir?</p></div>
+    <div class="step"><b>selbst&shy;organisiert</b><p class="sm">Wie ordne ich meine Arbeit?</p></div>
+    <div class="step"><b>selbst&shy;verantwortlich</b><p class="sm">Wofür stehe ich ein?</p></div>
+    <div class="step on"><b>selbst&shy;reguliert</b><p class="sm">Wie steuere ich mein Lernen?</p></div>
   </div>
   <p class="kw step">Selbstständig ≠ <em>selbstreguliert.</em></p>
 </section>
 
-<section class="slide cover chapter" data-title="Kapitel 2" data-section="2 · Warum es sich lohnt" data-dark>
+<section class="slide pause" data-part="1" data-title="Kurz anhalten" data-cam="big">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement kin" style="font-size:84px">Welcher dieser Mythen ist dir schon begegnet – bei anderen oder <em>bei dir selbst?</em></p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+</section>
+
+<section class="slide cover chapter outro" data-part="1" data-title="Weiter in Teil 2" data-cam="big" data-dark>
+  <div class="orbit" aria-hidden="true"></div>
+  <p class="label">Ende von Teil 1 · weiter geht es mit</p>
+  <h2 class="h">Teil 2: Warum es sich<br><em>lohnt.</em></h2>
+</section>
+
+<section class="slide cover chapter" data-part="2" data-title="Teil 2" data-cam="big" data-section="2 · Warum es sich lohnt" data-dark>
+  <div class="orbit" aria-hidden="true"></div>
   <p class="chap-no">2</p>
-  <p class="label">Kapitel 2 von 5</p>
+  <p class="label">Teil 2 von 5 · SRL ist keine Methode!</p>
   <h2 class="h">Warum es sich<br><em>lohnt.</em></h2>
 </section>
 
-<section class="slide" data-title="Wirksamkeit">
-  <p class="label">Warum sich das lohnt</p>
-  <h2 class="h" style="font-size:140px;margin-bottom:4px">d ≈ <em><span class="count" data-to="0.6" data-dec="1">0,6</span></em></h2>
-  <p class="kw" style="font-size:40px">Effektstärke von SRL und Metakognition – deutlich über dem Durchschnitt.</p>
+<section class="slide effect" data-part="2" data-title="Wirksamkeit" data-cam="off">
+  <p class="label">Was die Forschung sagt</p>
+  <div class="hero"><p class="hero-n">+<span class="count" data-to="8" data-dec="0">8</span></p><p class="hero-t">Monate zusätzlicher <em>Lernfortschritt</em> pro Schuljahr<small>im Durchschnitt, bei sehr geringen Kosten · EEF, 355 Studien</small></p></div>
   <div class="scale">
-    <div class="sc-above" style="left:40%;transform:translateX(-100%);text-align:right;padding-right:14px">Durchschnitt aller Maßnahmen<br><b>0,40</b> (Hattie)</div>
-    <div class="sc-above sc-srl" style="left:52%;padding-left:6px">SRL &amp; Metakognition<br><b>0,52–0,61</b> (Hattie, EEF)</div>
+    <div class="sc-above step" style="left:40%;transform:translateX(-100%);text-align:right;padding-right:14px">Durchschnitt aller Maßnahmen<br><b>d = 0,40</b> (Hattie)</div>
+    <div class="sc-above sc-srl step" style="left:52%;padding-left:6px">Selbstregulation &amp; Metakognition<br><b>d = 0,52–0,60</b> (Hattie)</div>
     <div class="sc-track">
       <div class="sc-zone" style="left:40%;right:0"></div>
-      <div class="sc-band" style="left:52%;width:9%"></div>
+      <div class="sc-band" style="left:52%;width:8%"></div>
       <div class="sc-hinge" style="left:40%"></div>
     </div>
     <div class="sc-ticks">
@@ -556,38 +732,57 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
       <span style="left:50%">0,5<i>mittel</i></span><span style="left:60%">0,6</span><span style="left:80%">0,8<i>groß</i></span><span style="left:100%">1,0</span>
     </div>
   </div>
-  <p class="sm" style="margin-top:40px">Zum Vergleich: Die EEF übersetzt d = 0,53–0,61 als <b style="color:var(--navy)">„+7 Monate“</b> zusätzlichen Lernfortschritt im Schuljahr – gegenüber ähnlichen Lernenden ohne diese Förderung.</p>
-  <p class="src" style="margin-top:22px;font-size:20px">Hattie, Visible Learning (Stand 2017): metakognitive Strategien 0,60, Selbstregulationsstrategien 0,52, Durchschnitt 0,40 · <a href="https://visible-learning.org/hattie-ranking-influences-effect-sizes-learning-achievement/">visible-learning.org</a> · EEF Teaching and Learning Toolkit 2025, 246 Studien · <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">educationendowmentfoundation.org.uk</a> · Einordnung klein/mittel/groß nach Cohen</p>
+  <p class="sm step" style="margin-top:44px;color:var(--navy);font-weight:600">Durchschnitte über viele Studien – entscheidend ist, <em style="font-style:normal;color:var(--rust-dark)">wie</em> man es umsetzt.</p>
+  <p class="src" style="margin-top:20px;font-size:20px">EEF Teaching and Learning Toolkit, „Metacognition and self-regulation“ (Stand Mai 2025): +8 Monate, 355 Studien · <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">educationendowmentfoundation.org.uk</a> · Hattie, Visible Learning (Stand 2017): metakognitive Strategien 0,60, Selbstregulationsstrategien 0,52, Durchschnitt 0,40 · <a href="https://visible-learning.org/hattie-ranking-influences-effect-sizes-learning-achievement/">visible-learning.org</a> · klein/mittel/groß nach Cohen</p>
 </section>
 
-<section class="slide" data-title="Was wirkt">
+<section class="slide seq" data-part="2" data-title="Was wirkt" data-cam="pip">
   <p class="label">Was laut EEF wirkt</p>
   <h2 class="h">Was <em>wirkt?</em></h2>
   <ol class="kw-list checks" style="gap:30px">
-    <li class="kw">Strategien <em>explizit</em> unterrichten</li>
-    <li class="kw">Eigenes Denken <em>vormachen</em></li>
-    <li class="kw">Anspruchsvolle Aufgaben <em>im Fachunterricht</em></li>
-    <li class="kw">Fortbildung für ein <em>gemeinsames Bild</em></li>
+    <li class="kw step">Strategien <em>explizit</em> unterrichten</li>
+    <li class="kw step">Eigenes Denken <em>vormachen</em></li>
+    <li class="kw step">Anspruchsvolle Aufgaben <em>im Fachunterricht</em></li>
+    <li class="kw step">Fortbildung für ein <em>gemeinsames Bild</em></li>
   </ol>
-  <p class="src" style="margin-top:50px;font-size:22px">Education Endowment Foundation (EEF), Teaching and Learning Toolkit: „Metacognition and self-regulation“ · <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">educationendowmentfoundation.org.uk</a></p>
+  <p class="src" style="margin-top:44px;font-size:22px">Education Endowment Foundation (EEF), Teaching and Learning Toolkit · <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">educationendowmentfoundation.org.uk</a></p>
 </section>
 
-<section class="slide cover chapter" data-title="Kapitel 3" data-section="3 · Das Modell" data-dark>
+<section class="slide" data-part="2" data-title="Für wen besonders" data-cam="big">
+  <p class="label">Für wen es den größten Unterschied macht</p>
+  <p class="statement kin">Wer Strategien selten von selbst nutzt, <em>kann am meisten gewinnen.</em></p>
+  <p class="sm" style="margin-top:40px;max-width:860px">Benachteiligte Lernende profitieren besonders, wenn Strategien ausdrücklich vermittelt werden (EEF).</p>
+</section>
+
+<section class="slide pause" data-part="2" data-title="Kurz anhalten" data-cam="big">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement kin" style="font-size:84px">Wann hast du zuletzt vor der Klasse <em>laut gedacht?</em></p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+</section>
+
+<section class="slide cover chapter outro" data-part="2" data-title="Weiter in Teil 3" data-cam="big" data-dark>
+  <div class="orbit" aria-hidden="true"></div>
+  <p class="label">Ende von Teil 2 · weiter geht es mit</p>
+  <h2 class="h">Teil 3: Das Modell:<br><em>die SRL-Turbine.</em></h2>
+</section>
+
+<section class="slide cover chapter" data-part="3" data-title="Teil 3" data-cam="big" data-section="3 · Das Modell: die SRL-Turbine" data-dark>
+  <div class="orbit" aria-hidden="true"></div>
   <p class="chap-no">3</p>
-  <p class="label">Kapitel 3 von 5</p>
+  <p class="label">Teil 3 von 5 · SRL ist keine Methode!</p>
   <h2 class="h">Das Modell:<br><em>die SRL-Turbine.</em></h2>
 </section>
 
-<section class="slide" data-title="Forschung">
-  <h2 class="h">Ansätze aus der <em>Forschung</em></h2>
+<section class="slide" data-part="3" data-title="Forschung" data-cam="off">
+  <h2 class="h">Drei Stimmen aus der <em>Forschung</em></h2>
   <div class="grid3">
-    <div class="col"><p class="name">Stebner</p><p class="sm">Uni Osnabrück</p><p class="kw">Strategien &amp; Implementierung</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.ferdinand-stebner.de/" target="_blank" rel="noopener">ferdinand-stebner.de</a></p></div>
-    <div class="col"><p class="name"><span data-morph="karlen">Karlen</span></p><p class="sm">Uni Zürich</p><p class="kw">Metakognition &amp; Motivation</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.selbstreguliertes-lernen.uzh.ch/de.html" target="_blank" rel="noopener">selbstreguliertes-lernen.uzh.ch</a></p></div>
-    <div class="col"><p class="name">Wirth</p><p class="sm">Ruhr-Uni Bochum</p><p class="kw">Äußere Struktur &amp; Lernbuddy</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.pe.ruhr-uni-bochum.de/erziehungswissenschaft/lllf/index.html.de" target="_blank" rel="noopener">pe.ruhr-uni-bochum.de</a></p></div>
+    <div class="col step"><p class="name">Stebner</p><p class="sm">Uni Osnabrück</p><p class="kw">Strategien &amp; Implementierung</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.ferdinand-stebner.de/" target="_blank" rel="noopener">ferdinand-stebner.de</a></p></div>
+    <div class="col step"><p class="name"><span data-morph="karlen">Karlen</span></p><p class="sm">Uni Zürich</p><p class="kw">Metakognition &amp; Motivation</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.selbstreguliertes-lernen.uzh.ch/de.html" target="_blank" rel="noopener">selbstreguliertes-lernen.uzh.ch</a></p></div>
+    <div class="col step"><p class="name">Wirth</p><p class="sm">Ruhr-Uni Bochum</p><p class="kw">Äußere Struktur &amp; Lernbuddy</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.pe.ruhr-uni-bochum.de/erziehungswissenschaft/lllf/index.html.de" target="_blank" rel="noopener">pe.ruhr-uni-bochum.de</a></p></div>
   </div>
 </section>
 
-<section class="slide" data-anchor="turbine" data-title="SRL-Turbine">
+<section class="slide" data-part="3" data-title="SRL-Turbine" data-cam="off">
   <div class="split">
     <figure>
       <img class="turbine" src="assets/turbine.png" alt="SRL-Turbine der Universität Zürich">
@@ -597,109 +792,111 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
       <p class="label"><span data-morph="karlen">Karlen</span> et al. · Uni Zürich</p>
       <h2 class="h">Die SRL-<em>Turbine</em></h2>
       <ol class="kw-list rings">
-        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="off" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="on fill" cx="32" cy="32" r="8"/></svg><span>Grundbedürfnisse<small>innen</small></span></li>
-        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="off" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="on" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Lernprozess<small>mittlerer Ring</small></span></li>
-        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Kompetenzbereiche<small>außen</small></span></li>
+        <li class="kw step"><div class="tb tbico" data-focus="needs" data-solid="1"></div><span>Grundbedürfnisse<small>innen · das Warum</small></span></li>
+        <li class="kw step"><div class="tb tbico" data-focus="process" data-solid="1"></div><span>Lernprozess<small>mittlerer Ring · der Ablauf</small></span></li>
+        <li class="kw step"><div class="tb tbico" data-focus="areas" data-solid="1"></div><span>Kompetenzbereiche<small>außen · das Können</small></span></li>
       </ol>
     </div>
   </div>
 </section>
 
-<section class="slide" data-anchor="turbine" data-title="Turbine · Grundbedürfnisse">
+<section class="slide seq lvl" data-part="3" data-title="Turbine · Grundbedürfnisse" data-cam="off" data-anchor="turbine">
   <div class="split">
-    <figure>
-      <img class="turbine" src="assets/turbine-needs.png" alt="SRL-Turbine – Fokus Grundbedürfnisse">
-      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
-    </figure>
+    <figure><div class="tb tbbig" data-focus="needs"></div><p class="src">Vereinfachte Darstellung nach Karlen et al., Universität Zürich</p></figure>
     <div>
       <p class="label">Ebene 1 · Grundbedürfnisse</p>
       <h2 class="h" style="font-size:68px">Warum sollten Lernende ihr Lernen steuern <em>wollen?</em></h2>
       <ul class="kw-list dotted">
-        <li class="kw">Kompetenz</li>
-        <li class="kw">Autonomie</li>
-        <li class="kw">Eingebundenheit</li>
+        <li class="kw step" data-tb="n1">Kompetenz <small>sich als fähig erleben</small></li>
+        <li class="kw step" data-tb="n2">Autonomie <small>mitgestalten dürfen</small></li>
+        <li class="kw step" data-tb="n3">Eingebundenheit <small>tragfähige Beziehungen</small></li>
       </ul>
-      <p class="sm bottom" style="margin-top:46px;color:var(--red);font-weight:700">Nicht allein gelassen.</p>
+      <p class="sm step punch">Selbstreguliert heißt nicht: allein gelassen.</p>
     </div>
   </div>
 </section>
 
-<section class="slide" data-anchor="turbine" data-title="Turbine · Lernprozess">
+<section class="slide seq lvl" data-part="3" data-title="Turbine · Lernprozess" data-cam="off" data-anchor="turbine">
   <div class="split">
-    <figure>
-      <img class="turbine" src="assets/turbine-process.png" alt="SRL-Turbine – Fokus Lernprozess">
-      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
-    </figure>
+    <figure><div class="tb tbbig" data-focus="process"></div><p class="src">Vereinfachte Darstellung nach Karlen et al., Universität Zürich</p></figure>
     <div>
       <p class="label">Ebene 2 · Lernprozess</p>
       <h2 class="h">Der <em>Zyklus.</em></h2>
-      <div class="cyc">
-      <ul class="kw-list arrows" style="gap:14px">
-        <li class="kw">Planung</li>
-        <li class="kw">Durchführung</li>
-        <li class="kw">Reflexion</li>
+      <ul class="kw-list dotted">
+        <li class="kw step" data-tb="p1">Planung <small>Ausgangslage, Ziele, Strategien</small></li>
+        <li class="kw step" data-tb="p2">Durchführung <small>beobachten, anpassen, Hilfe holen</small></li>
+        <li class="kw step" data-tb="p3">Reflexion <small>Ergebnis und Vorgehen bewerten</small></li>
       </ul>
-      <svg class="cyc-back step" viewBox="0 0 120 306" aria-hidden="true"><path class="cyc-line" pathLength="1" d="M-80 274 C 40 274, 88 236, 88 152 S 40 31, -98 31" fill="none" stroke="var(--sage-dark)" stroke-width="5" stroke-linecap="round"/><path class="cyc-head" d="M-98 20.5 L-98 41.5 L-119 31 Z" fill="var(--sage-dark)" stroke="var(--sage-dark)" stroke-width="2" stroke-linejoin="round"/></svg>
-      </div>
+      <p class="sm step punch" data-tb="run">Die Reflexion fließt in die nächste Planung.</p>
+      <p class="src" style="margin-top:26px">Im Original heißt die erste Phase „Vorbereitung“ – gemeint ist dasselbe.</p>
     </div>
   </div>
 </section>
 
-<section class="slide" data-anchor="turbine" data-title="Turbine · Kompetenzen">
+<section class="slide seq lvl" data-part="3" data-title="Turbine · Kompetenzbereiche" data-cam="off" data-anchor="turbine">
   <div class="split">
-    <figure>
-      <img class="turbine" src="assets/turbine-areas.png" alt="SRL-Turbine – Fokus Kompetenzbereiche">
-      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
-    </figure>
+    <figure><div class="tb tbbig" data-focus="areas"></div><p class="src">Vereinfachte Darstellung nach Karlen et al., Universität Zürich</p></figure>
     <div>
       <p class="label">Ebene 3 · Kompetenzbereiche</p>
-      <h2 class="h">Mehr&shy;<em>dimensional.</em></h2>
-      <p class="sm" style="margin-top:36px;max-width:560px">Jeder dieser Kompetenzbereiche wäre einen eigenen Vortrag wert. Gutes Material dazu gibt es bei der Uni Zürich:</p>
-      <p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html" target="_blank" rel="noopener">selbstreguliertes-lernen.uzh.ch</a></p>
+      <h2 class="h" style="font-size:76px;margin-bottom:30px">Sechs <em>Bereiche.</em></h2>
+      <ul class="kw-list areas">
+        <li class="kw step" data-tb="metakognition">Metakognition <small>planen, überwachen, auswerten</small></li>
+        <li class="kw step" data-tb="kognition">Kognition <small>Informationen verarbeiten</small></li>
+        <li class="kw step" data-tb="mindset">Mindset <small>Fehler als Lerngelegenheit</small></li>
+        <li class="kw step" data-tb="motivation">Motivation <small>sich etwas zutrauen, dranbleiben</small></li>
+        <li class="kw step" data-tb="emotion">Emotion <small>Frust und Unsicherheit regulieren</small></li>
+        <li class="kw step" data-tb="ressourcen">Ressourcen <small>Zeit, Material, Ort und Hilfe nutzen</small></li>
+      </ul>
+      <p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html" target="_blank" rel="noopener">Mehr dazu: selbstreguliertes-lernen.uzh.ch</a></p>
     </div>
   </div>
 </section>
 
-<section class="slide pause" data-title="Kurz anhalten 2">
-  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
-  <p class="statement" style="font-size:84px">Welche Ebene der Turbine kommt in deinem Unterricht schon vor – und welche <em>kaum?</em></p>
-  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
-</section>
-
-<section class="slide" data-title="SRL ist …">
+<section class="slide" data-part="3" data-title="SRL ist …" data-cam="pip">
   <div class="stackv"><p class="big">SRL<br>ist …</p>
     <ul><li>ein Prozess</li><li>erlernbar</li><li>zyklisch</li><li>metakognitiv</li><li>strategisch</li><li>begleitet</li><li class="all">für alle.</li></ul>
   </div>
 </section>
 
-<section class="slide" data-title="Zitat">
-  <p class="quote">„Ich weiß, warum ich lerne, wie ich lerne – und was ich <em style="font-style:normal;color:var(--red)">beim nächsten Mal anders</em> machen will.“</p>
+<section class="slide" data-part="3" data-title="Zitat" data-cam="big">
+  <p class="label">Das Ziel – aus Sicht der Lernenden</p>
+  <p class="quote kin">„Ich weiß, warum ich lerne, wie ich lerne – und was ich <em class="r">beim nächsten Mal anders</em> machen will.“</p>
 </section>
 
-<section class="slide cover chapter" data-title="Kapitel 4" data-section="4 · Vom Bildungsziel zur Praxis" data-dark>
+<section class="slide pause" data-part="3" data-title="Kurz anhalten" data-cam="big">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement kin" style="font-size:84px">Welche Ebene der Turbine kommt in deinem Unterricht schon vor – und welche <em>kaum?</em></p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+</section>
+
+<section class="slide cover chapter outro" data-part="3" data-title="Weiter in Teil 4" data-cam="big" data-dark>
+  <div class="orbit" aria-hidden="true"></div>
+  <p class="label">Ende von Teil 3 · weiter geht es mit</p>
+  <h2 class="h">Teil 4: Vom Bildungsziel<br><em>zur Praxis.</em></h2>
+</section>
+
+<section class="slide cover chapter" data-part="4" data-title="Teil 4" data-cam="big" data-section="4 · Vom Bildungsziel zur Praxis" data-dark>
+  <div class="orbit" aria-hidden="true"></div>
   <p class="chap-no">4</p>
-  <p class="label">Kapitel 4 von 5</p>
+  <p class="label">Teil 4 von 5 · SRL ist keine Methode!</p>
   <h2 class="h">Vom Bildungsziel<br><em>zur Praxis.</em></h2>
 </section>
 
-<section class="slide" data-title="Bildungsziel">
-  <p class="label">Vom Modell zur Praxis</p>
-  <h2 class="h" style="margin-bottom:18px;font-size:84px">Keine Methode, sondern ein <em>Bildungsziel.</em></h2>
-  <p class="kw" style="font-size:44px;font-weight:500">Ein Kompetenzpaket – lernbar, nicht angeboren.</p>
-  <div class="pack">
-    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Metakognition</p><p class="sm">planen, überwachen, auswerten</p></div>
-    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Kognition</p><p class="sm">Informationen verarbeiten und verstehen</p></div>
-    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Mindset</p><p class="sm">Fehler als Lerngelegenheit sehen</p></div>
-    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Motivation</p><p class="sm">sich etwas zutrauen und dranbleiben</p></div>
-    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Emotion</p><p class="sm">Frust und Unsicherheit regulieren</p></div>
-    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Ressourcen</p><p class="sm">Zeit, Material, Ort und Hilfe nutzen</p></div>
+<section class="slide" data-part="4" data-title="Kompetenzpaket" data-cam="off">
+  <div class="split">
+    <figure><div class="tb tbbig" data-focus="areas" data-on="metakognition kognition mindset motivation emotion ressourcen"></div><p class="src">Vereinfachte Darstellung nach Karlen et al., Universität Zürich</p></figure>
+    <div>
+      <p class="label">Zurück zur These</p>
+      <h2 class="h" style="font-size:84px;margin-bottom:26px">Kein Verfahren, sondern ein <em>Kompetenz&shy;paket.</em></h2>
+      <p class="kw step" style="font-weight:500">Lernbar – nicht angeboren.</p>
+      <p class="sm step" style="margin-top:30px">Sechs Bereiche, die Lernende Schritt für Schritt aufbauen. Du kennst sie aus Teil 3.</p>
+    </div>
   </div>
-  <p class="src" style="margin-top:32px">Kompetenzbereiche der SRL-Turbine (Karlen et al., Universität Zürich)</p>
 </section>
 
-<section class="slide" data-title="Mittel, nicht Ziel">
+<section class="slide means" data-part="4" data-title="Mittel, nicht Ziel" data-cam="off">
   <p class="label">Settings · Methoden · Prüfungsformate</p>
-  <h2 class="h" style="margin-bottom:40px">Mittel, nicht <em>Ziel.</em></h2>
+  <h2 class="h" style="margin-bottom:36px">Mittel, nicht <em>Ziel.</em></h2>
   <div class="lever-grid">
     <div><p class="col-h">Was wir verändern</p>
       <ul class="kw-list dotted">
@@ -709,34 +906,28 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
         <li class="kw">Lernräume</li>
         <li class="kw">Coaching</li>
       </ul></div>
-    <div class="lever-arrow"><svg viewBox="0 0 150 60" aria-hidden="true"><path d="M8 30H118" stroke="var(--sage-dark)" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M118 19.5L139 30L118 40.5Z" fill="var(--sage-dark)" stroke="var(--sage-dark)" stroke-width="2" stroke-linejoin="round"/></svg></div>
-    <div class="step"><p class="col-h">Worauf es zielt</p>
-      <ul class="kw-list target-list">
-        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Metakognition</span></li>
-        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Kognition</span></li>
-        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Mindset</span></li>
-        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Motivation</span></li>
-        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Emotion</span></li>
-        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Ressourcen</span></li>
-      </ul></div>
+    <div class="lever-arrow step" data-tb="metakognition kognition mindset motivation emotion ressourcen"><svg viewBox="0 0 150 60" aria-hidden="true"><path class="cyc-line" pathLength="1" d="M8 30H118" stroke="var(--sage-dark)" stroke-width="5" stroke-linecap="round" fill="none"/><path class="cyc-head" d="M118 19.5L139 30L118 40.5Z" fill="var(--sage-dark)"/></svg></div>
+    <div><p class="col-h">Worauf es zielt</p><div class="tb tbmid" data-focus="areas"></div></div>
   </div>
-  <p class="sm" style="margin-top:40px;font-weight:600;color:var(--navy)">Neue Settings sind Begleiterscheinungen – sie wirken, wenn sie gezielt Kompetenzbereiche stärken.</p>
+  <p class="sm step" style="margin-top:30px;font-weight:600;color:var(--navy)">Ein offenes Setting ist nicht automatisch SRL – es wirkt, wenn es gezielt einen Kompetenzbereich stärkt.</p>
 </section>
 
-<section class="slide lever" data-title="Metakognition">
-  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Metakognition · Kognition</p>
+<section class="slide lever seq" data-part="4" data-title="Metakognition" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="metakognition kognition"></div>
+  <p class="label">Zielt auf: Metakognition · Kognition</p>
   <h2 class="h">Denken über das <em>Lernen.</em></h2>
-  <p class="lead">Eine Routine des zyklischen, metakognitiv aktivierten Lernens.</p>
+  <p class="lead">Eine Routine, die in jeder Reihe wiederkommt.</p>
   <ul class="kw-list dotted">
-    <li class="kw">Lern- und Denkstrategien explizit einführen und üben</li>
-    <li class="kw">Laut denken: Lehrkräfte machen ihr Denken sichtbar</li>
-    <li class="kw">Introspektion: Lernende beobachten und beschreiben ihr Lernen</li>
-    <li class="kw">Planung, Durchführung, Reflexion – in jeder Reihe wieder</li>
+    <li class="kw step">Strategien explizit einführen und üben</li>
+    <li class="kw step">Laut denken: das eigene Denken vormachen</li>
+    <li class="kw step">Introspektion: das eigene Lernen beschreiben</li>
+    <li class="kw step">Planung · Durchführung · Reflexion – in jeder Reihe</li>
   </ul>
-  <p class="tried"><b>Bei uns punktuell erprobt:</b> <span data-morph="buddy">Lernbuddy</span> · Logbuch mit Lerntagebuch · Gelingensnachweise</p>
+  <p class="eg step"><b>So klingt lautes Denken:</b> „Ich lese erst die Aufgabe und frage mich: Was ist hier eigentlich gesucht?“</p>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> <span data-morph="buddy">Lernbuddy</span> · Logbuch mit Lerntagebuch</p>
 </section>
 
-<section class="slide" data-title="Lernbuddy">
+<section class="slide" data-part="4" data-title="Lernbuddy" data-cam="off">
   <i class="step zs zs1"></i><i class="step zs zs2"></i><i class="step zs zs3"></i>
   <div class="split">
     <div class="buddy-zoom"><img class="buddy" src="assets/lernbuddy.webp" alt="Arbeitsblatt Lernbuddy der Klasse 5.3 mit Planung, Durchführung und Reflexion"></div>
@@ -749,131 +940,158 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
   </div>
 </section>
 
-<section class="slide lever" data-title="Motivation">
-  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Motivation · Mindset</p>
+<section class="slide lever seq" data-part="4" data-title="Wahl" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="motivation mindset"></div>
+  <p class="label">Zielt auf: Motivation · Mindset</p>
   <h2 class="h">Selbstwirksam durch <em>Wahl.</em></h2>
-  <p class="lead">Unterrichtsreihen so aufbauen, dass Lernende Entscheidungen treffen.</p>
+  <p class="lead">Reihen so aufbauen, dass Lernende echte Entscheidungen treffen.</p>
   <ul class="kw-list dotted">
-    <li class="kw">Wo arbeite ich? – Arbeitsort</li>
-    <li class="kw">Wie schnell? – eigenes Tempo</li>
-    <li class="kw">Wie schwer? – Schwierigkeitsgrad</li>
-    <li class="kw">Wann bin ich bereit? – Zeitpunkt des Nachweises</li>
-    <li class="kw">Noch nicht geschafft? – neuer Anlauf statt Endurteil</li>
+    <li class="kw step">Wo arbeite ich? – Arbeitsort</li>
+    <li class="kw step">Wie schnell? – eigenes Tempo</li>
+    <li class="kw step">Wie schwer? – Schwierigkeitsgrad</li>
+    <li class="kw step">Wahl braucht Rahmen: dosiert statt grenzenlos</li>
   </ul>
-  <p class="tried"><b>Bei uns punktuell erprobt:</b> Lernwege und Lerntheken · geöffnete Lernsettings · Wahltermine</p>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Lernwege und Lerntheken · geöffnete Lernsettings</p>
 </section>
 
-<section class="slide lever" data-title="Ressourcen">
-  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Ressourcen</p>
+<section class="slide lever seq" data-part="4" data-title="Prüfungsformate" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="motivation mindset ressourcen"></div>
+  <p class="label">Zielt auf: Motivation · Mindset · Ressourcen</p>
+  <h2 class="h">Prüfen, wenn es <em>passt.</em></h2>
+  <p class="lead">Prüfungsformate, die Selbstregulation verlangen – und belohnen.</p>
+  <ul class="kw-list dotted">
+    <li class="kw step">Bin ich so weit? – sich vor dem Nachweis einschätzen</li>
+    <li class="kw step">Wann bin ich bereit? – Zeitpunkt mitbestimmen</li>
+    <li class="kw step">Noch nicht geschafft? – neuer Anlauf statt Endurteil</li>
+    <li class="kw step">Hilfsmittel klug nutzen – als Teil der Leistung</li>
+  </ul>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Gelingensnachweise · Wahltermine · Open-Book-Arbeiten</p>
+</section>
+
+<section class="slide lever seq" data-part="4" data-title="Ressourcen" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="ressourcen"></div>
+  <p class="label">Zielt auf: Ressourcen</p>
   <h2 class="h">Ressourcen, die <em>passen.</em></h2>
-  <p class="lead">Material, Hilfe und Zeit so planen, dass Wahl überhaupt möglich wird.</p>
+  <p class="lead">Material, Hilfe und Zeit mitplanen – nicht nachträglich ergänzen.</p>
   <ul class="kw-list dotted">
-    <li class="kw">Verlässlicher Zugang zu Aufgaben und Material</li>
-    <li class="kw">Gestufte Hilfe statt sofortiger Lösung</li>
-    <li class="kw">Hilfsmittel sinnvoll nutzen lernen</li>
-    <li class="kw">Zeitfenster, die eigene Planung erlauben</li>
+    <li class="kw step">Verlässlicher Zugang zu Aufgaben und Material</li>
+    <li class="kw step">Gestufte Hilfe statt sofortiger Lösung</li>
+    <li class="kw step">Zeitfenster, die eigene Planung erlauben</li>
   </ul>
-  <p class="tried"><b>Bei uns punktuell erprobt:</b> Lösungsleiter · Lernwege · Open-Book-Arbeiten</p>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Lösungsleiter · Lernwege</p>
 </section>
 
-<section class="slide lever" data-title="Lernraum">
-  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Ressourcen · Emotion</p>
+<section class="slide lever seq" data-part="4" data-title="Lernraum" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="ressourcen emotion"></div>
+  <p class="label">Zielt auf: Ressourcen · Emotion</p>
   <h2 class="h">Der Raum als <em>dritter Pädagoge.</em></h2>
-  <p class="lead">Lernräume sind äußere Ressource – und prägen, wie man sich darin fühlt.</p>
+  <p class="lead">Lernräume sind Ressource – und prägen, wie man sich darin fühlt.</p>
   <ul class="kw-list dotted">
-    <li class="kw">Orientierung: Wo finde ich was, wo arbeite ich wie?</li>
-    <li class="kw">Zonen für Ruhe, Austausch und Input</li>
-    <li class="kw">Wohlbefinden: ein Ort, an dem man gern lernt</li>
+    <li class="kw step">Orientierung: Wo finde ich was, wo arbeite ich wie?</li>
+    <li class="kw step">Zonen für Ruhe, Austausch und Input</li>
+    <li class="kw step">Wohlbefinden: ein Ort, an dem man gern lernt</li>
   </ul>
-  <p class="tried"><b>Bei uns punktuell erprobt:</b> Lernbüro · Churer Modell</p>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Lernbüro · Churer Modell</p>
 </section>
 
-<section class="slide lever" data-title="Coaching">
-  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Emotion · Motivation · Mindset · Metakognition</p>
+<section class="slide lever seq" data-part="4" data-title="Coaching" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="emotion motivation mindset metakognition"></div>
+  <p class="label">Zielt auf: Emotion · Motivation · Mindset · Metakognition</p>
   <h2 class="h">Begleiten im <em>Gespräch.</em></h2>
   <p class="lead">Coaching unterstützt, was sich nicht verordnen lässt.</p>
   <ul class="kw-list dotted">
-    <li class="kw">Emotion: Frust, Unsicherheit und Prüfungsangst ansprechen</li>
-    <li class="kw">Motivation: Ziele vereinbaren, Fortschritte sichtbar machen</li>
-    <li class="kw">Mindset: Fehler als Lerngelegenheit deuten</li>
-    <li class="kw">Metakognition: über das eigene Lernen sprechen</li>
+    <li class="kw step">Emotion: Frust, Unsicherheit, Prüfungsangst ansprechen</li>
+    <li class="kw step">Motivation: Ziele vereinbaren, Fortschritt zeigen</li>
+    <li class="kw step">Mindset: Fehler als Lerngelegenheit deuten</li>
+    <li class="kw step">Metakognition: über das eigene Lernen sprechen</li>
   </ul>
-  <p class="tried"><b>Bei uns punktuell erprobt:</b> 1:1-Mentorengespräche</p>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> 1:1-Mentorengespräche</p>
 </section>
 
-<section class="slide" data-title="Fazit Praxis">
-  <p class="statement">Nicht das Setting ist das Ziel – <em>sondern die Kompetenz, die es stärkt.</em></p>
+<section class="slide" data-part="4" data-title="Fazit Praxis" data-cam="big">
+  <p class="statement kin">Nicht das Setting ist das Ziel – <em>sondern die Kompetenz, die es stärkt.</em></p>
 </section>
 
-<section class="slide pause" data-title="Kurz anhalten 3">
+<section class="slide pause" data-part="4" data-title="Kurz anhalten" data-cam="big">
   <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
-  <p class="statement" style="font-size:84px">Was veränderst du schon im Unterricht – und auf welchen Kompetenzbereich <em>zielt es?</em></p>
+  <p class="statement kin" style="font-size:84px">Was veränderst du schon im Unterricht – und auf welchen Kompetenzbereich <em>zielt es?</em></p>
   <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
 </section>
 
-<section class="slide" data-title="KI &amp; Digital">
-  <p class="label">Perspektive Digitalisierung</p>
-  <h2 class="h" style="font-size:120px">KI macht kein SRL.</h2>
-  <p class="kw"><em style="color:var(--sage-dark)">Aber sie verändert, was skalierbar wird.</em></p>
-  <p class="sm" style="margin-top:40px">SRL braucht passendes Material und Rückmeldung – das kostet Zeit.</p>
-  <p class="sm" style="margin-top:10px">KI hilft bei Material · Lernwegen · Feedback → mehr Zeit für Begleitung.</p>
+<section class="slide cover chapter outro" data-part="4" data-title="Weiter in Teil 5" data-cam="big" data-dark>
+  <div class="orbit" aria-hidden="true"></div>
+  <p class="label">Ende von Teil 4 · weiter geht es mit</p>
+  <h2 class="h">Teil 5: Wie es<br><em>weitergeht.</em></h2>
 </section>
 
-<section class="slide cover chapter" data-title="Kapitel 5" data-section="5 · Wie es weitergeht" data-dark>
+<section class="slide cover chapter" data-part="5" data-title="Teil 5" data-cam="big" data-section="5 · Wie es weitergeht" data-dark>
+  <div class="orbit" aria-hidden="true"></div>
   <p class="chap-no">5</p>
-  <p class="label">Kapitel 5 von 5</p>
+  <p class="label">Teil 5 von 5 · SRL ist keine Methode!</p>
   <h2 class="h">Wie es<br><em>weitergeht.</em></h2>
 </section>
 
-<section class="slide" data-title="Reibungen">
+<section class="slide seq" data-part="5" data-title="Reibungen" data-cam="pip">
+  <p class="label">Ehrlich gesagt</p>
   <h2 class="h">Wo es <em>reibt.</em></h2>
-  <ul class="kw-list dotted">
-    <li class="kw">Planung ohne Realismus</li>
-    <li class="kw">Reflexion als Floskel</li>
-    <li class="kw">Zu viel Wahl überfordert</li>
-    <li class="kw">Viel Material ≠ selbstreguliert</li>
+  <ul class="kw-list dotted rub">
+    <li class="kw step">Planung ohne Realismus</li>
+    <li class="kw step">Reflexion als Floskel</li>
+    <li class="kw step">Zu viel Wahl überfordert</li>
+    <li class="kw step">Viel Material ≠ selbstreguliert</li>
+    <li class="kw step">Am Anfang: erst einmal Mehrarbeit</li>
   </ul>
 </section>
 
-<section class="slide" data-title="Schulentwicklung">
+<section class="slide seq" data-part="5" data-title="Schulentwicklung" data-cam="pip">
   <h2 class="h">Auch <em>Schulentwicklung.</em></h2>
-  <ul class="kw-list grid2 dotted" style="gap:30px 70px">
-    <li class="kw">Gemeinsames Verständnis</li>
-    <li class="kw">Fachliche Freiheit</li>
-    <li class="kw">Gemeinsame Sprache</li>
-    <li class="kw">Zeit &amp; Begleitung</li>
-    <li class="kw">Wenige Routinen</li>
-    <li class="kw">Progression</li>
+  <ul class="kw-list grid2 dotted sdev" style="gap:30px 70px">
+    <li class="kw step">Gemeinsames Verständnis</li>
+    <li class="kw step">Fachliche Freiheit</li>
+    <li class="kw step">Gemeinsame Sprache</li>
+    <li class="kw step">Zeit &amp; Begleitung</li>
+    <li class="kw step">Wenige Routinen</li>
+    <li class="kw step">Progression</li>
   </ul>
 </section>
 
-<section class="slide" data-title="Empfehlungen">
-  <p class="label">Aus der Erfahrung der letzten Jahre</p>
+<section class="slide seq" data-part="5" data-title="Gelernt" data-cam="pip">
+  <p class="label">Aus den ersten Erfahrungen</p>
   <h2 class="h" style="margin-bottom:40px">Was wir <em>gelernt haben.</em></h2>
   <ul class="kw-list dotted recs">
-    <li class="kw">Veränderung geht langsam – sehr langsam.</li>
-    <li class="kw">Lernende brauchen verlässlichen Zugang zu Lernaufgaben.</li>
-    <li class="kw">Ändert sich die eigene Rolle im Raum, entstehen Freiräume.</li>
-    <li class="kw"><em>Mehr vom Kind aus denken als vom Lehrplan.</em></li>
-    <li class="kw">Geduld wird belohnt: SRL gelingt nicht in einer Doppelstunde.</li>
+    <li class="kw step">Veränderung geht langsam – sehr langsam.</li>
+    <li class="kw step">Ändert sich die eigene Rolle, entstehen Freiräume.</li>
+    <li class="kw step"><em>Mehr vom Kind aus denken als vom Lehrplan.</em></li>
+    <li class="kw step">Geduld wird belohnt.</li>
   </ul>
 </section>
 
-<section class="slide" data-title="Pointe">
-  <p class="statement">Nicht alles auf einmal.<br><em style="color:var(--sage-dark)">Aber gemeinsam und Schritt&nbsp;für&nbsp;Schritt.</em></p>
+<section class="slide full kipper" data-part="5" data-title="Muldenkipper" data-cam="off" data-dark>
+  <img src="assets/muldenkipper.webp" alt="Elektro-Muldenkipper eDumper im Steinbruch">
+  <p class="src">eDumper im Steinbruch Péry (BE) · Foto: Andreas Sutter · <a href="https://www.architektur-technik.ch/aktuell/groesster-elektro-laster-der-welt/">architektur-technik.ch</a></p>
 </section>
 
-<section class="slide" data-title="Fürs Team">
-  <p class="label">Für den Austausch im Team</p>
+<section class="slide" data-part="5" data-title="Pointe" data-cam="big">
+  <p class="statement kin">Nicht alles auf einmal.<br><em style="color:var(--sage-dark)">Aber gemeinsam und Schritt&nbsp;für&nbsp;Schritt.</em></p>
+</section>
+
+<section class="slide seq" data-part="5" data-title="Fürs Team" data-cam="pip">
+  <p class="label">Für Fachschaft und Jahrgangsteam</p>
   <h2 class="h" style="margin-bottom:44px">Drei <em>Fragen.</em></h2>
   <ol class="kw-list numbered team" style="gap:30px">
-    <li class="kw">Wo fördern wir SRL schon – ohne es so zu nennen?</li>
-    <li class="kw">Welche Routine aus Planung, Durchführung und Reflexion könnten wir <em>gemeinsam</em> einführen?</li>
-    <li class="kw">Welchen Baustein möchten wir uns einmal genauer ansehen?</li>
+    <li class="kw step">Wo fördern wir SRL schon – ohne es so zu nennen?</li>
+    <li class="kw step">Welche Routine aus Planung, Durchführung und Reflexion führen wir <em>gemeinsam</em> ein?</li>
+    <li class="kw step">Welchen Baustein sehen wir uns genauer an?</li>
   </ol>
 </section>
 
-<section class="slide" data-title="Literatur">
+<section class="slide" data-part="5" data-title="Nächster Schritt" data-cam="big">
+  <p class="label">Dein nächster Schritt</p>
+  <p class="statement kin">Eine Routine. Eine Reihe. <em>Eine Lerngruppe.</em></p>
+  <p class="sm" style="margin-top:40px;max-width:860px">Klein anfangen – und im Team davon erzählen.</p>
+</section>
+
+<section class="slide" data-part="5" data-title="Literatur" data-cam="off">
   <p class="label">Zum Weiterlesen</p>
   <h2 class="h" style="margin-bottom:36px;font-size:96px">Literatur&shy;<em>empfehlungen.</em></h2>
   <div class="grid3 books">
@@ -883,20 +1101,17 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
   </div>
 </section>
 
-<section class="slide full kipper" data-title="Muldenkipper" data-dark>
-  <img src="assets/muldenkipper.webp" alt="Elektro-Muldenkipper eDumper im Steinbruch">
-  <p class="src">eDumper im Steinbruch Péry (BE) · Foto: Andreas Sutter · <a href="https://www.architektur-technik.ch/aktuell/groesster-elektro-laster-der-welt/">architektur-technik.ch</a></p>
-</section>
-
-<section class="slide thanks" data-title="Danke">
+<section class="slide thanks" data-part="5" data-title="Danke" data-cam="big">
   <h2 class="h">Danke fürs <em>Zuschauen!</em></h2>
-  <p class="kw" style="margin-top:20px">Fragen, Austausch oder einen Blick in den Unterricht?</p>
+  <p class="kw" style="margin-top:20px;max-width:900px">Fragen, Austausch oder ein Blick in den Unterricht?</p>
   <div class="contact">
     <p class="sm"><b>Christoph Wegemann</b></p>
     <p class="sm link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg><a href="mailto:christoph.wegemann@hbgdo-edu.de">christoph.wegemann@hbgdo-edu.de</a></p>
   </div>
   <p class="ai-note">Diese HTML-Präsentation wurde mithilfe von KI programmiert.</p>
 </section>
+
+<div id="cam" aria-hidden="true"><video autoplay muted playsinline></video><div class="cam-ph"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 21c.6-4.6 4-7 8.5-7s7.900 2.400 8.500 7z"/></svg><span>Webcam</span></div></div>
 </div></div>
 
 <div id="progress"><div class="bar"></div></div>
@@ -913,7 +1128,9 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
   <div class="m-btns">
     <button data-act="prev">◀ Zurück</button><button data-act="jump">☰ Folien</button><button data-act="next">Weiter ▶</button>
     <button data-act="full">⛶ Vollbild</button><button data-act="black">● Schwarz</button><button data-act="anim">⏸ Animation aus</button>
+    <button class="wide" data-act="cam">◉ Webcam an / aus</button>
   </div>
+  <div class="m-parts"><span>Teil</span><a href="?teil=1">1</a><a href="?teil=2">2</a><a href="?teil=3">3</a><a href="?teil=4">4</a><a href="?teil=5">5</a><a href="./">alle</a></div>
   <table>
     <tr><td><kbd>→</kbd> <kbd>Leertaste</kbd></td><td>weiter / aufdecken</td></tr>
     <tr><td><kbd>←</kbd></td><td>zurück</td></tr>
@@ -924,6 +1141,8 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <tr><td><kbd>M</kbd></td><td>dieses Menü</td></tr>
     <tr><td><kbd>A</kbd></td><td>Animationen an/aus</td></tr>
     <tr><td><kbd>R</kbd></td><td>Aufnahmemodus (ohne Balken und Mauszeiger)</td></tr>
+    <tr><td><kbd>C</kbd></td><td>Webcam an/aus · <kbd>⇧C</kbd> nur Platzhalter</td></tr>
+    <tr><td><kbd>V</kbd></td><td>Webcam groß / klein / aus / automatisch</td></tr>
     <tr><td colspan="2" class="m-sec">iPad</td></tr>
     <tr><td>Wischen ← →</td><td>weiter / zurück</td></tr>
     <tr><td>Tippen rechts / links</td><td>weiter / zurück</td></tr>
@@ -947,7 +1166,63 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
 </div>
 
 <script>
+/* ---------- Teile: ?teil=1 … 5 zeigt nur die Folien eines Videos ---------- */
+const QS=new URLSearchParams(location.search);
+const TEIL=parseInt(QS.get('teil'),10);
+if(TEIL>=1&&TEIL<=5){ document.querySelectorAll('.slide').forEach(s=>{ if(+s.dataset.part!==TEIL) s.remove(); }); document.title='Teil '+TEIL+' · SRL ist keine Methode!'; }
 const slides=[...document.querySelectorAll('.slide')];
+
+/* ---------- Turbine als SVG (vereinfacht nach Karlen et al.) ----------
+   <div class="tb" data-focus="needs|process|areas" data-on="kognition …">
+   Schritte mit data-tb="schlüssel" lassen beim Aufdecken das passende Teil aufleuchten. */
+(function(){
+  const P=(r,a)=>{ a=a*Math.PI/180; return (r*Math.sin(a)).toFixed(2)+' '+(-r*Math.cos(a)).toFixed(2); };
+  const sector=(r0,r1,a0,a1)=>'M'+P(r1,a0)+'A'+r1+' '+r1+' 0 0 1 '+P(r1,a1)+'L'+P(r0,a1)+'A'+r0+' '+r0+' 0 0 0 '+P(r0,a0)+'Z';
+  const arc=(r,a0,a1,flip)=>flip?'M'+P(r,a1)+'A'+r+' '+r+' 0 0 0 '+P(r,a0):'M'+P(r,a0)+'A'+r+' '+r+' 0 0 1 '+P(r,a1);
+  const AREAS=[['kognition','Kognition',330],['metakognition','Metakognition',30],['motivation','Motivation',90],['emotion','Emotion',150],['ressourcen','Ressourcen',210],['mindset','Mindset',270]];
+  const PROC=[['p1','Planung',0],['p2','Durchführung',120],['p3','Reflexion',240]];
+  const NEEDS=[['n1','Kompetenz',-22],['n2','Autonomie',5],['n3','Eingebundenheit',32]];
+  let uid=0;
+  document.querySelectorAll('.tb').forEach(tb=>{
+    const id='tb'+(uid++)+'-'; let i=0, h='<svg viewBox="-200 -200 400 400" aria-hidden="true"><g class="g g-areas">';
+    AREAS.forEach(([k,t,c])=>{ const flip=c>90&&c<270;
+      h+='<g class="k" data-k="'+k+'" style="--i:'+(i++)+'"><path class="shape" d="'+sector(150,195,c-28,c+28)+'"/><path id="'+id+k+'" d="'+arc(flip?178.5:166.5,c-28,c+28,flip)+'" fill="none"/><text><textPath href="#'+id+k+'" startOffset="50%" text-anchor="middle">'+t+'</textPath></text></g>'; });
+    h+='</g><g class="g g-proc">';
+    PROC.forEach(([k,t,c])=>{ const flip=c>90&&c<270, a0=c-56, a1=c+42;
+      h+='<g class="k" data-k="'+k+'" style="--i:'+(i++)+'"><path class="shape" d="'+sector(96,140,a0,a1)+'M'+P(89,a1)+'L'+P(147,a1)+'L'+P(118,a1+13)+'Z"/><path id="'+id+k+'" d="'+arc(flip?124:112,a0,a1,flip)+'" fill="none"/><text><textPath href="#'+id+k+'" startOffset="50%" text-anchor="middle">'+t+'</textPath></text></g>'; });
+    h+='<circle class="runner" r="8" fill="var(--rust-dark)" stroke="#fff" stroke-width="3"><animateMotion dur="5s" repeatCount="indefinite" path="M0 -145A145 145 0 1 1 0 145A145 145 0 1 1 0 -145"/></circle>';
+    h+='</g><g class="g g-needs"><g class="k" style="--i:'+(i++)+'"><circle class="shape" r="84"/>';
+    NEEDS.forEach(([k,t,y])=>{ h+='<text data-k="'+k+'" y="'+y+'" text-anchor="middle">'+t+'</text>'; });
+    tb.innerHTML=h+'</g></g></svg>';
+    tb.setAttribute('role','img'); tb.setAttribute('aria-label','SRL-Turbine, vereinfachte Darstellung');
+  });
+})();
+function applyTb(sl){
+  const tb=sl.querySelector('.tbbig,.tbmid,.tbnav'); if(!tb) return;
+  const shown=[...sl.querySelectorAll('.step[data-tb]:not(.hidden)')];
+  const keys=new Set((tb.dataset.on||'').split(/\s+/).filter(Boolean));
+  shown.forEach(s=>s.dataset.tb.split(/\s+/).forEach(k=>keys.add(k)));
+  const last=shown.length?shown[shown.length-1].dataset.tb.split(/\s+/):[];
+  tb.querySelectorAll('[data-k]').forEach(el=>{
+    const on=keys.has(el.dataset.k), was=el.classList.contains('on');
+    el.classList.toggle('on',on);
+    if(on&&!was&&last.includes(el.dataset.k)&&sl.classList.contains('active')){ el.classList.remove('pulse'); void el.getBoundingClientRect(); el.classList.add('pulse'); }
+  });
+  tb.classList.toggle('run',keys.has('run'));
+}
+/* Aussagen in Wörter zerlegen, damit sie sich Wort für Wort aufbauen */
+document.querySelectorAll('.kin').forEach(el=>{
+  let n=0;
+  (function walk(node){
+    [...node.childNodes].forEach(c=>{
+      if(c.nodeType===3){ const f=document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach(t=>{ if(!t) return; if(/^\s+$/.test(t)){ f.appendChild(document.createTextNode(' ')); return; }
+          const w=document.createElement('span'); w.className='w'; w.style.setProperty('--w',n++); w.textContent=t; f.appendChild(w); });
+        c.replaceWith(f); }
+      else if(c.nodeType===1&&c.tagName!=='BR') walk(c);
+    });
+  })(el);
+});
 const NOTES_MODE=new URLSearchParams(location.search).has('notes');
 
 /* ---------- Bühne skalieren ---------- */
@@ -969,15 +1244,22 @@ slides.forEach((s,i)=>{ if(s.dataset.section&&i>0){ const t=document.createEleme
 
 /* ---------- Navigation ---------- */
 let index=0;
-function markDone(sl){ sl.classList.toggle('steps-done',!sl.querySelector('.step.hidden')); }
+function markDone(sl){
+  sl.classList.toggle('steps-done',!sl.querySelector('.step.hidden'));
+  const shown=sl.querySelectorAll('.step:not(.hidden)');
+  sl.querySelectorAll('.step.cur').forEach(e=>e.classList.remove('cur'));
+  if(shown.length) shown[shown.length-1].classList.add('cur');
+  applyTb(sl);
+}
 function setSteps(sl,hidden){ sl.querySelectorAll('.step').forEach(el=>el.classList.toggle('hidden',hidden)); markDone(sl); }
 function stepInfo(){ const all=slides[index].querySelectorAll('.step').length, open=all-slides[index].querySelectorAll('.step.hidden').length; return {all,open}; }
 /* Bewegung: Richtung merken, alte Folie kurz ausblenden, Inhalte gestaffelt aufbauen */
 let navDir=1, leaveTimer;
-const STAG_SEL='.scale,.label,.h,.statement,.quote,.kw,.sm,.src,.kw-list>li,.terms>div,.grid3>div,.ways>div,.pairs>*,figure,.myth-art,.stackv .big,.stackv li,.buddy,.qr-box,.mark,.line';
+const STAG_SEL='.hero,.eg,.tbnav,.scale,.label,.h,.statement,.quote,.kw,.sm,.src,.kw-list>li,.terms>div,.grid3>div,.ways>div,.pairs>*,figure,.myth-art,.stackv .big,.stackv li,.buddy,.qr-box,.mark,.line';
 function animOff(){ return document.body.classList.contains('no-anim'); }
 function stagger(sl,anchored){
   sl.querySelectorAll('.stag,.draw').forEach(el=>el.classList.remove('stag','draw'));
+  sl.querySelectorAll('.tb').forEach(tb=>{ tb.classList.remove('build'); if(!anchored&&!animOff()){ void tb.offsetWidth; tb.classList.add('build'); } });
   if(animOff()) return;
   const all=[...sl.querySelectorAll(STAG_SEL)].filter(el=>!el.closest('.notes')&&!el.closest('.step')&&!el.classList.contains('step'));
   const top=all.filter(el=>!all.some(o=>o!==el&&o.contains(el)));
@@ -1048,6 +1330,7 @@ function showSlide(i){
   markDone(slides[index]);
   bar.style.width=((index+1)/slides.length*100)+'%';
   document.body.classList.toggle('dark-slide','dark' in slides[index].dataset);
+  setCamMode();
   try{ history.replaceState(null,'',location.pathname+location.search+'#'+(index+1)); }catch(_){}
   broadcast();
 }
@@ -1075,6 +1358,22 @@ function toggleAnim(){
   const b=document.querySelector('#menu [data-act=anim]'); if(b) b.textContent=off?'▶ Animation an':'⏸ Animation aus';
 }
 try{ if(localStorage.getItem('srl-no-anim')==='1'){ document.body.classList.add('no-anim'); const b=document.querySelector('#menu [data-act=anim]'); if(b) b.textContent='▶ Animation an'; } }catch(_){}
+
+/* ---------- Webcam (C an/aus · Umschalt+C nur Platzhalter · V Größe von Hand) ----------
+   Jede Folie legt mit data-cam="big|pip|off" fest, wo das Kamerabild steht. */
+const camEl=document.getElementById('cam'), camVid=camEl.querySelector('video');
+let camStream=null, camOverride=null;
+function setCamMode(){ document.body.dataset.cam=camOverride||slides[index].dataset.cam||'pip'; }
+function stopCam(){ if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; } camVid.srcObject=null; camEl.classList.remove('live'); }
+async function toggleCam(placeholder){
+  if(document.body.classList.contains('cam-on')){ document.body.classList.remove('cam-on'); stopCam(); return; }
+  document.body.classList.add('cam-on');
+  if(placeholder||!navigator.mediaDevices) return;
+  try{ camStream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},facingMode:'user'},audio:false});
+       camVid.srcObject=camStream; camEl.classList.add('live'); }
+  catch(_){ /* keine Kamera oder nicht erlaubt: Platzhalter bleibt stehen */ }
+}
+function cycleCam(){ const o=[null,'big','pip','off']; camOverride=o[(o.indexOf(camOverride)+1)%o.length]; setCamMode(); }
 
 /* ---------- Folienübersicht (G) ---------- */
 const jump=document.getElementById('jump'),jumpGrid=document.getElementById('jumpGrid'),jumpNum=document.getElementById('jumpNum');
@@ -1120,6 +1419,7 @@ addEventListener('message',e=>{
 
 /* ---------- Menü ---------- */
 const menu=document.getElementById('menu');
+menu.querySelectorAll('.m-parts a').forEach((a,i)=>a.classList.toggle('cur',TEIL?i===TEIL-1:i===5));
 function toggleMenu(force){ menu.classList.toggle('open',force===undefined?!menu.classList.contains('open'):force); }
 menu.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
@@ -1128,6 +1428,7 @@ menu.addEventListener('click',e=>{
   if(a==='full')toggleFullscreen(); if(a==='black'){toggleMenu(false);document.getElementById('black').classList.add('on');}
   if(a==='notes')openNotes();
   if(a==='anim')toggleAnim();
+  if(a==='cam')toggleCam();
   b.blur();                                  // Leertaste soll danach weiterblättern, nicht den Knopf erneut auslösen
 });
 
@@ -1149,6 +1450,8 @@ document.addEventListener('keydown',e=>{
   else if(k==='m'||k==='M'){ e.preventDefault(); toggleMenu(); }
   else if(k==='a'||k==='A'){ e.preventDefault(); toggleAnim(); }
   else if(k==='r'||k==='R'){ document.body.classList.toggle('rec'); }
+  else if(k==='c'||k==='C'){ toggleCam(e.shiftKey); }
+  else if(k==='v'||k==='V'){ cycleCam(); }
   else if(k==='Escape'&&menu.classList.contains('open')){ toggleMenu(false); }
 });
 
@@ -1228,7 +1531,9 @@ if(NOTES_MODE){
 }else{
   const n=parseInt((location.hash||'').slice(1),10);
   const s=(n>=1&&n<=slides.length)?n-1:0;
+  slides.forEach(markDone);
   setSteps(slides[s],true); showSlide(s);
+  if(QS.has('cam')&&!isRead()) toggleCam(QS.get('cam')==='demo');
 }
 </script>
 </body>
