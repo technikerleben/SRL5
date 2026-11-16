@@ -519,6 +519,40 @@ em.r{font-style:normal;color:var(--red)}
 .read .tbnav{position:static;width:300px;height:300px;margin-bottom:30px}
 .read .tbbig,.read .tbmid{width:860px;height:860px;max-width:100%}
 .read .means .lever-grid{grid-template-columns:1fr}
+
+/* Strategie konkret (nach Stebner et al. 2015) und lautes Denken */
+.strat .h{font-size:68px;margin-bottom:20px}
+.strat .tbnav{width:360px;height:360px;right:70px;top:270px}
+.flow{display:grid;gap:9px;max-width:1010px;padding-left:22px;border-left:8px solid var(--slate-pale);transition:border-color .5s ease}
+.fl{display:grid;grid-template-columns:50px 1fr auto;align-items:center;gap:16px;background:#fff;border-radius:12px;padding:9px 16px;box-shadow:0 0 0 2px var(--line)}
+.fl p{margin:0;font:500 27px/1.25 Jost,sans-serif;color:var(--muted)}
+.fl b{font:700 32px/1.2 Jost,sans-serif;color:var(--navy);margin-right:10px}
+.fl .fn{display:grid;place-items:center;width:44px;height:44px;border-radius:11px;background:var(--navy);color:#fff;font:700 24px Jost,sans-serif}
+.fl>i{font:700 16px Jost,sans-serif;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--slate-base);background:var(--slate-ghost);border-radius:99px;padding:5px 12px}
+.fl.meta{opacity:0;transform:translateX(-14px);transition:opacity .5s ease,transform .5s var(--ease);box-shadow:0 0 0 2px var(--sage-dark)}
+.fl.meta .fn{background:var(--sage-dark) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/28px no-repeat;border-radius:50%}
+.fl.meta>i{color:#fff;background:var(--sage-dark)}
+.strat:has(.zm:not(.hidden)) .fl.meta,.read .fl.meta{opacity:1;transform:none}
+.strat:has(.zm:not(.hidden)) .flow{border-left-color:var(--sage-dark)}
+.strat .tried{margin-top:16px;max-width:1010px}
+.strat .src{font-size:18px;max-width:940px;margin-top:10px}
+.talkslide{padding:64px 120px}
+.talkslide .h{font-size:76px;margin-bottom:26px}
+.talk{display:grid;gap:11px;max-width:1120px}
+.tk{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:16px}
+.tk>i{justify-self:end;font:700 16px Jost,sans-serif;font-style:normal;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-base);background:var(--slate-ghost);border-radius:99px;padding:6px 13px;white-space:nowrap}
+.tk.meta>i{color:#fff;background:var(--sage-dark)}
+.tk p{margin:0;justify-self:start;font:500 29px/1.3 Jost,sans-serif;color:var(--navy);background:#fff;border-radius:6px 22px 22px 22px;padding:11px 22px;box-shadow:0 0 0 2px var(--line)}
+.talkslide .tried{margin-top:22px;max-width:1000px}
+.talkslide .src{font-size:18px}
+body.cam-on .talk{max-width:910px}
+body.cam-on .talkslide .tried{max-width:900px}
+body.cam-on .talkslide .h{font-size:58px;margin-bottom:22px}
+body.cam-on .tk p{font-size:27px;padding:9px 20px}
+body.cam-on .tk{grid-template-columns:160px 1fr}
+.read .fl{grid-template-columns:50px 1fr}.read .fl>i{grid-column:2;justify-self:start}
+.read .tk{grid-template-columns:1fr}.read .tk>i{justify-self:start}
+
 /* ---------- Webcam: läuft direkt in der Seite (Taste C) ---------- */
 #cam{position:absolute;z-index:30;left:1270px;top:570px;width:280px;height:280px;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.6);pointer-events:none;background:var(--slate-base);
   box-shadow:0 0 0 6px #fff,0 0 0 12px var(--sage-dark),0 20px 44px -10px rgba(30,42,53,.5);
@@ -611,7 +645,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw on"><span class="cn">1</span><span>Was SRL ist – und was nicht</span><small>ca. 7 min</small></li>
     <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span><small>ca. 3 min</small></li>
     <li class="kw"><span class="cn">3</span><span>Das Modell: die SRL-Turbine</span><small>ca. 5 min</small></li>
-    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 8 min</small></li>
+    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 10 min</small></li>
     <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span><small>ca. 5 min</small></li>
   </ol>
   <p class="sm" style="margin-top:36px">Jeder Teil endet mit einer Frage zum Anhalten. Bilder ohne Quellenangabe sind KI-generiert.</p>
@@ -923,8 +957,38 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw step">Introspektion: das eigene Lernen beschreiben</li>
     <li class="kw step">Planung · Durchführung · Reflexion – in jeder Reihe</li>
   </ul>
-  <p class="eg step"><b>So klingt lautes Denken:</b> „Ich lese erst die Aufgabe und frage mich: Was ist hier eigentlich gesucht?“</p>
-  <p class="tried step"><b>Bei uns punktuell erprobt:</b> <span data-morph="buddy">Lernbuddy</span> · Logbuch mit Lerntagebuch</p>
+  <p class="tried step"><b>Gleich konkret:</b> eine Strategie Schritt für Schritt – und wie es klingt, sie vorzumachen.</p>
+</section>
+
+<section class="slide lever strat" data-part="4" data-title="Strategie konkret" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas"></div>
+  <p class="label">Beispiel für eine Strategie · Texte markieren (Jg. 5/6)</p>
+  <h2 class="h">Handwerkszeug plus <em>Qualitätskontrolle.</em></h2>
+  <div class="flow">
+    <div class="fl meta"><span class="fn"></span><p><b>Ziel setzen</b> Abschnitt für Abschnitt vorgehen</p><i>metakognitiv</i></div>
+    <div class="fl step" data-tb="kognition"><span class="fn">1</span><p><b>Abschnitt lesen</b> noch nichts markieren</p><i>kognitiv</i></div>
+    <div class="fl step" data-tb="kognition"><span class="fn">2</span><p><b>Frage stellen</b> „Wie und was jagt ein Eisbär?“</p><i>kognitiv</i></div>
+    <div class="fl step" data-tb="kognition"><span class="fn">3</span><p><b>Markieren</b> nur, was die Frage beantwortet</p><i>kognitiv</i></div>
+    <i class="step zs zm" data-tb="metakognition"></i>
+    <div class="fl meta"><span class="fn"></span><p><b>Überprüfen</b> „Sind die Markierungen vollständig?“</p><i>metakognitiv</i></div>
+    <div class="fl meta"><span class="fn"></span><p><b>Reagieren</b> bei Fehlern: Abschnitt noch einmal lesen</p><i>metakognitiv</i></div>
+  </div>
+  <p class="tried step"><b>Gleiches Prinzip:</b> Experimentieren mit Je-desto-Idee · schwierige Aufgabe einteilen und Hilfsmittel nutzen</p>
+  <p class="src">Stebner, Schiffhauer, Schmeck, Schuster, Leutner &amp; Wirth (2015): Selbstreguliertes Lernen in den Naturwissenschaften. Praxismaterial für die 5. und 6. Jahrgangsstufe. Waxmann · <a href="https://www.pedocs.de/volltexte/2017/15114/pdf/Stebner_etal_2015_Selbstreguliertes_Lernen_in_den_Naturwissenschaften.pdf">pedocs.de</a></p>
+</section>
+
+<section class="slide seq talkslide" data-part="4" data-title="Laut denken" data-cam="big">
+  <p class="label">Laut denken · so klingt Vormachen</p>
+  <h2 class="h">Unsichtbares Denken <em>hörbar machen.</em></h2>
+  <div class="talk">
+    <div class="tk step meta"><i>Ziel setzen</i><p>„Ich will wissen, wie der Eisbär jagt. Ich gehe Abschnitt für Abschnitt vor.“</p></div>
+    <div class="tk step"><i>Lesen</i><p>„Den ersten Abschnitt lese ich erst ganz. Ich markiere noch nichts.“</p></div>
+    <div class="tk step"><i>Frage stellen</i><p>„Meine Frage an den Abschnitt: Wie und was jagt ein Eisbär?“</p></div>
+    <div class="tk step"><i>Markieren</i><p>„Jetzt markiere ich nur, was meine Frage beantwortet.“</p></div>
+    <div class="tk step meta"><i>Überprüfen</i><p>„Moment – das ist zu viel markiert. Ich lese noch einmal und radiere.“</p></div>
+  </div>
+  <p class="tried step"><b>Damit daraus eine Routine wird, erproben wir:</b> <span data-morph="buddy">Lernbuddy</span> · Logbuch mit Lerntagebuch</p>
+  <p class="src">Strategie: Stebner et al. (2015) · Vormachen als Empfehlung: EEF · Formulierungen: eigenes Beispiel</p>
 </section>
 
 <section class="slide" data-part="4" data-title="Lernbuddy" data-cam="off">
