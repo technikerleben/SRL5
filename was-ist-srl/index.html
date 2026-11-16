@@ -326,15 +326,18 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
 .chapters li{display:grid;grid-template-columns:76px 1fr auto;align-items:center;gap:26px;border-bottom:2px solid var(--line);padding-bottom:16px;max-width:1150px}
 .chapters .cn{display:grid;place-items:center;width:60px;height:60px;border-radius:50%;background:var(--slate-dark);color:#fff;font:400 32px Anton,sans-serif}
 .chapters small{font:500 28px Jost,sans-serif;color:var(--muted)}
-.pack{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-top:56px}
-.pack>div{border-top:6px solid var(--sage-dark);padding-top:24px}
-.pack .ring-ico{width:56px;height:56px;margin-bottom:14px}
-.pack .name{font:400 46px/1.05 Anton,sans-serif;color:var(--navy);margin:0 0 10px}
-.pack .sm{font-size:27px;line-height:1.35}
+.pack{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 48px;margin-top:40px}
+.pack>div{border-top:6px solid var(--sage-dark);padding-top:16px;display:grid;grid-template-columns:52px 1fr;column-gap:16px;align-content:start}
+.pack>div .sm{grid-column:2}
+.pack .ring-ico{width:48px;height:48px;grid-row:1/span 2;align-self:start;margin-top:4px}
+.pack .name{grid-column:2}
+.pack .name{font:400 42px/1.05 Anton,sans-serif;color:var(--navy);margin:0}
+.pack .sm{font-size:25px;line-height:1.3;margin-top:6px}
 .lever-grid{display:grid;grid-template-columns:1fr 150px 1fr;align-items:center;gap:36px}
 .lever-grid .col-h{font:700 24px Jost,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
 .lever-grid .kw{font-size:42px}
-.lever-grid .kw-list{gap:14px}
+.lever-grid .kw-list{gap:10px}
+.target-list .kw{font-size:38px}
 .lever-arrow svg{width:150px;height:60px;display:block}
 .lever-arrow{opacity:0;transition:opacity .5s ease}
 .lever-grid:has(.step:not(.hidden)) .lever-arrow,.read .lever-arrow,body.no-anim .lever-arrow{opacity:1}
@@ -685,11 +688,13 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
   <p class="kw" style="font-size:44px;font-weight:500">Ein Kompetenzpaket – lernbar, nicht angeboren.</p>
   <div class="pack">
     <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Metakognition</p><p class="sm">planen, überwachen, auswerten</p></div>
+    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Kognition</p><p class="sm">Informationen verarbeiten und verstehen</p></div>
+    <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Mindset</p><p class="sm">Fehler als Lerngelegenheit sehen</p></div>
     <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Motivation</p><p class="sm">sich etwas zutrauen und dranbleiben</p></div>
     <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Emotion</p><p class="sm">Frust und Unsicherheit regulieren</p></div>
     <div><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><p class="name">Ressourcen</p><p class="sm">Zeit, Material, Ort und Hilfe nutzen</p></div>
   </div>
-  <p class="src" style="margin-top:40px">Ausgewählte Kompetenzbereiche der SRL-Turbine (Karlen et al., Universität Zürich)</p>
+  <p class="src" style="margin-top:32px">Kompetenzbereiche der SRL-Turbine (Karlen et al., Universität Zürich)</p>
 </section>
 
 <section class="slide" data-title="Mittel, nicht Ziel">
@@ -708,6 +713,8 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <div class="step"><p class="col-h">Worauf es zielt</p>
       <ul class="kw-list target-list">
         <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Metakognition</span></li>
+        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Kognition</span></li>
+        <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Mindset</span></li>
         <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Motivation</span></li>
         <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Emotion</span></li>
         <li class="kw"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg><span>Ressourcen</span></li>
@@ -717,11 +724,11 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
 </section>
 
 <section class="slide lever" data-title="Metakognition">
-  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Metakognition</p>
+  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Metakognition · Kognition</p>
   <h2 class="h">Denken über das <em>Lernen.</em></h2>
   <p class="lead">Eine Routine des zyklischen, metakognitiv aktivierten Lernens.</p>
   <ul class="kw-list dotted">
-    <li class="kw">Strategien explizit einführen und üben</li>
+    <li class="kw">Lern- und Denkstrategien explizit einführen und üben</li>
     <li class="kw">Laut denken: Lehrkräfte machen ihr Denken sichtbar</li>
     <li class="kw">Introspektion: Lernende beobachten und beschreiben ihr Lernen</li>
     <li class="kw">Planung, Durchführung, Reflexion – in jeder Reihe wieder</li>
@@ -743,7 +750,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
 </section>
 
 <section class="slide lever" data-title="Motivation">
-  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Motivation</p>
+  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Motivation · Mindset</p>
   <h2 class="h">Selbstwirksam durch <em>Wahl.</em></h2>
   <p class="lead">Unterrichtsreihen so aufbauen, dass Lernende Entscheidungen treffen.</p>
   <ul class="kw-list dotted">
@@ -751,6 +758,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw">Wie schnell? – eigenes Tempo</li>
     <li class="kw">Wie schwer? – Schwierigkeitsgrad</li>
     <li class="kw">Wann bin ich bereit? – Zeitpunkt des Nachweises</li>
+    <li class="kw">Noch nicht geschafft? – neuer Anlauf statt Endurteil</li>
   </ul>
   <p class="tried"><b>Bei uns punktuell erprobt:</b> Lernwege und Lerntheken · geöffnete Lernsettings · Wahltermine</p>
 </section>
@@ -781,12 +789,13 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
 </section>
 
 <section class="slide lever" data-title="Coaching">
-  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Emotion · Motivation · Metakognition</p>
+  <p class="label"><svg class="ring-ico" viewBox="0 0 64 64" aria-hidden="true"><circle class="on" cx="32" cy="32" r="27" fill="none" stroke-width="8"/><circle class="off" cx="32" cy="32" r="16.5" fill="none" stroke-width="7"/><circle class="off fill" cx="32" cy="32" r="8"/></svg>Zielt auf: Emotion · Motivation · Mindset · Metakognition</p>
   <h2 class="h">Begleiten im <em>Gespräch.</em></h2>
   <p class="lead">Coaching unterstützt, was sich nicht verordnen lässt.</p>
   <ul class="kw-list dotted">
     <li class="kw">Emotion: Frust, Unsicherheit und Prüfungsangst ansprechen</li>
     <li class="kw">Motivation: Ziele vereinbaren, Fortschritte sichtbar machen</li>
+    <li class="kw">Mindset: Fehler als Lerngelegenheit deuten</li>
     <li class="kw">Metakognition: über das eigene Lernen sprechen</li>
   </ul>
   <p class="tried"><b>Bei uns punktuell erprobt:</b> 1:1-Mentorengespräche</p>
