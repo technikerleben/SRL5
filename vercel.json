@@ -15,6 +15,11 @@
       "source": "/was-ist-srl",
       "destination": "/was-ist-srl/",
       "permanent": false
+    },
+    {
+      "source": "/ks-mk",
+      "destination": "/ks-mk/",
+      "permanent": false
     }
   ]
 }
