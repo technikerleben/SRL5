@@ -553,6 +553,15 @@ body.cam-on .tk{grid-template-columns:160px 1fr}
 .read .fl{grid-template-columns:50px 1fr}.read .fl>i{grid-column:2;justify-self:start}
 .read .tk{grid-template-columns:1fr}.read .tk>i{justify-self:start}
 
+/* Szenenbilder: erscheinen per Klick bildschirmfüllend, solange sie der aktuelle Schritt sind */
+.pic{position:absolute;inset:0;z-index:20;margin:0;background:#fff;display:grid;place-items:center}
+.pic img{width:100%;height:100%;object-fit:contain;display:block}
+.slide .pic.step{transition:opacity .5s ease,transform .6s var(--ease),visibility 0s linear .6s}
+.slide .pic.step:not(.cur){opacity:0!important;visibility:hidden;transform:scale(1.03)}
+.slide .pic.step.cur{opacity:1!important;visibility:visible;transform:none;transition:opacity .5s ease,transform .6s var(--ease),visibility 0s}
+body:has(.slide.active .pic.cur) #cam{opacity:0!important}
+.read .slide .pic.step{position:static;opacity:1!important;visibility:visible;transform:none;margin-top:28px;border-radius:12px;overflow:hidden;box-shadow:0 0 0 2px var(--line)}
+@media print{.slide .pic.step{position:static;opacity:1!important;visibility:visible;transform:none;margin-top:20px}}
 /* ---------- Webcam: läuft direkt in der Seite (Taste C) ---------- */
 #cam{position:absolute;z-index:30;left:1270px;top:570px;width:280px;height:280px;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.6);pointer-events:none;background:var(--slate-base);
   box-shadow:0 0 0 6px #fff,0 0 0 12px var(--sage-dark),0 20px 44px -10px rgba(30,42,53,.5);
@@ -645,7 +654,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw on"><span class="cn">1</span><span>Was SRL ist – und was nicht</span><small>ca. 7 min</small></li>
     <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span><small>ca. 3 min</small></li>
     <li class="kw"><span class="cn">3</span><span>Das Modell: die SRL-Turbine</span><small>ca. 5 min</small></li>
-    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 10 min</small></li>
+    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 11 min</small></li>
     <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span><small>ca. 5 min</small></li>
   </ol>
   <p class="sm" style="margin-top:36px">Jeder Teil endet mit einer Frage zum Anhalten. Bilder ohne Quellenangabe sind KI-generiert.</p>
@@ -980,6 +989,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
 <section class="slide seq talkslide" data-part="4" data-title="Laut denken" data-cam="big">
   <p class="label">Laut denken · so klingt Vormachen</p>
   <h2 class="h">Unsichtbares Denken <em>hörbar machen.</em></h2>
+  <figure class="pic step"><img src="assets/szene-laut-denken.webp" alt="Zeichnung: Lehrkraft an der Dokumentenkamera mit Denkblase, die Klasse schaut auf den projizierten Eisbär-Text"></figure>
   <div class="talk">
     <div class="tk step meta"><i>Ziel setzen</i><p>„Ich will wissen, wie der Eisbär jagt. Ich gehe Abschnitt für Abschnitt vor.“</p></div>
     <div class="tk step"><i>Lesen</i><p>„Den ersten Abschnitt lese ich erst ganz. Ich markiere noch nichts.“</p></div>
@@ -1016,6 +1026,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw step">Wahl braucht Rahmen: dosiert statt grenzenlos</li>
   </ul>
   <p class="tried step"><b>Bei uns punktuell erprobt:</b> Lernwege und Lerntheken · geöffnete Lernsettings</p>
+  <figure class="pic step"><img src="assets/szene-wahl.webp" alt="Zeichnung: Ein Mädchen überlegt an drei Körben mit Aufgaben in drei Schwierigkeitsstufen, im Hintergrund arbeiten Kinder an verschiedenen Orten"></figure>
 </section>
 
 <section class="slide lever seq" data-part="4" data-title="Prüfungsformate" data-cam="pip">
@@ -1030,6 +1041,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw step">Hilfsmittel klug nutzen – als Teil der Leistung</li>
   </ul>
   <p class="tried step"><b>Bei uns punktuell erprobt:</b> Gelingensnachweise · Wahltermine · Open-Book-Arbeiten</p>
+  <figure class="pic step"><img src="assets/szene-pruefen.webp" alt="Zeichnung: Links wählt ein Junge einen Termin und ein Mädchen schätzt sich auf einer Stufenleiter ein, rechts schreibt ein Mädchen eine Arbeit mit Heft und Notizen auf dem Tisch"></figure>
 </section>
 
 <section class="slide lever seq" data-part="4" data-title="Ressourcen" data-cam="pip">
@@ -1056,6 +1068,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw step">Wohlbefinden: ein Ort, an dem man gern lernt</li>
   </ul>
   <p class="tried step"><b>Bei uns punktuell erprobt:</b> Lernbüro · Churer Modell</p>
+  <figure class="pic step"><img src="assets/szene-lernraum.webp" alt="Zeichnung: Klassenraum mit Lesezone am Fenster, Gruppentisch, Materialregal und einer Lehrkraft, die einem Kind hilft"></figure>
 </section>
 
 <section class="slide lever seq" data-part="4" data-title="Coaching" data-cam="pip">
@@ -1070,6 +1083,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw step">Metakognition: über das eigene Lernen sprechen</li>
   </ul>
   <p class="tried step"><b>Bei uns punktuell erprobt:</b> 1:1-Mentorengespräche</p>
+  <figure class="pic step"><img src="assets/szene-coaching.webp" alt="Zeichnung: Lehrkraft und Kind sitzen auf Augenhöhe an einem runden Tisch, das Kind zeigt auf eine Seite und erzählt"></figure>
 </section>
 
 <section class="slide" data-part="4" data-title="Fazit Praxis" data-cam="big">
