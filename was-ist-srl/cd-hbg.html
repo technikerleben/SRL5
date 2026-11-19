@@ -563,6 +563,103 @@ body.cam-on .tk{grid-template-columns:160px 1fr}
 body:has(.slide.active .pic.cur) #cam{opacity:0!important}
 .read .slide .pic.step{position:static;opacity:1!important;visibility:visible;transform:none;margin-top:28px;border-radius:12px;overflow:hidden;box-shadow:0 0 0 2px var(--line)}
 @media print{.slide .pic.step{position:static;opacity:1!important;visibility:visible;transform:none;margin-top:20px}}
+/* Klare Erwartungen: drei Niveaus als Treppe */
+.expect .h{font-size:86px;margin-bottom:14px}
+.expect .lead{margin-bottom:22px}
+.stairs{display:flex;align-items:flex-end;gap:14px;max-width:960px}
+.st{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;border-radius:16px 16px 6px 6px;padding:16px 20px;color:#fff;position:relative}
+.st b{font:400 34px/1 Gagalin,sans-serif;letter-spacing:.01em}
+.st span{font:500 22px/1.25 "Glacial Indifference",sans-serif;opacity:.92}
+.st1{height:140px;background:var(--rust-dark)}
+.st2{height:190px;background:var(--slate-base)}
+.st3{height:240px;background:var(--slate-dark)}
+.st1 i{position:absolute;left:16px;top:-16px;font:700 15px "Glacial Indifference",sans-serif;font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:var(--rust-dark);background:#fff;border:2px solid var(--rust-dark);border-radius:99px;padding:4px 12px}
+.expect .punch{margin-top:22px!important}
+.why{margin:14px 0 0;max-width:960px;font:500 22px/1.35 "Glacial Indifference",sans-serif;color:var(--navy);background:var(--slate-ghost);border-left:8px solid var(--slate-base);border-radius:6px 14px 14px 6px;padding:11px 18px}
+.why b{color:var(--slate-dark)}
+.expect .tried{margin-top:14px}
+.expect .src{font-size:16px;margin-top:8px;max-width:960px}
+.read .stairs{flex-wrap:wrap}.read .st{height:auto;min-width:220px}
+/* ---------- Praxisfolien Kapitel 5 (Namensraum pr-) ---------- */
+.slide.praxis{padding:56px 110px 50px;justify-content:flex-start}
+.praxis .label{margin-bottom:12px}
+.praxis .h{font-size:80px;margin:0 0 10px;max-width:1080px}
+.pr-lead{font:500 28px/1.3 "Glacial Indifference",sans-serif;color:var(--muted);margin:0 0 6px;max-width:1080px}
+.pr-meter{position:absolute;right:110px;top:56px;text-align:right;font:700 15px "Glacial Indifference",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pr-meter div{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
+.pr-meter i{width:34px;height:12px;border-radius:6px;background:var(--slate-pale)}
+.pr-meter i.on{background:var(--sage-dark)}
+.pr-body{display:grid;grid-template-columns:1fr 500px;gap:56px;align-items:center;margin-top:18px;flex:1;min-height:0}
+.pr-steps{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.pr-steps li{display:grid;grid-template-columns:190px 1fr;column-gap:20px;align-items:baseline;background:#fff;border-radius:14px;padding:14px 22px;box-shadow:0 0 0 2px var(--line)}
+.pr-steps .pr-ph{grid-row:span 2;align-self:center;justify-self:start;font:700 16px "Glacial Indifference",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#fff;border-radius:99px;padding:6px 14px}
+.pr-ph.pl{background:var(--slate-base)}.pr-ph.du{background:var(--rust-dark)}.pr-ph.re{background:var(--sage-dark)}
+.pr-steps b{font:700 30px/1.15 "Glacial Indifference",sans-serif;color:var(--navy)}
+.pr-t{font:500 24px/1.3 "Glacial Indifference",sans-serif;color:var(--ink)}
+.pr-vis{position:relative;display:grid;place-items:center}
+.pr-vis svg{width:500px;height:auto;overflow:visible}
+.pr-foot{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:20px}
+.pr-eg,.pr-key{margin:0;font:500 21px/1.4 "Glacial Indifference",sans-serif;border-radius:6px 14px 14px 6px;padding:12px 18px}
+.pr-eg{color:var(--navy);background:#fff;border-left:8px solid var(--rust-base);box-shadow:0 0 0 2px var(--line)}
+.pr-eg b{color:var(--rust-dark)}
+.pr-key{color:var(--ink);font-weight:600;background:var(--slate-ghost);border-left:8px solid var(--sage-dark)}
+/* Skizzen: Grundformen */
+.pr-vis svg *{transition:fill .45s ease,stroke .45s ease,opacity .45s ease,stroke-dashoffset .8s var(--ease)}
+.v-board{fill:var(--slate-dark)}.v-chalk{stroke:#fff;stroke-width:6;stroke-linecap:round;fill:none;opacity:.8}
+.v-time{stroke:var(--slate-pale);stroke-width:8;stroke-linecap:round}
+.v-n>circle:first-child{fill:#fff;stroke:var(--slate-pale);stroke-width:5}
+.v-ic{fill:none;stroke:var(--slate-pale);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.pr-front:has(.step[data-v="1"]:not(.hidden)) .v-n1>circle:first-child{fill:var(--slate-base);stroke:var(--slate-base)}
+.pr-front:has(.step[data-v="2"]:not(.hidden)) .v-n2>circle:first-child{fill:var(--rust-dark);stroke:var(--rust-dark)}
+.pr-front:has(.step[data-v="3"]:not(.hidden)) .v-n3>circle:first-child{fill:var(--sage-dark);stroke:var(--sage-dark)}
+.pr-front:has(.step[data-v="1"]:not(.hidden)) .v-n1 .v-ic,.pr-front:has(.step[data-v="2"]:not(.hidden)) .v-n2 .v-ic,.pr-front:has(.step[data-v="3"]:not(.hidden)) .v-n3 .v-ic{stroke:#fff}
+.lw-n.lw-nw{fill:#fff}
+
+.pm-outer{fill:#fff;stroke:var(--slate-base);stroke-width:4}.pm-diag{stroke:var(--slate-base);stroke-width:3}
+.pm-f{fill:transparent}.pm-ink{stroke:var(--slate-mid);stroke-width:5;stroke-linecap:round;opacity:.0}
+.pm-center{fill:var(--slate-ghost);stroke:var(--slate-base);stroke-width:4}
+.pm-check{fill:none;stroke:#fff;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.pm-loop{fill:none;stroke:var(--sage-dark);stroke-width:5;opacity:0}
+.pr-pm:has(.step[data-v="1"]:not(.hidden)) .pm-f{fill:var(--slate-ghost)}
+.pr-pm:has(.step[data-v="1"]:not(.hidden)) .pm-ink{opacity:1}
+.pr-pm:has(.step[data-v="2"]:not(.hidden)) .pm-center{fill:var(--rust-dark);stroke:var(--rust-dark)}
+.pr-pm:has(.step[data-v="2"]:not(.hidden)) .pm-check{opacity:1}
+.pr-pm:has(.step[data-v="3"]:not(.hidden)) .pm-outer{stroke:var(--sage-dark);stroke-width:8}
+.lw-path{fill:none;stroke:var(--slate-pale);stroke-width:12;stroke-linecap:round;stroke-dasharray:2 22}
+.lw-s{fill:#fff;stroke:var(--slate-base);stroke-width:4}.lw-done{fill:var(--slate-base)}
+.lw-n{font:700 16px "Glacial Indifference",sans-serif;fill:var(--slate-base);text-anchor:middle}
+.lw-ring{fill:none;stroke:var(--slate-base);stroke-width:4;stroke-dasharray:6 6;opacity:0}
+.lw-test{fill:#fff;stroke:var(--rust-dark);stroke-width:4;stroke-linejoin:round;opacity:0}
+.lw-alt{fill:none;stroke:var(--sage-dark);stroke-width:5;stroke-linecap:round;opacity:0}
+.lw-flag{fill:var(--slate-pale);stroke:var(--slate-base);stroke-width:3}
+.pr-lw:has(.step[data-v="1"]:not(.hidden)) .lw-ring{opacity:1}
+.pr-lw:has(.step[data-v="2"]:not(.hidden)) .lw-test{opacity:1}
+.pr-lw:has(.step[data-v="3"]:not(.hidden)) .lw-alt{opacity:1}
+.lt-shelf{stroke:var(--slate-base);stroke-width:6;stroke-linecap:round}
+.lt-tray rect{fill:#fff;stroke:var(--slate-base);stroke-width:4}.lt-tray circle{fill:var(--slate-base)}
+.lt-arc{fill:none;stroke:var(--slate-pale);stroke-width:14;stroke-linecap:round}.lt-needle{stroke:var(--navy);stroke-width:6;stroke-linecap:round}.lt-hub{fill:var(--navy)}
+.lt-gauge,.lt-swap{opacity:.25}.lt-swap{fill:none;stroke:var(--sage-dark);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.pr-lt:has(.step[data-v="1"]:not(.hidden)) .lt-gauge{opacity:1}
+.pr-lt:has(.step[data-v="1"]:not(.hidden)) .lt-arc{stroke:var(--slate-base)}
+.pr-lt:has(.step[data-v="2"]:not(.hidden)) .lt-2 rect{fill:var(--rust-dark);stroke:var(--rust-dark)}
+.pr-lt:has(.step[data-v="2"]:not(.hidden)) .lt-2 circle{fill:#fff}
+.pr-lt:has(.step[data-v="3"]:not(.hidden)) .lt-swap{opacity:1}
+.lt-badge{position:absolute;left:0;right:0;bottom:-30px;margin:0;text-align:center;font:700 18px "Glacial Indifference",sans-serif;color:var(--rust-dark)}
+.pj-line{stroke:var(--slate-pale);stroke-width:12;stroke-linecap:round}
+.pj-prog{stroke:var(--slate-base);stroke-width:12;stroke-linecap:round;stroke-dasharray:160;stroke-dashoffset:160}
+.pj-ms path{fill:#fff;stroke:var(--slate-base);stroke-width:4;opacity:0}
+.pj-goal rect{fill:var(--slate-ghost);stroke:var(--slate-base);stroke-width:4}.pj-goal path{fill:none;stroke:var(--slate-base);stroke-width:4;stroke-linecap:round}
+.pj-warn path{fill:none;stroke:var(--rust-dark);stroke-width:5;stroke-linejoin:round;stroke-linecap:round;opacity:0}
+.pj-new{fill:none;stroke:var(--sage-dark);stroke-width:5;stroke-linecap:round;stroke-dasharray:6 8;opacity:0}
+.pr-pj:has(.step[data-v="1"]:not(.hidden)) .pj-ms path{opacity:1}
+.pr-pj:has(.step[data-v="2"]:not(.hidden)) .pj-prog{stroke-dashoffset:0}
+.pr-pj:has(.step[data-v="2"]:not(.hidden)) .pj-warn path{opacity:1}
+.pr-pj:has(.step[data-v="3"]:not(.hidden)) .pj-new{opacity:1}
+.pr-pm .pr-vis svg{width:330px}
+.read .slide.praxis{padding:60px 40px}
+.read .pr-body,.read .pr-foot{grid-template-columns:1fr}
+.read .pr-steps li{grid-template-columns:1fr}.read .pr-meter{position:static;text-align:left;margin-bottom:16px}.read .pr-meter div{justify-content:flex-start}
+.read .pr-vis svg{width:100%;max-width:420px}
 /* ---------- Webcam: läuft direkt in der Seite (Taste C) ---------- */
 #cam{position:absolute;z-index:30;left:1270px;top:570px;width:280px;height:280px;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.6);pointer-events:none;background:var(--slate-base);
   box-shadow:0 0 0 6px #fff,0 0 0 12px var(--sage-dark),0 20px 44px -10px rgba(30,42,53,.5);
@@ -633,6 +730,8 @@ body.cam-on #cam{box-shadow:0 0 0 6px #fff,0 0 0 12px var(--slate-base),0 20px 4
 #cd-logo{position:absolute;z-index:25;right:56px;top:12px;width:156px;height:44px;color:#791D22;pointer-events:none;transition:opacity .3s ease}
 body:has(.slide.active.kipper) #cd-head,body:has(.slide.active.kipper) #cd-logo,
 body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-logo{opacity:0}
+.pr-meter{top:84px}
+.slide.praxis{padding-top:64px}
 .read #cd-head,.read #cd-logo{display:none}
 @media print{#cd-head,#cd-logo{display:none}}
 </style>
@@ -684,11 +783,11 @@ body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-l
   <p class="label">Überblick</p>
   <h2 class="h" style="margin-bottom:44px">Fünf <em>Kapitel.</em></h2>
   <ol class="kw-list chapters">
-    <li class="kw on"><span class="cn">1</span><span>Was SRL ist – und was nicht</span><small>ca. 7 min</small></li>
-    <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span><small>ca. 3 min</small></li>
-    <li class="kw"><span class="cn">3</span><span>Das Modell: die SRL-Turbine</span><small>ca. 5 min</small></li>
-    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 11 min</small></li>
-    <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span><small>ca. 5 min</small></li>
+    <li class="kw on"><span class="cn">1</span><span>Was SRL ist – und was nicht</span></li>
+    <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span></li>
+    <li class="kw"><span class="cn">3</span><span>Das Modell: die SRL-Turbine</span></li>
+    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span></li>
+    <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span></li>
   </ol>
   <p class="sm" style="margin-top:36px">Jedes Kapitel endet mit einer Frage zum Anhalten. Bilder ohne Quellenangabe sind KI-generiert.</p>
 </section>
@@ -1044,6 +1143,22 @@ body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-l
   <figure class="pic step"><img src="assets/szene-wahl.webp" alt="Zeichnung: Ein Mädchen überlegt an drei Körben mit Aufgaben in drei Schwierigkeitsstufen, im Hintergrund arbeiten Kinder an verschiedenen Orten"></figure>
 </section>
 
+<section class="slide lever seq expect" data-part="4" data-title="Klare Erwartungen" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas"></div>
+  <p class="label">Zielt auf: Metakognition · Motivation</p>
+  <h2 class="h">Klare <em>Erwartungen.</em></h2>
+  <p class="lead">Jede Reihe legt fest, was alle können müssen – und wohin es weitergeht.</p>
+  <div class="stairs">
+    <div class="st st1 step" data-tb="metakognition"><i>für alle verbindlich</i><b>Mindeststandard</b><span>Das können alle.</span></div>
+    <div class="st st2 step" data-tb="metakognition"><b>Regelstandard</b><span>Das Ziel der Reihe.</span></div>
+    <div class="st st3 step" data-tb="motivation"><b>Leistungsstandard</b><span>Die Herausforderung für Starke.</span></div>
+  </div>
+  <p class="sm step punch">Den Mindeststandard sichern zählt mehr als die Note.</p>
+  <p class="why step"><b>Warum jetzt:</b> PISA 2025 – die niedrigsten Werte, die in Deutschland je gemessen wurden; rund ein Fünftel der 15-Jährigen ohne Basiskompetenzen in allen drei Bereichen. IQB-Bildungstrend 2024 – 34&nbsp;% der Neuntklässler verfehlen in Mathematik den Mindeststandard für den MSA.</p>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Kompetenzraster mit drei Niveaus in jeder Reihe</p>
+  <p class="src">OECD (2026): PISA 2025 Ergebnisse, Ländernotiz Deutschland · Deutscher Bildungsserver, Pressedossier PISA 2025 · IQB-Bildungstrend 2024 (Stanat u.&nbsp;a., 2025)</p>
+</section>
+
 <section class="slide lever seq" data-part="4" data-title="Prüfungsformate" data-cam="pip">
   <div class="tb tbnav" data-focus="areas" data-on="motivation mindset ressourcen"></div>
   <p class="label">Zielt auf: Motivation · Mindset · Ressourcen</p>
@@ -1160,6 +1275,104 @@ body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-l
 
 <section class="slide" data-part="5" data-title="Pointe" data-cam="big">
   <p class="statement kin">Nicht alles auf einmal.<br><em style="color:var(--sage-dark)">Aber gemeinsam und Schritt&nbsp;für&nbsp;Schritt.</em></p>
+</section>
+
+<section class="slide seq praxis pr-front" data-part="5" data-title="Praxis: von vorne" data-cam="off">
+  <div class="pr-meter" aria-label="Spielraum der Lernenden: 1 von 5"><span>Spielraum der Lernenden</span><div><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div></div>
+  <p class="label">Lehrkraftgeführter Unterricht</p>
+  <h2 class="h">Auch von vorne geht <em>SRL.</em></h2>
+  <p class="pr-lead">Die Lehrkraft steuert den Unterricht. Die Lernenden beobachten ihr eigenes Lernen.</p>
+  <div class="pr-body">
+    <ol class="pr-steps">
+      <li class="step" data-v="1"><span class="pr-ph pl">Planung</span><b>Vorher – Ziel klären</b><span class="pr-t">„Was soll ich am Ende erklären können?“</span></li>
+      <li class="step" data-v="2"><span class="pr-ph du">Durchführung</span><b>Währenddessen – Verständnis prüfen</b><span class="pr-t">„Kann ich den Gedankengang nachvollziehen?“</span></li>
+      <li class="step" data-v="3"><span class="pr-ph re">Reflexion</span><b>Nachher – Bilanz ziehen</b><span class="pr-t">„Was habe ich verstanden? Wo brauche ich noch Hilfe?“</span></li>
+    </ol>
+    <div class="pr-vis" aria-hidden="true"><svg viewBox="0 0 440 320"><rect class="v-board" x="60" y="10" width="320" height="140" rx="12"/><path class="v-chalk" d="M96 52h150M96 82h210M96 112h120"/>
+<path class="v-time" d="M50 250H390"/>
+<g class="v-n v-n1"><circle cx="80" cy="250" r="38"/><circle class="v-ic" cx="80" cy="250" r="20"/><circle class="v-ic" cx="80" cy="250" r="8"/></g>
+<g class="v-n v-n2"><circle cx="220" cy="250" r="38"/><circle class="v-ic" cx="214" cy="244" r="15"/><path class="v-ic" d="M225 255l15 15"/></g>
+<g class="v-n v-n3"><circle cx="360" cy="250" r="38"/><path class="v-ic" d="M343 251l11 11 23-25"/></g></svg></div>
+  </div>
+  <div class="pr-foot"><p class="pr-eg"><b>Konkret:</b> Nach einer gemeinsamen Erklärung bearbeiten alle eine kurze Verständnisfrage. Lernende markieren, wie sicher sie ihre Antwort begründen können, und entscheiden, ob sie eine weitere Erklärung brauchen.</p><p class="pr-key">Selbstregulation braucht nicht zwingend Wahl oder offene Aufgaben – auch angeleitete Selbsteinschätzung und die Reaktion darauf fördern sie.</p></div>
+</section>
+
+<section class="slide seq praxis pr-pm" data-part="5" data-title="Praxis: Placemat" data-cam="off">
+  <div class="pr-meter" aria-label="Spielraum der Lernenden: 2 von 5"><span>Spielraum der Lernenden</span><div><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></div></div>
+  <p class="label">Gruppenarbeit · Placemat</p>
+  <h2 class="h">Gemeinsam arbeiten. Bewusst <em>lernen.</em></h2>
+  <div class="pr-body">
+    <ol class="pr-steps">
+      <li class="step" data-v="1"><span class="pr-ph pl">Planung</span><b>Allein denken</b><span class="pr-t">Eigene Idee entwickeln und begründen.</span></li>
+      <li class="step" data-v="2"><span class="pr-ph du">Durchführung</span><b>Gemeinsam vergleichen</b><span class="pr-t">Beiträge besprechen und eine Gruppenlösung festlegen.</span></li>
+      <li class="step" data-v="3"><span class="pr-ph re">Reflexion</span><b>Prozess reflektieren</b><span class="pr-t">„Was hat meine Meinung verändert? Wie haben wir entschieden?“</span></li>
+    </ol>
+    <div class="pr-vis" aria-hidden="true"><svg viewBox="0 0 320 320"><rect class="pm-outer" x="10" y="10" width="300" height="300" rx="14"/><path class="pm-diag" d="M10 10L110 110M310 10L210 110M10 310L110 210M310 310L210 210"/>
+<path class="pm-f pm-f1" d="M22 18h276L206 106H114Z"/><path class="pm-f pm-f2" d="M302 22v276L214 206V114Z"/><path class="pm-f pm-f3" d="M298 302H22l92-88h92Z"/><path class="pm-f pm-f4" d="M18 298V22l88 92v92Z"/>
+<g class="pm-ink"><path d="M120 46h80M132 62h56M262 130v60M246 142v36M120 268h80M132 254h56M58 130v60M74 142v36"/></g>
+<rect class="pm-center" x="110" y="110" width="100" height="100" rx="10"/><path class="pm-check" d="M138 160l16 16 30-34"/>
+<path class="pm-loop" d="M300 300c40 10 30-60 12-70" /></svg></div>
+  </div>
+  <div class="pr-foot"><p class="pr-eg"><b>Konkret:</b> Die Gruppe diskutiert eine Problemstellung. Alle schreiben zuerst ins eigene Placemat-Feld, dann entsteht in der Mitte eine gemeinsame, begründete Antwort.</p><p class="pr-key">Kooperation fördert SRL besonders, wenn neben dem Ergebnis auch das eigene Denken und die gemeinsame Steuerung betrachtet werden.</p></div>
+</section>
+
+<section class="slide seq praxis pr-lw" data-part="5" data-title="Praxis: Lernweg" data-cam="off">
+  <div class="pr-meter" aria-label="Spielraum der Lernenden: 3 von 5"><span>Spielraum der Lernenden</span><div><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></div></div>
+  <p class="label">Individuelle Lernwege</p>
+  <h2 class="h">Eigenes Tempo. Klare <em>Orientierung.</em></h2>
+  <div class="pr-body">
+    <ol class="pr-steps">
+      <li class="step" data-v="1"><span class="pr-ph pl">Planung</span><b>Planen</b><span class="pr-t">„Welchen Lernschritt schaffe ich heute?“</span></li>
+      <li class="step" data-v="2"><span class="pr-ph du">Durchführung</span><b>Überprüfen</b><span class="pr-t">„Kann ich die Aufgabe bereits sicher lösen?“</span></li>
+      <li class="step" data-v="3"><span class="pr-ph re">Reflexion</span><b>Anpassen</b><span class="pr-t">„Brauche ich Übung, Hilfe oder den nächsten Schritt?“</span></li>
+    </ol>
+    <div class="pr-vis" aria-hidden="true"><svg viewBox="10 10 400 270"><path class="lw-path" d="M30 250C90 250 80 170 150 170S210 250 270 230 300 110 360 90"/>
+<g class="lw-st"><circle class="lw-s lw-done" cx="30" cy="250" r="16"/><circle class="lw-s lw-done" cx="150" cy="170" r="16"/><circle class="lw-s lw-goal" cx="270" cy="230" r="16"/><circle class="lw-s" cx="360" cy="90" r="16"/></g>
+<text x="30" y="256" class="lw-n lw-nw">1</text><text x="150" y="176" class="lw-n lw-nw">2</text><text x="270" y="236" class="lw-n">3</text><text x="360" y="96" class="lw-n">4</text>
+<circle class="lw-ring" cx="270" cy="230" r="28"/><path class="lw-test" d="M136 138h28v-22h-28zM142 128l6 6 10-12"/>
+<g class="lw-fork"><path d="M270 230c-10-60-60-70-90-60" class="lw-alt"/><path d="M174 164l6 7 4-9" class="lw-alt"/></g>
+<path class="lw-flag" d="M360 74V30l34 12-34 12"/></svg></div>
+  </div>
+  <div class="pr-foot"><p class="pr-eg"><b>Konkret:</b> Ein Lernweg hat mehrere Etappen mit Übungsaufgaben und kurzen Selbsttests. Die Lernenden planen ihren Fortschritt und wählen anhand der Ergebnisse den nächsten sinnvollen Schritt.</p><p class="pr-key">Nicht das eigene Tempo macht den Lernweg selbstreguliert, sondern das Überprüfen und das begründete Anpassen des Vorgehens.</p></div>
+</section>
+
+<section class="slide seq praxis pr-lt" data-part="5" data-title="Praxis: Lerntheke" data-cam="off">
+  <div class="pr-meter" aria-label="Spielraum der Lernenden: 4 von 5"><span>Spielraum der Lernenden</span><div><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></div></div>
+  <p class="label">Differenzierte Lerntheke</p>
+  <h2 class="h">Erst einschätzen. Dann <em>entscheiden.</em></h2>
+  <div class="pr-body">
+    <ol class="pr-steps">
+      <li class="step" data-v="1"><span class="pr-ph pl">Planung</span><b>Einschätzen</b><span class="pr-t">„Was kann ich schon sicher?“</span></li>
+      <li class="step" data-v="2"><span class="pr-ph du">Durchführung</span><b>Auswählen</b><span class="pr-t">Aufgabe mit passendem Anspruch wählen.</span></li>
+      <li class="step" data-v="3"><span class="pr-ph re">Reflexion</span><b>Neu entscheiden</b><span class="pr-t">„War meine Wahl passend oder muss ich wechseln?“</span></li>
+    </ol>
+    <div class="pr-vis" aria-hidden="true"><svg viewBox="10 50 400 210"><path class="lt-shelf" d="M20 250h380"/>
+<g class="lt-tray lt-1"><rect x="34" y="196" width="104" height="54" rx="8"/><circle cx="86" cy="223" r="7"/></g>
+<g class="lt-tray lt-2"><rect x="158" y="196" width="104" height="54" rx="8"/><circle cx="198" cy="223" r="7"/><circle cx="222" cy="223" r="7"/></g>
+<g class="lt-tray lt-3"><rect x="282" y="196" width="104" height="54" rx="8"/><circle cx="310" cy="223" r="7"/><circle cx="334" cy="223" r="7"/><circle cx="358" cy="223" r="7"/></g>
+<g class="lt-gauge"><path d="M150 120a60 60 0 0 1 120 0" class="lt-arc"/><path d="M210 120l30-36" class="lt-needle"/><circle cx="210" cy="120" r="7" class="lt-hub"/></g>
+<path class="lt-swap" d="M300 186c-20-40-60-40-80 0M214 176l6 12 10-10"/></svg><p class="lt-badge">Der gemeinsame Mindeststandard bleibt verbindlich.</p></div>
+  </div>
+  <div class="pr-foot"><p class="pr-eg"><b>Konkret:</b> Aufgaben auf drei Anforderungsniveaus. Eine kurze Einstiegsdiagnose und transparente Kriterien helfen bei der Auswahl; nach einer Aufgabe überprüfen die Lernenden ihre Entscheidung.</p><p class="pr-key">Die Wahl allein ist noch keine Selbstregulation. Entscheidend ist, sich zunehmend realistisch einzuschätzen und Entscheidungen zu korrigieren.</p></div>
+</section>
+
+<section class="slide seq praxis pr-pj" data-part="5" data-title="Praxis: Projekt" data-cam="off">
+  <div class="pr-meter" aria-label="Spielraum der Lernenden: 5 von 5"><span>Spielraum der Lernenden</span><div><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+  <p class="label">Projektarbeit</p>
+  <h2 class="h">Große Aufgabe. Kleine <em>Ziele.</em></h2>
+  <div class="pr-body">
+    <ol class="pr-steps">
+      <li class="step" data-v="1"><span class="pr-ph pl">Planung</span><b>Planen</b><span class="pr-t">Teilziele, Rollen und Meilensteine vereinbaren.</span></li>
+      <li class="step" data-v="2"><span class="pr-ph du">Durchführung</span><b>Überwachen</b><span class="pr-t">Fortschritte und Schwierigkeiten sichtbar machen.</span></li>
+      <li class="step" data-v="3"><span class="pr-ph re">Reflexion</span><b>Nachsteuern</b><span class="pr-t">Aufgabenverteilung, Strategien oder Zeitplan anpassen.</span></li>
+    </ol>
+    <div class="pr-vis" aria-hidden="true"><svg viewBox="20 90 390 170"><path class="pj-line" d="M30 200H330"/><path class="pj-prog" d="M30 200H190"/>
+<g class="pj-ms"><path d="M90 186l14 14-14 14-14-14z"/><path d="M170 186l14 14-14 14-14-14z"/><path d="M250 186l14 14-14 14-14-14z"/></g>
+<g class="pj-goal"><rect x="334" y="166" width="66" height="66" rx="10"/><path d="M350 214v-30h34v30M358 196h18"/></g>
+<g class="pj-warn"><path d="M170 112l26 44h-52z"/><path d="M170 128v14M170 148v2"/></g>
+<path class="pj-new" d="M190 200c20 50 80 50 110 10"/><path class="pj-new" d="M290 220l12-10 2 16"/></svg></div>
+  </div>
+  <div class="pr-foot"><p class="pr-eg"><b>Konkret:</b> Eine Gruppe plant und baut ein kleines Werkstück. Sie dokumentiert Zwischenstände, prüft die Passung zum Entwurf und ändert den Arbeitsplan, wenn Schwierigkeiten entstehen.</p><p class="pr-key">Projekte bieten viel Freiraum – und brauchen deshalb klare Kriterien, strukturierende Hilfen und regelmäßige Reflexion. Selbstorganisation allein reicht nicht.</p></div>
 </section>
 
 <section class="slide seq" data-part="5" data-title="Fürs Team" data-cam="pip">

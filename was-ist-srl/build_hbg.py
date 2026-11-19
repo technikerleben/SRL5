@@ -65,6 +65,8 @@ body.cam-on #cam{box-shadow:0 0 0 6px #fff,0 0 0 12px var(--slate-base),0 20px 4
 #cd-logo{position:absolute;z-index:25;right:56px;top:12px;width:156px;height:44px;color:#791D22;pointer-events:none;transition:opacity .3s ease}
 body:has(.slide.active.kipper) #cd-head,body:has(.slide.active.kipper) #cd-logo,
 body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-logo{opacity:0}
+.pr-meter{top:84px}
+.slide.praxis{padding-top:64px}
 .read #cd-head,.read #cd-logo{display:none}
 @media print{#cd-head,#cd-logo{display:none}}
 '''
