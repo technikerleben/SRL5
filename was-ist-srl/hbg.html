@@ -1,0 +1,1637 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#163A5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SRL-Vortrag">
+<title>SRL ist keine Methode! · Online-Fortbildung in fünf Kapiteln · HBG</title>
+<meta name="description" content="Online-Fortbildung zum selbstregulierten Lernen: Grundlagen, Mythen, SRL-Turbine und erste Bausteine aus der Praxis.">
+<!-- Ordner-URL ohne "/" am Ende: sonst lädt der Browser keine Bilder und Schriften -->
+<script>if(location.protocol!=='file:'&&!/\/$|\.html?$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash);</script>
+<style>
+@font-face{font-family:Gagalin;src:url(assets/fonts/gagalin.woff2) format("woff2");font-display:block;size-adjust:86%}
+@font-face{font-family:"Glacial Indifference";src:url(assets/fonts/glacial-400.woff2) format("woff2");font-weight:100 550;font-display:block}
+@font-face{font-family:"Glacial Indifference";src:url(assets/fonts/glacial-700.woff2) format("woff2");font-weight:551 900;font-display:block}
+
+:root{
+  --slate-dark:#163A5C;--slate-base:#245688;--slate-mid:#6C93B8;--slate-pale:#CBDBE9;--slate-ghost:#EFF4F9;--rust-dark:#791D22;--rust-base:#791D22;--rust-mid:#E8C9CB;--rust-pale:#F8EEEE;--sage-dark:#3F6B4D;--sage-base:#7C9C82;
+  --navy:var(--slate-dark);--blue:var(--slate-base);--red:var(--rust-dark);--mint:var(--sage-dark);--orange:var(--rust-base);
+  --paper:#FFFFFF;--ink:#1F2020;--muted:#5A5A5A;--line:rgba(36,86,136,.20);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:"Glacial Indifference",system-ui,sans-serif;overflow:hidden}
+body.idle,body.idle *{cursor:none!important}
+
+/* ---------- Feste 16:9-Bühne (1600 × 900), wird aufs Fenster skaliert ---------- */
+#viewport{position:fixed;inset:0;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%) scale(var(--s,1));transform-origin:center}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:90px 120px}
+/* ---------- Bewegung: kurz, gerichtet, ruhig ---------- */
+:root{--t:.45s;--ease:cubic-bezier(.22,.7,.2,1)}
+.slide.active{display:flex;z-index:2;animation:inFwd var(--t) var(--ease) both}
+body.dir-back .slide.active{animation-name:inBack}
+.slide.active.anchored{animation-name:fadeIn}
+.slide.leaving{display:flex;z-index:1;animation:fadeOut .26s ease both;pointer-events:none}
+.slide.leaving.anchored{animation:none}
+.slide.leaving.anchored>*:not(.split),.slide.leaving.anchored .split>*:not(figure){animation:fadeOut .2s ease both}
+@keyframes inFwd{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+@keyframes inBack{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+/* gestaffelter Aufbau */
+.stag{animation:rise .5s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 90ms)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.qr-box.stag{animation-name:pop}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+/* Akzentlinien zeichnen sich ein */
+.draw{animation:draw .7s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 200ms)}
+@keyframes draw{from{background-size:0 6px}to{background-size:100% 6px}}
+.stag.draw{animation:rise .5s var(--ease) both,draw .7s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 90ms),calc(var(--i,0)*70ms + 260ms)}
+.cover .line.draw,.cover .line.stag.draw{animation:drawLine .7s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 300ms)}
+@keyframes drawLine{from{width:0}to{width:120px}}
+/* Ken Burns nur auf großen Bildfolien */
+.slide.full.active img{animation:kb 14s ease-out both}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.04)}}
+.slide.full{overflow:hidden}
+body.overlay .slide.full.active img{animation-play-state:paused}
+.notes{display:none}
+
+/* ---------- Drei Schriftgrößen (+ Quellenzeile) ---------- */
+.label{font:700 24px/1.2 "Glacial Indifference",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin:0 0 22px}
+.h{font:400 100px/1.02 Gagalin,sans-serif;color:var(--navy);margin:0 0 50px;letter-spacing:-.005em;text-wrap:balance}
+.h em,.kw em,.statement em{font-style:normal;color:var(--rust-dark)}
+.h em,.statement em{color:var(--rust-base)}
+.kw{font:600 52px/1.22 "Glacial Indifference",sans-serif;color:var(--navy);margin:0}
+.kw-list{list-style:none;margin:0;padding:0;display:grid;gap:26px}
+.sm{font:500 28px/1.35 "Glacial Indifference",sans-serif;color:var(--muted);margin:0}
+.src{font:400 20px/1.35 "Glacial Indifference",sans-serif;color:var(--muted);margin:14px 0 0}
+.src a{color:inherit}
+
+/* Klick für Klick */
+.step{transition:opacity .4s ease,transform .4s ease}
+.step.hidden{opacity:0;transform:translateY(10px)}
+
+/* ---------- Folientypen ---------- */
+.split{display:grid;grid-template-columns:auto minmax(0,1fr);gap:90px;align-items:center}
+.split .h{font-size:88px}
+figure{margin:0}
+
+/* Titel */
+.slide.cover{background:radial-gradient(circle at 78% 22%,#245688 0,var(--slate-dark) 55%,#0F2A44 100%);color:white}
+.cover .mark{display:inline-grid;place-items:center;width:84px;height:84px;border-radius:22px;border:3px solid rgba(255,255,255,.28);font:400 30px Gagalin,sans-serif;letter-spacing:.05em;margin-bottom:40px;width:max-content;padding:0 18px}
+.cover .h{font-size:150px;color:white;margin-bottom:30px}
+.cover .h em{color:var(--rust-mid)}
+.cover .kw{color:var(--slate-pale);font-weight:500}
+.cover .line{width:120px;height:7px;border-radius:9px;background:linear-gradient(90deg,var(--rust-base),var(--rust-mid));margin:56px 0 26px}
+.cover .sm{color:var(--slate-pale);font-weight:600}
+.cover .sm.event{font-weight:500;color:#CBDBE9;margin-top:10px}
+
+/* Vollbild-Bild */
+.slide.full{padding:30px;background:white}
+.slide.full img{width:100%;height:100%;object-fit:contain;display:block}
+.slide.full .src{position:absolute;left:40px;bottom:22px;margin:0;background:rgba(255,255,255,.85);padding:4px 10px;border-radius:6px}
+.slide.kipper{padding:0;background:#222}
+.slide.kipper img{object-fit:cover}
+.slide.kipper .src{background:rgba(0,0,0,.55);color:#eee}
+
+/* Aussage-Folie */
+.statement{font:400 96px/1.08 Gagalin,sans-serif;color:var(--navy);margin:0;max-width:1300px;text-wrap:balance}
+.quote{font:600 64px/1.3 "Glacial Indifference",sans-serif;color:var(--navy);margin:0;max-width:1300px;text-wrap:balance}
+
+/* Vorab mit Kipper */
+.kipper-teaser{width:420px}
+.kipper-teaser img{width:100%;display:block;border-radius:16px}
+.kipper-teaser .sm{margin-top:18px;color:var(--navy);font-weight:600}
+
+/* Mythen: rechte Bildhälfte verdeckt bis zur Auflösung */
+.myth-art{position:relative;width:760px}
+.myth-art img{display:block;width:100%;border-radius:14px}
+.myth-cover{position:absolute;top:0;right:0;bottom:0;background:var(--paper);transform-origin:right center;transition:transform .7s var(--ease)}
+.slide.steps-done .myth-cover{transform:scaleX(0)}
+.myth .split{gap:70px}
+.myth .h{font-size:74px;margin-bottom:44px}
+.myth .kw{font-size:46px}
+/* Salbeigrün = was stimmt, wirkt, gelingt */
+.myth .kw.step{position:relative;border-left:8px solid var(--sage-dark);padding:6px 0 6px 92px;border-radius:4px}
+.myth .kw.step::before{content:"";position:absolute;left:26px;top:50%;width:46px;height:46px;margin-top:-23px;border-radius:50%;background:var(--sage-dark) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/30px no-repeat}
+.checks li{padding-left:84px;text-indent:-84px}
+.checks li::before{content:"";display:inline-block;width:58px;height:58px;vertical-align:-.28em;border-radius:14px;background:var(--sage-dark) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/38px no-repeat;margin-right:26px}
+.recs.dotted li::before,.blocks.dotted li::before{background:var(--sage-dark)}
+
+/* SRL ist … */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px 80px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 60px}
+ .tried .kw{font-size:36px;margin-top:22px}
+.tried .sm{font-size:24px;margin:4px 0 0}
+.about{display:grid;grid-template-columns:1fr 560px;gap:70px;align-items:center}
+.about .h{font-size:84px;margin-bottom:34px}
+.about .kw-list{gap:16px}
+.about .kw{font-size:40px}
+.about-img{margin:0}
+.about-img img{display:block;width:560px;height:560px;border-radius:14px;box-shadow:0 2px 4px rgba(44,61,76,.12),0 18px 40px -16px rgba(44,61,76,.4)}
+.ways{display:grid;grid-template-columns:repeat(3,1fr);gap:56px;margin-top:56px}
+.ways>div{padding-top:28px;background:linear-gradient(var(--sage-dark),var(--sage-dark)) left top/100% 6px no-repeat}
+.ways .name{font:400 58px/1.05 Gagalin,sans-serif;color:var(--navy);margin:0 0 14px}
+.ways .kw{font-size:36px;line-height:1.25;margin-bottom:16px}
+.ways .sm{font-size:26px}
+.stackv{display:grid;grid-template-columns:auto 1fr;gap:110px;align-items:center}
+.stackv .big{font:400 190px/0.95 Gagalin,sans-serif;color:var(--navy);margin:0}
+.stackv ul{list-style:none;margin:0;padding:0 0 0 60px;border-left:6px solid var(--line);display:grid;gap:12px}
+.stackv li{font:600 54px/1.15 "Glacial Indifference",sans-serif;color:var(--navy)}
+.stackv li.all{margin-top:18px;justify-self:start;background:var(--sage-dark);color:white;padding:10px 30px;border-radius:14px}
+.recs{gap:22px}
+.recs .kw{font-size:44px}
+.thanks-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:90px;align-items:center}
+.thanks .h{font-size:130px;margin-bottom:40px}
+.thanks .url{font:700 48px/1.2 "Glacial Indifference",sans-serif;color:var(--sage-dark);margin:10px 0 0;letter-spacing:-.005em}
+.qr-box{background:white;border-radius:26px;padding:34px;box-shadow:0 0 0 2px var(--line)}
+.qr-box .qr{display:block;width:440px;height:440px}
+.qr-box figcaption{font:600 24px "Glacial Indifference",sans-serif;color:var(--muted);text-align:center;margin-top:18px}
+.scale{position:relative;margin-top:120px;height:84px}
+.sc-above{position:absolute;bottom:calc(100% + 26px);font:500 24px/1.25 "Glacial Indifference",sans-serif;color:var(--muted);white-space:nowrap}
+.sc-above b{color:var(--navy);font-weight:700}
+.sc-srl b{color:var(--ink)}
+.sc-track{position:absolute;left:0;right:0;top:0;height:22px;border-radius:11px;background:var(--slate-ghost)}
+.sc-zone{position:absolute;top:0;bottom:0;border-radius:0 11px 11px 0;background:var(--slate-pale)}
+.sc-band{position:absolute;top:-8px;bottom:-8px;border-radius:9px;background:var(--sage-dark);transform-origin:left center}
+.sc-hinge{position:absolute;top:-30px;bottom:-14px;width:4px;margin-left:-2px;background:var(--navy);border-radius:2px}
+.sc-ticks{position:absolute;left:0;right:0;top:36px}
+.sc-ticks span{position:absolute;transform:translateX(-50%);font:600 22px "Glacial Indifference",sans-serif;color:var(--navy);text-align:center}
+.sc-ticks span:first-child{transform:none}
+.sc-ticks span:last-child{transform:translateX(-100%)}
+.sc-ticks i{display:block;font:500 20px "Glacial Indifference",sans-serif;font-style:normal;color:var(--muted)}
+.scale.stag .sc-band{animation:grow .8s var(--ease) both;animation-delay:calc(var(--i,0)*70ms + 300ms)}
+@keyframes grow{from{transform:scaleX(0)}to{transform:none}}
+.blocks{gap:30px 70px;grid-template-rows:repeat(4,auto);grid-auto-flow:column;grid-template-columns:.85fr 1.15fr}
+.blocks .kw{font-size:46px}
+.blocks small{display:block;font:500 26px/1.3 "Glacial Indifference",sans-serif;color:var(--muted);margin-top:4px}
+.thanks .contact{margin-top:40px;display:grid;gap:4px}
+.thanks .contact .sm{color:var(--navy);font-size:28px}
+.thanks .contact b{font-weight:700}
+.thanks .contact a{color:inherit;text-decoration:none;border-bottom:2px solid var(--line)}
+.ai-note{position:absolute;left:120px;bottom:40px;margin:0;font:400 20px "Glacial Indifference",sans-serif;color:var(--muted)}
+.thanks .contact .link{display:flex;align-items:center;gap:14px}
+.ico{width:30px;height:30px;flex:none;fill:none;stroke:var(--red);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.res-link{display:flex;align-items:center;gap:10px;margin-top:22px!important;font-size:24px!important}
+.res-link .ico{width:24px;height:24px}
+.res-link a{color:var(--navy);text-decoration:none;border-bottom:2px solid var(--line)}
+.dotted li{display:grid;grid-template-columns:38px 1fr;align-items:baseline}
+.dotted li::before{content:"";width:16px;height:16px;border-radius:5px;background:var(--red);transform:translateY(-.12em)}
+
+/* Begriffe */
+.terms{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-bottom:60px}
+.terms div{border-top:6px solid var(--line);padding-top:20px}
+.terms b{display:block;font:700 40px/1.15 "Glacial Indifference",sans-serif;color:var(--navy);margin-bottom:12px;hyphens:manual}
+.terms .on{border-top-color:var(--red)}
+.terms .on b{color:var(--red)}
+
+/* Turbine & Bilder */
+.turbine{width:700px;height:700px;display:block;object-fit:contain}
+.turbine.big{width:760px;height:760px}
+.numbered{counter-reset:n}
+.numbered li{counter-increment:n}
+.rings li{display:flex;align-items:center;gap:26px}
+.rings small{display:block;font:500 24px/1.2 "Glacial Indifference",sans-serif;color:var(--muted);letter-spacing:.04em;margin-top:2px}
+.ring-ico{width:74px;height:74px;flex:none}
+.ring-ico .off{stroke:var(--slate-pale)}.ring-ico .off.fill{fill:var(--slate-pale);stroke:none}
+.ring-ico .on{stroke:var(--sage-dark)}.ring-ico .on.fill{fill:var(--sage-dark);stroke:none}
+.numbered li::before{content:counter(n);display:inline-grid;place-items:center;width:58px;height:58px;border-radius:14px;background:var(--navy);color:white;font:700 32px "Glacial Indifference",sans-serif;margin-right:26px;vertical-align:.08em}
+.cyc{position:relative;width:max-content;padding-right:120px}
+.cyc-back{position:absolute;right:0;top:0;width:120px;height:100%;overflow:visible}
+.cyc-back.step.hidden{opacity:1;transform:none}
+.cyc-line{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s var(--ease)}
+.cyc-head{opacity:0;transition:opacity .25s ease .75s}
+.cyc-back:not(.hidden) .cyc-line{stroke-dashoffset:0}
+.cyc-back:not(.hidden) .cyc-head{opacity:1}
+.read .cyc-line{stroke-dashoffset:0!important}.read .cyc-head{opacity:1!important}
+.arrows li+li::before{content:"";display:block;width:24px;height:52px;margin:-2px 0 12px 4px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 52'%3E%3Cpath d='M12 4V28' stroke='%234D8B3F' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M1.5 28H22.5L12 49Z' fill='%234D8B3F' stroke='%234D8B3F' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+.buddy{height:720px;width:auto;display:block;border-radius:10px;box-shadow:0 0 0 2px var(--line)}
+/* Lernbuddy: Klick 1 obere Hälfte, Klick 2 untere Hälfte, Klick 3 zurück */
+.zs{display:none!important}
+.buddy-zoom{position:relative;z-index:5;transform-origin:0 0;transition:transform 1s cubic-bezier(.65,0,.35,1)}
+.buddy-zoom+div{transition:opacity .5s ease}
+.zs1:not(.hidden)~.split .buddy-zoom{transform:translate(57px,-80px) scale(2.444)}
+.zs2:not(.hidden)~.split .buddy-zoom{transform:translate(57px,-960px) scale(2.444)}
+.zs3:not(.hidden)~.split .buddy-zoom{transform:none}
+.zs1:not(.hidden)~.split .buddy-zoom+div{opacity:0}
+.zs3:not(.hidden)~.split .buddy-zoom+div{opacity:1}
+.no-anim .buddy-zoom,.no-anim .buddy-zoom+div{transition:none}
+/* Wandernde Begriffe zwischen Folien */
+.slide.measure,.slide.measure *{animation:none!important;transition:none!important}
+#morphLayer{position:absolute;inset:0;z-index:40;pointer-events:none}
+.morph-clone{position:absolute;margin:0;line-height:normal;white-space:nowrap;transform-origin:0 0;will-change:transform,opacity}
+.morph-hide{visibility:hidden}
+[data-morph]{display:inline-block}
+.flash{animation:flash .56s ease-in-out both}
+@keyframes flash{0%,100%{transform:none}35%,60%{transform:scale(1.14);color:var(--red);text-shadow:0 0 18px rgba(201,119,58,.55)}}
+
+/* Forschung / Erprobung */
+.col .name{font:400 60px/1.05 Gagalin,sans-serif;color:var(--navy);margin:0 0 10px}
+.books{gap:56px;align-items:start}
+.book{display:flex;flex-direction:column;gap:22px}
+.book .cover{height:250px;width:auto;align-self:flex-start;border-radius:3px;box-shadow:0 1px 2px rgba(44,61,76,.18),0 10px 24px -8px rgba(44,61,76,.35)}
+.book .who{font:600 19px/1.3 "Glacial Indifference",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin:0 0 8px}
+.book .name{font-size:40px;margin-bottom:0}
+.book .sm{font-size:24px}
+.book .desc{font:400 25px/1.4 "Glacial Indifference",sans-serif;color:var(--ink);margin:14px 0 0}
+.book .res-link{margin-top:16px!important}
+.book .res-link .pub{color:var(--muted);margin-right:14px}
+.read .book .desc{font-size:36px}
+.read .book .sm{font-size:34px}
+.read .book .who{font-size:26px}
+.read .book{flex-direction:row;align-items:flex-start;gap:36px}
+.read .book .cover{width:220px;height:auto;flex:none}
+.col .sm{margin-bottom:18px}
+.col .kw{font-size:40px;line-height:1.3}
+.bottom{margin-top:70px}
+
+/* Werkzeuge */
+.pairs{display:grid;grid-template-columns:max-content 1fr;gap:22px 50px;align-items:baseline}
+.pairs .sm{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:26px}
+
+/* ---------- Rahmen außerhalb der Bühne ---------- */
+#progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:rgba(44,61,76,.10);z-index:5}
+#progress .bar{height:100%;width:0;background:var(--navy);transition:width .3s ease}
+#progress .tick{position:absolute;top:-3px;width:2px;height:9px;background:rgba(44,61,76,.35)}
+body.dark-slide #progress{background:rgba(255,255,255,.12)}
+body.dark-slide #progress .bar{background:var(--rust-mid)}
+#black{position:fixed;inset:0;background:#000;z-index:40;display:none}
+#black.on{display:block}
+
+/* Folienübersicht (Taste G) */
+#jump,#menu{touch-action:manipulation}
+#jump{position:fixed;inset:0;z-index:50;display:none;background:rgba(15,42,68,.8);padding:4vh 4vw;font-size:16px}
+#jump.open{display:grid;place-items:center}
+.jump-panel{background:var(--paper);border-radius:18px;width:min(1100px,100%);max-height:92vh;overflow:auto;padding:18px 22px 22px}
+.jump-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.jump-head b{font:400 24px Gagalin,sans-serif;color:var(--navy)}
+.jump-head span{color:var(--muted);font-size:14px}
+#jumpNum{margin-left:auto;width:90px;padding:8px 10px;border:2px solid var(--line);border-radius:10px;font:600 16px "Glacial Indifference",sans-serif}
+#jumpGrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+#jumpGrid .sec{grid-column:1/-1;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--red);margin:12px 2px 0}
+#jumpGrid button{width:100%;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;text-align:left;padding:9px 12px;border-radius:12px;border:2px solid var(--line);background:white;color:var(--ink);cursor:pointer;font:600 15px "Glacial Indifference",sans-serif}
+#jumpGrid button.current{border-color:var(--red)}
+#jumpGrid .n{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--navy);color:white;font-size:13px}
+
+/* ---------- Menü (Taste M) ---------- */
+#menu{position:fixed;right:18px;bottom:18px;z-index:45;display:none;width:330px;max-width:calc(100vw - 36px);
+  background:rgba(16,28,41,.94);color:#EFF4F9;border-radius:16px;padding:14px 14px 12px;font:500 14px/1.35 "Glacial Indifference",sans-serif;
+  box-shadow:0 18px 50px rgba(0,0,0,.35)}
+#menu.open{display:block}
+#menu .m-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 10px}
+#menu .m-head b{font:400 18px Gagalin,sans-serif;letter-spacing:.03em}
+#menu .m-head span{color:#CBDBE9;font-size:13px}
+#menu .m-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+#menu button{font:600 13px "Glacial Indifference",sans-serif;color:#EFF4F9;background:#1D4670;border:1px solid #2E5E8C;border-radius:10px;padding:9px 4px;cursor:pointer}
+#menu button:hover{background:#2C4862}
+#menu button.wide{grid-column:span 3}
+#menu table{width:100%;border-collapse:collapse}
+#menu td{padding:3px 2px;vertical-align:top}
+#menu td:first-child{white-space:nowrap;padding-right:10px}
+#menu kbd{display:inline-block;min-width:22px;text-align:center;padding:1px 6px;border-radius:6px;background:#2A4157;border:1px solid #3B5874;font:600 12px "Glacial Indifference",sans-serif}
+#menu .m-sec{color:#E8C9CB;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding-top:8px}
+
+/* ---------- Sprechernotizen-Fenster (?notes) ---------- */
+#notesView{display:none}
+body.notes-mode{overflow:auto;background:#0F2A44;color:#EFF4F9}
+body.notes-mode #viewport,body.notes-mode #progress,body.notes-mode #menu{display:none!important}
+body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh;padding:22px 28px;gap:18px}
+.nv-head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.nv-num{font:400 34px Gagalin,sans-serif;color:#E8C9CB}
+.nv-title{font:600 28px "Glacial Indifference",sans-serif}
+.nv-step{font:600 18px "Glacial Indifference",sans-serif;color:#CBDBE9;padding:3px 10px;border:1px solid #2E5E8C;border-radius:99px}
+.nv-time{margin-left:auto;font:600 26px "Glacial Indifference",sans-serif;font-variant-numeric:tabular-nums;color:#EFF4F9}
+.nv-notes{font:400 26px/1.5 "Glacial Indifference",sans-serif;max-width:60em}
+.nv-notes ul{margin:0;padding-left:1.2em}
+.nv-notes li{margin:.3em 0}
+.nv-notes p{margin:.4em 0}
+.nv-notes b{color:#F8EEEE}
+.nv-foot{display:flex;gap:24px;flex-wrap:wrap;font:500 18px "Glacial Indifference",sans-serif;color:#CBDBE9;border-top:1px solid #2E5E8C;padding-top:12px}
+.nv-foot b{color:#EFF4F9}
+.nv-warn{color:#E8C9CB}
+
+#readNote{display:none}
+.read #readNote{display:block;padding:14px 18px;background:var(--navy);color:var(--slate-pale);font:500 15px/1.45 "Glacial Indifference",sans-serif}
+.read #readNote b{color:#fff;font-weight:700}
+.read #readNote a{color:var(--rust-mid);font-weight:600}
+  /* ---------- Videofassung ---------- */
+.chapter{justify-content:center}
+.chapter .chap-no{position:absolute;right:120px;top:50%;transform:translateY(-50%);margin:0;font:400 520px/1 Gagalin,sans-serif;color:rgba(255,255,255,.07)}
+.chapter .label{color:var(--rust-mid)}
+.chapter .h{font-size:130px}
+.chapters{gap:22px}
+.chapters li{display:grid;grid-template-columns:76px 1fr auto;align-items:center;gap:26px;border-bottom:2px solid var(--line);padding-bottom:16px;max-width:1150px}
+.chapters .cn{display:grid;place-items:center;width:60px;height:60px;border-radius:50%;background:var(--slate-dark);color:#fff;font:400 32px Gagalin,sans-serif}
+.chapters small{font:500 28px "Glacial Indifference",sans-serif;color:var(--muted)}
+.pack{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 48px;margin-top:40px}
+.pack>div{border-top:6px solid var(--sage-dark);padding-top:16px;display:grid;grid-template-columns:52px 1fr;column-gap:16px;align-content:start}
+.pack>div .sm{grid-column:2}
+.pack .ring-ico{width:48px;height:48px;grid-row:1/span 2;align-self:start;margin-top:4px}
+.pack .name{grid-column:2}
+.pack .name{font:400 42px/1.05 Gagalin,sans-serif;color:var(--navy);margin:0}
+.pack .sm{font-size:25px;line-height:1.3;margin-top:6px}
+.lever-grid{display:grid;grid-template-columns:1fr 150px 1fr;align-items:center;gap:36px}
+.lever-grid .col-h{font:700 24px "Glacial Indifference",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+.lever-grid .kw{font-size:42px}
+.lever-grid .kw-list{gap:10px}
+.target-list .kw{font-size:38px}
+.lever-arrow svg{width:150px;height:60px;display:block}
+.lever-arrow{opacity:0;transition:opacity .5s ease}
+.lever-grid:has(.step:not(.hidden)) .lever-arrow,.read .lever-arrow,body.no-anim .lever-arrow{opacity:1}
+.target-list li{display:flex;align-items:center;gap:18px}
+.target-list .ring-ico{width:48px;height:48px;flex:none}
+.lever .label{display:flex;align-items:center;gap:14px}
+.lever .label .ring-ico{width:38px;height:38px;flex:none}
+.lever .h{font-size:100px;margin-bottom:14px}
+.lever .lead{font:500 38px/1.3 "Glacial Indifference",sans-serif;color:var(--muted);margin:0 0 34px}
+.lever .kw-list{gap:16px}
+.lever .kw{font-size:42px}
+.lever .dotted li::before,.lever-grid .dotted li::before{background:var(--sage-dark)}
+.tried{margin:40px 0 0;font:500 27px/1.4 "Glacial Indifference",sans-serif;color:var(--muted)}
+.tried b{color:var(--navy);font-weight:700}
+.read .pack{grid-template-columns:1fr 1fr}
+.read .lever-grid{grid-template-columns:1fr}
+.read .lever-arrow svg{transform:rotate(90deg);margin:0 0 0 20px}
+.read .lever .tried{font-size:34px}
+.team li{padding-left:84px;text-indent:-84px}
+.team li::before{text-indent:0}
+.pause .label{display:flex;align-items:center;gap:16px}
+.pause-ico{width:40px;height:40px;fill:var(--sage-dark)}
+.thanks .contact{margin-top:46px}
+body.rec #progress,body.rec #readNote,body.rec .toast{display:none!important}
+body.rec,body.rec *{cursor:none!important}
+.read .chapter .chap-no{display:none}
+.read .chapters li{grid-template-columns:60px 1fr;}
+.read .chapters small{grid-column:2}
+/* ---------- Leseansicht fürs Handy: Folien untereinander, alles aufgedeckt ---------- */
+html.read,html.read body{overflow:auto;height:auto}
+.read #viewport{position:static;touch-action:auto;-webkit-user-select:text;user-select:text}
+.read #stage{position:static;width:auto;height:auto;transform:none}
+.read #progress,.read #menu,.read #jump,.read #black,.read #morphLayer{display:none!important}
+.read .slide{display:flex!important;position:relative;inset:auto;width:1000px;zoom:var(--z,.39);padding:90px 50px;justify-content:flex-start;border-bottom:2px solid var(--line)}
+.read .slide,.read .slide *{animation:none!important;transition:none!important}
+.read .step.hidden{opacity:1;transform:none}
+.read .myth-cover{transform:scaleX(0)}
+.read .slide.cover{padding:120px 50px}
+.read .cover .h{font-size:120px}
+.read .slide.full{padding:0;background:white;border:0}
+.read .slide.full img{height:auto}
+.read .slide.full .src,.read .ai-note{position:static;margin:16px 30px}
+.read .slide.kipper .src{margin:0;border-radius:0;padding:12px 30px}
+.read .label{font-size:30px}
+.read .sm{font-size:36px}
+.read .src{font-size:30px}
+.read .res-link{font-size:34px!important}
+.read .res-link .ico{width:32px;height:32px}
+.read .ai-note{font-size:28px}
+.read .about,.read .split,.read .stackv,.read .thanks-grid,.read .grid2,.read .grid3,.read .ways,.read .blocks{grid-template-columns:1fr!important;grid-template-rows:none;grid-auto-flow:row}
+.read .split,.read .thanks-grid{gap:50px}
+.read .split>figure,.read .split>.buddy-zoom{justify-self:center}
+.read .stackv{gap:40px}
+.read .stackv ul{padding-left:40px}
+.read .terms{grid-template-columns:1fr 1fr}
+.read .ways{gap:44px}
+.read .myth-art,.read .kipper-teaser{width:100%}
+.read .turbine,.read .turbine.big{width:900px;height:auto}
+.read .about-img img{width:100%;height:auto}
+.read .buddy{height:auto;width:100%;max-width:900px}
+.read .buddy-zoom+div{opacity:1!important}
+.read .qr-box{justify-self:start}
+.read .scale{margin-top:200px}
+.read .sc-above{font-size:28px;white-space:normal;width:300px}
+.read .sc-ticks span,.read .sc-ticks i{font-size:26px}
+/* ================= Videofassung in fünf Kapiteln: Sprechtakt, Turbine, Webcam ================= */
+.slide.cover{overflow:hidden}
+/* Punkte im Sprechtakt: der aktuelle Punkt steht voll, frühere treten zurück */
+.seq:not(.steps-done) .step:not(.hidden):not(.cur){opacity:.42}
+.dotted li small,.areas small{display:block;grid-column:2;font:500 25px/1.25 "Glacial Indifference",sans-serif;color:var(--muted);margin-top:2px}
+.punch{margin-top:34px!important;color:var(--rust-dark)!important;font-weight:700!important;font-size:32px!important}
+em.r{font-style:normal;color:var(--red)}
+/* bewegte Typo: Aussagen bauen sich Wort für Wort auf */
+.kin .w{display:inline-block}
+.slide.active .kin .w{animation:word .55s var(--ease) both;animation-delay:calc(var(--w)*70ms + 220ms)}
+@keyframes word{from{opacity:0;transform:translateY(.38em)}to{opacity:1;transform:none}}
+/* Mythos wird bei der Auflösung durchgestrichen */
+.myth .h{text-decoration:line-through;text-decoration-thickness:5px;text-decoration-color:transparent;transition:text-decoration-color .5s ease .25s,opacity .5s ease .25s}
+.myth.steps-done .h{text-decoration-color:var(--rust-dark);opacity:.6}
+.read .myth .h{text-decoration:none;opacity:1}
+/* drehender Turbinenring auf dunklen Folien */
+.orbit{position:absolute;left:800px;top:-50px;width:1000px;height:1000px;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(rgba(255,255,255,.075) 0 55deg,transparent 55deg 60deg);
+  -webkit-mask:radial-gradient(closest-side,transparent 70%,#000 70.5%,#000 99%,transparent 100%);mask:radial-gradient(closest-side,transparent 70%,#000 70.5%,#000 99%,transparent 100%);
+  animation:spin 140s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cover>*:not(.orbit):not(.chap-no){position:relative}
+.chapter .chap-no{right:auto;left:1300px;transform:translate(-50%,-50%);transition:opacity .4s ease}
+.outro .h{font-size:92px}
+.read .orbit{display:none}
+/* Einstiegsgeschichte */
+.story .split{align-items:start;gap:80px}
+.story-img img{display:block;height:700px;width:auto;border-radius:14px}
+.story .h{margin-bottom:36px}
+.read .story-img img{height:auto;width:100%}
+/* Kein Zusatzprogramm */
+.nots{gap:24px}
+.nots li{display:grid;grid-template-columns:78px 1fr;align-items:center}
+.nots li::before{content:"";width:54px;height:54px;border-radius:50%;background:var(--rust-dark) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 7l10 10M17 7L7 17' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/32px no-repeat}
+.nots li.yes::before{background-color:var(--sage-dark);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.chapters li{max-width:1050px}
+.chapters li.on .cn{background:var(--rust-base)}
+/* Definition: drei Phasen als Schleife */
+.phases{position:relative;display:flex;align-items:center;gap:22px;width:max-content;margin-top:64px;padding-bottom:96px}
+.phases .ph{font:400 52px/1 Gagalin,sans-serif;color:#fff;background:var(--slate-dark);padding:18px 34px;border-radius:16px}
+.ph-arr{position:relative;width:74px;height:6px;border-radius:3px;background:var(--sage-dark)}
+.ph-arr::after{content:"";position:absolute;right:-4px;top:50%;margin-top:-13px;border-left:22px solid var(--sage-dark);border-top:13px solid transparent;border-bottom:13px solid transparent}
+.ph-back{position:absolute;left:0;bottom:0;width:100%;height:84px;overflow:visible}
+.step .cyc-line{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s var(--ease) .45s}
+.step .cyc-head{opacity:0;transition:opacity .25s ease 1.25s}
+.step:not(.hidden) .cyc-line{stroke-dashoffset:0}
+.step:not(.hidden) .cyc-head{opacity:1}
+.read .phases{flex-wrap:wrap}.read .ph-back{display:none}
+/* Wirksamkeit */
+.hero{display:flex;align-items:center;gap:44px}
+.hero-n{font:400 230px/.9 Gagalin,sans-serif;color:var(--rust-base);margin:0}
+.hero-t{font:600 58px/1.14 "Glacial Indifference",sans-serif;color:var(--navy);margin:0}
+.hero-t em{font-style:normal;color:var(--rust-dark)}
+.hero-t small{display:block;font:500 28px/1.3 "Glacial Indifference",sans-serif;color:var(--muted);margin-top:12px}
+.effect .scale{margin-top:128px}
+.effect .scale.stag .sc-band{animation:none}
+.effect .sc-hinge{opacity:0;transition:opacity .4s ease}
+.effect .sc-band{transform:scaleX(0);transition:transform .8s var(--ease) .15s}
+.effect .scale:has(.sc-above:not(.sc-srl):not(.hidden)) .sc-hinge,.read .effect .sc-hinge{opacity:1}
+.effect .scale:has(.sc-srl:not(.hidden)) .sc-band,.read .effect .sc-band{transform:none}
+.read .hero{flex-direction:column;align-items:flex-start;gap:10px}
+/* Turbine als gezeichnetes Bauteil */
+.tb{display:block;flex:none}
+.tb svg{display:block;width:100%;height:100%;overflow:visible}
+.tb .shape{transition:fill .45s ease}
+.tb .g{transition:opacity .5s ease}
+.tb text{font-family:"Glacial Indifference",sans-serif;font-weight:700;font-size:17px;transition:fill .45s ease,opacity .45s ease}
+.tb .g-areas .shape{fill:var(--slate-pale)}
+.tb .g-areas text{fill:var(--slate-base)}
+.tb .g-proc .shape{fill:var(--slate-base)}
+.tb .g-proc text{fill:#fff}
+.tb .g-needs .shape{fill:var(--slate-ghost);stroke:var(--slate-pale);stroke-width:2;transition:fill .45s ease,stroke .45s ease}
+.tb .g-needs text{fill:var(--slate-base);font-size:15px;font-weight:600}
+.tb[data-focus=needs] .g-proc,.tb[data-focus=needs] .g-areas,.tb[data-focus=process] .g-needs,.tb[data-focus=process] .g-areas,.tb[data-focus=areas] .g-needs,.tb[data-focus=areas] .g-proc{opacity:.26}
+.tb[data-focus=needs] .g-needs .shape{fill:#fff;stroke:var(--sage-dark);stroke-width:4}
+.tb .g-areas .on .shape{fill:var(--sage-dark)}
+.tb .g-areas .on text{fill:#fff}
+.tb .g-proc .on .shape{fill:var(--rust-base)}
+.tb .g-needs text.on{fill:var(--rust-dark);font-weight:800}
+.tb .k{transform-box:view-box;transform-origin:center}
+.tb.build .k{animation:segIn .6s var(--ease) both;animation-delay:calc(var(--i)*55ms + 140ms)}
+@keyframes segIn{from{opacity:0;transform:scale(.8) rotate(-16deg)}to{opacity:1;transform:none}}
+.tb .k.pulse{animation:segPulse .65s var(--ease)}
+@keyframes segPulse{40%{transform:scale(1.07)}}
+.tb .runner{display:none}
+.tb.run .runner{display:block}
+.tbbig{width:700px;height:700px}
+.tbmid{width:430px;height:430px}
+.tbmid .g-proc text,.tbmid .g-needs text,.tbnav .g-proc text,.tbnav .g-needs text,.tbico text{display:none}
+.tbico{width:74px;height:74px}
+.tbico[data-focus=needs] .g-needs .shape,.tbico[data-focus=process] .g-proc .shape,.tbico[data-focus=areas] .g-areas .shape{fill:var(--sage-dark);stroke:none}
+.tbnav{position:absolute;right:80px;top:230px;width:420px;height:420px;transition:top .7s var(--ease),right .7s var(--ease),width .7s var(--ease),height .7s var(--ease)}
+.tbnav .g-areas text{opacity:0}
+.tbnav .g-areas .on text{opacity:1}
+.lvl .h{margin-bottom:34px}
+.lvl .kw-list{gap:18px}
+.areas{gap:11px!important}
+.areas .kw{font-size:38px;line-height:1.1;padding-left:20px;border-left:7px solid var(--slate-pale);transition:opacity .4s ease,transform .4s ease,border-color .4s ease}
+.areas .kw:not(.hidden){border-left-color:var(--sage-dark)}
+.areas small{font-size:23px}
+.means .lever-grid{grid-template-columns:1fr 150px 430px;gap:50px}
+.means .lever-arrow{opacity:1}
+.means .lever-arrow.step.hidden{opacity:1;transform:none}
+/* Hebel-Folien */
+.slide.lever{padding:64px 120px}
+.lever .h{font-size:86px;max-width:940px}
+.lever .lead{font-size:34px;margin-bottom:26px;max-width:940px}
+.lever .kw-list{gap:14px;max-width:940px}
+.lever .kw{font-size:38px}
+.lever .tried{margin-top:26px;max-width:940px}
+.eg{margin:24px 0 0;max-width:900px;font:500 28px/1.35 "Glacial Indifference",sans-serif;color:var(--navy);background:#fff;border-left:8px solid var(--rust-base);border-radius:6px 16px 16px 6px;padding:14px 22px;box-shadow:0 0 0 2px var(--line)}
+.eg b{font-weight:700;color:var(--rust-dark)}
+.read .seq .step{opacity:1!important}
+.read .tbnav{position:static;width:300px;height:300px;margin-bottom:30px}
+.read .tbbig,.read .tbmid{width:860px;height:860px;max-width:100%}
+.read .means .lever-grid{grid-template-columns:1fr}
+
+/* Strategie konkret (nach Stebner et al. 2015) und lautes Denken */
+.strat .h{font-size:68px;margin-bottom:20px}
+.strat .tbnav{width:360px;height:360px;right:70px;top:270px}
+.flow{display:grid;gap:9px;max-width:1010px;padding-left:22px;border-left:8px solid var(--slate-pale);transition:border-color .5s ease}
+.fl{display:grid;grid-template-columns:50px 1fr auto;align-items:center;gap:16px;background:#fff;border-radius:12px;padding:9px 16px;box-shadow:0 0 0 2px var(--line)}
+.fl p{margin:0;font:500 27px/1.25 "Glacial Indifference",sans-serif;color:var(--muted)}
+.fl b{font:700 32px/1.2 "Glacial Indifference",sans-serif;color:var(--navy);margin-right:10px}
+.fl .fn{display:grid;place-items:center;width:44px;height:44px;border-radius:11px;background:var(--navy);color:#fff;font:700 24px "Glacial Indifference",sans-serif}
+.fl>i{font:700 16px "Glacial Indifference",sans-serif;font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:var(--slate-base);background:var(--slate-ghost);border-radius:99px;padding:5px 12px}
+.fl.meta{opacity:0;transform:translateX(-14px);transition:opacity .5s ease,transform .5s var(--ease);box-shadow:0 0 0 2px var(--sage-dark)}
+.fl.meta .fn{background:var(--sage-dark) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.2 4.2L19 7' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/28px no-repeat;border-radius:50%}
+.fl.meta>i{color:#fff;background:var(--sage-dark)}
+.strat:has(.zm:not(.hidden)) .fl.meta,.read .fl.meta{opacity:1;transform:none}
+.strat:has(.zm:not(.hidden)) .flow{border-left-color:var(--sage-dark)}
+.strat .tried{margin-top:16px;max-width:1010px}
+.strat .src{font-size:18px;max-width:940px;margin-top:10px}
+.talkslide{padding:64px 120px}
+.talkslide .h{font-size:76px;margin-bottom:26px}
+.talk{display:grid;gap:11px;max-width:1120px}
+.tk{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:16px}
+.tk>i{justify-self:end;font:700 16px "Glacial Indifference",sans-serif;font-style:normal;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-base);background:var(--slate-ghost);border-radius:99px;padding:6px 13px;white-space:nowrap}
+.tk.meta>i{color:#fff;background:var(--sage-dark)}
+.tk p{margin:0;justify-self:start;font:500 29px/1.3 "Glacial Indifference",sans-serif;color:var(--navy);background:#fff;border-radius:6px 22px 22px 22px;padding:11px 22px;box-shadow:0 0 0 2px var(--line)}
+.talkslide .tried{margin-top:22px;max-width:1000px}
+.talkslide .src{font-size:18px}
+body.cam-on .talk{max-width:910px}
+body.cam-on .talkslide .tried{max-width:900px}
+body.cam-on .talkslide .h{font-size:58px;margin-bottom:22px}
+body.cam-on .tk p{font-size:27px;padding:9px 20px}
+body.cam-on .tk{grid-template-columns:160px 1fr}
+.read .fl{grid-template-columns:50px 1fr}.read .fl>i{grid-column:2;justify-self:start}
+.read .tk{grid-template-columns:1fr}.read .tk>i{justify-self:start}
+
+/* Szenenbilder: erscheinen per Klick bildschirmfüllend, solange sie der aktuelle Schritt sind */
+.pic{position:absolute;inset:0;z-index:20;margin:0;background:#fff;display:grid;place-items:center}
+.pic img{width:100%;height:100%;object-fit:contain;display:block}
+.slide .pic.step{transition:opacity .5s ease,transform .6s var(--ease),visibility 0s linear .6s}
+.slide .pic.step:not(.cur){opacity:0!important;visibility:hidden;transform:scale(1.03)}
+.slide .pic.step.cur{opacity:1!important;visibility:visible;transform:none;transition:opacity .5s ease,transform .6s var(--ease),visibility 0s}
+body:has(.slide.active .pic.cur) #cam{opacity:0!important}
+.read .slide .pic.step{position:static;opacity:1!important;visibility:visible;transform:none;margin-top:28px;border-radius:12px;overflow:hidden;box-shadow:0 0 0 2px var(--line)}
+@media print{.slide .pic.step{position:static;opacity:1!important;visibility:visible;transform:none;margin-top:20px}}
+/* ---------- Webcam: läuft direkt in der Seite (Taste C) ---------- */
+#cam{position:absolute;z-index:30;left:1270px;top:570px;width:280px;height:280px;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.6);pointer-events:none;background:var(--slate-base);
+  box-shadow:0 0 0 6px #fff,0 0 0 12px var(--sage-dark),0 20px 44px -10px rgba(30,42,53,.5);
+  transition:left .7s var(--ease),top .7s var(--ease),width .7s var(--ease),height .7s var(--ease),opacity .4s ease,transform .5s var(--ease),box-shadow .5s ease}
+#cam video{display:none;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+#cam.live video{display:block}
+#cam.live .cam-ph{display:none}
+.cam-ph{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:6px;color:var(--slate-pale);font:600 20px "Glacial Indifference",sans-serif;text-align:center}
+.cam-ph svg{width:46%;height:46%;fill:var(--slate-pale);opacity:.8}
+body.cam-on[data-cam=pip] #cam,body.cam-on[data-cam=big] #cam{opacity:1;transform:none}
+body.cam-on[data-cam=big] #cam{left:1080px;top:230px;width:440px;height:440px}
+body.cam-on.dark-slide #cam{box-shadow:0 0 0 6px rgba(255,255,255,.92),0 0 0 12px var(--rust-base),0 20px 44px -10px rgba(0,0,0,.6)}
+.read #cam{display:none}
+@media print{#cam{display:none}}
+/* Platz für das Kamerabild, sobald es läuft */
+body.cam-on .slide[data-cam=big] .statement{max-width:900px;font-size:78px}
+body.cam-on .slide[data-cam=big].pause .statement{font-size:70px!important}
+body.cam-on .slide[data-cam=big] .quote{max-width:900px;font-size:56px}
+body.cam-on .slide[data-cam=big] .sm,body.cam-on .slide[data-cam=big] .kw{max-width:880px}
+body.cam-on .slide.cover:not(.chapter) .h{font-size:124px}
+body.cam-on .slide.cover:not(.chapter) .kw{font-size:42px}
+body.cam-on .chapter .h{font-size:104px}
+body.cam-on .outro .h{font-size:76px;max-width:900px}
+body.cam-on .thanks .h{font-size:104px}
+body.cam-on .chap-no{opacity:0}
+body.cam-on .tbnav{top:66px;right:60px;width:320px;height:320px}
+body.cam-on .slide[data-cam=pip] .recs,body.cam-on .slide[data-cam=pip] .team,body.cam-on .slide[data-cam=pip] .sdev,body.cam-on .slide[data-cam=pip] .rub{max-width:1090px}
+body.cam-on .termsl{padding-bottom:210px}
+body.cam-on .chapters~.sm{max-width:1080px}
+#menu .m-parts{display:flex;align-items:center;gap:6px;margin:0 2px 12px;color:#CBDBE9;font-size:13px}
+#menu .m-parts a{flex:1;text-align:center;color:#EFF4F9;text-decoration:none;background:#1D4670;border:1px solid #2E5E8C;border-radius:8px;padding:6px 0;font-weight:600}
+#menu .m-parts a.m-alt{flex:2.4}
+#menu .m-parts a.cur{background:var(--rust-dark);border-color:var(--rust-base)}
+body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{
+  html,body{overflow:visible;height:auto;background:white}
+  #viewport{position:static}
+  #stage{position:relative;left:auto;top:auto;transform:none;page-break-inside:avoid}
+  .slide{position:relative;display:flex!important;width:1600px;height:900px;page-break-after:always}
+  .step.hidden{opacity:1;transform:none}
+  .myth-cover,#progress,#jump,#black,#menu{display:none!important}
+}
+
+/* ================= HBG Corporate Design (erzeugt von build_hbg.py) ================= */
+.h,.statement,.stackv .big,.hero-n{letter-spacing:0}
+.h em,.statement em{color:var(--rust-dark)}
+.slide.cover{background:
+  radial-gradient(ellipse 55% 60% at 88% 18%,rgba(36,86,136,.16),transparent 70%),
+  radial-gradient(ellipse 40% 45% at 70% 82%,rgba(121,29,34,.12),transparent 70%),
+  radial-gradient(ellipse 35% 40% at 96% 60%,rgba(108,147,184,.18),transparent 70%),#fff;color:var(--ink);padding-bottom:170px}
+.slide.cover::after{content:"";position:absolute;left:0;right:0;bottom:0;height:118px;background:var(--rust-dark)}
+.cover .h{color:var(--ink)}
+.cover .h em{color:var(--rust-dark)}
+.cover .kw,.cover .sm{color:var(--ink)}
+.cover .sm.event{color:#fff;position:absolute;left:120px;bottom:42px;margin:0;font-weight:700;z-index:2}
+.cover .label{color:var(--rust-dark)}
+.cover .mark{border-color:var(--rust-dark);color:var(--rust-dark)}
+.cover .line{background:var(--rust-dark)}
+.orbit{background:repeating-conic-gradient(rgba(36,86,136,.10) 0 55deg,transparent 55deg 60deg)}
+.chapter .chap-no{color:rgba(121,29,34,.08)}
+.thanks .h{color:var(--ink)}
+.chapters .cn{background:var(--rust-dark)}
+.chapters li.on .cn{background:var(--slate-base)}
+body.cam-on #cam{box-shadow:0 0 0 6px #fff,0 0 0 12px var(--slate-base),0 20px 44px -10px rgba(22,58,92,.45)}
+/* Kopfzeile und Logo auf jeder Folie */
+#cd-head{position:absolute;z-index:25;left:120px;top:18px;font:700 14px/1 "Glacial Indifference",sans-serif;letter-spacing:.06em;color:#1F2020;pointer-events:none;transition:opacity .3s ease}
+#cd-logo{position:absolute;z-index:25;right:56px;top:12px;width:156px;height:44px;color:#791D22;pointer-events:none;transition:opacity .3s ease}
+body:has(.slide.active.kipper) #cd-head,body:has(.slide.active.kipper) #cd-logo,
+body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-logo{opacity:0}
+.read #cd-head,.read #cd-logo{display:none}
+@media print{#cd-head,#cd-logo{display:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="hbg-logo-wordmark" viewBox="0 0 1536 434"><title>HBG-Wortmarke ohne Motto</title><path fill="currentColor" fill-rule="evenodd" d="M788 393 L787 392 L769 392 L768 393 L754 393 L753 394 L743 394 L742 395 L742 402 L741 403 L741 408 L743 410 L746 410 L747 409 L756 409 L757 408 L767 408 L768 407 L779 407 L780 406 L786 406 L787 405 L787 400 L788 399 Z M495 392 L477 392 L476 393 L461 393 L460 394 L450 394 L449 395 L449 409 L450 409 L451 410 L454 410 L455 409 L464 409 L465 408 L475 408 L476 407 L486 407 L487 406 L494 406 L494 405 L495 404 Z M1373 366 L1372 367 L1372 375 L1371 376 L1371 381 L1370 382 L1370 396 L1369 397 L1369 420 L1370 421 L1370 424 L1371 425 L1371 427 L1376 432 L1377 432 L1378 433 L1401 433 L1402 432 L1405 431 L1407 429 L1408 429 L1411 426 L1411 425 L1412 424 L1412 423 L1415 418 L1415 414 L1416 413 L1416 406 L1417 405 L1417 385 L1418 384 L1418 367 L1417 366 L1402 366 L1402 371 L1401 372 L1401 391 L1400 392 L1400 400 L1399 401 L1399 410 L1398 411 L1398 413 L1397 414 L1397 415 L1395 417 L1388 417 L1386 414 L1386 398 L1387 397 L1387 384 L1388 383 L1388 372 L1389 371 L1389 367 L1388 367 L1387 366 Z M551 369 L550 369 L547 367 L545 367 L544 366 L533 366 L532 367 L526 367 L525 368 L515 368 L514 369 L512 369 L511 370 L511 380 L510 381 L510 397 L509 398 L509 410 L508 411 L508 416 L507 417 L507 429 L506 430 L506 432 L507 433 L544 433 L545 432 L546 432 L549 429 L550 429 L550 428 L554 423 L554 421 L555 420 L555 408 L554 407 L553 404 L550 401 L550 399 L553 396 L553 395 L555 393 L555 391 L557 388 L557 377 L555 375 L555 373 Z M534 408 L536 411 L535 414 L532 417 L530 417 L527 419 L525 419 L524 418 L524 416 L525 415 L525 410 L526 409 L528 409 L529 408 Z M535 382 L538 385 L538 387 L537 388 L537 389 L535 391 L534 391 L533 392 L531 392 L530 393 L527 393 L526 392 L526 387 L527 386 L527 385 L529 383 L532 383 L533 382 Z M1533 365 L1514 365 L1513 366 L1494 366 L1493 367 L1490 367 L1489 368 L1489 370 L1488 371 L1488 381 L1487 382 L1487 395 L1486 396 L1486 433 L1529 433 L1530 432 L1531 432 L1531 417 L1530 416 L1504 416 L1503 415 L1503 410 L1505 408 L1509 408 L1510 407 L1516 407 L1517 406 L1523 406 L1524 405 L1526 405 L1527 404 L1527 392 L1526 392 L1525 391 L1513 391 L1512 392 L1505 392 L1504 391 L1504 385 L1505 384 L1509 384 L1510 383 L1515 383 L1516 382 L1525 382 L1526 381 L1529 382 L1530 381 L1533 381 L1534 380 L1534 366 Z M1434 365 L1433 366 L1433 384 L1432 385 L1432 405 L1431 406 L1431 426 L1430 427 L1430 433 L1472 433 L1472 432 L1473 431 L1473 430 L1472 429 L1473 428 L1473 415 L1472 414 L1450 414 L1449 415 L1448 414 L1448 407 L1449 406 L1449 387 L1450 386 L1450 369 L1451 368 L1451 367 L1449 365 Z M1217 366 L1214 366 L1213 365 L1208 365 L1207 366 L1202 366 L1199 368 L1197 368 L1196 369 L1195 369 L1190 374 L1190 375 L1187 380 L1187 382 L1186 383 L1186 395 L1187 396 L1187 397 L1191 402 L1192 402 L1195 405 L1198 406 L1200 408 L1201 408 L1203 410 L1204 410 L1206 412 L1206 413 L1208 416 L1207 419 L1206 420 L1204 420 L1203 421 L1202 421 L1201 420 L1198 420 L1197 419 L1196 419 L1191 416 L1187 416 L1186 417 L1186 418 L1185 419 L1185 420 L1182 425 L1182 427 L1184 429 L1186 429 L1188 431 L1189 431 L1190 432 L1192 432 L1193 433 L1215 433 L1216 432 L1217 432 L1219 430 L1220 430 L1222 428 L1222 427 L1224 425 L1224 424 L1226 421 L1226 418 L1227 417 L1227 412 L1226 411 L1226 409 L1225 408 L1225 407 L1224 406 L1223 403 L1219 399 L1218 399 L1215 396 L1214 396 L1212 394 L1209 393 L1207 391 L1207 390 L1205 388 L1205 387 L1204 386 L1206 380 L1207 379 L1209 379 L1211 381 L1211 389 L1212 390 L1226 390 L1227 389 L1227 376 L1226 375 L1226 374 L1225 373 L1224 370 L1223 369 L1222 369 Z M1122 366 L1121 367 L1121 376 L1120 377 L1120 384 L1121 385 L1128 385 L1129 384 L1133 384 L1134 383 L1135 383 L1136 384 L1136 401 L1135 402 L1135 433 L1152 433 L1152 422 L1153 421 L1153 420 L1152 419 L1152 415 L1153 414 L1153 409 L1154 408 L1154 382 L1155 381 L1168 381 L1170 379 L1170 366 L1169 366 L1168 365 L1140 365 L1139 366 Z M1103 367 L1102 367 L1099 365 L1093 365 L1090 367 L1090 369 L1087 374 L1087 376 L1086 377 L1086 379 L1085 380 L1085 381 L1082 386 L1082 388 L1081 389 L1081 390 L1078 395 L1075 390 L1075 386 L1074 385 L1074 382 L1073 381 L1073 379 L1072 378 L1072 375 L1070 372 L1070 370 L1067 367 L1066 367 L1065 366 L1052 366 L1051 367 L1051 375 L1050 376 L1050 398 L1049 399 L1049 416 L1048 417 L1048 433 L1066 433 L1066 418 L1067 417 L1068 417 L1069 418 L1069 421 L1070 422 L1070 424 L1071 425 L1071 426 L1074 429 L1078 429 L1079 428 L1080 428 L1082 426 L1082 425 L1084 423 L1084 422 L1085 421 L1085 420 L1088 415 L1089 416 L1089 433 L1107 433 L1107 374 L1106 373 L1106 371 L1105 370 L1105 369 Z M1018 366 L1016 366 L1015 365 L1008 365 L1007 366 L1004 366 L1003 367 L1000 368 L1000 369 L999 370 L999 372 L997 375 L997 377 L996 378 L996 379 L993 384 L993 386 L991 389 L991 391 L990 392 L990 394 L988 397 L988 399 L987 400 L987 402 L986 403 L986 405 L985 406 L985 408 L984 409 L984 412 L983 413 L983 415 L982 416 L982 419 L980 422 L980 425 L979 426 L979 429 L978 430 L978 433 L996 433 L998 430 L998 427 L999 426 L999 425 L1001 423 L1004 423 L1005 422 L1008 422 L1009 421 L1013 421 L1014 422 L1014 431 L1015 432 L1015 433 L1034 433 L1034 428 L1033 427 L1033 425 L1032 424 L1032 418 L1031 417 L1031 411 L1030 410 L1030 406 L1029 405 L1029 402 L1028 401 L1028 396 L1027 395 L1027 389 L1026 388 L1026 385 L1025 384 L1025 381 L1024 380 L1024 378 L1023 377 L1023 374 L1022 373 L1022 372 L1021 371 L1020 368 Z M1023 420 L1025 420 L1026 421 L1026 425 L1027 426 L1027 427 L1026 428 L1024 426 L1024 425 L1021 423 Z M1009 393 L1010 394 L1010 400 L1011 401 L1011 404 L1009 406 L1006 406 L1005 405 L1005 403 L1006 402 L1006 399 L1007 398 L1007 395 Z M955 366 L952 366 L951 365 L945 365 L944 366 L941 366 L940 367 L938 367 L937 368 L935 368 L933 370 L932 370 L929 373 L929 374 L927 376 L927 377 L925 380 L925 382 L924 383 L924 394 L925 395 L925 397 L926 398 L926 399 L933 405 L936 406 L938 408 L939 408 L941 410 L942 410 L945 413 L945 414 L946 415 L946 418 L944 420 L943 420 L942 421 L940 421 L939 420 L936 420 L935 419 L934 419 L931 417 L929 417 L928 416 L925 416 L923 419 L923 421 L922 422 L922 423 L920 425 L920 427 L922 429 L923 429 L926 431 L928 431 L931 433 L953 433 L954 432 L955 432 L958 429 L959 429 L963 423 L963 421 L964 420 L964 409 L963 408 L963 406 L962 405 L962 404 L961 404 L960 403 L960 402 L956 398 L955 398 L953 396 L952 396 L950 394 L949 394 L947 392 L946 392 L944 390 L944 389 L943 388 L943 386 L942 385 L942 384 L943 383 L944 380 L945 379 L948 379 L949 380 L949 389 L950 389 L951 390 L964 390 L964 389 L965 388 L965 379 L964 378 L964 374 L961 369 L960 369 Z M907 365 L888 365 L887 366 L869 366 L868 367 L863 367 L863 368 L862 369 L862 380 L861 381 L861 395 L860 396 L860 418 L859 419 L859 433 L903 433 L904 432 L905 432 L905 431 L906 430 L906 417 L905 416 L878 416 L877 415 L877 410 L879 408 L883 408 L884 407 L890 407 L891 406 L898 406 L899 405 L900 405 L900 404 L901 403 L901 402 L900 401 L900 396 L901 395 L901 394 L899 391 L887 391 L886 392 L879 392 L878 391 L878 385 L879 384 L883 384 L884 383 L889 383 L890 382 L902 382 L903 381 L907 381 L907 377 L908 376 L908 366 Z M835 366 L833 366 L832 365 L825 365 L824 366 L822 366 L819 368 L817 368 L816 369 L815 369 L807 377 L807 378 L805 380 L805 381 L803 384 L803 386 L802 387 L802 390 L801 391 L801 393 L800 394 L800 401 L799 402 L799 414 L800 415 L800 420 L801 421 L801 423 L802 424 L802 425 L804 427 L804 428 L807 431 L808 431 L810 433 L830 433 L831 432 L833 432 L835 430 L836 430 L839 427 L839 426 L842 423 L842 422 L843 421 L843 418 L844 417 L844 415 L846 412 L846 403 L845 402 L845 401 L842 398 L841 398 L840 397 L828 397 L827 398 L824 398 L823 399 L823 400 L822 401 L822 410 L821 411 L821 414 L822 415 L825 415 L826 416 L826 417 L824 419 L823 419 L822 420 L819 419 L816 416 L816 415 L815 414 L815 411 L816 410 L816 405 L815 404 L815 403 L816 402 L816 397 L817 396 L817 393 L818 392 L818 390 L819 389 L820 386 L825 381 L827 381 L829 383 L829 393 L844 393 L846 390 L846 377 L845 376 L844 373 L842 371 L842 370 L841 369 L840 369 Z M690 365 L689 366 L689 384 L688 385 L688 395 L687 396 L687 416 L686 417 L686 433 L727 433 L728 432 L728 426 L729 425 L729 415 L728 415 L727 414 L706 414 L705 415 L704 414 L704 405 L705 404 L705 399 L704 398 L705 397 L705 386 L706 385 L706 366 L705 365 Z M635 365 L634 366 L634 394 L633 395 L633 416 L632 417 L632 427 L631 428 L631 432 L632 433 L673 433 L674 432 L674 422 L675 421 L675 418 L674 417 L674 415 L673 414 L651 414 L650 413 L650 396 L651 395 L651 366 L650 365 Z M267 368 L265 368 L262 366 L258 366 L257 365 L249 365 L248 366 L242 366 L241 367 L236 367 L235 368 L229 368 L228 369 L228 374 L227 375 L227 383 L226 384 L226 404 L225 405 L225 420 L224 421 L224 433 L240 433 L240 415 L243 413 L246 413 L247 414 L247 415 L249 417 L249 418 L250 419 L251 422 L253 424 L253 425 L256 430 L256 432 L257 433 L262 433 L263 432 L264 432 L266 430 L269 429 L272 426 L272 424 L271 423 L271 422 L269 420 L269 419 L267 416 L267 414 L265 412 L265 411 L263 408 L263 405 L264 404 L265 404 L269 399 L269 398 L272 393 L272 389 L273 388 L273 380 L272 379 L272 376 L271 375 L271 373 L267 369 Z M255 381 L256 382 L257 385 L256 386 L256 387 L255 388 L254 391 L252 393 L251 393 L249 395 L248 395 L247 396 L243 396 L242 395 L242 386 L243 385 L243 383 L244 382 L247 382 L248 381 Z M165 366 L164 367 L164 375 L163 376 L163 382 L162 383 L162 400 L161 401 L161 418 L160 419 L160 433 L177 433 L177 431 L178 430 L178 402 L179 401 L181 404 L181 406 L182 407 L182 409 L183 410 L183 412 L185 415 L185 417 L186 418 L186 420 L187 421 L187 423 L190 428 L190 431 L191 432 L191 433 L208 433 L209 432 L209 393 L210 392 L210 377 L211 376 L211 367 L210 366 L208 366 L207 365 L197 365 L196 366 L195 366 L195 369 L194 370 L194 388 L193 389 L192 389 L191 388 L191 386 L188 381 L188 379 L187 378 L187 376 L186 375 L186 373 L184 371 L184 370 L182 367 L181 367 L178 365 L168 365 L167 366 Z M115 365 L96 365 L95 366 L76 366 L75 367 L71 367 L70 368 L70 379 L69 380 L69 388 L68 389 L68 404 L67 405 L67 433 L111 433 L112 432 L113 432 L113 417 L112 416 L88 416 L87 417 L86 417 L84 415 L84 412 L85 411 L85 410 L87 408 L91 408 L92 407 L98 407 L99 406 L106 406 L107 405 L108 405 L108 392 L107 391 L95 391 L94 392 L87 392 L86 391 L86 385 L87 384 L91 384 L92 383 L97 383 L98 382 L107 382 L108 381 L114 381 L115 380 L115 371 L116 370 L116 368 L115 367 Z M1355 365 L1353 365 L1352 364 L1340 364 L1339 365 L1338 365 L1338 379 L1337 380 L1337 389 L1336 390 L1332 390 L1331 391 L1325 391 L1323 389 L1323 385 L1324 384 L1324 370 L1325 369 L1325 366 L1324 365 L1309 365 L1308 366 L1308 368 L1307 369 L1307 384 L1306 385 L1306 399 L1305 400 L1305 413 L1304 414 L1304 427 L1303 428 L1303 433 L1322 433 L1322 412 L1323 411 L1323 409 L1324 408 L1325 408 L1326 407 L1328 407 L1329 406 L1335 406 L1336 407 L1335 408 L1335 428 L1334 429 L1334 432 L1335 433 L1353 433 L1354 432 L1354 389 L1355 388 Z M1277 365 L1271 365 L1270 364 L1269 364 L1268 365 L1263 365 L1262 366 L1261 366 L1260 367 L1259 367 L1258 368 L1255 369 L1254 370 L1254 371 L1249 376 L1249 377 L1246 380 L1246 381 L1243 386 L1243 388 L1242 389 L1242 392 L1241 393 L1241 396 L1240 397 L1240 413 L1241 414 L1241 418 L1243 421 L1243 423 L1244 424 L1244 425 L1247 428 L1247 429 L1253 433 L1272 433 L1273 432 L1274 432 L1280 426 L1281 426 L1282 425 L1282 424 L1284 422 L1284 421 L1286 419 L1286 418 L1288 415 L1287 412 L1281 406 L1279 406 L1277 408 L1277 409 L1275 411 L1275 412 L1273 414 L1273 415 L1266 420 L1263 419 L1261 417 L1261 416 L1260 415 L1260 413 L1259 412 L1259 398 L1260 397 L1260 395 L1261 394 L1261 392 L1262 391 L1262 389 L1263 388 L1263 386 L1267 380 L1269 380 L1270 379 L1272 379 L1273 380 L1273 385 L1272 386 L1272 388 L1271 389 L1271 394 L1288 394 L1288 393 L1290 390 L1290 378 L1289 377 L1289 376 L1288 375 L1287 372 L1283 368 L1282 368 Z M601 364 L593 364 L592 365 L589 365 L588 366 L585 367 L578 374 L578 375 L576 377 L576 378 L574 381 L574 384 L573 385 L573 387 L572 388 L572 390 L571 391 L571 396 L570 397 L570 402 L571 403 L571 405 L570 406 L570 414 L571 415 L571 418 L573 421 L573 423 L575 425 L575 426 L577 428 L577 429 L583 433 L601 433 L602 432 L603 432 L605 430 L606 430 L611 425 L611 423 L613 421 L613 420 L615 417 L615 415 L616 414 L616 410 L617 409 L617 404 L618 403 L618 385 L617 384 L617 381 L616 380 L616 378 L615 377 L615 375 L613 373 L613 372 L610 369 L610 368 L608 368 L606 366 L605 366 L604 365 L602 365 Z M598 378 L600 380 L600 382 L601 383 L601 386 L602 387 L601 388 L601 401 L600 402 L600 408 L599 409 L599 412 L598 413 L597 416 L595 418 L592 419 L588 415 L588 395 L589 394 L589 392 L590 391 L590 387 L591 386 L591 384 L592 383 L592 381 L595 378 Z M435 365 L434 365 L433 364 L420 364 L419 365 L418 365 L418 370 L417 371 L417 389 L416 390 L412 390 L411 391 L404 391 L403 390 L403 379 L404 378 L404 366 L403 365 L388 365 L387 366 L387 376 L386 377 L386 398 L385 399 L385 407 L384 408 L384 411 L385 412 L384 413 L384 421 L383 422 L383 433 L402 433 L402 411 L404 408 L405 408 L406 407 L408 407 L409 406 L415 406 L416 407 L415 408 L415 423 L414 424 L415 427 L414 428 L414 432 L415 433 L433 433 L433 403 L434 402 L434 382 L435 381 Z M357 365 L351 365 L350 364 L349 364 L348 365 L343 365 L342 366 L341 366 L340 367 L339 367 L338 368 L335 369 L331 373 L331 374 L328 377 L328 378 L326 380 L325 383 L323 385 L323 387 L322 388 L322 391 L321 392 L321 395 L320 396 L320 400 L319 401 L319 410 L320 411 L320 415 L321 416 L321 418 L322 419 L322 421 L323 422 L323 424 L326 427 L326 428 L329 431 L330 431 L332 433 L351 433 L352 432 L355 431 L363 423 L363 422 L365 420 L365 419 L367 416 L367 413 L362 408 L362 407 L361 407 L360 406 L358 406 L358 407 L354 412 L353 415 L352 416 L351 416 L348 419 L346 419 L345 420 L344 420 L340 416 L340 415 L339 414 L339 398 L340 397 L340 393 L341 392 L341 390 L343 387 L343 385 L347 380 L348 380 L349 379 L351 379 L353 381 L353 383 L352 384 L352 387 L351 388 L351 394 L368 394 L368 393 L369 392 L369 389 L370 388 L370 380 L369 379 L369 377 L368 376 L368 374 L366 372 L366 371 L363 368 L361 368 L359 366 L358 366 Z M307 364 L301 364 L300 365 L292 365 L291 366 L291 378 L290 379 L290 394 L289 395 L289 420 L288 421 L288 433 L307 433 L307 387 L308 386 L308 378 L309 377 L309 365 L308 365 Z M292 380 L293 379 L294 380 L293 381 Z M292 374 L293 373 L294 374 L293 375 Z M294 367 L296 369 L296 370 L294 373 L292 371 L292 370 Z M148 364 L143 364 L142 365 L132 365 L131 366 L131 380 L130 381 L130 404 L129 405 L129 421 L128 422 L128 432 L129 433 L147 433 L147 395 L148 394 L148 379 L149 378 L149 370 L150 369 L150 367 Z M132 380 L133 379 L134 380 L133 381 Z M134 367 L137 369 L134 374 L132 371 L132 369 Z M54 365 L53 365 L52 364 L39 364 L38 365 L37 365 L37 371 L36 372 L36 388 L34 390 L31 390 L30 391 L23 391 L22 390 L22 385 L23 384 L23 365 L7 365 L6 366 L6 383 L5 384 L5 392 L4 393 L4 405 L3 406 L3 421 L2 422 L2 433 L21 433 L21 410 L23 408 L24 408 L25 407 L27 407 L28 406 L33 406 L34 407 L34 426 L33 427 L33 432 L34 433 L52 433 L52 403 L53 402 L53 382 L54 381 Z M611 343 L609 343 L608 344 L606 344 L603 347 L603 348 L602 349 L602 356 L604 358 L604 359 L605 359 L606 360 L611 360 L613 358 L614 358 L615 357 L615 355 L617 352 L617 350 L616 349 L616 347 L613 344 L612 344 Z M595 344 L593 344 L592 343 L591 343 L590 344 L588 344 L585 347 L585 348 L584 349 L584 356 L586 359 L587 359 L588 360 L593 360 L594 359 L595 359 L597 357 L597 356 L598 355 L598 353 L599 352 L599 349 L598 348 L598 347 Z M1440 229 L1440 320 L1441 321 L1471 321 L1472 322 L1514 322 L1515 323 L1529 323 L1530 324 L1535 324 L1535 235 L1531 235 L1530 234 L1516 234 L1515 233 L1494 233 L1493 232 L1480 232 L1479 231 L1471 231 L1470 230 L1456 230 L1455 229 Z M97 229 L82 229 L81 230 L66 230 L65 231 L58 231 L57 232 L42 232 L41 233 L21 233 L20 234 L6 234 L5 235 L0 235 L0 324 L5 324 L6 323 L20 323 L21 322 L64 322 L65 321 L93 321 L94 320 L97 320 Z M1263 218 L1263 316 L1295 316 L1296 317 L1314 317 L1315 318 L1384 318 L1385 319 L1401 319 L1402 320 L1414 320 L1415 319 L1415 228 L1408 228 L1407 227 L1398 227 L1397 226 L1384 226 L1383 225 L1363 225 L1362 224 L1349 224 L1348 223 L1340 223 L1339 222 L1326 222 L1325 221 L1305 221 L1304 220 L1291 220 L1290 219 L1282 219 L1281 218 L1267 218 L1266 217 L1264 217 Z M274 218 L273 217 L269 217 L268 218 L255 218 L254 219 L246 219 L245 220 L232 220 L231 221 L211 221 L210 222 L197 222 L196 223 L188 223 L187 224 L174 224 L173 225 L153 225 L152 226 L139 226 L138 227 L130 227 L129 228 L122 228 L122 234 L121 235 L121 238 L122 239 L122 319 L123 320 L133 320 L134 319 L151 319 L152 318 L220 318 L221 317 L239 317 L240 316 L274 316 Z M1154 211 L1154 220 L1155 221 L1155 313 L1167 313 L1168 314 L1234 314 L1234 216 L1229 216 L1228 215 L1220 215 L1219 214 L1206 214 L1205 213 L1184 213 L1183 212 L1169 212 L1168 211 Z M382 211 L369 211 L368 212 L353 212 L352 213 L331 213 L330 214 L316 214 L315 215 L306 215 L305 216 L303 216 L303 314 L368 314 L369 313 L381 313 L382 312 Z M1062 205 L1062 207 L1061 208 L1061 304 L1062 305 L1061 306 L1061 308 L1063 310 L1112 310 L1113 311 L1124 311 L1125 312 L1143 312 L1143 210 L1142 209 L1120 209 L1119 208 L1104 208 L1103 207 L1088 207 L1087 206 L1079 206 L1078 205 Z M476 205 L458 205 L457 206 L449 206 L448 207 L433 207 L432 208 L417 208 L416 209 L395 209 L394 210 L394 312 L410 312 L411 311 L423 311 L424 310 L472 310 L473 309 L475 309 L475 307 L476 306 Z M826 190 L826 288 L825 289 L825 291 L826 292 L826 296 L825 297 L825 298 L826 299 L826 301 L834 301 L835 302 L878 302 L879 303 L906 303 L907 304 L936 304 L937 305 L952 305 L953 306 L1009 306 L1010 307 L1027 307 L1027 233 L1028 232 L1028 228 L1027 227 L1027 224 L1028 223 L1028 209 L1027 208 L1027 207 L1028 206 L1028 205 L1027 204 L1027 203 L1025 203 L1024 202 L1015 202 L1014 201 L985 201 L984 200 L977 200 L976 199 L961 199 L960 198 L952 198 L951 197 L921 197 L920 196 L913 196 L912 195 L897 195 L896 194 L889 194 L888 193 L859 193 L858 192 L851 192 L850 191 L834 191 L833 190 Z M711 191 L710 190 L702 190 L701 191 L686 191 L685 192 L678 192 L677 193 L648 193 L647 194 L640 194 L639 195 L623 195 L622 196 L615 196 L614 197 L584 197 L583 198 L576 198 L575 199 L560 199 L559 200 L553 200 L552 201 L522 201 L521 202 L513 202 L512 203 L510 203 L510 205 L509 206 L509 256 L510 257 L510 307 L524 307 L525 306 L582 306 L583 305 L598 305 L599 304 L627 304 L628 303 L656 303 L657 302 L701 302 L702 301 L711 301 L711 299 L712 298 L712 297 L711 296 L711 292 L712 291 L712 289 L711 288 Z M0 175 L0 193 L70 188 L77 186 L95 187 L94 199 L0 205 L0 226 L283 206 L304 206 L342 202 L438 197 L462 194 L575 188 L582 186 L618 185 L641 182 L693 180 L702 178 L753 177 L753 292 L751 310 L397 319 L376 321 L247 323 L225 325 L3 329 L0 330 L0 346 L769 331 L1535 345 L1535 330 L1533 329 L1472 329 L1064 317 L1009 317 L991 315 L822 312 L784 309 L785 176 L1535 226 L1535 205 L1487 201 L1459 201 L1442 198 L1443 186 L1535 193 L1535 175 L1027 131 L1020 129 L1000 129 L976 125 L955 125 L949 123 L911 121 L885 117 L865 117 L814 111 L762 108 Z M1265 172 L1266 171 L1272 171 L1273 172 L1285 172 L1286 173 L1292 173 L1293 174 L1313 174 L1314 175 L1321 175 L1322 176 L1333 176 L1334 177 L1340 177 L1341 178 L1358 178 L1359 179 L1362 178 L1363 179 L1369 179 L1370 180 L1382 180 L1383 181 L1394 181 L1395 182 L1410 182 L1411 183 L1412 183 L1414 185 L1414 187 L1413 188 L1413 190 L1414 191 L1414 193 L1413 194 L1413 196 L1412 197 L1407 197 L1406 196 L1399 196 L1398 195 L1384 195 L1383 194 L1377 194 L1376 193 L1352 193 L1351 192 L1344 192 L1343 191 L1330 191 L1329 190 L1323 190 L1322 189 L1296 189 L1295 188 L1289 188 L1288 187 L1275 187 L1274 186 L1265 186 L1264 185 L1265 184 Z M272 172 L272 185 L271 186 L262 186 L261 187 L249 187 L248 188 L241 188 L240 189 L216 189 L215 190 L207 190 L206 191 L193 191 L192 192 L186 192 L185 193 L160 193 L159 194 L153 194 L152 195 L138 195 L137 196 L130 196 L129 197 L125 197 L124 196 L124 194 L123 193 L123 191 L124 190 L124 188 L123 187 L123 184 L124 183 L127 183 L128 182 L142 182 L143 181 L154 181 L155 180 L166 180 L167 179 L172 179 L173 178 L195 178 L196 177 L202 177 L203 176 L215 176 L216 175 L221 175 L222 174 L244 174 L245 173 L251 173 L252 172 L263 172 L264 171 L271 171 Z M1063 156 L1064 155 L1078 155 L1079 156 L1090 156 L1091 157 L1096 157 L1097 158 L1110 158 L1111 159 L1112 159 L1113 158 L1114 159 L1126 159 L1127 160 L1139 160 L1140 161 L1145 161 L1146 162 L1159 162 L1160 163 L1175 163 L1176 164 L1188 164 L1189 165 L1194 165 L1195 166 L1217 166 L1218 167 L1224 167 L1225 168 L1232 168 L1233 169 L1233 182 L1232 183 L1218 183 L1217 182 L1205 182 L1204 181 L1187 181 L1186 180 L1181 180 L1180 179 L1167 179 L1166 178 L1154 178 L1153 177 L1136 177 L1135 176 L1129 176 L1128 175 L1116 175 L1115 174 L1102 174 L1101 173 L1085 173 L1084 172 L1073 172 L1072 171 L1065 171 L1063 169 Z M474 156 L474 169 L471 171 L465 171 L464 172 L452 172 L451 173 L434 173 L433 174 L422 174 L421 175 L409 175 L408 176 L402 176 L401 177 L384 177 L383 178 L370 178 L369 179 L357 179 L356 180 L351 180 L350 181 L332 181 L331 182 L319 182 L318 183 L305 183 L304 182 L304 169 L305 168 L312 168 L313 167 L319 167 L320 166 L342 166 L343 165 L347 165 L348 164 L361 164 L362 163 L377 163 L378 162 L390 162 L391 161 L396 161 L397 160 L409 160 L410 159 L425 159 L426 158 L439 158 L440 157 L445 157 L446 156 L458 156 L459 155 L473 155 Z M827 139 L828 138 L828 136 L829 135 L836 135 L837 136 L842 136 L843 137 L854 137 L855 138 L869 138 L870 139 L883 139 L884 140 L890 140 L891 141 L903 141 L904 142 L917 142 L918 143 L932 143 L933 144 L939 144 L940 145 L951 145 L952 146 L964 146 L965 147 L980 147 L981 148 L987 148 L988 149 L1000 149 L1001 150 L1017 150 L1018 151 L1025 151 L1026 152 L1026 166 L1025 167 L1015 167 L1014 166 L1002 166 L1001 165 L985 165 L984 164 L974 164 L973 163 L966 163 L965 162 L953 162 L952 161 L936 161 L935 160 L925 160 L924 159 L917 159 L916 158 L904 158 L903 157 L887 157 L886 156 L876 156 L875 155 L867 155 L866 154 L855 154 L854 153 L839 153 L838 152 L830 152 L828 150 L828 144 L827 143 Z M710 139 L710 143 L709 144 L709 150 L707 152 L699 152 L698 153 L683 153 L682 154 L670 154 L669 155 L662 155 L661 156 L650 156 L649 157 L632 157 L631 158 L620 158 L619 159 L613 159 L612 160 L601 160 L600 161 L584 161 L583 162 L571 162 L570 163 L564 163 L563 164 L553 164 L552 165 L535 165 L534 166 L523 166 L522 167 L512 167 L511 166 L511 152 L512 151 L521 151 L522 150 L536 150 L537 149 L548 149 L549 148 L555 148 L556 147 L571 147 L572 146 L585 146 L586 145 L596 145 L597 144 L604 144 L605 143 L617 143 L618 142 L633 142 L634 141 L646 141 L647 140 L652 140 L653 139 L667 139 L668 138 L682 138 L683 137 L694 137 L695 136 L700 136 L701 135 L708 135 L709 136 L709 138 Z M766 130 L771 130 L772 131 L784 131 L785 132 L785 146 L783 148 L774 148 L774 309 L773 310 L764 310 L763 309 L763 148 L754 148 L752 146 L752 132 L753 131 L765 131 Z M0 145 L0 163 L19 162 L25 160 L61 158 L67 156 L103 154 L109 152 L145 150 L161 147 L187 146 L341 130 L348 131 L382 126 L389 127 L414 123 L430 123 L502 116 L509 114 L516 115 L523 113 L586 107 L612 106 L617 104 L653 102 L660 100 L737 94 L754 91 L781 91 L800 94 L836 96 L841 98 L920 104 L925 106 L961 108 L1021 115 L1028 114 L1035 116 L1067 119 L1070 118 L1098 122 L1123 123 L1147 127 L1164 127 L1189 131 L1206 131 L1213 133 L1249 135 L1255 137 L1290 139 L1297 141 L1332 143 L1339 145 L1374 147 L1381 149 L1406 150 L1433 154 L1458 155 L1535 163 L1535 145 L1387 131 L1380 129 L1364 129 L1341 125 L1324 125 L1318 123 L1285 121 L1262 117 L1245 117 L1240 115 L1168 109 L1162 107 L1129 105 L1123 103 L1089 101 L1063 97 L1049 97 L1034 94 L1010 93 L994 90 L961 88 L955 86 L932 85 L877 78 L860 78 L838 74 L814 73 L775 68 L699 74 L675 78 L660 78 L644 81 L503 94 L448 101 L414 103 L408 105 L375 107 L369 109 L335 111 L329 113 L316 113 L290 117 L273 117 L252 121 L235 121 L212 125 L179 127 L173 129 L156 129 L130 133 L117 133 L110 135 Z M0 119 L0 137 L53 131 L84 129 L91 127 L123 125 L129 123 L182 119 L237 112 L308 106 L313 104 L346 102 L352 100 L423 94 L429 92 L461 90 L467 88 L499 86 L505 84 L576 78 L591 75 L613 74 L661 69 L667 67 L682 67 L706 63 L721 63 L744 59 L770 57 L816 63 L831 63 L854 67 L870 67 L885 70 L908 71 L923 74 L946 75 L961 78 L1032 84 L1038 86 L1070 88 L1076 90 L1108 92 L1114 94 L1136 95 L1153 98 L1184 100 L1190 102 L1223 104 L1228 106 L1251 107 L1277 111 L1280 110 L1354 119 L1376 120 L1391 123 L1408 123 L1423 126 L1535 137 L1535 119 L1521 117 L1507 117 L1501 115 L1435 109 L1429 107 L1363 101 L1348 98 L1291 93 L1276 90 L1256 89 L1241 86 L1220 85 L1205 82 L1184 81 L1161 77 L1094 71 L1015 61 L1001 61 L981 57 L965 57 L960 55 L893 49 L888 47 L859 45 L853 43 L832 42 L771 34 L649 47 L643 49 L612 51 L606 53 L594 53 L572 57 L556 57 L536 61 L522 61 L343 82 L331 82 L325 84 L224 94 L209 97 L188 98 L174 101 L116 106 L102 109 L71 111 L66 113 Z M0 93 L0 111 L9 111 L33 107 L54 106 L94 100 L124 98 L129 96 L158 94 L198 88 L227 86 L241 83 L296 78 L312 75 L374 69 L380 67 L394 67 L449 59 L464 59 L493 54 L495 55 L547 48 L559 48 L574 45 L768 23 L1535 111 L1535 93 L1350 71 L1312 65 L1301 65 L1278 61 L1265 61 L1260 59 L1167 49 L1162 47 L1143 46 L1120 42 L1101 41 L1096 39 L970 25 L956 22 L945 22 L923 18 L912 18 L891 14 L878 14 L858 10 L785 2 L784 0 L753 0 L752 2 L679 10 L658 14 L646 14 L633 17 L614 18 L600 21 L581 22 L567 25 L556 25 L534 29 L441 39 L436 41 L408 43 L402 45 L375 47 L370 49 L342 51 L337 53 L309 55 L304 57 L291 57 L272 61 L258 61 L236 65 L225 65 L187 71 L151 74 L137 77 L118 78 L65 86 L52 86 L39 89 Z"/></symbol></svg>
+<div id="readNote"><b>Mobile Ansicht</b> – alle Folien untereinander zum Lesen. Für die Ansicht als Folienpräsentation im Browser „Desktopversion“ wählen oder <a href="?folien">hier tippen</a>.</div>
+<div id="viewport"><div id="stage"><div id="morphLayer"></div>
+
+<section class="slide cover" data-part="1" data-title="Titel" data-cam="big" data-section="1 · Was SRL ist – und was nicht">
+  <div class="orbit" aria-hidden="true"></div>
+  <div class="mark">SRL</div>
+  <h1 class="h">SRL ist<br><em>keine Methode!</em></h1>
+  <p class="kw">Was selbstreguliertes Lernen (nicht) ist.</p>
+  <div class="line"></div>
+  <p class="sm">Christoph Wegemann</p>
+  <p class="sm event">Online-Fortbildung in fünf Kapiteln</p>
+</section>
+
+<section class="slide story" data-part="1" data-title="Geschichte" data-cam="pip">
+  <div class="split">
+    <figure class="story-img"><img src="assets/einstieg.webp" alt="Gezeichnete Schülerin mit einem Zettel voller Matheaufgaben, gut gelaunt"></figure>
+    <div>
+      <p class="label">Eine Geschichte vorab</p>
+      <h2 class="h">Ein Glücks&shy;<em>moment.</em></h2>
+      <p class="kw step">Strategien aus Deutsch – selbst auf Mathe übertragen.</p>
+      <p class="src" style="margin-top:36px">Bild: KI-generiert. Die Geschichte ist echt.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="1" data-title="These" data-cam="big">
+  <p class="label">Die These dieser Fortbildung</p>
+  <p class="statement kin">SRL ist keine Methode – sondern ein <em>Bildungsziel.</em></p>
+  <p class="kw step" style="margin-top:44px;font-weight:500;max-width:900px">Etwas, das Lernende <em>können</em> sollen. Nicht etwas, das wir „machen“.</p>
+</section>
+
+<section class="slide seq" data-part="1" data-title="Kein Zusatzprogramm" data-cam="pip">
+  <p class="label">Was das für dich heißt</p>
+  <h2 class="h">Kein Zusatz&shy;<em>programm.</em></h2>
+  <ul class="kw-list nots">
+    <li class="kw step no">Kein neues Fach</li>
+    <li class="kw step no">Keine Methode, die du übernehmen musst</li>
+    <li class="kw step yes">Ein anderer Blick auf das, was du schon tust</li>
+  </ul>
+</section>
+
+<section class="slide" data-part="1" data-title="Überblick" data-cam="pip">
+  <p class="label">Überblick</p>
+  <h2 class="h" style="margin-bottom:44px">Fünf <em>Kapitel.</em></h2>
+  <ol class="kw-list chapters">
+    <li class="kw on"><span class="cn">1</span><span>Was SRL ist – und was nicht</span><small>ca. 7 min</small></li>
+    <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span><small>ca. 3 min</small></li>
+    <li class="kw"><span class="cn">3</span><span>Das Modell: die SRL-Turbine</span><small>ca. 5 min</small></li>
+    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 11 min</small></li>
+    <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span><small>ca. 5 min</small></li>
+  </ol>
+  <p class="sm" style="margin-top:36px">Jedes Kapitel endet mit einer Frage zum Anhalten. Bilder ohne Quellenangabe sind KI-generiert.</p>
+</section>
+
+<section class="slide" data-part="1" data-title="Leitfrage" data-cam="big">
+  <p class="label">Leitfrage</p>
+  <p class="statement kin">Wie befähigen wir Lernende, ihr Lernen <em>selbst zu steuern?</em></p>
+</section>
+
+<section class="slide defn" data-part="1" data-title="Arbeitsdefinition" data-cam="off">
+  <p class="label">Selbstreguliertes Lernen · Arbeitsdefinition</p>
+  <p class="quote kin">Lernende <em class="r">planen</em> ihr Lernen, <em class="r">beobachten</em> es beim Arbeiten und <em class="r">werten es aus</em> – und steuern dabei auch ihre Motivation.</p>
+  <div class="phases step">
+    <span class="ph">Planung</span><i class="ph-arr"></i><span class="ph">Durchführung</span><i class="ph-arr"></i><span class="ph">Reflexion</span>
+    <svg class="ph-back" viewBox="0 0 1000 80" preserveAspectRatio="none" aria-hidden="true"><path class="cyc-line" pathLength="1" d="M900 6 C 900 70, 700 70, 500 70 S 100 70, 100 14" fill="none" stroke="var(--sage-dark)" stroke-width="5" stroke-linecap="round"/><path class="cyc-head" d="M88 16 L112 16 L100 -4 Z" fill="var(--sage-dark)"/></svg>
+  </div>
+</section>
+
+<section class="slide myth" data-part="1" data-title="Mythos 1" data-cam="off">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth1.webp" alt="Kind vor leerem Blatt – Kind mit Plan und Checkliste"><div class="myth-cover" style="left:49.5%"></div></div>
+    <div>
+      <p class="label">Mythos 1 von 5</p>
+      <h2 class="h">„SRL ist <em>Freiarbeit.</em>“</h2>
+      <p class="kw step">Freiheit ohne Strategie = Selbstbeschäftigung.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide myth" data-part="1" data-title="Mythos 2" data-cam="off">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth2.webp" alt="Lehrkraft lehnt sich zurück – Lehrkraft begleitet ein Kind"><div class="myth-cover" style="left:50.5%"></div></div>
+    <div>
+      <p class="label">Mythos 2 von 5</p>
+      <h2 class="h">„Die Lehrkraft <em>zieht sich zurück.</em>“</h2>
+      <p class="kw step">Andere Rolle: Gerüst, Feedback, Begleitung.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide myth" data-part="1" data-title="Mythos 3" data-cam="off">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth3.webp" alt="Siegertreppchen – viele Kinder auf eigenen Wegen"><div class="myth-cover" style="left:40.5%"></div></div>
+    <div>
+      <p class="label">Mythos 3 von 5</p>
+      <h2 class="h">„Das können nur <em>starke Lernende.</em>“</h2>
+      <p class="kw step">Gerade Schwächere profitieren – wenn SRL gelehrt wird.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide myth" data-part="1" data-title="Mythos 4" data-cam="off">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth4.webp" alt="Chaotische Projektarbeit – strukturierter Unterricht mit Zyklus an der Tafel"><div class="myth-cover" style="left:48.7%"></div></div>
+    <div>
+      <p class="label">Mythos 4 von 5</p>
+      <h2 class="h">„Immer <em>Projektarbeit</em> und offene Methoden.“</h2>
+      <p class="kw step">Jede Unterrichtsform kann SRL fördern.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide myth" data-part="1" data-title="Mythos 5" data-cam="off">
+  <div class="split">
+    <div class="myth-art"><img src="assets/myth5.webp" alt="Stempel SRL ja/nein auf Babys – Kind steigt Treppe Planen, Ausprobieren, Reflektieren, Wachsen"><div class="myth-cover" style="left:50.5%"></div></div>
+    <div>
+      <p class="label">Mythos 5 von 5</p>
+      <h2 class="h">„SRL ist ein <em>Persönlichkeits&shy;merkmal.</em>“</h2>
+      <p class="kw step">SRL ist erlernbar.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide seq termsl" data-part="1" data-title="Begriffe" data-cam="pip">
+  <h2 class="h">Wo steht SRL?</h2>
+  <div class="terms">
+    <div class="step"><b>selbst&shy;ständig</b><p class="sm">Brauche ich jemanden neben mir?</p></div>
+    <div class="step"><b>selbst&shy;organisiert</b><p class="sm">Wie ordne ich meine Arbeit?</p></div>
+    <div class="step"><b>selbst&shy;verantwortlich</b><p class="sm">Wofür stehe ich ein?</p></div>
+    <div class="step on"><b>selbst&shy;reguliert</b><p class="sm">Wie steuere ich mein Lernen?</p></div>
+  </div>
+  <p class="kw step">Selbstständig ≠ <em>selbstreguliert.</em></p>
+</section>
+
+<section class="slide pause" data-part="1" data-title="Kurz anhalten" data-cam="big">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement kin" style="font-size:84px">Welcher dieser Mythen ist dir schon begegnet – bei anderen oder <em>bei dir selbst?</em></p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+</section>
+
+<section class="slide cover chapter" data-part="2" data-title="Kapitel 2" data-cam="big" data-section="2 · Warum es sich lohnt">
+  <div class="orbit" aria-hidden="true"></div>
+  <p class="chap-no">2</p>
+  <p class="label">Kapitel 2 von 5 · SRL ist keine Methode!</p>
+  <h2 class="h">Warum es sich<br><em>lohnt.</em></h2>
+</section>
+
+<section class="slide effect" data-part="2" data-title="Wirksamkeit" data-cam="off">
+  <p class="label">Was die Forschung sagt</p>
+  <div class="hero"><p class="hero-n">+<span class="count" data-to="8" data-dec="0">8</span></p><p class="hero-t">Monate zusätzlicher <em>Lernfortschritt</em> pro Schuljahr<small>im Durchschnitt, bei sehr geringen Kosten · EEF, 355 Studien</small></p></div>
+  <div class="scale">
+    <div class="sc-above step" style="left:40%;transform:translateX(-100%);text-align:right;padding-right:14px">Durchschnitt aller Maßnahmen<br><b>d = 0,40</b> (Hattie)</div>
+    <div class="sc-above sc-srl step" style="left:52%;padding-left:6px">Selbstregulation &amp; Metakognition<br><b>d = 0,52–0,60</b> (Hattie)</div>
+    <div class="sc-track">
+      <div class="sc-zone" style="left:40%;right:0"></div>
+      <div class="sc-band" style="left:52%;width:8%"></div>
+      <div class="sc-hinge" style="left:40%"></div>
+    </div>
+    <div class="sc-ticks">
+      <span style="left:0%">0</span><span style="left:20%">0,2<i>klein</i></span><span style="left:40%">0,4</span>
+      <span style="left:50%">0,5<i>mittel</i></span><span style="left:60%">0,6</span><span style="left:80%">0,8<i>groß</i></span><span style="left:100%">1,0</span>
+    </div>
+  </div>
+  <p class="sm step" style="margin-top:44px;color:var(--navy);font-weight:600">Durchschnitte über viele Studien – entscheidend ist, <em style="font-style:normal;color:var(--rust-dark)">wie</em> man es umsetzt.</p>
+  <p class="src" style="margin-top:20px;font-size:20px">EEF Teaching and Learning Toolkit, „Metacognition and self-regulation“ (Stand Mai 2025): +8 Monate, 355 Studien · <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">educationendowmentfoundation.org.uk</a> · Hattie, Visible Learning (Stand 2017): metakognitive Strategien 0,60, Selbstregulationsstrategien 0,52, Durchschnitt 0,40 · <a href="https://visible-learning.org/hattie-ranking-influences-effect-sizes-learning-achievement/">visible-learning.org</a> · klein/mittel/groß nach Cohen</p>
+</section>
+
+<section class="slide seq" data-part="2" data-title="Was wirkt" data-cam="pip">
+  <p class="label">Was laut EEF wirkt</p>
+  <h2 class="h">Was <em>wirkt?</em></h2>
+  <ol class="kw-list checks" style="gap:30px">
+    <li class="kw step">Strategien <em>explizit</em> unterrichten</li>
+    <li class="kw step">Eigenes Denken <em>vormachen</em></li>
+    <li class="kw step">Anspruchsvolle Aufgaben <em>im Fachunterricht</em></li>
+    <li class="kw step">Fortbildung für ein <em>gemeinsames Bild</em></li>
+  </ol>
+  <p class="src" style="margin-top:44px;font-size:22px">Education Endowment Foundation (EEF), Teaching and Learning Toolkit · <a href="https://educationendowmentfoundation.org.uk/education-evidence/teaching-learning-toolkit/metacognition-and-self-regulation">educationendowmentfoundation.org.uk</a></p>
+</section>
+
+<section class="slide" data-part="2" data-title="Für wen besonders" data-cam="big">
+  <p class="label">Für wen es den größten Unterschied macht</p>
+  <p class="statement kin">Wer Strategien selten von selbst nutzt, <em>kann am meisten gewinnen.</em></p>
+  <p class="sm" style="margin-top:40px;max-width:860px">Benachteiligte Lernende profitieren besonders, wenn Strategien ausdrücklich vermittelt werden (EEF).</p>
+</section>
+
+<section class="slide pause" data-part="2" data-title="Kurz anhalten" data-cam="big">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement kin" style="font-size:84px">Wann hast du zuletzt vor der Klasse <em>laut gedacht?</em></p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+</section>
+
+<section class="slide cover chapter" data-part="3" data-title="Kapitel 3" data-cam="big" data-section="3 · Das Modell: die SRL-Turbine">
+  <div class="orbit" aria-hidden="true"></div>
+  <p class="chap-no">3</p>
+  <p class="label">Kapitel 3 von 5 · SRL ist keine Methode!</p>
+  <h2 class="h">Das Modell:<br><em>die SRL-Turbine.</em></h2>
+</section>
+
+<section class="slide" data-part="3" data-title="Forschung" data-cam="off">
+  <h2 class="h">Drei Stimmen aus der <em>Forschung</em></h2>
+  <div class="grid3">
+    <div class="col step"><p class="name">Stebner</p><p class="sm">Uni Osnabrück</p><p class="kw">Strategien &amp; Implementierung</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.ferdinand-stebner.de/" target="_blank" rel="noopener">ferdinand-stebner.de</a></p></div>
+    <div class="col step"><p class="name"><span data-morph="karlen">Karlen</span></p><p class="sm">Uni Zürich</p><p class="kw">Metakognition &amp; Motivation</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.selbstreguliertes-lernen.uzh.ch/de.html" target="_blank" rel="noopener">selbstreguliertes-lernen.uzh.ch</a></p></div>
+    <div class="col step"><p class="name">Wirth</p><p class="sm">Ruhr-Uni Bochum</p><p class="kw">Äußere Struktur &amp; Lernbuddy</p><p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.pe.ruhr-uni-bochum.de/erziehungswissenschaft/lllf/index.html.de" target="_blank" rel="noopener">pe.ruhr-uni-bochum.de</a></p></div>
+  </div>
+</section>
+
+<section class="slide" data-part="3" data-title="SRL-Turbine" data-cam="off">
+  <div class="split">
+    <figure>
+      <img class="turbine" src="assets/turbine.png" alt="SRL-Turbine der Universität Zürich">
+      <p class="src">Karlen et al., Universität Zürich · <a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html">selbstreguliertes-lernen.uzh.ch</a></p>
+    </figure>
+    <div>
+      <p class="label"><span data-morph="karlen">Karlen</span> et al. · Uni Zürich</p>
+      <h2 class="h">Die SRL-<em>Turbine</em></h2>
+      <ol class="kw-list rings">
+        <li class="kw step"><div class="tb tbico" data-focus="needs" data-solid="1"></div><span>Grundbedürfnisse<small>innen · das Warum</small></span></li>
+        <li class="kw step"><div class="tb tbico" data-focus="process" data-solid="1"></div><span>Lernprozess<small>mittlerer Ring · der Ablauf</small></span></li>
+        <li class="kw step"><div class="tb tbico" data-focus="areas" data-solid="1"></div><span>Kompetenzbereiche<small>außen · das Können</small></span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="slide seq lvl" data-part="3" data-title="Turbine · Grundbedürfnisse" data-cam="off" data-anchor="turbine">
+  <div class="split">
+    <figure><div class="tb tbbig" data-focus="needs"></div><p class="src">Vereinfachte Darstellung nach Karlen et al., Universität Zürich</p></figure>
+    <div>
+      <p class="label">Ebene 1 · Grundbedürfnisse</p>
+      <h2 class="h" style="font-size:68px">Warum sollten Lernende ihr Lernen steuern <em>wollen?</em></h2>
+      <ul class="kw-list dotted">
+        <li class="kw step" data-tb="n1">Kompetenz <small>sich als fähig erleben</small></li>
+        <li class="kw step" data-tb="n2">Autonomie <small>mitgestalten dürfen</small></li>
+        <li class="kw step" data-tb="n3">Eingebundenheit <small>tragfähige Beziehungen</small></li>
+      </ul>
+      <p class="sm step punch">Selbstreguliert heißt nicht: allein gelassen.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide seq lvl" data-part="3" data-title="Turbine · Lernprozess" data-cam="off" data-anchor="turbine">
+  <div class="split">
+    <figure><div class="tb tbbig" data-focus="process"></div><p class="src">Vereinfachte Darstellung nach Karlen et al., Universität Zürich</p></figure>
+    <div>
+      <p class="label">Ebene 2 · Lernprozess</p>
+      <h2 class="h">Der <em>Zyklus.</em></h2>
+      <ul class="kw-list dotted">
+        <li class="kw step" data-tb="p1">Planung <small>Ausgangslage, Ziele, Strategien</small></li>
+        <li class="kw step" data-tb="p2">Durchführung <small>beobachten, anpassen, Hilfe holen</small></li>
+        <li class="kw step" data-tb="p3">Reflexion <small>Ergebnis und Vorgehen bewerten</small></li>
+      </ul>
+      <p class="sm step punch" data-tb="run">Die Reflexion fließt in die nächste Planung.</p>
+      <p class="src" style="margin-top:26px">Im Original heißt die erste Phase „Vorbereitung“ – gemeint ist dasselbe.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide seq lvl" data-part="3" data-title="Turbine · Kompetenzbereiche" data-cam="off" data-anchor="turbine">
+  <div class="split">
+    <figure><div class="tb tbbig" data-focus="areas"></div><p class="src">Vereinfachte Darstellung nach Karlen et al., Universität Zürich</p></figure>
+    <div>
+      <p class="label">Ebene 3 · Kompetenzbereiche</p>
+      <h2 class="h" style="font-size:76px;margin-bottom:30px">Sechs <em>Bereiche.</em></h2>
+      <ul class="kw-list areas">
+        <li class="kw step" data-tb="metakognition">Metakognition <small>planen, überwachen, auswerten</small></li>
+        <li class="kw step" data-tb="kognition">Kognition <small>Informationen verarbeiten</small></li>
+        <li class="kw step" data-tb="mindset">Mindset <small>Fehler als Lerngelegenheit</small></li>
+        <li class="kw step" data-tb="motivation">Motivation <small>sich etwas zutrauen, dranbleiben</small></li>
+        <li class="kw step" data-tb="emotion">Emotion <small>Frust und Unsicherheit regulieren</small></li>
+        <li class="kw step" data-tb="ressourcen">Ressourcen <small>Zeit, Material, Ort und Hilfe nutzen</small></li>
+      </ul>
+      <p class="sm res-link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.selbstreguliertes-lernen.uzh.ch/de/fuer-lehrpersonen/lehrperson-themenbeitraege/was-ist-selbstreguliertes-lernen.html" target="_blank" rel="noopener">Mehr dazu: selbstreguliertes-lernen.uzh.ch</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="3" data-title="SRL ist …" data-cam="pip">
+  <div class="stackv"><p class="big">SRL<br>ist …</p>
+    <ul><li>ein Prozess</li><li>erlernbar</li><li>zyklisch</li><li>metakognitiv</li><li>strategisch</li><li>begleitet</li><li class="all">für alle.</li></ul>
+  </div>
+</section>
+
+<section class="slide" data-part="3" data-title="Zitat" data-cam="big">
+  <p class="label">Das Ziel – aus Sicht der Lernenden</p>
+  <p class="quote kin">„Ich weiß, warum ich lerne, wie ich lerne – und was ich <em class="r">beim nächsten Mal anders</em> machen will.“</p>
+</section>
+
+<section class="slide pause" data-part="3" data-title="Kurz anhalten" data-cam="big">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement kin" style="font-size:84px">Welche Ebene der Turbine kommt in deinem Unterricht schon vor – und welche <em>kaum?</em></p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+</section>
+
+<section class="slide cover chapter" data-part="4" data-title="Kapitel 4" data-cam="big" data-section="4 · Vom Bildungsziel zur Praxis">
+  <div class="orbit" aria-hidden="true"></div>
+  <p class="chap-no">4</p>
+  <p class="label">Kapitel 4 von 5 · SRL ist keine Methode!</p>
+  <h2 class="h">Vom Bildungsziel<br><em>zur Praxis.</em></h2>
+</section>
+
+<section class="slide" data-part="4" data-title="Kompetenzpaket" data-cam="off">
+  <div class="split">
+    <figure><div class="tb tbbig" data-focus="areas" data-on="metakognition kognition mindset motivation emotion ressourcen"></div><p class="src">Vereinfachte Darstellung nach Karlen et al., Universität Zürich</p></figure>
+    <div>
+      <p class="label">Zurück zur These</p>
+      <h2 class="h" style="font-size:84px;margin-bottom:26px">Kein Verfahren, sondern ein <em>Kompetenz&shy;paket.</em></h2>
+      <p class="kw step" style="font-weight:500">Lernbar – nicht angeboren.</p>
+      <p class="sm step" style="margin-top:30px">Sechs Bereiche, die Lernende Schritt für Schritt aufbauen. Du kennst sie aus Kapitel 3.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide means" data-part="4" data-title="Mittel, nicht Ziel" data-cam="off">
+  <p class="label">Settings · Methoden · Prüfungsformate</p>
+  <h2 class="h" style="margin-bottom:36px">Mittel, nicht <em>Ziel.</em></h2>
+  <div class="lever-grid">
+    <div><p class="col-h">Was wir verändern</p>
+      <ul class="kw-list dotted">
+        <li class="kw">Lernsettings und Methoden</li>
+        <li class="kw">Aufbau der Unterrichtsreihen</li>
+        <li class="kw">Prüfungsformate</li>
+        <li class="kw">Lernräume</li>
+        <li class="kw">Coaching</li>
+      </ul></div>
+    <div class="lever-arrow step" data-tb="metakognition kognition mindset motivation emotion ressourcen"><svg viewBox="0 0 150 60" aria-hidden="true"><path class="cyc-line" pathLength="1" d="M8 30H118" stroke="var(--sage-dark)" stroke-width="5" stroke-linecap="round" fill="none"/><path class="cyc-head" d="M118 19.5L139 30L118 40.5Z" fill="var(--sage-dark)"/></svg></div>
+    <div><p class="col-h">Worauf es zielt</p><div class="tb tbmid" data-focus="areas"></div></div>
+  </div>
+  <p class="sm step" style="margin-top:30px;font-weight:600;color:var(--navy)">Ein offenes Setting ist nicht automatisch SRL – es wirkt, wenn es gezielt einen Kompetenzbereich stärkt.</p>
+</section>
+
+<section class="slide lever seq" data-part="4" data-title="Metakognition" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="metakognition kognition"></div>
+  <p class="label">Zielt auf: Metakognition · Kognition</p>
+  <h2 class="h">Denken über das <em>Lernen.</em></h2>
+  <p class="lead">Eine Routine, die in jeder Reihe wiederkommt.</p>
+  <ul class="kw-list dotted">
+    <li class="kw step">Strategien explizit einführen und üben</li>
+    <li class="kw step">Laut denken: das eigene Denken vormachen</li>
+    <li class="kw step">Introspektion: das eigene Lernen beschreiben</li>
+    <li class="kw step">Planung · Durchführung · Reflexion – in jeder Reihe</li>
+  </ul>
+  <p class="tried step"><b>Gleich konkret:</b> eine Strategie Schritt für Schritt – und wie es klingt, sie vorzumachen.</p>
+</section>
+
+<section class="slide lever strat" data-part="4" data-title="Strategie konkret" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas"></div>
+  <p class="label">Beispiel für eine Strategie · Texte markieren (Jg. 5/6)</p>
+  <h2 class="h">Handwerkszeug plus <em>Qualitätskontrolle.</em></h2>
+  <div class="flow">
+    <div class="fl meta"><span class="fn"></span><p><b>Ziel setzen</b> Abschnitt für Abschnitt vorgehen</p><i>metakognitiv</i></div>
+    <div class="fl step" data-tb="kognition"><span class="fn">1</span><p><b>Abschnitt lesen</b> noch nichts markieren</p><i>kognitiv</i></div>
+    <div class="fl step" data-tb="kognition"><span class="fn">2</span><p><b>Frage stellen</b> „Wie und was jagt ein Eisbär?“</p><i>kognitiv</i></div>
+    <div class="fl step" data-tb="kognition"><span class="fn">3</span><p><b>Markieren</b> nur, was die Frage beantwortet</p><i>kognitiv</i></div>
+    <i class="step zs zm" data-tb="metakognition"></i>
+    <div class="fl meta"><span class="fn"></span><p><b>Überprüfen</b> „Sind die Markierungen vollständig?“</p><i>metakognitiv</i></div>
+    <div class="fl meta"><span class="fn"></span><p><b>Reagieren</b> bei Fehlern: Abschnitt noch einmal lesen</p><i>metakognitiv</i></div>
+  </div>
+  <p class="tried step"><b>Gleiches Prinzip:</b> Experimentieren mit Je-desto-Idee · schwierige Aufgabe einteilen und Hilfsmittel nutzen</p>
+  <p class="src">Stebner, Schiffhauer, Schmeck, Schuster, Leutner &amp; Wirth (2015): Selbstreguliertes Lernen in den Naturwissenschaften. Praxismaterial für die 5. und 6. Jahrgangsstufe. Waxmann · <a href="https://www.pedocs.de/volltexte/2017/15114/pdf/Stebner_etal_2015_Selbstreguliertes_Lernen_in_den_Naturwissenschaften.pdf">pedocs.de</a></p>
+</section>
+
+<section class="slide seq talkslide" data-part="4" data-title="Laut denken" data-cam="big">
+  <p class="label">Laut denken · so klingt Vormachen</p>
+  <h2 class="h">Unsichtbares Denken <em>hörbar machen.</em></h2>
+  <figure class="pic step"><img src="assets/szene-laut-denken.webp" alt="Zeichnung: Lehrkraft an der Dokumentenkamera mit Denkblase, die Klasse schaut auf den projizierten Eisbär-Text"></figure>
+  <div class="talk">
+    <div class="tk step meta"><i>Ziel setzen</i><p>„Ich will wissen, wie der Eisbär jagt. Ich gehe Abschnitt für Abschnitt vor.“</p></div>
+    <div class="tk step"><i>Lesen</i><p>„Den ersten Abschnitt lese ich erst ganz. Ich markiere noch nichts.“</p></div>
+    <div class="tk step"><i>Frage stellen</i><p>„Meine Frage an den Abschnitt: Wie und was jagt ein Eisbär?“</p></div>
+    <div class="tk step"><i>Markieren</i><p>„Jetzt markiere ich nur, was meine Frage beantwortet.“</p></div>
+    <div class="tk step meta"><i>Überprüfen</i><p>„Moment – das ist zu viel markiert. Ich lese noch einmal und radiere.“</p></div>
+  </div>
+  <p class="tried step"><b>Damit daraus eine Routine wird, erproben wir:</b> <span data-morph="buddy">Lernbuddy</span> · Logbuch mit Lerntagebuch</p>
+  <p class="src">Strategie: Stebner et al. (2015) · Vormachen als Empfehlung: EEF · Formulierungen: eigenes Beispiel</p>
+</section>
+
+<section class="slide" data-part="4" data-title="Lernbuddy" data-cam="off">
+  <i class="step zs zs1"></i><i class="step zs zs2"></i><i class="step zs zs3"></i>
+  <div class="split">
+    <div class="buddy-zoom"><img class="buddy" src="assets/lernbuddy.webp" alt="Arbeitsblatt Lernbuddy der Klasse 5.3 mit Planung, Durchführung und Reflexion"></div>
+    <div>
+      <p class="label">Rahmengebendes Werkzeug</p>
+      <h2 class="h">Der <em><span data-morph="buddy">Lernbuddy.</span></em></h2>
+      <p class="kw">Äußeres Gerüst →<br>innere Routine.</p>
+      <p class="src" style="margin-top:60px;font-size:22px">Entwickelt von Prof. Joachim Wirth und Team, Ruhr-Universität Bochum – für die Klasse 5.3 von uns angepasst.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide lever seq" data-part="4" data-title="Wahl" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="motivation mindset"></div>
+  <p class="label">Zielt auf: Motivation · Mindset</p>
+  <h2 class="h">Selbstwirksam durch <em>Wahl.</em></h2>
+  <p class="lead">Reihen so aufbauen, dass Lernende echte Entscheidungen treffen.</p>
+  <ul class="kw-list dotted">
+    <li class="kw step">Wo arbeite ich? – Arbeitsort</li>
+    <li class="kw step">Wie schnell? – eigenes Tempo</li>
+    <li class="kw step">Wie schwer? – Schwierigkeitsgrad</li>
+    <li class="kw step">Wahl braucht Rahmen: dosiert statt grenzenlos</li>
+  </ul>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Lernwege und Lerntheken · geöffnete Lernsettings</p>
+  <figure class="pic step"><img src="assets/szene-wahl.webp" alt="Zeichnung: Ein Mädchen überlegt an drei Körben mit Aufgaben in drei Schwierigkeitsstufen, im Hintergrund arbeiten Kinder an verschiedenen Orten"></figure>
+</section>
+
+<section class="slide lever seq" data-part="4" data-title="Prüfungsformate" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="motivation mindset ressourcen"></div>
+  <p class="label">Zielt auf: Motivation · Mindset · Ressourcen</p>
+  <h2 class="h">Prüfen, wenn es <em>passt.</em></h2>
+  <p class="lead">Prüfungsformate, die Selbstregulation verlangen – und belohnen.</p>
+  <ul class="kw-list dotted">
+    <li class="kw step">Bin ich so weit? – sich vor dem Nachweis einschätzen</li>
+    <li class="kw step">Wann bin ich bereit? – Zeitpunkt mitbestimmen</li>
+    <li class="kw step">Noch nicht geschafft? – neuer Anlauf statt Endurteil</li>
+    <li class="kw step">Hilfsmittel klug nutzen – als Teil der Leistung</li>
+  </ul>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Gelingensnachweise · Wahltermine · Open-Book-Arbeiten</p>
+  <figure class="pic step"><img src="assets/szene-pruefen.webp" alt="Zeichnung: Links wählt ein Junge einen Termin und ein Mädchen schätzt sich auf einer Stufenleiter ein, rechts schreibt ein Mädchen eine Arbeit mit Heft und Notizen auf dem Tisch"></figure>
+</section>
+
+<section class="slide lever seq" data-part="4" data-title="Ressourcen" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="ressourcen"></div>
+  <p class="label">Zielt auf: Ressourcen</p>
+  <h2 class="h">Ressourcen, die <em>passen.</em></h2>
+  <p class="lead">Material, Hilfe und Zeit mitplanen – nicht nachträglich ergänzen.</p>
+  <ul class="kw-list dotted">
+    <li class="kw step">Verlässlicher Zugang zu Aufgaben und Material</li>
+    <li class="kw step">Gestufte Hilfe statt sofortiger Lösung</li>
+    <li class="kw step">Zeitfenster, die eigene Planung erlauben</li>
+  </ul>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Lösungsleiter · Lernwege</p>
+</section>
+
+<section class="slide lever seq" data-part="4" data-title="Lernraum" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="ressourcen emotion"></div>
+  <p class="label">Zielt auf: Ressourcen · Emotion</p>
+  <h2 class="h">Der Raum als <em>dritter Pädagoge.</em></h2>
+  <p class="lead">Lernräume sind Ressource – und prägen, wie man sich darin fühlt.</p>
+  <ul class="kw-list dotted">
+    <li class="kw step">Orientierung: Wo finde ich was, wo arbeite ich wie?</li>
+    <li class="kw step">Zonen für Ruhe, Austausch und Input</li>
+    <li class="kw step">Wohlbefinden: ein Ort, an dem man gern lernt</li>
+  </ul>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Lernbüro · Churer Modell</p>
+  <figure class="pic step"><img src="assets/szene-lernraum.webp" alt="Zeichnung: Klassenraum mit Lesezone am Fenster, Gruppentisch, Materialregal und einer Lehrkraft, die einem Kind hilft"></figure>
+</section>
+
+<section class="slide lever seq" data-part="4" data-title="Coaching" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas" data-on="emotion motivation mindset metakognition"></div>
+  <p class="label">Zielt auf: Emotion · Motivation · Mindset · Metakognition</p>
+  <h2 class="h">Begleiten im <em>Gespräch.</em></h2>
+  <p class="lead">Coaching unterstützt, was sich nicht verordnen lässt.</p>
+  <ul class="kw-list dotted">
+    <li class="kw step">Emotion: Frust, Unsicherheit, Prüfungsangst ansprechen</li>
+    <li class="kw step">Motivation: Ziele vereinbaren, Fortschritt zeigen</li>
+    <li class="kw step">Mindset: Fehler als Lerngelegenheit deuten</li>
+    <li class="kw step">Metakognition: über das eigene Lernen sprechen</li>
+  </ul>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> 1:1-Mentorengespräche</p>
+  <figure class="pic step"><img src="assets/szene-coaching.webp" alt="Zeichnung: Lehrkraft und Kind sitzen auf Augenhöhe an einem runden Tisch, das Kind zeigt auf eine Seite und erzählt"></figure>
+</section>
+
+<section class="slide" data-part="4" data-title="Fazit Praxis" data-cam="big">
+  <p class="statement kin">Nicht das Setting ist das Ziel – <em>sondern die Kompetenz, die es stärkt.</em></p>
+</section>
+
+<section class="slide pause" data-part="4" data-title="Kurz anhalten" data-cam="big">
+  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
+  <p class="statement kin" style="font-size:84px">Was veränderst du schon im Unterricht – und auf welchen Kompetenzbereich <em>zielt es?</em></p>
+  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+</section>
+
+<section class="slide cover chapter" data-part="5" data-title="Kapitel 5" data-cam="big" data-section="5 · Wie es weitergeht">
+  <div class="orbit" aria-hidden="true"></div>
+  <p class="chap-no">5</p>
+  <p class="label">Kapitel 5 von 5 · SRL ist keine Methode!</p>
+  <h2 class="h">Wie es<br><em>weitergeht.</em></h2>
+</section>
+
+<section class="slide seq" data-part="5" data-title="Reibungen" data-cam="pip">
+  <p class="label">Ehrlich gesagt</p>
+  <h2 class="h">Wo es <em>reibt.</em></h2>
+  <ul class="kw-list dotted rub">
+    <li class="kw step">Planung ohne Realismus</li>
+    <li class="kw step">Reflexion als Floskel</li>
+    <li class="kw step">Zu viel Wahl überfordert</li>
+    <li class="kw step">Viel Material ≠ selbstreguliert</li>
+    <li class="kw step">Am Anfang: erst einmal Mehrarbeit</li>
+  </ul>
+</section>
+
+<section class="slide seq" data-part="5" data-title="Schulentwicklung" data-cam="pip">
+  <h2 class="h">Auch <em>Schulentwicklung.</em></h2>
+  <ul class="kw-list grid2 dotted sdev" style="gap:30px 70px">
+    <li class="kw step">Gemeinsames Verständnis</li>
+    <li class="kw step">Fachliche Freiheit</li>
+    <li class="kw step">Gemeinsame Sprache</li>
+    <li class="kw step">Zeit &amp; Begleitung</li>
+    <li class="kw step">Wenige Routinen</li>
+    <li class="kw step">Progression</li>
+  </ul>
+</section>
+
+<section class="slide seq" data-part="5" data-title="Gelernt" data-cam="pip">
+  <p class="label">Aus den ersten Erfahrungen</p>
+  <h2 class="h" style="margin-bottom:40px">Was wir <em>gelernt haben.</em></h2>
+  <ul class="kw-list dotted recs">
+    <li class="kw step">Veränderung geht langsam – sehr langsam.</li>
+    <li class="kw step">Ändert sich die eigene Rolle, entstehen Freiräume.</li>
+    <li class="kw step"><em>Mehr vom Kind aus denken als vom Lehrplan.</em></li>
+    <li class="kw step">Geduld wird belohnt.</li>
+  </ul>
+</section>
+
+<section class="slide full kipper" data-part="5" data-title="Muldenkipper" data-cam="off" data-dark>
+  <img src="assets/muldenkipper.webp" alt="Elektro-Muldenkipper eDumper im Steinbruch">
+  <p class="src">eDumper im Steinbruch Péry (BE) · Foto: Andreas Sutter · <a href="https://www.architektur-technik.ch/aktuell/groesster-elektro-laster-der-welt/">architektur-technik.ch</a></p>
+</section>
+
+<section class="slide" data-part="5" data-title="Pointe" data-cam="big">
+  <p class="statement kin">Nicht alles auf einmal.<br><em style="color:var(--sage-dark)">Aber gemeinsam und Schritt&nbsp;für&nbsp;Schritt.</em></p>
+</section>
+
+<section class="slide seq" data-part="5" data-title="Fürs Team" data-cam="pip">
+  <p class="label">Für Fachschaft und Jahrgangsteam</p>
+  <h2 class="h" style="margin-bottom:44px">Drei <em>Fragen.</em></h2>
+  <ol class="kw-list numbered team" style="gap:30px">
+    <li class="kw step">Wo fördern wir SRL schon – ohne es so zu nennen?</li>
+    <li class="kw step">Welche Routine aus Planung, Durchführung und Reflexion führen wir <em>gemeinsam</em> ein?</li>
+    <li class="kw step">Welchen Baustein sehen wir uns genauer an?</li>
+  </ol>
+</section>
+
+<section class="slide" data-part="5" data-title="Nächster Schritt" data-cam="big">
+  <p class="label">Dein nächster Schritt</p>
+  <p class="statement kin">Eine Routine. Eine Reihe. <em>Eine Lerngruppe.</em></p>
+  <p class="sm" style="margin-top:40px;max-width:860px">Klein anfangen – und im Team davon erzählen.</p>
+</section>
+
+<section class="slide" data-part="5" data-title="Literatur" data-cam="off">
+  <p class="label">Zum Weiterlesen</p>
+  <h2 class="h" style="margin-bottom:36px;font-size:96px">Literatur&shy;<em>empfehlungen.</em></h2>
+  <div class="grid3 books">
+    <div class="col book"><img class="cover" src="assets/book-karlen.webp" alt="Cover: Gewusst wie!"><div class="btxt"><p class="who">Yves Karlen (Hrsg.)</p><p class="name">Gewusst wie!</p><p class="desc">Das Buch von Prof. Karlen und Team.</p><p class="sm res-link"><span class="pub">hep Verlag · 2026</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.hep-verlag.ch/gewusst-wie" target="_blank" rel="noopener">hep-verlag.ch</a></p></div></div>
+    <div class="col book"><img class="cover" src="assets/book-ruppaner.webp" alt="Cover: Das könnte Schule machen"><div class="btxt"><p class="who">Stefan Ruppaner · Anke Willers</p><p class="name">Das könnte Schule machen</p><p class="desc">Einblick in eine der bekanntesten Schulen, die neue Konzepte eingeführt hat: die Alemannenschule Wutöschingen.</p><p class="sm res-link"><span class="pub">Rowohlt · 2025</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.rowohlt.de/buch/stefan-ruppaner-anke-willers-das-koennte-schule-machen-9783499016394" target="_blank" rel="noopener">rowohlt.de</a></p></div></div>
+    <div class="col book"><img class="cover" src="assets/book-pruefungskultur.webp" alt="Cover: Wege zu einer zeitgemäßen Prüfungskultur"><div class="btxt"><p class="who">Langela-Bickenbach · Dreier · Wampfler · Albrecht (Hrsg.)</p><p class="name">Wege zu einer zeitgemäßen Prüfungskultur</p><p class="desc">Das Buch zum Thema zeitgemäße Prüfungskultur.</p><p class="sm res-link"><span class="pub">Beltz · 2024</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://pruefungskultur.de/buch/" target="_blank" rel="noopener">pruefungskultur.de</a></p></div></div>
+  </div>
+</section>
+
+<section class="slide thanks" data-part="5" data-title="Danke" data-cam="big">
+  <h2 class="h">Danke fürs <em>Zuschauen!</em></h2>
+  <p class="kw" style="margin-top:20px;max-width:900px">Fragen, Austausch oder ein Blick in den Unterricht?</p>
+  <div class="contact">
+    <p class="sm"><b>Christoph Wegemann</b></p>
+    <p class="sm link"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg><a href="mailto:christoph.wegemann@hbgdo-edu.de">christoph.wegemann@hbgdo-edu.de</a></p>
+  </div>
+  <p class="ai-note">Diese HTML-Präsentation wurde mithilfe von KI programmiert.</p>
+</section>
+
+<div id="cd-head">HEINRICH-BÖLL-GESAMTSCHULE DORTMUND</div><svg id="cd-logo" viewBox="0 0 1536 434" role="img" aria-label="Heinrich-Böll-Gesamtschule Dortmund"><use href="#hbg-logo-wordmark"></use></svg>
+<div id="cam" aria-hidden="true"><video autoplay muted playsinline></video><div class="cam-ph"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4.2"/><path d="M3.5 21c.6-4.6 4-7 8.5-7s7.900 2.400 8.500 7z"/></svg><span>Webcam</span></div></div>
+</div></div>
+
+<div id="progress"><div class="bar"></div></div>
+<div id="black"></div>
+<div id="jump" role="dialog" aria-modal="true" aria-label="Folienübersicht">
+  <div class="jump-panel">
+    <div class="jump-head"><b>Folien</b><span>Klicken oder Nummer + Enter · Esc schließt</span><input id="jumpNum" inputmode="numeric" placeholder="Nr." aria-label="Foliennummer"></div>
+    <ol id="jumpGrid"></ol>
+  </div>
+</div>
+
+<div id="menu" role="dialog" aria-label="Steuerung und Tastenkürzel">
+  <div class="m-head"><b>Steuerung</b><span>M schließt</span></div>
+  <div class="m-btns">
+    <button data-act="prev">◀ Zurück</button><button data-act="jump">☰ Folien</button><button data-act="next">Weiter ▶</button>
+    <button data-act="full">⛶ Vollbild</button><button data-act="black">● Schwarz</button><button data-act="anim">⏸ Animation aus</button>
+    <button class="wide" data-act="cam">◉ Webcam an / aus</button>
+  </div>
+  <div class="m-parts"><span>Kapitel</span><a href="#" data-ch="1">1</a><a href="#" data-ch="2">2</a><a href="#" data-ch="3">3</a><a href="#" data-ch="4">4</a><a href="#" data-ch="5">5</a><a href="./" class="m-alt" data-alt>SRL-Design</a></div>
+  <table>
+    <tr><td><kbd>→</kbd> <kbd>Leertaste</kbd></td><td>weiter / aufdecken</td></tr>
+    <tr><td><kbd>←</kbd></td><td>zurück</td></tr>
+    <tr><td><kbd>G</kbd></td><td>Folienübersicht</td></tr>
+    <tr><td><kbd>12</kbd> <kbd>Enter</kbd></td><td>zu Folie 12 springen</td></tr>
+    <tr><td><kbd>F</kbd></td><td>Vollbild</td></tr>
+    <tr><td><kbd>B</kbd> <kbd>.</kbd></td><td>schwarzer Bildschirm</td></tr>
+    <tr><td><kbd>M</kbd></td><td>dieses Menü</td></tr>
+    <tr><td><kbd>A</kbd></td><td>Animationen an/aus</td></tr>
+    <tr><td><kbd>R</kbd></td><td>Aufnahmemodus (ohne Balken und Mauszeiger)</td></tr>
+    <tr><td><kbd>C</kbd></td><td>Webcam an/aus · <kbd>⇧C</kbd> nur Platzhalter</td></tr>
+    <tr><td><kbd>V</kbd></td><td>Webcam groß / klein / aus / automatisch</td></tr>
+    <tr><td colspan="2" class="m-sec">iPad</td></tr>
+    <tr><td>Wischen ← →</td><td>weiter / zurück</td></tr>
+    <tr><td>Tippen rechts / links</td><td>weiter / zurück</td></tr>
+    <tr><td>Wischen ↑</td><td>Folienübersicht</td></tr>
+    <tr><td>Zwei Finger tippen</td><td>schwarzer Bildschirm</td></tr>
+    <tr><td>Lange drücken</td><td>dieses Menü</td></tr>
+  </table>
+</div>
+
+<div id="notesView">
+  <div class="nv-head">
+    <span class="nv-num" id="nvNum">1 / 1</span><span class="nv-title" id="nvTitle"></span><span class="nv-step" id="nvStep"></span>
+    <span class="nv-time" id="nvTime">00:00</span>
+  </div>
+  <div class="nv-notes" id="nvNotes"></div>
+  <div class="nv-foot">
+    <span>Als Nächstes: <b id="nvNext">–</b></span>
+    <span>→ weiter · ← zurück · T Zeit zurücksetzen</span>
+    <span class="nv-warn" id="nvWarn"></span>
+  </div>
+</div>
+
+<script>
+/* ---------- Eine Präsentation in fünf Kapiteln (data-part = Kapitel) ----------
+   Ältere Links mit ?teil=n springen an den Anfang von Kapitel n. */
+const QS=new URLSearchParams(location.search);
+const slides=[...document.querySelectorAll('.slide')];
+const chapterStart=n=>slides.findIndex(s=>+s.dataset.part===n);
+const OLD_TEIL=parseInt(QS.get('teil'),10);
+if(QS.has('teil')){ QS.delete('teil'); const q=QS.toString(); try{ history.replaceState(null,'',location.pathname+(q?'?'+q:'')+location.hash); }catch(_){} }
+
+/* ---------- Turbine als SVG (vereinfacht nach Karlen et al.) ----------
+   <div class="tb" data-focus="needs|process|areas" data-on="kognition …">
+   Schritte mit data-tb="schlüssel" lassen beim Aufdecken das passende Teil aufleuchten. */
+(function(){
+  const P=(r,a)=>{ a=a*Math.PI/180; return (r*Math.sin(a)).toFixed(2)+' '+(-r*Math.cos(a)).toFixed(2); };
+  const sector=(r0,r1,a0,a1)=>'M'+P(r1,a0)+'A'+r1+' '+r1+' 0 0 1 '+P(r1,a1)+'L'+P(r0,a1)+'A'+r0+' '+r0+' 0 0 0 '+P(r0,a0)+'Z';
+  const arc=(r,a0,a1,flip)=>flip?'M'+P(r,a1)+'A'+r+' '+r+' 0 0 0 '+P(r,a0):'M'+P(r,a0)+'A'+r+' '+r+' 0 0 1 '+P(r,a1);
+  const AREAS=[['kognition','Kognition',330],['metakognition','Metakognition',30],['motivation','Motivation',90],['emotion','Emotion',150],['ressourcen','Ressourcen',210],['mindset','Mindset',270]];
+  const PROC=[['p1','Planung',0],['p2','Durchführung',120],['p3','Reflexion',240]];
+  const NEEDS=[['n1','Kompetenz',-22],['n2','Autonomie',5],['n3','Eingebundenheit',32]];
+  let uid=0;
+  document.querySelectorAll('.tb').forEach(tb=>{
+    const id='tb'+(uid++)+'-'; let i=0, h='<svg viewBox="-200 -200 400 400" aria-hidden="true"><g class="g g-areas">';
+    AREAS.forEach(([k,t,c])=>{ const flip=c>90&&c<270;
+      h+='<g class="k" data-k="'+k+'" style="--i:'+(i++)+'"><path class="shape" d="'+sector(150,195,c-28,c+28)+'"/><path id="'+id+k+'" d="'+arc(flip?178.5:166.5,c-28,c+28,flip)+'" fill="none"/><text><textPath href="#'+id+k+'" startOffset="50%" text-anchor="middle">'+t+'</textPath></text></g>'; });
+    h+='</g><g class="g g-proc">';
+    PROC.forEach(([k,t,c])=>{ const flip=c>90&&c<270, a0=c-56, a1=c+42;
+      h+='<g class="k" data-k="'+k+'" style="--i:'+(i++)+'"><path class="shape" d="'+sector(96,140,a0,a1)+'M'+P(89,a1)+'L'+P(147,a1)+'L'+P(118,a1+13)+'Z"/><path id="'+id+k+'" d="'+arc(flip?124:112,a0,a1,flip)+'" fill="none"/><text><textPath href="#'+id+k+'" startOffset="50%" text-anchor="middle">'+t+'</textPath></text></g>'; });
+    h+='<circle class="runner" r="8" fill="var(--rust-dark)" stroke="#fff" stroke-width="3"><animateMotion dur="5s" repeatCount="indefinite" path="M0 -145A145 145 0 1 1 0 145A145 145 0 1 1 0 -145"/></circle>';
+    h+='</g><g class="g g-needs"><g class="k" style="--i:'+(i++)+'"><circle class="shape" r="84"/>';
+    NEEDS.forEach(([k,t,y])=>{ h+='<text data-k="'+k+'" y="'+y+'" text-anchor="middle">'+t+'</text>'; });
+    tb.innerHTML=h+'</g></g></svg>';
+    tb.setAttribute('role','img'); tb.setAttribute('aria-label','SRL-Turbine, vereinfachte Darstellung');
+  });
+})();
+function applyTb(sl){
+  const tb=sl.querySelector('.tbbig,.tbmid,.tbnav'); if(!tb) return;
+  const shown=[...sl.querySelectorAll('.step[data-tb]:not(.hidden)')];
+  const keys=new Set((tb.dataset.on||'').split(/\s+/).filter(Boolean));
+  shown.forEach(s=>s.dataset.tb.split(/\s+/).forEach(k=>keys.add(k)));
+  const last=shown.length?shown[shown.length-1].dataset.tb.split(/\s+/):[];
+  tb.querySelectorAll('[data-k]').forEach(el=>{
+    const on=keys.has(el.dataset.k), was=el.classList.contains('on');
+    el.classList.toggle('on',on);
+    if(on&&!was&&last.includes(el.dataset.k)&&sl.classList.contains('active')){ el.classList.remove('pulse'); void el.getBoundingClientRect(); el.classList.add('pulse'); }
+  });
+  tb.classList.toggle('run',keys.has('run'));
+}
+/* Aussagen in Wörter zerlegen, damit sie sich Wort für Wort aufbauen */
+document.querySelectorAll('.kin').forEach(el=>{
+  let n=0;
+  (function walk(node){
+    [...node.childNodes].forEach(c=>{
+      if(c.nodeType===3){ const f=document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach(t=>{ if(!t) return; if(/^\s+$/.test(t)){ f.appendChild(document.createTextNode(' ')); return; }
+          const w=document.createElement('span'); w.className='w'; w.style.setProperty('--w',n++); w.textContent=t; f.appendChild(w); });
+        c.replaceWith(f); }
+      else if(c.nodeType===1&&c.tagName!=='BR') walk(c);
+    });
+  })(el);
+});
+const NOTES_MODE=new URLSearchParams(location.search).has('notes');
+
+/* ---------- Bühne skalieren ---------- */
+function fit(){ const s=Math.min(innerWidth/1600,innerHeight/900); document.documentElement.style.setProperty('--s',s); }
+addEventListener('resize',fit); fit();
+/* Leseansicht auf Handys (schmal hochkant oder flach quer) */
+const readMQ=matchMedia('(max-width:760px),(max-height:500px) and (max-width:950px) and (orientation:landscape)');
+const isRead=()=>document.documentElement.classList.contains('read');
+function setRead(){
+  const q=new URLSearchParams(location.search), on=readMQ.matches&&!q.has('notes')&&!q.has('folien');
+  document.documentElement.classList.toggle('read',on);
+  document.documentElement.style.setProperty('--z',Math.min(1,innerWidth/1000));
+}
+readMQ.addEventListener('change',setRead); addEventListener('resize',setRead); setRead();
+
+/* ---------- Fortschritt mit Kapitel-Markierungen ---------- */
+const progress=document.getElementById('progress'),bar=progress.querySelector('.bar');
+slides.forEach((s,i)=>{ if(s.dataset.section&&i>0){ const t=document.createElement('div'); t.className='tick'; t.style.left=(i/slides.length*100)+'%'; progress.appendChild(t); } });
+
+/* ---------- Navigation ---------- */
+let index=0;
+function markDone(sl){
+  sl.classList.toggle('steps-done',!sl.querySelector('.step.hidden'));
+  const shown=sl.querySelectorAll('.step:not(.hidden)');
+  sl.querySelectorAll('.step.cur').forEach(e=>e.classList.remove('cur'));
+  if(shown.length) shown[shown.length-1].classList.add('cur');
+  applyTb(sl);
+}
+function setSteps(sl,hidden){ sl.querySelectorAll('.step').forEach(el=>el.classList.toggle('hidden',hidden)); markDone(sl); }
+function stepInfo(){ const all=slides[index].querySelectorAll('.step').length, open=all-slides[index].querySelectorAll('.step.hidden').length; return {all,open}; }
+/* Bewegung: Richtung merken, alte Folie kurz ausblenden, Inhalte gestaffelt aufbauen */
+let navDir=1, leaveTimer;
+const STAG_SEL='.hero,.eg,.tbnav,.scale,.label,.h,.statement,.quote,.kw,.sm,.src,.kw-list>li,.terms>div,.grid3>div,.ways>div,.pairs>*,figure,.myth-art,.stackv .big,.stackv li,.buddy,.qr-box,.mark,.line';
+function animOff(){ return document.body.classList.contains('no-anim'); }
+function stagger(sl,anchored){
+  sl.querySelectorAll('.stag,.draw').forEach(el=>el.classList.remove('stag','draw'));
+  sl.querySelectorAll('.tb').forEach(tb=>{ tb.classList.remove('build'); if(!anchored&&!animOff()){ void tb.offsetWidth; tb.classList.add('build'); } });
+  if(animOff()) return;
+  const all=[...sl.querySelectorAll(STAG_SEL)].filter(el=>!el.closest('.notes')&&!el.closest('.step')&&!el.classList.contains('step'));
+  const top=all.filter(el=>!all.some(o=>o!==el&&o.contains(el)));
+  let k=0;
+  top.forEach(el=>{
+    if(anchored&&el.tagName==='FIGURE') return;           // Turbine bleibt stehen
+    el.style.setProperty('--i',Math.min(k++,10));
+    void el.offsetWidth; el.classList.add('stag');
+  });
+  sl.querySelectorAll('.ways>div,.cover .line').forEach((el,j)=>{ el.style.setProperty('--i',j); void el.offsetWidth; el.classList.add('draw'); });
+  const c=sl.querySelector('.count');
+  if(c&&navDir>0){ const to=+c.dataset.to,dec=+(c.dataset.dec||0),t0=performance.now(),d=650;
+    const fmt=v=>v.toFixed(dec).replace('.',',');
+    const step=t=>{ const p=Math.min(1,(t-t0-250)/d); c.textContent=fmt(p<=0?0:to*(1-Math.pow(1-p,3))); if(p<1)requestAnimationFrame(step); };
+    c.textContent=fmt(0); requestAnimationFrame(step); }
+}
+/* Begriff wandert von einer Folie zur nächsten (data-morph="schlüssel") */
+const stageEl=document.getElementById('stage'),morphLayer=document.getElementById('morphLayer');
+const reduceMotion=matchMedia('(prefers-reduced-motion:reduce)');
+function stageBox(el){ const sr=stageEl.getBoundingClientRect(),k=sr.width/1600,r=el.getBoundingClientRect();
+  return {x:(r.left-sr.left)/k,y:(r.top-sr.top)/k,w:r.width/k,h:r.height/k}; }
+function morphClone(el,b){ const cs=getComputedStyle(el),c=document.createElement('span');
+  c.className='morph-clone'; c.textContent=el.textContent;
+  ['fontFamily','fontSize','fontWeight','fontStyle','letterSpacing','textTransform','color'].forEach(p=>c.style[p]=cs[p]);
+  c.style.left=b.x+'px'; c.style.top=b.y+'px'; morphLayer.appendChild(c); return c; }
+let morphAnims=[];
+function clearMorph(){ morphAnims.forEach(a=>a.cancel()); morphAnims=[]; morphLayer.innerHTML=''; document.querySelectorAll('.morph-hide').forEach(e=>e.classList.remove('morph-hide')); }
+function prepMorph(from,to){
+  clearMorph();
+  if(animOff()||reduceMotion.matches||from===to) return null;
+  const pairs=[...from.querySelectorAll('[data-morph]')].map(s=>[s,to.querySelector('[data-morph="'+s.dataset.morph+'"]')]).filter(p=>p[1]);
+  if(!pairs.length) return null;
+  return pairs.map(([s,t])=>({s,t,sb:stageBox(s)}));
+}
+function runMorph(list,to){
+  if(!list) return;
+  to.classList.add('measure'); void to.offsetWidth;
+  list.forEach(m=>m.tb=stageBox(m.t));
+  to.classList.remove('measure');
+  const D=900,E='cubic-bezier(.65,0,.35,1)';
+  list.forEach(({s,t,sb,tb})=>{
+    const a=morphClone(s,sb),b=morphClone(t,tb);
+    const ka=tb.h/sb.h,kb=sb.h/tb.h;
+    s.classList.add('morph-hide'); t.classList.add('morph-hide');
+    morphAnims.push(
+      a.animate([{transform:'none',opacity:1},{opacity:1,offset:.35},{transform:`translate(${tb.x-sb.x}px,${tb.y-sb.y}px) scale(${ka})`,opacity:0}],{duration:D,easing:E,fill:'both'}),
+      b.animate([{transform:`translate(${sb.x-tb.x}px,${sb.y-tb.y}px) scale(${kb})`,opacity:0},{opacity:0,offset:.3},{transform:'none',opacity:1}],{duration:D,easing:E,fill:'both'})
+    );
+  });
+  Promise.all(morphAnims.map(a=>a.finished)).then(clearMorph,()=>{});
+}
+function showSlide(i){
+  const prev=index;
+  const morph=prepMorph(slides[prev],slides[Math.max(0,Math.min(slides.length-1,i))]);
+  index=Math.max(0,Math.min(slides.length-1,i));
+  const from=slides[prev], to=slides[index];
+  const anchored=prev!==index&&from.dataset.anchor&&from.dataset.anchor===to.dataset.anchor;
+  document.body.classList.toggle('dir-back',navDir<0);
+  slides.forEach(s=>s.classList.remove('leaving','anchored'));
+  clearTimeout(leaveTimer);
+  if(prev!==index&&!animOff()){
+    from.classList.add('leaving'); if(anchored){from.classList.add('anchored');to.classList.add('anchored');}
+    leaveTimer=setTimeout(()=>slides.forEach(s=>s.classList.remove('leaving')),480);
+  }
+  slides.forEach((s,n)=>{ s.classList.remove('active'); if(n===index){ void s.offsetWidth; s.classList.add('active'); } });
+  stagger(to,anchored);
+  runMorph(morph,to);
+  markDone(slides[index]);
+  bar.style.width=((index+1)/slides.length*100)+'%';
+  document.body.classList.toggle('dark-slide','dark' in slides[index].dataset);
+  setCamMode();
+  if(typeof markChapter==='function') markChapter();
+  try{ history.replaceState(null,'',location.pathname+location.search+'#'+(index+1)); }catch(_){}
+  broadcast();
+}
+function forward(){
+  const nx=slides[index].querySelector('.step.hidden');
+  if(nx){ nx.classList.remove('hidden'); markDone(slides[index]); broadcast(); return; }
+  if(index<slides.length-1){ flashThen(slides[index],slides[index+1],()=>{ navDir=1; setSteps(slides[index+1],true); showSlide(index+1); }); }
+}
+/* Vor dem Flug blinkt der Begriff kurz auf, damit der Blick ihm folgt */
+let flashing=false;
+function flashThen(from,to,go){
+  if(flashing) return;
+  const src=[...from.querySelectorAll('[data-morph]')].filter(s=>to.querySelector('[data-morph="'+s.dataset.morph+'"]'));
+  if(!src.length||animOff()||reduceMotion.matches){ go(); return; }
+  flashing=true;
+  src.forEach(s=>{ s.classList.remove('flash'); void s.offsetWidth; s.classList.add('flash'); });
+  setTimeout(()=>{ src.forEach(s=>s.classList.remove('flash')); flashing=false; if(slides[index]===from) go(); },560);
+}
+function backward(){ if(index>0){ navDir=-1; setSteps(slides[index-1],false); showSlide(index-1); } }
+function goTo(i){ i=Math.max(0,Math.min(slides.length-1,i)); if(i===index)return; navDir=i>index?1:-1; setSteps(slides[i],i>index); showSlide(i); }
+function toggleAnim(){
+  const off=!document.body.classList.contains('no-anim');
+  document.body.classList.toggle('no-anim',off);
+  try{ localStorage.setItem('srl-no-anim',off?'1':'0'); }catch(_){}
+  const b=document.querySelector('#menu [data-act=anim]'); if(b) b.textContent=off?'▶ Animation an':'⏸ Animation aus';
+}
+try{ if(localStorage.getItem('srl-no-anim')==='1'){ document.body.classList.add('no-anim'); const b=document.querySelector('#menu [data-act=anim]'); if(b) b.textContent='▶ Animation an'; } }catch(_){}
+
+/* ---------- Webcam (C an/aus · Umschalt+C nur Platzhalter · V Größe von Hand) ----------
+   Jede Folie legt mit data-cam="big|pip|off" fest, wo das Kamerabild steht. */
+const camEl=document.getElementById('cam'), camVid=camEl.querySelector('video');
+let camStream=null, camOverride=null;
+function setCamMode(){ document.body.dataset.cam=camOverride||slides[index].dataset.cam||'pip'; }
+function stopCam(){ if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; } camVid.srcObject=null; camEl.classList.remove('live'); }
+async function toggleCam(placeholder){
+  if(document.body.classList.contains('cam-on')){ document.body.classList.remove('cam-on'); stopCam(); return; }
+  document.body.classList.add('cam-on');
+  if(placeholder||!navigator.mediaDevices) return;
+  try{ camStream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},facingMode:'user'},audio:false});
+       camVid.srcObject=camStream; camEl.classList.add('live'); }
+  catch(_){ /* keine Kamera oder nicht erlaubt: Platzhalter bleibt stehen */ }
+}
+function cycleCam(){ const o=[null,'big','pip','off']; camOverride=o[(o.indexOf(camOverride)+1)%o.length]; setCamMode(); }
+
+/* ---------- Folienübersicht (G) ---------- */
+const jump=document.getElementById('jump'),jumpGrid=document.getElementById('jumpGrid'),jumpNum=document.getElementById('jumpNum');
+function openJump(byTouch){
+  jumpGrid.innerHTML='';
+  slides.forEach((s,i)=>{
+    if(s.dataset.section){ const h=document.createElement('li'); h.className='sec'; h.textContent=s.dataset.section; jumpGrid.appendChild(h); }
+    const li=document.createElement('li'),b=document.createElement('button');
+    b.innerHTML='<span class="n">'+(i+1)+'</span><span></span>'; b.lastChild.textContent=s.dataset.title;
+    if(i===index)b.className='current';
+    b.addEventListener('click',()=>{closeJump();goTo(i);});
+    li.appendChild(b); jumpGrid.appendChild(li);
+  });
+  jump.classList.add('open'); document.body.classList.add('overlay'); jumpNum.value=''; if(!byTouch) jumpNum.focus();
+}
+function closeJump(){ jump.classList.remove('open'); document.body.classList.remove('overlay'); jumpNum.blur(); }
+jump.addEventListener('click',e=>{ if(e.target===jump) closeJump(); });
+jumpNum.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ const n=parseInt(jumpNum.value,10); if(n>=1&&n<=slides.length){closeJump();goTo(n-1);} e.preventDefault(); }
+  if(e.key==='Escape'){ closeJump(); e.preventDefault(); }
+  e.stopPropagation();
+});
+
+/* ---------- Sprechernotizen: Verbindung zwischen den Fenstern ---------- */
+let notesWin=null;
+function broadcast(){
+  if(NOTES_MODE) return;
+  const msg={srl:'state',index,...stepInfo()};
+  try{ if(notesWin&&!notesWin.closed) notesWin.postMessage(msg,'*'); }catch(_){}
+}
+function openNotes(){
+  const url=location.pathname+'?notes#'+(index+1);
+  notesWin=window.open(url,'srl-notizen','width=1000,height=720');
+  setTimeout(broadcast,600);
+}
+addEventListener('message',e=>{
+  const d=e.data||{};
+  if(!NOTES_MODE){
+    if(d.srl==='hello'){ notesWin=e.source; broadcast(); }
+    if(d.srl==='cmd'){ notesWin=e.source; if(d.action==='next')forward(); if(d.action==='prev')backward(); if(d.action==='goto')goTo(d.n); }
+  }
+});
+
+/* ---------- Menü ---------- */
+const menu=document.getElementById('menu');
+const chLinks=[...menu.querySelectorAll('.m-parts a[data-ch]')];
+const altLink=menu.querySelector('.m-parts a[data-alt]'); if(altLink) altLink.addEventListener('click',()=>{ altLink.href=altLink.getAttribute('href').split('#')[0]+'#'+(index+1); });
+chLinks.forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); const i=chapterStart(+a.dataset.ch); if(i>=0) goTo(i); toggleMenu(false); }));
+function markChapter(){ chLinks.forEach(a=>a.classList.toggle('cur',+a.dataset.ch===+slides[index].dataset.part)); }
+function toggleMenu(force){ menu.classList.toggle('open',force===undefined?!menu.classList.contains('open'):force); }
+menu.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const a=b.dataset.act;
+  if(a==='prev')backward(); if(a==='next')forward(); if(a==='jump'){toggleMenu(false);openJump(true);}
+  if(a==='full')toggleFullscreen(); if(a==='black'){toggleMenu(false);document.getElementById('black').classList.add('on');}
+  if(a==='notes')openNotes();
+  if(a==='anim')toggleAnim();
+  if(a==='cam')toggleCam();
+  b.blur();                                  // Leertaste soll danach weiterblättern, nicht den Knopf erneut auslösen
+});
+
+/* ---------- Tastatur ---------- */
+let typed='',typedTimer;
+document.addEventListener('keydown',e=>{
+  if(NOTES_MODE||isRead()) return;
+  if(jump.classList.contains('open')){ if(e.key==='Escape'){closeJump();e.preventDefault();} return; }
+  const k=e.key;
+  if(/^[0-9]$/.test(k)){ typed+=k; clearTimeout(typedTimer); typedTimer=setTimeout(()=>typed='',2000); return; }
+  if(k==='Enter'&&typed){ const n=parseInt(typed,10); typed=''; if(n>=1&&n<=slides.length) goTo(n-1); e.preventDefault(); return; }
+  if(k==='ArrowRight'||k==='ArrowDown'||k==='PageDown'||k===' '){ e.preventDefault(); forward(); }
+  else if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp'||k==='Backspace'){ e.preventDefault(); backward(); }
+  else if(k==='Home'){ e.preventDefault(); goTo(0); }
+  else if(k==='End'){ e.preventDefault(); setSteps(slides[slides.length-1],false); showSlide(slides.length-1); }
+  else if(k==='g'||k==='G'){ e.preventDefault(); openJump(); }
+  else if(k==='f'||k==='F'){ toggleFullscreen(); }
+  else if(k==='b'||k==='B'||k==='.'){ document.getElementById('black').classList.toggle('on'); }
+  else if(k==='m'||k==='M'){ e.preventDefault(); toggleMenu(); }
+  else if(k==='a'||k==='A'){ e.preventDefault(); toggleAnim(); }
+  else if(k==='r'||k==='R'){ document.body.classList.toggle('rec'); }
+  else if(k==='c'||k==='C'){ toggleCam(e.shiftKey); }
+  else if(k==='v'||k==='V'){ cycleCam(); }
+  else if(k==='Escape'&&menu.classList.contains('open')){ toggleMenu(false); }
+});
+
+function toggleFullscreen(){
+  const d=document,el=d.documentElement;
+  if(d.fullscreenElement||d.webkitFullscreenElement){ (d.exitFullscreen||d.webkitExitFullscreen).call(d); }
+  else{ const r=el.requestFullscreen||el.webkitRequestFullscreen; if(r){ const p=r.call(el); if(p&&p.catch)p.catch(()=>{}); } }
+}
+
+/* ---------- Touch (iPad) ----------
+   Wischen nach links = weiter, nach rechts = zurück
+   Tippen: rechte zwei Drittel = weiter, linkes Drittel = zurück
+   Wischen nach oben = Folienübersicht, nach unten = schließen
+   Zwei Finger tippen = schwarzer Bildschirm an/aus
+   Vollbild auf dem iPad: Seite über „Teilen → Zum Home-Bildschirm“ als App starten */
+const vp=document.getElementById('viewport');
+let t0x=0,t0y=0,t0t=0,tFingers=0,tMoved=false; const tStart={};
+vp.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){ tFingers=0; tMoved=false; const t=e.touches[0]; t0x=t.clientX; t0y=t.clientY; t0t=Date.now(); }
+  tFingers=Math.max(tFingers,e.touches.length);
+  for(const t of e.changedTouches) tStart[t.identifier]=[t.clientX,t.clientY];
+},{passive:true});
+vp.addEventListener('touchmove',e=>{
+  for(const t of e.changedTouches){ const s0=tStart[t.identifier]; if(s0&&Math.hypot(t.clientX-s0[0],t.clientY-s0[1])>30) tMoved=true; }
+},{passive:true});
+vp.addEventListener('touchend',e=>{
+  for(const t of e.changedTouches){ const s0=tStart[t.identifier]; if(s0&&Math.hypot(t.clientX-s0[0],t.clientY-s0[1])>30) tMoved=true; delete tStart[t.identifier]; }
+  if(e.touches.length) return;                       // erst reagieren, wenn alle Finger weg sind
+  if(isRead()) return;                               // Leseansicht: normales Scrollen
+  const t=e.changedTouches[0], dt=Date.now()-t0t, black=document.getElementById('black');
+  if(tFingers>=2){ if(!tMoved&&dt<500) black.classList.toggle('on'); return; }
+  const dx=t.clientX-t0x, dy=t.clientY-t0y, adx=Math.abs(dx), ady=Math.abs(dy);
+  if(black.classList.contains('on')){ black.classList.remove('on'); return; }   // erster Tipp holt das Bild zurück
+  if(adx>50 && adx>ady*1.3){ dx<0?forward():backward(); return; }
+  if(dy<-70 && ady>adx*1.3){ openJump(true); return; }
+  if(!tMoved && adx<12 && ady<12 && dt>=600){ toggleMenu(); return; }   // lange drücken
+  if(adx<12 && ady<12 && dt<350){
+    if(e.target.closest&&e.target.closest('a')) return;  // Quellen-Links bleiben antippbar
+    (t.clientX<innerWidth/3)?backward():forward();
+  }
+});
+document.getElementById('black').addEventListener('touchend',e=>{ e.currentTarget.classList.remove('on'); e.preventDefault(); });
+jump.addEventListener('touchstart',e=>{ jump._y=e.touches[0].clientY; },{passive:true});
+jump.addEventListener('touchend',e=>{ const dy=e.changedTouches[0].clientY-(jump._y||0); if(dy>90&&jump.querySelector('.jump-panel').scrollTop<=0) closeJump(); });
+
+/* Mauszeiger nach 2 s Ruhe ausblenden */
+let idleT; document.addEventListener('mousemove',()=>{ document.body.classList.remove('idle'); clearTimeout(idleT); idleT=setTimeout(()=>document.body.classList.add('idle'),2000); });
+
+/* ---------- Start ---------- */
+if(NOTES_MODE){
+  /* Notizfenster: zeigt Notizen der aktuellen Folie, steuert das Hauptfenster */
+  document.body.classList.add('notes-mode');
+  document.title='Notizen · SRL ist keine Methode!';
+  const $=id=>document.getElementById(id);
+  let t0=Date.now(), last=null;
+  function render(st){
+    last=st; const s=slides[st.index], nx=slides[st.index+1];
+    $('nvNum').textContent=(st.index+1)+' / '+slides.length;
+    $('nvTitle').textContent=s.dataset.title;
+    $('nvStep').textContent=st.all?('Klick '+st.open+' / '+st.all):'ohne Aufbau';
+    const n=s.querySelector('.notes'); $('nvNotes').innerHTML=n?n.innerHTML:'<p>–</p>';
+    $('nvNext').textContent=nx?nx.dataset.title:'Ende';
+    $('nvWarn').textContent='';
+  }
+  addEventListener('message',e=>{ if((e.data||{}).srl==='state') render(e.data); });
+  const send=msg=>{ try{ if(window.opener&&!window.opener.closed){ window.opener.postMessage(msg,'*'); return true; } }catch(_){} $('nvWarn').textContent='Hauptfenster nicht verbunden – dort S drücken.'; return false; };
+  setInterval(()=>{ if(!last) send({srl:'hello'}); },1500); send({srl:'hello'});
+  setInterval(()=>{ const s=Math.floor((Date.now()-t0)/1000); $('nvTime').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); },500);
+  document.addEventListener('keydown',e=>{
+    const k=e.key;
+    if(k==='ArrowRight'||k==='ArrowDown'||k==='PageDown'||k===' '){ e.preventDefault(); send({srl:'cmd',action:'next'}); }
+    if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp'||k==='Backspace'){ e.preventDefault(); send({srl:'cmd',action:'prev'}); }
+    if(k==='t'||k==='T'){ t0=Date.now(); }
+  });
+  const h=parseInt((location.hash||'').slice(1),10); render({index:(h>=1&&h<=slides.length)?h-1:0,all:0,open:0});
+  last=null;
+}else{
+  const n=parseInt((location.hash||'').slice(1),10);
+  let s=(n>=1&&n<=slides.length)?n-1:0;
+  if(!(n>=1)&&OLD_TEIL>=1&&OLD_TEIL<=5) s=Math.max(0,chapterStart(OLD_TEIL));
+  slides.forEach(markDone);
+  setSteps(slides[s],true); showSlide(s);
+  if(QS.has('cam')&&!isRead()) toggleCam(QS.get('cam')==='demo');
+  addEventListener('hashchange',()=>{ const h=parseInt((location.hash||'').slice(1),10); if(h>=1&&h<=slides.length&&h-1!==index) goTo(h-1); });
+  markChapter();
+}
+</script>
+</body>
+</html>

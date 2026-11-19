@@ -593,6 +593,7 @@ body.cam-on .termsl{padding-bottom:210px}
 body.cam-on .chapters~.sm{max-width:1080px}
 #menu .m-parts{display:flex;align-items:center;gap:6px;margin:0 2px 12px;color:#9FB6CC;font-size:13px}
 #menu .m-parts a{flex:1;text-align:center;color:#E6EEF5;text-decoration:none;background:#22374C;border:1px solid #33506B;border-radius:8px;padding:6px 0;font-weight:600}
+#menu .m-parts a.m-alt{flex:2.4}
 #menu .m-parts a.cur{background:var(--rust-dark);border-color:var(--rust-base)}
 body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!important;transition:none!important}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
@@ -1185,7 +1186,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <button data-act="full">⛶ Vollbild</button><button data-act="black">● Schwarz</button><button data-act="anim">⏸ Animation aus</button>
     <button class="wide" data-act="cam">◉ Webcam an / aus</button>
   </div>
-  <div class="m-parts"><span>Kapitel</span><a href="#" data-ch="1">1</a><a href="#" data-ch="2">2</a><a href="#" data-ch="3">3</a><a href="#" data-ch="4">4</a><a href="#" data-ch="5">5</a></div>
+  <div class="m-parts"><span>Kapitel</span><a href="#" data-ch="1">1</a><a href="#" data-ch="2">2</a><a href="#" data-ch="3">3</a><a href="#" data-ch="4">4</a><a href="#" data-ch="5">5</a><a href="hbg.html" class="m-alt" data-alt>HBG-Design</a></div>
   <table>
     <tr><td><kbd>→</kbd> <kbd>Leertaste</kbd></td><td>weiter / aufdecken</td></tr>
     <tr><td><kbd>←</kbd></td><td>zurück</td></tr>
@@ -1477,7 +1478,8 @@ addEventListener('message',e=>{
 
 /* ---------- Menü ---------- */
 const menu=document.getElementById('menu');
-const chLinks=[...menu.querySelectorAll('.m-parts a')];
+const chLinks=[...menu.querySelectorAll('.m-parts a[data-ch]')];
+const altLink=menu.querySelector('.m-parts a[data-alt]'); if(altLink) altLink.addEventListener('click',()=>{ altLink.href=altLink.getAttribute('href').split('#')[0]+'#'+(index+1); });
 chLinks.forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); const i=chapterStart(+a.dataset.ch); if(i>=0) goTo(i); toggleMenu(false); }));
 function markChapter(){ chLinks.forEach(a=>a.classList.toggle('cur',+a.dataset.ch===+slides[index].dataset.part)); }
 function toggleMenu(force){ menu.classList.toggle('open',force===undefined?!menu.classList.contains('open'):force); }
