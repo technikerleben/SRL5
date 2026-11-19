@@ -1,4 +1,4 @@
-"""Erzeugt hbg.html – die Fassung im Corporate Design der HBG – aus index.html.
+"""Erzeugt cd-hbg.html – die Fassung im Corporate Design der HBG – aus index.html.
 Inhalt, Klicks und Sprechertext bleiben identisch; nur Schriften, Farben,
 Titelfolien sowie Kopfzeile und Logo werden ersetzt.
 Nach jeder Änderung an index.html neu ausführen:  python3 build_hbg.py"""
@@ -77,6 +77,6 @@ rep('<body', '<body', 1)
 s = re.sub(r'(<body[^>]*>)', r'\1\n<svg width="0" height="0" style="position:absolute" aria-hidden="true">' + logo.replace('\\', '\\\\') + '</svg>', s, count=1)
 s = re.sub(r'<title>(.*?)</title>', r'<title>\1 · HBG</title>', s, count=1)
 
-rep('<a href="hbg.html" class="m-alt" data-alt>HBG-Design</a>','<a href="./" class="m-alt" data-alt>SRL-Design</a>')
-(HERE/'hbg.html').write_text(s)
-print('hbg.html geschrieben,', len(s), 'Zeichen')
+rep('<a href="cd-hbg.html" class="m-alt" data-alt>HBG-Design</a>','<a href="./" class="m-alt" data-alt>SRL-Design</a>')
+(HERE/'cd-hbg.html').write_text(s)
+print('cd-hbg.html geschrieben,', len(s), 'Zeichen')
