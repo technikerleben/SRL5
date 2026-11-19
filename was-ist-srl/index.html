@@ -562,6 +562,23 @@ body.cam-on .tk{grid-template-columns:160px 1fr}
 body:has(.slide.active .pic.cur) #cam{opacity:0!important}
 .read .slide .pic.step{position:static;opacity:1!important;visibility:visible;transform:none;margin-top:28px;border-radius:12px;overflow:hidden;box-shadow:0 0 0 2px var(--line)}
 @media print{.slide .pic.step{position:static;opacity:1!important;visibility:visible;transform:none;margin-top:20px}}
+/* Klare Erwartungen: drei Niveaus als Treppe */
+.expect .h{font-size:86px;margin-bottom:14px}
+.expect .lead{margin-bottom:22px}
+.stairs{display:flex;align-items:flex-end;gap:14px;max-width:960px}
+.st{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;border-radius:16px 16px 6px 6px;padding:16px 20px;color:#fff;position:relative}
+.st b{font:400 34px/1 Anton,sans-serif;letter-spacing:.01em}
+.st span{font:500 22px/1.25 Jost,sans-serif;opacity:.92}
+.st1{height:140px;background:var(--rust-dark)}
+.st2{height:190px;background:var(--slate-base)}
+.st3{height:240px;background:var(--slate-dark)}
+.st1 i{position:absolute;left:16px;top:-16px;font:700 15px Jost,sans-serif;font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:var(--rust-dark);background:#fff;border:2px solid var(--rust-dark);border-radius:99px;padding:4px 12px}
+.expect .punch{margin-top:22px!important}
+.why{margin:14px 0 0;max-width:960px;font:500 22px/1.35 Jost,sans-serif;color:var(--navy);background:var(--slate-ghost);border-left:8px solid var(--slate-base);border-radius:6px 14px 14px 6px;padding:11px 18px}
+.why b{color:var(--slate-dark)}
+.expect .tried{margin-top:14px}
+.expect .src{font-size:16px;margin-top:8px;max-width:960px}
+.read .stairs{flex-wrap:wrap}.read .st{height:auto;min-width:220px}
 /* ---------- Webcam: läuft direkt in der Seite (Taste C) ---------- */
 #cam{position:absolute;z-index:30;left:1270px;top:570px;width:280px;height:280px;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.6);pointer-events:none;background:var(--slate-base);
   box-shadow:0 0 0 6px #fff,0 0 0 12px var(--sage-dark),0 20px 44px -10px rgba(30,42,53,.5);
@@ -656,7 +673,7 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
     <li class="kw on"><span class="cn">1</span><span>Was SRL ist – und was nicht</span><small>ca. 7 min</small></li>
     <li class="kw"><span class="cn">2</span><span>Warum es sich lohnt</span><small>ca. 3 min</small></li>
     <li class="kw"><span class="cn">3</span><span>Das Modell: die SRL-Turbine</span><small>ca. 5 min</small></li>
-    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 11 min</small></li>
+    <li class="kw"><span class="cn">4</span><span>Vom Bildungsziel zur Praxis</span><small>ca. 12 min</small></li>
     <li class="kw"><span class="cn">5</span><span>Wie es weitergeht</span><small>ca. 5 min</small></li>
   </ol>
   <p class="sm" style="margin-top:36px">Jedes Kapitel endet mit einer Frage zum Anhalten. Bilder ohne Quellenangabe sind KI-generiert.</p>
@@ -1011,6 +1028,22 @@ body.no-anim *,body.no-anim *::before,body.no-anim *::after{animation:none!impor
   </ul>
   <p class="tried step"><b>Bei uns punktuell erprobt:</b> Lernwege und Lerntheken · geöffnete Lernsettings</p>
   <figure class="pic step"><img src="assets/szene-wahl.webp" alt="Zeichnung: Ein Mädchen überlegt an drei Körben mit Aufgaben in drei Schwierigkeitsstufen, im Hintergrund arbeiten Kinder an verschiedenen Orten"></figure>
+</section>
+
+<section class="slide lever seq expect" data-part="4" data-title="Klare Erwartungen" data-cam="pip">
+  <div class="tb tbnav" data-focus="areas"></div>
+  <p class="label">Zielt auf: Metakognition · Motivation</p>
+  <h2 class="h">Klare <em>Erwartungen.</em></h2>
+  <p class="lead">Jede Reihe legt fest, was alle können müssen – und wohin es weitergeht.</p>
+  <div class="stairs">
+    <div class="st st1 step" data-tb="metakognition"><i>für alle verbindlich</i><b>Mindeststandard</b><span>Das können alle.</span></div>
+    <div class="st st2 step" data-tb="metakognition"><b>Regelstandard</b><span>Das Ziel der Reihe.</span></div>
+    <div class="st st3 step" data-tb="motivation"><b>Leistungsstandard</b><span>Die Herausforderung für Starke.</span></div>
+  </div>
+  <p class="sm step punch">Den Mindeststandard sichern zählt mehr als die Note.</p>
+  <p class="why step"><b>Warum jetzt:</b> PISA 2025 – die niedrigsten Werte, die in Deutschland je gemessen wurden; rund ein Fünftel der 15-Jährigen ohne Basiskompetenzen in allen drei Bereichen. IQB-Bildungstrend 2024 – 34&nbsp;% der Neuntklässler verfehlen in Mathematik den Mindeststandard für den MSA.</p>
+  <p class="tried step"><b>Bei uns punktuell erprobt:</b> Kompetenzraster mit drei Niveaus in jeder Reihe</p>
+  <p class="src">OECD (2026): PISA 2025 Ergebnisse, Ländernotiz Deutschland · Deutscher Bildungsserver, Pressedossier PISA 2025 · IQB-Bildungstrend 2024 (Stanat u.&nbsp;a., 2025)</p>
 </section>
 
 <section class="slide lever seq" data-part="4" data-title="Prüfungsformate" data-cam="pip">
