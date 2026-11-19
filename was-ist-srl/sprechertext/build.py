@@ -40,10 +40,10 @@ tr.sum td{{font-weight:700;color:var(--navy);border-bottom:0}}
 h3{{font:700 14pt/1.3 Jost;color:var(--navy);margin:0 0 2mm}}
 p{{margin:0 0 2.5mm}}
 </style>
-<div class="cover"><div class="mark">SRL</div><p class="kicker">Sprechertext · Erklärvideo</p><h1>SRL ist keine Methode!</h1><p class="sub">Was selbstreguliertes Lernen (nicht) ist · Online-Fortbildung in fünf kurzen Videos</p>
+<div class="cover"><div class="mark">SRL</div><p class="kicker">Sprechertext · Erklärvideo</p><h1>SRL ist keine Methode!</h1><p class="sub">Was selbstreguliertes Lernen (nicht) ist · Online-Fortbildung in fünf Kapiteln</p>
 <div class="leg"><div><span class="pill">Klick</span> Inhalt aufdecken oder Bild zoomen, genau an dieser Stelle klicken</div><div><span class="regie">kursiv grau</span> – Regieanweisung, nicht sprechen</div></div>
 <table>{rows}<tr class="sum"><td>Gesamt</td><td>{NSL} Folien</td><td>ca. {NMIN} min</td></tr></table>
-<p class="tips"><b>Aufnahme:</b> Jeden Teil als eigenes Video aufnehmen – die Seite mit <b>?teil=1</b> bis <b>?teil=5</b> am Ende der Adresse öffnen (oder im Menü mit M wählen), dann stimmen die Foliennummern mit diesem Text überein. <b>F</b> Vollbild, <b>R</b> Aufnahmemodus ohne Fortschrittsbalken und Mauszeiger, <b>C</b> Webcam an – das Kamerabild läuft direkt in der Seite und wechselt je Folie zwischen groß, klein und aus (<b>V</b> stellt es von Hand um). Zwischen den Klicks kurz Luft lassen; Animationen brauchen etwa eine Sekunde.</p><p class="tips"><b>Beispiele:</b> Das Beispiel zum lauten Denken in Teil 4 ist ein Platzhalter – ein echtes aus dem eigenen Unterricht wirkt stärker.</p></div>
+<p class="tips"><b>Aufnahme:</b> Alles in einem Stück aufnehmen – die Foliennummern hier stimmen mit der Präsentation überein. Zu einer Folie springen: Nummer tippen und Enter, oder <b>G</b> für die Übersicht; im Menü (<b>M</b>) springen die Knöpfe 1–5 an den Kapitelanfang. Für Kapitelmarken im Video die Zeit notieren, wenn eine Kapitelfolie erscheint. <b>F</b> Vollbild, <b>R</b> Aufnahmemodus ohne Fortschrittsbalken und Mauszeiger, <b>C</b> Webcam an – das Kamerabild läuft direkt in der Seite und wechselt je Folie zwischen groß, klein und aus (<b>V</b> stellt es von Hand um). Zwischen den Klicks kurz Luft lassen; Animationen brauchen etwa eine Sekunde.</p></div>
 {"".join(body)}</html>'''
 open(D+'/sprechertext.html','w').write(doc)
 from playwright.async_api import async_playwright
