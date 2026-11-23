@@ -359,8 +359,6 @@ body.notes-mode #notesView{display:grid;grid-template-rows:auto 1fr auto;min-hei
 .read .lever .tried{font-size:34px}
 .team li{padding-left:84px;text-indent:-84px}
 .team li::before{text-indent:0}
-.pause .label{display:flex;align-items:center;gap:16px}
-.pause-ico{width:40px;height:40px;fill:var(--sage-dark)}
 .thanks .contact{margin-top:46px}
 body.rec #progress,body.rec #readNote,body.rec .toast{display:none!important}
 body.rec,body.rec *{cursor:none!important}
@@ -675,6 +673,19 @@ body:has(.slide.active .pic.cur) #cam{opacity:0!important}
 .fz-goal em{font-style:normal;color:var(--rust-dark)}
 .fz-tb{width:600px;height:600px}
 .read .fazit .split{grid-template-columns:1fr}.read .fz-tb{width:100%;height:auto;aspect-ratio:1}
+/* Pausenfolien: deutlicher Pausenknopf am Ende jedes Kapitels */
+.pz-head{display:flex;align-items:center;gap:34px;margin-bottom:40px}
+.pz-btn{position:relative;flex:none;width:190px;height:190px;border-radius:50%;background:var(--rust-base);display:grid;place-items:center;box-shadow:0 18px 40px -14px rgba(158,78,34,.55)}
+.pz-btn svg{width:92px;height:92px;fill:#fff}
+.pz-btn::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:5px solid var(--rust-base);opacity:0}
+.slide.active .pz-btn::after{animation:pzRing 2.4s ease-out 1s infinite}
+@keyframes pzRing{0%{transform:scale(.9);opacity:.55}80%,100%{transform:scale(1.25);opacity:0}}
+.pz-head .label{margin:0 0 6px}
+.pz-call{margin:0;font:400 76px/1 Gagalin,sans-serif;color:var(--rust-dark)}
+.pause .pz-q{font-size:68px;max-width:1240px}
+.pz-note{margin:40px 0 0;max-width:1240px;font:500 28px/1.4 "Glacial Indifference",sans-serif;color:var(--muted)}
+.pz-note b{color:var(--navy);font-weight:700}
+body.no-anim .pz-btn::after{animation:none}
 /* ---------- Webcam: läuft direkt in der Seite (Taste C) ---------- */
 #cam{position:absolute;z-index:30;left:1270px;top:570px;width:280px;height:280px;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.6);pointer-events:none;background:var(--slate-base);
   box-shadow:0 0 0 6px #fff,0 0 0 12px var(--sage-dark),0 20px 44px -10px rgba(30,42,53,.5);
@@ -691,7 +702,9 @@ body.cam-on.dark-slide #cam{box-shadow:0 0 0 6px rgba(255,255,255,.92),0 0 0 12p
 @media print{#cam{display:none}}
 /* Platz für das Kamerabild, sobald es läuft */
 body.cam-on .slide[data-cam=big] .statement{max-width:900px;font-size:78px}
-body.cam-on .slide[data-cam=big].pause .statement{font-size:70px!important}
+body.cam-on .slide[data-cam=big].pause .statement{font-size:62px!important}
+body.cam-on .pz-note{max-width:880px}
+body.cam-on .pz-call{font-size:64px}
 body.cam-on .slide[data-cam=big] .quote{max-width:900px;font-size:56px}
 body.cam-on .slide[data-cam=big] .sm,body.cam-on .slide[data-cam=big] .kw{max-width:880px}
 body.cam-on .slide.cover:not(.chapter) .h{font-size:124px}
@@ -888,9 +901,12 @@ body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-l
 </section>
 
 <section class="slide pause" data-part="1" data-title="Kurz anhalten" data-cam="big">
-  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
-  <p class="statement kin" style="font-size:84px">Welcher dieser Mythen ist dir schon begegnet – bei anderen oder <em>bei dir selbst?</em></p>
-  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+  <div class="pz-head">
+    <div class="pz-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg></div>
+    <div><p class="label">Ende von Kapitel 1</p><p class="pz-call">Jetzt auf Pause klicken.</p></div>
+  </div>
+  <p class="statement kin pz-q">Welcher dieser Mythen ist dir schon begegnet – bei anderen oder <em>bei dir selbst?</em></p>
+  <p class="pz-note"><b>Nachdenken oder notieren</b> – und dann weiter. <b>Oder später hier einsteigen:</b> Als Nächstes kommt Kapitel 2, „Warum es sich lohnt“.</p>
 </section>
 
 <section class="slide cover chapter" data-part="2" data-title="Kapitel 2" data-cam="big" data-section="2 · Warum es sich lohnt">
@@ -939,9 +955,12 @@ body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-l
 </section>
 
 <section class="slide pause" data-part="2" data-title="Kurz anhalten" data-cam="big">
-  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
-  <p class="statement kin" style="font-size:84px">Wann hast du zuletzt vor der Klasse <em>laut gedacht?</em></p>
-  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+  <div class="pz-head">
+    <div class="pz-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg></div>
+    <div><p class="label">Ende von Kapitel 2</p><p class="pz-call">Jetzt auf Pause klicken.</p></div>
+  </div>
+  <p class="statement kin pz-q">Wann hast du zuletzt vor der Klasse <em>laut gedacht?</em></p>
+  <p class="pz-note"><b>Nachdenken oder notieren</b> – und dann weiter. <b>Oder später hier einsteigen:</b> Als Nächstes kommt Kapitel 3, „Das Modell: die SRL-Turbine“.</p>
 </section>
 
 <section class="slide cover chapter" data-part="3" data-title="Kapitel 3" data-cam="big" data-section="3 · Das Modell: die SRL-Turbine">
@@ -1042,9 +1061,12 @@ body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-l
 </section>
 
 <section class="slide pause" data-part="3" data-title="Kurz anhalten" data-cam="big">
-  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
-  <p class="statement kin" style="font-size:84px">Welche Ebene der Turbine kommt in deinem Unterricht schon vor – und welche <em>kaum?</em></p>
-  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+  <div class="pz-head">
+    <div class="pz-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg></div>
+    <div><p class="label">Ende von Kapitel 3</p><p class="pz-call">Jetzt auf Pause klicken.</p></div>
+  </div>
+  <p class="statement kin pz-q">Welche Ebene der Turbine kommt in deinem Unterricht schon vor – und welche <em>kaum?</em></p>
+  <p class="pz-note"><b>Nachdenken oder notieren</b> – und dann weiter. <b>Oder später hier einsteigen:</b> Als Nächstes kommt Kapitel 4, „Vom Bildungsziel zur Praxis“.</p>
 </section>
 
 <section class="slide cover chapter" data-part="4" data-title="Kapitel 4" data-cam="big" data-section="4 · Vom Bildungsziel zur Praxis">
@@ -1236,9 +1258,12 @@ body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-l
 </section>
 
 <section class="slide pause" data-part="4" data-title="Kurz anhalten" data-cam="big">
-  <p class="label"><svg class="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14.5" y="4" width="4.5" height="16" rx="1.2"/></svg>Kurz anhalten</p>
-  <p class="statement kin" style="font-size:84px">Was veränderst du schon im Unterricht – und auf welchen Kompetenzbereich <em>zielt es?</em></p>
-  <p class="sm" style="margin-top:44px">Video pausieren, kurz nachdenken oder notieren – dann weiter.</p>
+  <div class="pz-head">
+    <div class="pz-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg></div>
+    <div><p class="label">Ende von Kapitel 4</p><p class="pz-call">Jetzt auf Pause klicken.</p></div>
+  </div>
+  <p class="statement kin pz-q">Was veränderst du schon im Unterricht – und auf welchen Kompetenzbereich <em>zielt es?</em></p>
+  <p class="pz-note"><b>Nachdenken oder notieren</b> – und dann weiter. <b>Oder später hier einsteigen:</b> Als Nächstes kommt Kapitel 5, „Wie es weitergeht“.</p>
 </section>
 
 <section class="slide cover chapter" data-part="5" data-title="Kapitel 5" data-cam="big" data-section="5 · Wie es weitergeht">
