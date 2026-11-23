@@ -660,6 +660,21 @@ body:has(.slide.active .pic.cur) #cam{opacity:0!important}
 .read .pr-body,.read .pr-foot{grid-template-columns:1fr}
 .read .pr-steps li{grid-template-columns:1fr}.read .pr-meter{position:static;text-align:left;margin-bottom:16px}.read .pr-meter div{justify-content:flex-start}
 .read .pr-vis svg{width:100%;max-width:420px}
+/* Fazit */
+.fazit .split{grid-template-columns:1fr 600px;gap:60px;align-items:center}
+.fazit .h{font-size:84px;margin-bottom:28px}
+.fz-list{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.fz-list li{display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:start}
+.fz-n{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--rust-base);color:#fff;font:400 28px Gagalin,sans-serif}
+.fz-list li:nth-child(2) .fz-n{background:var(--sage-dark)}
+.fz-list li:nth-child(3) .fz-n{background:var(--slate-base)}
+.fz-tb .g-areas [data-k=motivation].on .shape,.fz-tb .g-areas [data-k=emotion].on .shape,.fz-tb .g-areas [data-k=mindset].on .shape,.fz-tb .g-areas [data-k=ressourcen].on .shape{fill:var(--slate-base)}
+.fz-list b{display:block;font:700 34px/1.15 "Glacial Indifference",sans-serif;color:var(--navy)}
+.fz-list span:not(.fz-n){display:block;font:500 25px/1.32 "Glacial Indifference",sans-serif;color:var(--ink);margin-top:4px}
+.fz-goal{margin:30px 0 0;font:700 34px/1.25 "Glacial Indifference",sans-serif;color:var(--navy);padding:16px 22px;background:#fff;border-left:10px solid var(--rust-base);border-radius:6px 16px 16px 6px;box-shadow:0 0 0 2px var(--line)}
+.fz-goal em{font-style:normal;color:var(--rust-dark)}
+.fz-tb{width:600px;height:600px}
+.read .fazit .split{grid-template-columns:1fr}.read .fz-tb{width:100%;height:auto;aspect-ratio:1}
 /* ---------- Webcam: läuft direkt in der Seite (Taste C) ---------- */
 #cam{position:absolute;z-index:30;left:1270px;top:570px;width:280px;height:280px;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.6);pointer-events:none;background:var(--slate-base);
   box-shadow:0 0 0 6px #fff,0 0 0 12px var(--sage-dark),0 20px 44px -10px rgba(30,42,53,.5);
@@ -1398,6 +1413,22 @@ body:has(.slide.active .pic.cur) #cd-head,body:has(.slide.active .pic.cur) #cd-l
     <div class="col book"><img class="cover" src="assets/book-karlen.webp" alt="Cover: Gewusst wie!"><div class="btxt"><p class="who">Yves Karlen (Hrsg.)</p><p class="name">Gewusst wie!</p><p class="desc">Das Buch von Prof. Karlen und Team.</p><p class="sm res-link"><span class="pub">hep Verlag · 2026</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.hep-verlag.ch/gewusst-wie" target="_blank" rel="noopener">hep-verlag.ch</a></p></div></div>
     <div class="col book"><img class="cover" src="assets/book-ruppaner.webp" alt="Cover: Das könnte Schule machen"><div class="btxt"><p class="who">Stefan Ruppaner · Anke Willers</p><p class="name">Das könnte Schule machen</p><p class="desc">Einblick in eine der bekanntesten Schulen, die neue Konzepte eingeführt hat: die Alemannenschule Wutöschingen.</p><p class="sm res-link"><span class="pub">Rowohlt · 2025</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://www.rowohlt.de/buch/stefan-ruppaner-anke-willers-das-koennte-schule-machen-9783499016394" target="_blank" rel="noopener">rowohlt.de</a></p></div></div>
     <div class="col book"><img class="cover" src="assets/book-pruefungskultur.webp" alt="Cover: Wege zu einer zeitgemäßen Prüfungskultur"><div class="btxt"><p class="who">Langela-Bickenbach · Dreier · Wampfler · Albrecht (Hrsg.)</p><p class="name">Wege zu einer zeitgemäßen Prüfungskultur</p><p class="desc">Das Buch zum Thema zeitgemäße Prüfungskultur.</p><p class="sm res-link"><span class="pub">Beltz · 2024</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9z"/></svg><a href="https://pruefungskultur.de/buch/" target="_blank" rel="noopener">pruefungskultur.de</a></p></div></div>
+  </div>
+</section>
+
+<section class="slide seq fazit" data-part="5" data-title="Fazit" data-cam="off">
+  <div class="split">
+    <div>
+      <p class="label">Fazit · Was SRL ist</p>
+      <h2 class="h">Das Wesentliche in <em>drei Sätzen.</em></h2>
+      <ol class="fz-list">
+        <li class="step" data-tb="p1 p2 p3 run"><span class="fz-n">1</span><div><b>Ein Zyklus in jeder Reihe.</b><span>Planung · Durchführung · Reflexion – die Reflexion fließt in die nächste Planung.</span></div></li>
+        <li class="step" data-tb="metakognition kognition"><span class="fz-n">2</span><div><b>Im Kern: Strategien.</b><span>Vor allem metakognitive – planen, überwachen, auswerten. Explizit eingeführt, vorgemacht, geübt.</span></div></li>
+        <li class="step" data-tb="motivation emotion mindset ressourcen"><span class="fz-n">3</span><div><b>Getragen von mehr.</b><span>Motivation, Emotion, Mindset und Ressourcen entscheiden mit, ob Strategien genutzt werden.</span></div></li>
+      </ol>
+      <p class="fz-goal step">Damit Lernende <em>mehr Verantwortung für ihr eigenes Lernen</em> übernehmen.</p>
+    </div>
+    <figure><div class="tb tbbig fz-tb" data-focus="all"></div><p class="src">Vereinfachte Darstellung nach Karlen et al., Universität Zürich</p></figure>
   </div>
 </section>
 
