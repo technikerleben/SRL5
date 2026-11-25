@@ -20,6 +20,11 @@
       "source": "/ks-mk",
       "destination": "/ks-mk/",
       "permanent": false
+    },
+    {
+      "source": "/expedition",
+      "destination": "/expedition/",
+      "permanent": false
     }
   ]
 }
