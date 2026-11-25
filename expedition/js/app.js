@@ -2,6 +2,7 @@
 import { parseLevel, initialState, step, isWin } from './engine.js';
 import { LEVELS, WORLDS } from './levels.js';
 import { Board, webglAvailable } from './scene.js';
+import { createTutorial } from './tutorial.js';
 
 /* ================= Inhalte ================= */
 const STRATEGIES = [
@@ -151,6 +152,7 @@ function newTeam() {
 function openTeam(id) {
   team = db.teams[id]; db.last = id; save();
   if (!team.introDone) return renderIntro(0);
+  setTimeout(resumeTutorial, 600);
   if (team.cur && team.cur.levelId && !team.cur.pendingWorld) return openLevel(team.cur.levelId);
   if (team.cur && team.cur.pendingWorld != null) return renderWorldReflection(team.cur.pendingWorld);
   renderMap();
@@ -192,6 +194,7 @@ const INTRO = [
       <li>Kommt jemand zurück, drückt den Knopf <b>👋 Wo stehen wir?</b> Dann erklärt ihr euch gegenseitig, wo ihr gerade seid.</li>
       <li>Wenn ihr nicht weiterkommt, nutzt die <b>🪜 Lösungsleiter</b>. Die hat drei Sprossen – nehmt erst die unterste.</li>
       <li>Alles wird automatisch gespeichert. Ihr könnt später genau hier weitermachen.</li>
+      <li>Gleich zeigt euch <b>Ola in einem Tutorial</b> Schritt für Schritt, wie alles geht.</li>
     </ul>
     <p style="margin-top:14px">Für jedes Level gibt es bis zu <b>3 Sterne</b>: ⭐ geschafft · ⭐ gut eingeschätzt · ⭐ gut reflektiert.</p>`,
 ];
@@ -204,7 +207,7 @@ function renderIntro(i) {
   $('#intro-back').onclick = () => renderIntro(i - 1);
   $('#intro-next').onclick = () => {
     if (i < INTRO.length - 1) return renderIntro(i + 1);
-    team.introDone = true; save(); renderMap();
+    team.introDone = true; save(); renderMap(); tut.start('hallo');
   };
 }
 
@@ -272,6 +275,14 @@ function updateHud(S, stepNo) {
   $('#hud-step').textContent = stepNo == null ? 'Startaufstellung' : `Schritt ${stepNo}`;
 }
 
+// Scrollposition im Panel beim Neuzeichnen behalten
+function setPanel(html, key) {
+  const panel = $('#panel');
+  const old = panel.querySelector('.panel-scroll');
+  const top = old && panel.dataset.view === key ? old.scrollTop : 0;
+  panel.innerHTML = html; panel.dataset.view = key;
+  const sc = panel.querySelector('.panel-scroll'); if (sc) sc.scrollTop = top;
+}
 function setPhase(ph) { team.cur.phase = ph; save(); renderPhase(); }
 function renderPhase() {
   document.querySelectorAll('.phase').forEach(p => p.classList.toggle('on', p.dataset.ph === team.cur.phase));
@@ -328,34 +339,33 @@ function renderPlanung() {
   const st = planningStatus();
   const shells = L.shells.length;
   const lf = team.cur.lastFail;
-  const panel = $('#panel');
-  panel.innerHTML = `
+  setPanel(`
   <div class="panel-scroll">
     <div class="ph-head ph-plan"><h2>1 · Planung ${nAtt ? `– Versuch ${nAtt + 1}` : ''}</h2>
       <p>${nAtt ? 'Nutzt, was ihr in der Reflexion herausgefunden habt.' : 'Erst denken, dann losgehen. Arbeitet die vier Punkte von oben nach unten ab.'}</p></div>
     ${nAtt === 0 ? `<div class="newbox">🆕 <b>Neu:</b> ${esc(LV.neu)}</div>` : ''}
     ${lf ? `<div class="failnote">✗ Letzter Versuch: ${lf.step != null ? `<b>Schritt ${lf.step + 1}</b> – ` : ''}${esc(lf.text)}${lf.change ? `<br>Euer Vorhaben: ${esc(CHANGES.find(c => c.id === lf.change)?.label || '')}` : ''}</div>` : ''}
 
-    <div class="sec done"><div class="sec-title"><span>🎯 Ziel verstehen</span></div>
+    <div class="sec done" id="sec-goal"><div class="sec-title"><span>🎯 Ziel verstehen</span></div>
       <ul class="goal-list">
         ${shells ? `<li>🐚 ${shells === 1 ? 'Die Muschel' : `Alle ${shells} Muscheln`} einsammeln</li>` : ''}
         <li>🏠 Am Ende stehen <b>beide</b> im Bau (die Felder mit Fahne)</li>
         <li>⚡ Energie: höchstens <b>${LV.maxSteps} Karten</b> pro Figur</li>
       </ul></div>
 
-    <div class="sec ${st.strat ? 'done' : 'todo'}"><div class="sec-title"><span>🧭 Strategie wählen</span><span class="state">${st.strat ? '✓ erledigt' : 'noch offen'}</span></div>
+    <div class="sec ${st.strat ? 'done' : 'todo'}" id="sec-strat"><div class="sec-title"><span>🧭 Strategie wählen</span><span class="state">${st.strat ? '✓ erledigt' : 'noch offen'}</span></div>
       ${st.strat ? `<div class="strat-chosen">${team.cur.strategies.map(s => `<span class="strat-pill">${S_BY_ID[s].icon} ${esc(S_BY_ID[s].name)}</span>`).join('')}</div>
         <p class="muted">Leitfrage: ${team.cur.strategies.map(s => esc(S_BY_ID[s].frage)).join(' · ')}</p>` : '<p class="muted">Wie wollt ihr vorgehen? Wählt 1 oder 2 Strategien.</p>'}
       <button class="btn btn-secondary small" id="btn-strat" style="margin-top:6px">${st.strat ? '🔄 Strategie ändern' : '🧭 Strategie wählen'}</button>
     </div>
 
-    <div class="sec ${st.pred ? 'done' : 'todo'}"><div class="sec-title"><span>🔮 Vorhersage</span><span class="state">${st.pred ? '✓ erledigt' : 'noch offen'}</span></div>
+    <div class="sec ${st.pred ? 'done' : 'todo'}" id="sec-pred"><div class="sec-title"><span>🔮 Vorhersage</span><span class="state">${st.pred ? '✓ erledigt' : 'noch offen'}</span></div>
       ${nAtt === 0 ? `<p class="muted" style="margin-bottom:6px">Wie viele Versuche werdet ihr brauchen? Schätzt ehrlich – eine gute Einschätzung bringt einen Stern!</p>
       <div class="pred-btns">${PREDICTIONS.map(p => `<button class="pred-btn ${d.prediction === p.v ? 'on' : ''}" data-pred="${p.v}"><b>${p.icon}</b>${p.label}</button>`).join('')}</div>`
       : `<p>Eure Vorhersage: <b>${PREDICTIONS.find(p => p.v === d.prediction)?.icon} ${PREDICTIONS.find(p => p.v === d.prediction)?.label}</b></p><p class="muted">Die Vorhersage gilt für das ganze Level.</p>`}
     </div>
 
-    <div class="sec ${st.plan ? 'done' : 'todo'}"><div class="sec-title"><span>🗺️ Schritte planen</span><span class="state">${P.o.length} + ${P.d.length} Karten</span></div>
+    <div class="sec ${st.plan ? 'done' : 'todo'}" id="sec-plan"><div class="sec-title"><span>🗺️ Schritte planen</span><span class="state">${P.o.length} + ${P.d.length} Karten</span></div>
       <div class="row-tabs">
         <button class="row-tab o ${ui.row === 'o' ? 'on' : ''}" data-row="o">🦦 Ola planen <span class="energy">${P.o.length}/${LV.maxSteps}</span></button>
         <button class="row-tab d ${ui.row === 'd' ? 'on' : ''}" data-row="d">🦡 Bodo planen <span class="energy">${P.d.length}/${LV.maxSteps}</span></button>
@@ -380,7 +390,7 @@ function renderPlanung() {
   <div class="panel-foot">
     <button class="btn btn-secondary" id="btn-ladder">🪜 Lösungsleiter</button>
     <button class="btn btn-primary" id="btn-go" ${st.strat && st.pred && st.plan ? '' : 'disabled'}>▶ Zur Durchführung</button>
-  </div>`;
+  </div>`, 'plan-' + id);
   if (board) board.setPreview(P.o, P.d, ui.preview);
   if (board) { board.setState(initialState(L)); updateHud(initialState(L), null); }
   bindPlanung();
@@ -484,7 +494,7 @@ function renderDurchfuehrung() {
   runner = { S: initialState(L), i: 0, n, playing: false, busy: false, done: false, abort: false, log: [], speed: runner ? runner.speed : 1 };
   if (board) { board.setState(runner.S); board.setPreview([], [], false); }
   updateHud(runner.S, null);
-  $('#panel').innerHTML = `
+  setPanel(`
   <div class="panel-scroll">
     <div class="ph-head ph-do"><h2>2 · Durchführung – Versuch ${nAtt + 1}</h2><p>Jetzt wird nicht mehr geplant – beobachtet genau! Läuft alles so, wie ihr es euch gedacht habt?</p></div>
     <div class="run-ctrls">
@@ -497,7 +507,7 @@ function renderDurchfuehrung() {
     <ul class="runlog" id="runlog"><li>Startaufstellung. Drückt ▶ oder ⏭.</li></ul>
     <div id="run-result"></div>
   </div>
-  <div class="panel-foot"><button class="btn btn-success" id="r-next" disabled>Weiter zur Reflexion →</button></div>`;
+  <div class="panel-foot"><button class="btn btn-success" id="r-next" disabled>Weiter zur Reflexion →</button></div>`, 'run-' + Date.now());
   $('#r-play').onclick = () => {
     if (runner.done) return;
     runner.playing = !runner.playing;
@@ -603,7 +613,7 @@ function renderReflexion() {
   if (pend.result === 'win') return renderReflexionWin();
   const draft = team.cur.reflDraft || (team.cur.reflDraft = { cause: null, change: null });
   const code = pend.fail?.code;
-  $('#panel').innerHTML = `
+  setPanel(`
   <div class="panel-scroll">
     <div class="ph-head ph-ref"><h2>3 · Reflexion – Versuch ${pend.nr}</h2><p>Kein Problem – jetzt wisst ihr mehr als vorher. Findet heraus, was passiert ist.</p></div>
     <div class="result-box ${pend.result === 'fail' ? 'fail' : 'info'}">${pend.result === 'fail' ? `✗ Schritt ${pend.fail.step + 1}: ` : '⚠ '}${esc(pend.fail?.text)}</div>
@@ -616,7 +626,7 @@ function renderReflexion() {
     </div>
     ${team.cur.strategies.length ? `<p class="muted">Eure Strategie bisher: ${team.cur.strategies.map(s => S_BY_ID[s].icon + ' ' + S_BY_ID[s].name).join(', ')}</p>` : ''}
   </div>
-  <div class="panel-foot"><button class="btn btn-slate" id="btn-back-plan" ${draft.cause && draft.change ? '' : 'disabled'}>Zurück zur Planung →</button></div>`;
+  <div class="panel-foot"><button class="btn btn-slate" id="btn-back-plan" ${draft.cause && draft.change ? '' : 'disabled'}>Zurück zur Planung →</button></div>`, 'refl-' + pend.nr);
   document.querySelectorAll('[data-cause]').forEach(b => b.onclick = () => { draft.cause = b.dataset.cause; save(); sfx.click(); renderReflexion(); });
   document.querySelectorAll('[data-change]').forEach(b => b.onclick = () => { draft.change = b.dataset.change; save(); sfx.click(); renderReflexion(); });
   $('#btn-back-plan').onclick = () => {
@@ -644,7 +654,7 @@ function renderReflexionWin() {
   const predObj = PREDICTIONS.find(p => p.v === pred);
   const calibText = calib ? 'Super eingeschätzt! Ihr kennt euch gut.'
     : (nr < pred ? 'Es ging schneller als gedacht. Ihr könnt euch mehr zutrauen!' : 'Es hat länger gedauert als gedacht. Was hat euch überrascht?');
-  $('#panel').innerHTML = `
+  setPanel(`
   <div class="panel-scroll">
     <div class="ph-head ph-ref"><h2>3 · Reflexion – Geschafft! 🎉</h2><p>Jetzt schaut ihr zurück: Was hat euch zum Ziel gebracht?</p></div>
     <div class="star-rows">
@@ -663,7 +673,7 @@ function renderReflexionWin() {
       <textarea id="refl-text" maxlength="400">${esc(draft.text)}</textarea>
     </div>
   </div>
-  <div class="panel-foot"><button class="btn btn-success" id="btn-finish" ${allRated ? '' : 'disabled'}>${allRated ? 'Abschließen & weiter →' : 'Bitte erst die Strategien bewerten'}</button></div>`;
+  <div class="panel-foot"><button class="btn btn-success" id="btn-finish" ${allRated ? '' : 'disabled'}>${allRated ? 'Abschließen & weiter →' : 'Bitte erst die Strategien bewerten'}</button></div>`, 'win-' + id);
   document.querySelectorAll('[data-rate]').forEach(b => b.onclick = () => { draft.ratings[b.dataset.rate] = b.dataset.v; save(); sfx.click(); renderReflexionWin(); });
   const ta = $('#refl-text');
   ta.oninput = () => {
@@ -843,7 +853,8 @@ function openRules() {
     </div>
     <h3 style="margin:14px 0 6px;color:var(--slate-dark)">⭐ Sterne pro Level</h3>
     <p>⭐ Level geschafft · ⭐ Vorhersage hat gestimmt · ⭐ Reflexions-Satz geschrieben</p>`,
-    [{ label: 'Intro noch mal ansehen', fn: () => { closeModal(); renderIntro(0); } }, { label: 'Verstanden', cls: 'btn-primary', fn: closeModal }]);
+    [{ label: '🎓 Tutorial starten', fn: () => { closeModal(); startTutorial(); } },
+     { label: 'Intro noch mal ansehen', fn: () => { closeModal(); renderIntro(0); } }, { label: 'Verstanden', cls: 'btn-primary', fn: closeModal }]);
 }
 
 function openStrategies() {
@@ -934,7 +945,8 @@ function topAction(act) {
   if (act === 'strategies') openStrategies();
   if (act === 'logbook') openLogbook();
   if (act === 'rules') openRules();
-  if (act === 'home') { team = null; renderStart(); }
+  if (act === 'home') { tut.pause(); team = null; renderStart(); }
+  if (act === 'tutorial') startTutorial();
   if (act === 'map') {
     if (runner && !runner.done) { runner.playing = false; runner.abort = true; }
     if (team.cur && team.cur.phase === 'durchfuehrung') team.cur.phase = 'planung';
@@ -973,6 +985,33 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'Tab') { e.preventDefault(); ui.row = ui.row === 'o' ? 'd' : 'o'; ui.sel = null; renderPlanung(); }
 });
 
+/* ================= Tutorial ================= */
+const tut = createTutorial({
+  cur: () => team && team.cur,
+  ui: () => ui,
+  plan: () => (team && team.cur && team.plans[team.cur.levelId]) || { o: [], d: [] },
+  prediction: () => (team && team.cur && team.cur.levelId ? dgRec(team.cur.levelId).prediction : null),
+  runDone: () => !!(runner && runner.done),
+  lastResult: () => {
+    if (team && team.cur && team.cur.pending) return team.cur.pending.result;
+    const r = team && team.levels.L1; const a = r && r.attempts[r.attempts.length - 1];
+    return a ? a.result : null;
+  },
+  levelDone: id => { const r = team && team.levels[id]; return !!(r && r.done && !r.open); },
+  saveStep: stepId => { if (team) { team.tutorial = stepId; save(); } },
+});
+function startTutorial() {
+  if (!team) return;
+  if (!$('#scr-game').hidden && team.cur && team.cur.levelId === 'L1') return tut.start('insel');
+  topAction('map');
+  tut.start('hallo');
+}
+function resumeTutorial() {
+  if (!team || !team.tutorial || ['aus', 'fertig'].includes(team.tutorial)) return;
+  if (tut.running()) return;
+  tut.start(team.tutorial);
+}
+
 /* ================= Start ================= */
 updateSoundBtn();
 const params = new URLSearchParams(location.search);
@@ -984,4 +1023,4 @@ if (params.has('test')) {
   team = db.teams[id];
   openLevel(params.get('test'));
 }
-window.__exp = { get team() { return team; }, LEVELS, openLevel, renderMap };
+window.__exp = { get team() { return team; }, LEVELS, openLevel, renderMap, tut };

@@ -7,13 +7,14 @@ Ziel: **Planung – Durchführung – Reflexion** spielerisch üben und den **St
 - 6 Strategiekarten (Überblick, Rückwärts denken, Etappen, Aufgaben verteilen, Im Takt planen, Testen & anpassen)
 - Vorhersage vor jedem Level (Stern für realistische Selbsteinschätzung)
 - Lösungsleiter mit 3 Sprossen pro Level
+- Geführtes Tutorial mit Ola (23 Schritte) in Level 1 – startet automatisch nach dem Intro, jederzeit über „🎓 Tutorial“ wiederholbar
 - „👋 Wo stehen wir?“ für den Wiedereinstieg, wenn ein Kind kurz weg war
 - Etappen-Reflexion nach jeder Welt, Logbuch (druckbar), Urkunde
 - Übersicht für die Lehrkraft auf dem Startbildschirm
 - Speicherung im localStorage des jeweiligen Laptops
 
 ## Technik
-- `index.html`, `style.css`, `js/app.js` (Ablauf), `js/engine.js` (Spielregeln), `js/levels.js` (Karten), `js/scene.js` (3D)
+- `index.html`, `style.css`, `js/app.js` (Ablauf), `js/engine.js` (Spielregeln), `js/levels.js` (Karten), `js/scene.js` (3D), `js/tutorial.js` (geführtes Tutorial)
 - Bibliotheken lokal in `vendor/`: three.js r187, GSAP, canvas-confetti → läuft ohne CDN
 - Testhilfe: `index.html?test=L5` öffnet ein Level direkt mit Testteam
 

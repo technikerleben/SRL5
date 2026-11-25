@@ -298,6 +298,23 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: .9rem; }
 .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(120px); background: var(--slate-dark); color: #fff; padding: 10px 18px; border-radius: 12px; font-weight: 600; transition: transform .3s; z-index: 60; box-shadow: 0 8px 30px rgba(0,0,0,.25); max-width: 90vw; }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
+
+/* Tutorial */
+.tut-spot { position: fixed; z-index: 80; border-radius: 14px; pointer-events: none; box-shadow: 0 0 0 4px var(--rust), 0 0 0 9999px rgba(20,30,40,.45); transition: left .3s, top .3s, width .3s, height .3s, opacity .2s; animation: tut-pulse 1.6s ease-in-out infinite; }
+.tut-spot.full { box-shadow: 0 0 0 9999px rgba(20,30,40,.5); animation: none; }
+@keyframes tut-pulse { 50% { box-shadow: 0 0 0 7px var(--rust-mid), 0 0 0 9999px rgba(20,30,40,.45); } }
+.tut-bubble { position: fixed; z-index: 90; width: 360px; max-width: calc(100vw - 16px); background: #fff; border-radius: 16px; padding: 14px 16px 12px; box-shadow: 0 14px 40px rgba(0,0,0,.3); border: 3px solid var(--rust); transition: left .3s, top .3s; }
+.tut-bubble.mini { width: 250px; padding: 10px 12px; font-size: .9rem; }
+.tut-bubble.mini .tut-ava { font-size: 1.6rem; }
+.tut-head { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
+.tut-ava { font-size: 2.3rem; animation: bob 2.4s ease-in-out infinite; }
+.tut-count { font-size: .72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.tut-bubble h3 { font-size: 1.1rem; color: var(--slate-dark); }
+.tut-bubble p { font-size: .98rem; line-height: 1.45; }
+.tut-do { margin-top: 8px; background: var(--rust-ghost); color: var(--rust-dark); font-weight: 800; border-radius: 8px; padding: 6px 10px; }
+.tut-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 8px; }
+.tut-skip { background: none; border: none; color: var(--muted); font: inherit; font-size: .8rem; text-decoration: underline; cursor: pointer; padding: 4px; }
+
 #print-area { display: none; }
 
 @media (max-width: 1150px) {
@@ -313,7 +330,7 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: .9rem; }
 
 @media print {
   body { overflow: visible; background: #fff; }
-  .screen, .modal-bg, .toast { display: none !important; }
+  .screen, .modal-bg, .toast, .tut-spot, .tut-bubble { display: none !important; }
   #print-area { display: block; padding: 10mm; font-family: Arial, sans-serif; }
   #print-area h1 { font-size: 20pt; margin-bottom: 4mm; }
   .log-level { border: 1px solid #999; }
