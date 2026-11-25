@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Passwort-Labor · KS-MK Jahrgang 5</title>
+<style>
+  :root{--slate:#2C3D4C;--rust:#D97A4A;--sage:#4D8B3F;--gold:#C17B00;--red:#B23A2B;--ink:#2B2B2B;--mid:#5F6A72;--line:#E6E3DE;--paper:#F7F5F2;--white:#fff}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--paper);line-height:1.45;font-size:18px}
+  header{background:var(--white);border-bottom:4px solid var(--slate);padding:18px 20px}
+  .wrap{max-width:900px;margin:0 auto}
+  .eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--rust)}
+  h1{margin:.2rem 0 0;color:var(--slate);font-size:2rem}
+  main{padding:20px}
+  .warn{display:flex;gap:12px;align-items:flex-start;background:#fff;border:2px solid var(--rust);border-radius:14px;padding:14px 16px;font-weight:700}
+  .warn svg{flex:0 0 32px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:18px;box-shadow:0 3px 12px rgba(44,61,76,.06)}
+  .card h2{margin:0 0 10px;color:var(--slate);font-size:1.3rem}
+  label{display:block;font-weight:700;margin-bottom:8px}
+  input[type=text]{width:100%;font-size:1.5rem;padding:14px 16px;border:2px solid var(--slate);border-radius:12px;font-family:"Courier New",monospace;letter-spacing:.04em}
+  input[type=text]:focus{outline:3px solid var(--rust);outline-offset:2px}
+  .meter{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+  .meter i{height:18px;border-radius:9px;background:var(--line);transition:background .2s}
+  .result{margin-top:12px;font-size:1.6rem;font-weight:800;min-height:2.2rem}
+  .tips{list-style:none;padding:0;margin:10px 0 0}
+  .tips li{padding:7px 0 7px 34px;position:relative;border-bottom:1px solid var(--line)}
+  .tips li:last-child{border-bottom:none}
+  .tips li::before{position:absolute;left:0;top:6px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:800;color:#fff}
+  .tips li.ok::before{content:"✓";background:var(--sage)}
+  .tips li.no::before{content:"!";background:var(--rust)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  button{font:inherit;font-weight:700;padding:10px 16px;border-radius:10px;border:2px solid var(--slate);background:#fff;color:var(--slate);cursor:pointer}
+  button:hover{background:var(--slate);color:#fff}
+  .out{margin-top:12px;font-family:"Courier New",monospace;font-size:1.6rem;font-weight:800;color:var(--slate);word-break:break-all;min-height:2.2rem}
+  .small{color:var(--mid);font-size:.95rem}
+  .examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .examples button{font-family:"Courier New",monospace;font-size:1rem;padding:6px 12px}
+  footer{max-width:900px;margin:0 auto;padding:10px 20px 40px;color:var(--mid);font-size:.85rem}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="eyebrow">KS-MK · Jahrgang 5 · M2 Sicher digital</div>
+  <h1>Passwort-Labor</h1>
+</div></header>
+<main class="wrap">
+  <div class="warn" role="note">
+    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#D97A4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    <div>Gib hier nie dein echtes Passwort ein. Wir üben nur mit ausgedachten Passwörtern.<br><span class="small" style="font-weight:normal">Das Labor speichert nichts und schickt nichts weg.</span></div>
+  </div>
+
+  <section class="card">
+    <h2>1 · Teste ein Übungspasswort</h2>
+    <label for="pw">Dein Übungspasswort</label>
+    <input id="pw" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="z. B. MHBfjM2Ä!">
+    <div class="examples" aria-label="Beispiele zum Ausprobieren">
+      <span class="small" style="align-self:center">Beispiele:</span>
+      <button type="button" data-ex="123456">123456</button>
+      <button type="button" data-ex="lea2015">lea2015</button>
+      <button type="button" data-ex="Pizza!">Pizza!</button>
+      <button type="button" data-ex="MHBfjM2Ä!">MHBfjM2Ä!</button>
+      <button type="button" data-ex="Pferd-Mond-Tasche-71">Pferd-Mond-Tasche-71</button>
+    </div>
+    <div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="result" id="result" aria-live="polite"></div>
+    <ul class="tips" id="tips"></ul>
+  </section>
+
+  <section class="card">
+    <h2>2 · Satz-Methode</h2>
+    <p>Schreib einen Satz. Das Labor nimmt von jedem Wort den ersten Buchstaben. Zahlen und Zeichen bleiben stehen.</p>
+    <label for="satz">Dein Übungssatz</label>
+    <input id="satz" type="text" autocomplete="off" spellcheck="false" placeholder="Mein Hund Bello frisst jeden Morgen 2 Äpfel!">
+    <div class="out" id="satzOut" aria-live="polite"></div>
+    <div class="row"><button type="button" id="satzTest">Im Labor testen</button></div>
+  </section>
+</main>
+<footer>KS-MK · Jahrgang 5 · Klassenstunde Medienkompetenz</footer>
+
+<script>
+(function(){
+  var COMMON = ["passwort","password","hallo","hello","qwertz","qwerty","asdf","123456","12345","1234","abc","schule","iserv","pizza","hund","katze","pferd","fussball","fußball","ball","sommer","winter","liebe","schatz","admin","geheim","minecraft","fortnite","roblox","pokemon","dortmund","bvb"];
+  var pw = document.getElementById('pw'), res = document.getElementById('result'), tips = document.getElementById('tips');
+  var bars = document.querySelectorAll('.meter i');
+  var LEVELS = [
+    {t:"Sehr schwach", c:"#B23A2B"},
+    {t:"Schwach", c:"#D97A4A"},
+    {t:"Mittel", c:"#C17B00"},
+    {t:"Stark", c:"#4D8B3F"},
+    {t:"Sehr stark", c:"#2F6B2A"}
+  ];
+  function analyse(p){
+    var low=/[a-zäöüß]/.test(p), up=/[A-ZÄÖÜ]/.test(p), dig=/[0-9]/.test(p), sym=/[^A-Za-zÄÖÜäöüß0-9]/.test(p);
+    var pool=(low?26:0)+(up?26:0)+(dig?10:0)+(sym?30:0);
+    var bits = p.length*Math.log2(Math.max(pool,1));
+    var lc = p.toLowerCase(), hits=[];
+    COMMON.forEach(function(w){ if(lc.indexOf(w)>-1) hits.push(w); });
+    var year = /(19|20)\d\d/.test(p);
+    var repeat = /(.)\1\1/.test(p);
+    var seq = /(0123|1234|2345|3456|4567|5678|6789|abcd|qwer)/i.test(p);
+    if(hits.length) bits -= 18*hits.length;
+    if(year) bits -= 10;
+    if(repeat) bits -= 10;
+    if(seq) bits -= 15;
+    var lvl = bits<20?0:bits<35?1:bits<50?2:bits<70?3:4;
+    if(p.length<8) lvl=Math.min(lvl,1);
+    return {lvl:lvl, len:p.length, low:low, up:up, dig:dig, sym:sym, hits:hits, year:year, repeat:repeat, seq:seq};
+  }
+  function li(ok, text){ return '<li class="'+(ok?'ok':'no')+'">'+text+'</li>'; }
+  function show(){
+    var p = pw.value;
+    if(!p){ res.textContent=''; tips.innerHTML=''; bars.forEach(function(b){b.style.background='';}); return; }
+    var a = analyse(p), L = LEVELS[a.lvl];
+    res.textContent = L.t; res.style.color = L.c;
+    var filled = [1,1,2,3,4][a.lvl];
+    bars.forEach(function(b,i){ b.style.background = i<filled ? L.c : ''; });
+    var h = '';
+    h += li(a.len>=12, a.len>=12 ? 'Lang genug: '+a.len+' Zeichen.' : 'Nur '+a.len+' Zeichen. Mach es länger – mindestens 12.');
+    h += li(a.low && a.up, a.low && a.up ? 'Groß- und Kleinbuchstaben.' : 'Mische Groß- und Kleinbuchstaben.');
+    h += li(a.dig, a.dig ? 'Mit Zahl.' : 'Füge eine Zahl ein.');
+    h += li(a.sym, a.sym ? 'Mit Sonderzeichen.' : 'Füge ein Zeichen ein, zum Beispiel ! ? - +');
+    if(a.hits.length) h += li(false, 'Enthält ein bekanntes Wort: „'+a.hits[0]+'“. Solche Wörter probieren Angreifer zuerst.');
+    if(a.year) h += li(false, 'Enthält eine Jahreszahl. Geburtsjahre sind leicht zu erraten.');
+    if(a.seq) h += li(false, 'Enthält eine Reihe wie 1234 oder abcd.');
+    if(a.repeat) h += li(false, 'Ein Zeichen kommt dreimal hintereinander.');
+    tips.innerHTML = h;
+  }
+  pw.addEventListener('input', show);
+  document.querySelectorAll('[data-ex]').forEach(function(b){
+    b.addEventListener('click', function(){ pw.value=b.getAttribute('data-ex'); show(); pw.focus(); });
+  });
+  var satz=document.getElementById('satz'), out=document.getElementById('satzOut');
+  function build(){
+    var words = satz.value.trim().split(/\s+/).filter(Boolean);
+    return words.map(function(w){
+      if(/^[0-9]+[^A-Za-zÄÖÜäöüß]*$/.test(w)) return w;
+      var m = w.match(/^([^A-Za-zÄÖÜäöüß0-9]*)([A-Za-zÄÖÜäöüß0-9])/);
+      var first = m ? m[2] : w.charAt(0);
+      var trail = w.match(/[^A-Za-zÄÖÜäöüß0-9]+$/);
+      return first + (trail ? trail[0] : '');
+    }).join('');
+  }
+  satz.addEventListener('input', function(){ out.textContent = build(); });
+  document.getElementById('satzTest').addEventListener('click', function(){
+    var v = build(); if(!v) return; pw.value=v; show(); pw.scrollIntoView({behavior:'smooth',block:'center'}); pw.focus();
+  });
+})();
+</script>
+</body>
+</html>
