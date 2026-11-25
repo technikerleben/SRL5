@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  // Ohne Schrägstrich am Ende (…/expedition) würden alle relativen Pfade ins Leere zeigen.
+  if (/\/expedition$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);
+</script>
 <title>Expedition Otterbucht – Planung · Durchführung · Reflexion</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦦</text></svg>">
 <link rel="stylesheet" href="style.css">
@@ -132,5 +136,15 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script type="module" src="js/app.js"></script>
+<script>
+  // Hinweis, falls das Spiel nicht startet (z. B. sehr alter Browser)
+  setTimeout(function () {
+    if (window.__exp) return;
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:99;background:#FDECEA;color:#7A1B14;border-left:5px solid #C0392B;padding:12px 16px;border-radius:8px;font:16px Arial,sans-serif';
+    d.innerHTML = '<b>Das Spiel konnte nicht starten.</b> Bitte die Seite neu laden (Strg + F5). Falls das nicht hilft: einen aktuellen Chrome, Edge oder Firefox verwenden.';
+    document.body.appendChild(d);
+  }, 5000);
+</script>
 </body>
 </html>
