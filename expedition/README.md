@@ -10,7 +10,8 @@ Ziel: **Planung – Durchführung – Reflexion** spielerisch üben und den **St
 - Geführtes Tutorial mit Ola (23 Schritte) in Level 1 – startet automatisch nach dem Intro, jederzeit über „🎓 Tutorial“ wiederholbar
 - „👋 Wo stehen wir?“ für den Wiedereinstieg, wenn ein Kind kurz weg war
 - Etappen-Reflexion nach jeder Welt, Logbuch (druckbar), Urkunde
-- Übersicht für die Lehrkraft auf dem Startbildschirm
+- Vollbild-Knopf (Startseite, Karte, Spiel)
+- Administration (PIN B201): Level pro Team freischalten, Team mit Freischaltung anlegen (Gerätewechsel), Logbücher, Teams löschen
 - Speicherung im localStorage des jeweiligen Laptops
 
 ## Technik

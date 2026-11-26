@@ -299,6 +299,18 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: .9rem; }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
 
+
+.start-foot { display: flex; gap: 10px; justify-content: center; }
+.adm-box { background: var(--slate-ghost); border-radius: 12px; padding: 12px 14px; margin-top: 14px; }
+.adm-box h3 { color: var(--slate-dark); font-size: 1.02rem; margin-bottom: 4px; }
+.adm-box .btn { margin-right: 6px; }
+.adm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.adm-sel { font: inherit; font-size: .85rem; max-width: 210px; padding: 6px 8px; border: 2px solid var(--border); border-radius: 8px; background: #fff; max-width: 100%; }
+#adm-lvl { width: 100%; max-width: none; padding: 9px 10px; font-size: 1rem; }
+.adm-check { display: flex; gap: 8px; align-items: center; font-weight: 400; margin-top: 10px; }
+.adm-check input { width: auto; }
+.tbl td { vertical-align: middle; }
+
 /* Tutorial */
 .tut-spot { position: fixed; z-index: 80; border-radius: 14px; pointer-events: none; box-shadow: 0 0 0 4px var(--rust), 0 0 0 9999px rgba(20,30,40,.45); transition: left .3s, top .3s, width .3s, height .3s, opacity .2s; animation: tut-pulse 1.6s ease-in-out infinite; }
 .tut-spot.full { box-shadow: 0 0 0 9999px rgba(20,30,40,.5); animation: none; }

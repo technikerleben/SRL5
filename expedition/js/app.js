@@ -91,10 +91,11 @@ function dgRec(id) {
 function attemptsNow(id) { const r = rec(id); return r.attempts.filter(a => a.dg === r.durchgang); }
 function starsOf(id) { const r = team.levels[id]; return r && r.best ? r.best : null; }
 function starCount(s) { return s ? (s.geschafft ? 1 : 0) + (s.eingeschaetzt ? 1 : 0) + (s.reflektiert ? 1 : 0) : 0; }
-function unlockedUpTo() {
-  let n = 0;
-  while (n < LEVELS.length && team.levels[LEVELS[n].id] && team.levels[LEVELS[n].id].done) n++;
-  return n; // Index des ersten nicht geschafften Levels
+function unlockedUpTo() { return unlockedIdx(team); }
+// Index des höchsten spielbaren Levels: erstes nicht geschafftes Level
+// oder die Freischaltung aus der Administration – je nachdem, was weiter reicht.
+function unlockedIdx(t) {
+  return Math.min(LEVELS.length - 1, Math.max(unlockedFor(t), t.unlockedTo || 0));
 }
 
 /* ================= Ton ================= */
@@ -799,7 +800,7 @@ function confirmBox(text, yes) {
 function openRecap() {
   const c = team.cur;
   if (!c || !c.levelId) {
-    const unl = unlockedUpTo();
+    const unl = unlockedFor(team);
     const next = LEVELS[unl];
     openModal('👋 Wo stehen wir?', `
       <div class="recap-grid">
@@ -907,20 +908,66 @@ function openLogbook(t = team) {
      { label: 'Schließen', cls: 'btn-primary', fn: closeModal }]);
 }
 
+/* ================= Administration (PIN) ================= */
+const ADMIN_PIN = 'B201';
+let adminOpen = false;   // gilt bis zum Neuladen der Seite
+
 function openTeacher() {
+  if (adminOpen) return openAdmin();
+  openModal('🔒 Administration', `
+    <p style="margin-bottom:10px">Dieser Bereich ist für Lehrkräfte. Bitte die PIN eingeben.</p>
+    <label for="pin">PIN</label>
+    <input id="pin" type="password" autocomplete="off" maxlength="10" style="max-width:220px;font-size:1.3rem;letter-spacing:4px">
+    <p id="pin-err" class="muted" style="color:var(--error);margin-top:6px" hidden>✗ Falsche PIN. Bitte noch einmal versuchen.</p>`,
+    [{ label: 'Abbrechen', fn: closeModal }, { label: 'Öffnen', cls: 'btn-primary', fn: checkPin }]);
+  const inp = $('#pin'); inp.focus();
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkPin(); });
+}
+function checkPin() {
+  const v = ($('#pin').value || '').trim().toUpperCase();
+  if (v === ADMIN_PIN) { adminOpen = true; openAdmin(); return; }
+  $('#pin-err').hidden = false; $('#pin').value = ''; $('#pin').focus();
+}
+
+function levelOptions(sel) {
+  return LEVELS.map((l, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>${i === 0 ? 'nur Level 1' : `Level 1–${i + 1}`} (${esc(l.title)})</option>`).join('');
+}
+
+function openAdmin() {
   const teams = Object.values(db.teams).sort((a, b) => a.name.localeCompare(b.name));
   const fmt = ts => new Date(ts).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-  openModal('👩‍🏫 Übersicht für die Lehrkraft', `
-    <p class="muted" style="margin-bottom:10px">Alle Teams, die auf <b>diesem Gerät</b> spielen. Die Daten bleiben nur im Browser dieses Laptops gespeichert.</p>
-    ${teams.length ? `<table class="tbl"><thead><tr><th>Team</th><th>Fortschritt</th><th>Sterne</th><th>Versuche</th><th>Lösungsleiter</th><th>Zuletzt</th><th></th></tr></thead><tbody>
+  openModal('⚙️ Administration', `
+    <p class="muted" style="margin-bottom:10px">Alle Teams auf <b>diesem Gerät</b>. Die Daten liegen nur im Browser dieses Laptops.</p>
+    ${teams.length ? `<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Team</th><th>Geschafft</th><th>Sterne</th><th>Versuche</th><th>Freigeschaltet</th><th>Zuletzt</th><th></th></tr></thead><tbody>
     ${teams.map(t => {
       const n = unlockedFor(t);
       const stars = LEVELS.reduce((s, l) => s + starCount(t.levels[l.id] && t.levels[l.id].best), 0);
       const atts = Object.values(t.levels).reduce((s, r) => s + r.attempts.length, 0);
       const hints = Object.values(t.levels).reduce((s, r) => s + Object.values(r.dg).reduce((x, d) => x + d.hints, 0), 0);
-      return `<tr><td><b>${esc(t.name)}</b></td><td>${n}/12 Level</td><td>⭐ ${stars}</td><td>${atts}</td><td>${hints}</td><td>${fmt(t.updated)}</td>
-        <td><button class="btn btn-secondary small" data-log="${t.id}">📖</button> <button class="btn btn-ghost small" data-del="${t.id}" title="Team löschen">🗑️</button></td></tr>`;
-    }).join('')}</tbody></table>` : '<p class="empty">Noch keine Teams.</p>'}
+      return `<tr><td><b>${esc(t.name)}</b></td><td>${n}/12</td><td>⭐ ${stars}</td><td title="Versuche · genutzte Sprossen der Lösungsleiter">${atts} · 🪜${hints}</td>
+        <td><select class="adm-sel" data-unlock="${t.id}" aria-label="Freigeschaltet für ${esc(t.name)}">${levelOptions(unlockedIdx(t))}</select></td>
+        <td>${fmt(t.updated)}</td>
+        <td style="white-space:nowrap"><button class="btn btn-secondary small" data-log="${t.id}" title="Logbuch">📖</button> <button class="btn btn-ghost small" data-del="${t.id}" title="Team löschen">🗑️</button></td></tr>`;
+    }).join('')}</tbody></table></div>
+    <p class="muted" style="margin-top:6px">Geschaffte Level bleiben immer offen. Die Auswahl öffnet zusätzlich alle Level bis zur gewählten Stelle.</p>` : '<p class="empty">Noch keine Teams auf diesem Gerät.</p>'}
+
+    <div class="adm-box">
+      <h3>➕ Team mit Freischaltung anlegen</h3>
+      <p class="muted" style="margin-bottom:8px">Für Kinder, die an einem anderen Gerät weiterspielen: Team anlegen und die Level freischalten, bis zu denen sie schon gekommen sind.</p>
+      <div class="adm-row">
+        <div><label for="adm-name">Teamname</label><input id="adm-name" maxlength="28" placeholder="z. B. Die Muschelsucher"></div>
+        <div><label for="adm-lvl">Freigeschaltet</label><select id="adm-lvl" class="adm-sel">${levelOptions(0)}</select></div>
+      </div>
+      <label class="adm-check"><input type="checkbox" id="adm-skip" checked> Intro und Tutorial überspringen (das Team kennt das Spiel schon)</label>
+      <button class="btn btn-primary" id="adm-create" style="margin-top:8px">Team anlegen</button>
+    </div>
+
+    <div class="adm-box">
+      <h3>🖥️ Gerät</h3>
+      <button class="btn btn-secondary small" id="adm-all">Alle Teams: alle Level freischalten</button>
+      <button class="btn btn-ghost small" id="adm-lock">Administration wieder sperren</button>
+    </div>
+
     <h3 style="margin:16px 0 6px;color:var(--slate-dark)">Didaktische Hinweise</h3>
     <ul style="padding-left:20px;font-size:.93rem">
       <li>Jedes Level durchläuft <b>Planung – Durchführung – Reflexion</b>. Strategiewahl und Vorhersage sind Pflicht, bevor geplant wird.</li>
@@ -930,14 +977,55 @@ function openTeacher() {
       <li>Das Logbuch eignet sich als Gesprächsanlass: „Welche Strategie hat euch geholfen – und wo könnt ihr sie im Unterricht nutzen?“</li>
     </ul>`,
     [{ label: 'Schließen', cls: 'btn-primary', fn: closeModal }]);
+
   document.querySelectorAll('[data-log]').forEach(b => b.onclick = () => openLogbook(db.teams[b.dataset.log]));
   document.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
     const t = db.teams[b.dataset.del];
     confirmBox(`Team „${t.name}“ mit allen Daten löschen?`, () => {
-      delete db.teams[t.id]; if (db.last === t.id) db.last = null; save(); renderStart(); openTeacher();
+      delete db.teams[t.id]; if (db.last === t.id) db.last = null; save(); renderStart(); openAdmin();
     });
   });
+  document.querySelectorAll('[data-unlock]').forEach(sel => sel.onchange = () => {
+    const t = db.teams[sel.dataset.unlock];
+    t.unlockedTo = +sel.value; t.updated = Date.now(); save();
+    toast(`„${t.name}“: Level 1–${+sel.value + 1} freigeschaltet.`);
+    renderStart(); if (team === t && !$('#scr-map').hidden) renderMap();
+  });
+  $('#adm-create').onclick = () => {
+    const name = $('#adm-name').value.trim();
+    if (name.length < 2) { $('#adm-name').focus(); toast('Bitte einen Teamnamen eingeben.'); return; }
+    const skip = $('#adm-skip').checked;
+    const id = 't' + Date.now().toString(36);
+    db.teams[id] = { id, name, created: Date.now(), updated: Date.now(), introDone: skip, tutorial: skip ? 'aus' : undefined,
+      levels: {}, worlds: {}, cur: null, plans: {}, unlockedTo: +$('#adm-lvl').value };
+    save(); renderStart(); openAdmin();
+    toast(`Team „${name}“ angelegt.`);
+  };
+  $('#adm-all').onclick = () => confirmBox('Für alle Teams auf diesem Gerät alle 12 Level freischalten?', () => {
+    Object.values(db.teams).forEach(t => { t.unlockedTo = LEVELS.length - 1; });
+    save(); renderStart(); openAdmin(); toast('Alle Level freigeschaltet.');
+  });
+  $('#adm-lock').onclick = () => { adminOpen = false; closeModal(); toast('Administration gesperrt.'); };
 }
+
+/* ================= Vollbild ================= */
+function isFull() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+function toggleFullscreen() {
+  const el = document.documentElement;
+  try {
+    if (!isFull()) (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+    else (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  } catch (e) { toast('Vollbild geht hier nicht – drückt F11.'); }
+}
+function updateFullBtns() {
+  document.querySelectorAll('[data-act="fullscreen"]').forEach(b => {
+    const icon = b.classList.contains('fs-icon');
+    b.textContent = icon ? (isFull() ? '🗗' : '⛶') : (isFull() ? '🗗 Vollbild aus' : '⛶ Vollbild');
+    b.title = isFull() ? 'Vollbild beenden (Esc)' : 'Vollbild';
+  });
+}
+document.addEventListener('fullscreenchange', updateFullBtns);
+document.addEventListener('webkitfullscreenchange', updateFullBtns);
 
 /* ================= Globale Ereignisse ================= */
 function topAction(act) {
@@ -947,6 +1035,7 @@ function topAction(act) {
   if (act === 'rules') openRules();
   if (act === 'home') { tut.pause(); team = null; renderStart(); }
   if (act === 'tutorial') startTutorial();
+  if (act === 'fullscreen') toggleFullscreen();
   if (act === 'map') {
     if (runner && !runner.done) { runner.playing = false; runner.abort = true; }
     if (team.cur && team.cur.phase === 'durchfuehrung') team.cur.phase = 'planung';
@@ -1014,6 +1103,7 @@ function resumeTutorial() {
 
 /* ================= Start ================= */
 updateSoundBtn();
+updateFullBtns();
 const params = new URLSearchParams(location.search);
 if (db.last && db.teams[db.last] && !params.has('start')) renderStart(); else renderStart();
 // Testhilfe: ?test=L5 öffnet direkt ein Level mit Testteam
